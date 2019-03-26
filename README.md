@@ -1,1 +1,2 @@
-# TreeCompany_TheSpanishInquisition_IP1_Team13_KdG1819
+# The Spanish Inquisition presents
+# Integratieproject: City of Ideas
