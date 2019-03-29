@@ -7,7 +7,7 @@ namespace Domain
     {
         // Added by NG
         public int UserCount { get; set; }
-        public ICollection<QuestionnaireQuestion> Questions { get; set; }
+        public List<QuestionnaireQuestion> Questions { get; set; }
         
         // Added by EKT
         // Modified by NVZ

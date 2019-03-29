@@ -7,7 +7,7 @@ namespace Domain.UserInput
         // Added by NG
         // Modified by EKT & NVZ
         public string Url { get; set; }
-        public Media UploadedMedia { get; set; }
+        public Video UploadedVideo { get; set; }
         
     }
 }

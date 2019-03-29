@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Domain.Users;
 
 namespace Domain.UserInput
 {
@@ -8,7 +9,12 @@ namespace Domain.UserInput
         // Modified by XV, EKT & NVZ
         public int Id { get; set; }
         public string Title { get; set; }
-        public ICollection<Field> Fields { get; set; }
+
+        public User User { get; set; }
+
+
+        public List<Field> Fields { get; set; }
+
         // NOTES about boolean properties Reported & Visible.
         // 1. When an idea is reported it is still visible while the Moderation team takes its time to
         // verify this report. At that point Reported will be true and Visible also will be true.
@@ -24,20 +30,41 @@ namespace Domain.UserInput
         //
         // I wrote this so there will not be any confusion like I had before writing this - NVZ
         public bool Reported { get; set; }
+        public bool ReviewByAdmin { get; set; }
+
+        public int RetweetCount { get; set; }
+        public int ShareCount { get; set; }
+
         public bool Visible { get; set; }
         public int VoteCount { get; set; }
-        public bool VerifiedUser { get; set; }
-        public int? ParentId { get; set; }
+
+        public string Status { set; get; }
+
+        public Idea ParentIdea { get; set; }
+
         // NOTE about votes: As I noted in the User.cs file, Tree Company strives to keep voting as
         // anonymous as possible. We just need the count for the project and thus we will not keep
         // this property. I would love some feedback on this, thanks! - NVZ
         // public ICollection<Vote> Votes { get; set; }
-        public int questionID { get; set; }
-        
+        public Question Question { get; set; }
+
+        public IOT_Device Device { get; set; }
+
         // Added by EKT
         // Modified by NVZ
         // Methods
+
         #region
+
+        public bool IsVeriefiedUser()
+        {
+            if (User.Role == Role.LOGGEDINVERIFIED)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         public Idea GetIdeaInfo()
         {
@@ -45,8 +72,8 @@ namespace Domain.UserInput
             {
                 Title = this.Title,
                 VoteCount = this.VoteCount,
-                VerifiedUser = this.VerifiedUser,
-                ParentId = this.ParentId,
+                User = this.User,
+                ParentIdea = this.ParentIdea,
                 Fields = this.Fields
             };
 
@@ -62,6 +89,7 @@ namespace Domain.UserInput
         {
             Fields.Add(field);
         }
+
         #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace Domain.Users
         public string Password { get; set; }
         public string ZipCode { get; set; }
         public Role Role { get; set; }
-        public bool Banned { get; set; }
+        public bool     Banned { get; set; }
         public bool Gender { get; set; }
         public bool Active { get; set; }
         public DateTime BirthDate { get; set; }
