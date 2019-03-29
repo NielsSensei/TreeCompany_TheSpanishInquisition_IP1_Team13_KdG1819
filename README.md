@@ -2,4 +2,4 @@
 
 Mère Superieure: @NielsSensei
 
-Master branch is of limits, all edits must be made in seperate branches
+Master branch is off limits, all edits must be made in seperate branches
