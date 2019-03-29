@@ -9,6 +9,8 @@ namespace Domain.Users
         public int Id { get; set; }
         public ICollection<PlatformOwner> Owners { get; set; }
         public ICollection<User> Users { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
 
         //Added by NG
         public Platform(int id)
