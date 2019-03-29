@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using Domain;
 using Domain.Common;
+using Domain.Projects;
 
 namespace DAL
 {
@@ -83,7 +84,7 @@ namespace DAL
 
         public IEnumerable<Project> ReadAll(int platformID)
         {
-            return ReadAll().ToList().FindAll(p => p.myPlatformOwner == platformID);
+            return ReadAll().ToList().FindAll(p => p.MyPlatformOwner == platformID);
         }
         #endregion        
         
