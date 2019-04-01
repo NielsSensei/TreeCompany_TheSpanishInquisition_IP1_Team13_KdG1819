@@ -9,5 +9,8 @@ namespace UIMVC.Areas.Identity.Data
     // Add profile data for application users by adding properties to the UIMVCUser class
     public class UIMVCUser : IdentityUser
     {
+
+        [PersonalData]
+        public String Name { get; set; }
     }
 }

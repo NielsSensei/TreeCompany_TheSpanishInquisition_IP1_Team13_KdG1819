@@ -4,4 +4,8 @@
 
 <div>
     <h1>Welcome to the superadmin landing page!</h1>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p>You're logged in</p>
+    }
 </div>
