@@ -52,6 +52,9 @@ namespace UI_MVC
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            // Identity implementation
+            //app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
