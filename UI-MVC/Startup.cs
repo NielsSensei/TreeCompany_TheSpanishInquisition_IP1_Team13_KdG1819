@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using UIMVC.Areas.Identity.Data;
+using UIMVC.Models;
 
 namespace UIMVC
 {
@@ -31,6 +34,8 @@ namespace UIMVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -50,10 +55,11 @@ namespace UIMVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            // See UIMVC/Areas/Identity/IdentityHostingStartup for configuration
+            app.UseAuthentication();
             app.UseCookiePolicy();
-
-            // Identity implementation
-            //app.UseAuthentication();
+            
+            
 
             app.UseMvc(routes =>
             {

@@ -20,8 +20,15 @@ namespace UIMVC.Areas.Identity
                     options.UseSqlite(
                         context.Configuration.GetConnectionString("UIMVCContextConnection")));
 
-                services.AddDefaultIdentity<UIMVCUser>()
-                    .AddEntityFrameworkStores<UIMVCContext>();
+                //TODO: Implement roles
+                services.AddDefaultIdentity<UIMVCUser>(
+                    config => { config.SignIn.RequireConfirmedEmail = false; })
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<UIMVCContext>()
+                    .AddDefaultTokenProviders()
+                    .AddDefaultUI();
+
+                
             });
         }
     }
