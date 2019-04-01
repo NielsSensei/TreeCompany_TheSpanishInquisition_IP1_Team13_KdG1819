@@ -12,28 +12,28 @@ VALUES('Stad Antwerpen', 'www.cityofideas.be')
 6 = superadmin
 */
 INSERT INTO dbo.users(name, email, password, role, platformID)
-VALUES('TSI_LoggedIn', 'niels.vanzandbergen@student.kdg.be','696969', 1, 1)
+VALUES('TSI_LoggedIn', 'niels.vanzandbergen@student.kdg.be',CONVERT(binary,'696969'), 1, 1)
 
 INSERT INTO dbo.users(name, email, password, role, platformID)
-VALUES('TSI_BANNED', 'niels.vanzandbergen@student.kdg.be','696969', 1, 1)
+VALUES('TSI_BANNED', 'niels.vanzandbergen@student.kdg.be',CONVERT(binary,'696969'), 1, 1)
 
 INSERT INTO dbo.users(name, email, password, role, platformID)
-VALUES('TSI_INACTIVE', 'niels.vanzandbergen@student.kdg.be','696969', 1, 1)
+VALUES('TSI_INACTIVE', 'niels.vanzandbergen@student.kdg.be',CONVERT(binary,'696969'), 1, 1)
 
 INSERT INTO dbo.users(name, email, password, role, platformID)
-VALUES('TSI_LoggedInVerified', 'niels.vanzandbergen@student.kdg.be','696969', 2, 1)
+VALUES('TSI_LoggedInVerified', 'niels.vanzandbergen@student.kdg.be',CONVERT(binary,'696969'), 2, 1)
 
 INSERT INTO dbo.users(name, email, password, role, platformID)
-VALUES('TSI_LoggedInOrganisation', 'niels.vanzandbergen@student.kdg.be','696969', 3, 1)
+VALUES('TSI_LoggedInOrganisation', 'niels.vanzandbergen@student.kdg.be',CONVERT(binary,'696969'), 3, 1)
 
 INSERT INTO dbo.users(name, email, password, role, platformID)
-VALUES('TSI_Moderator', 'niels.vanzandbergen@student.kdg.be','696969', 4, 1)
+VALUES('TSI_Moderator', 'niels.vanzandbergen@student.kdg.be',CONVERT(binary,'696969'), 4, 1)
 
 INSERT INTO dbo.users(name, email, password, role, platformID)
-VALUES('TSI_Admin', 'niels.vanzandbergen@student.kdg.be','696969', 5, 1)
+VALUES('TSI_Admin', 'niels.vanzandbergen@student.kdg.be',CONVERT(binary,'696969'), 5, 1)
 
 INSERT INTO dbo.users(name, email, password, role, platformID)
-VALUES('TSI_SuperAdmin', 'niels.vanzandbergen@student.kdg.be','696969', 6, 1)
+VALUES('TSI_SuperAdmin', 'niels.vanzandbergen@student.kdg.be',CONVERT(binary,'696969'), 6, 1)
 
 /* UserDetails 
 BIT 0 = true | 1 = false 
@@ -78,7 +78,6 @@ likeVisbility
 4 = likecount & twitterlikecount
 5 = fblikecount & twitterlikecount
 6 = alle 3
-NOTE: Dit werkt atm ff niet. Sacha moet stuff updaten
 */
 INSERT INTO dbo.projects(currentPhaseID,userID,platformID,title,goal,status,visible,likeVisibility)
 VALUES(1,7,1,'GROENplaats','De Antwerpse Groenplaats terug groen maken','Niet gestart',1,0)
@@ -86,6 +85,11 @@ VALUES(1,7,1,'GROENplaats','De Antwerpse Groenplaats terug groen maken','Niet ge
 /* Phases 
 Veranderingen door Sacha nodig.
 */
+INSERT INTO dbo.phases(projectID, description, startDate, endDate)
+VALUES(1,'Vergroenen van de Groenplaats','2019-03-10','2019-03-30')
+
+INSERT INTO dbo.phases(projectID, description, startDate, endDate)
+VALUES(1,'Gebruik van nieuwe groene ruimte','2019-04-01','2019-04-30')
 
 /* Modules
 Veranderingen door Sacha nodig.
