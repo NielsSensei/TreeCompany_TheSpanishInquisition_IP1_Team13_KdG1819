@@ -1,4 +1,4 @@
-/*         CREATE SCRIPT IP1 VERSIE 1          */
+/*         CREATE SCRIPT IP1 VERSIE 2          */
 
 /*TABLES DROPPEN*/
 DROP TABLE IF EXISTS ideations
@@ -37,9 +37,9 @@ CREATE TABLE platforms(
 
 CREATE TABLE users(
 	userID INT IDENTITY  PRIMARY KEY,
-	name VARCHAR(100) NOT NULL,
-	email VARCHAR(100) NOT NULL,
-	password VARCHAR(100) NOT NULL,
+	name VARCHAR(100),
+	email VARCHAR(100),
+	password BINARY(25),
 	role TINYINT NOT NULL,
 	platformID INT NOT NULL,
 	/*Constraints*/
@@ -89,7 +89,7 @@ CREATE TABLE projects(
 	goal VARCHAR(255) NOT NULL,
 	status VARCHAR(25) NOT NULL,
 	visible BIT NOT NULL,
-	reactionCount INT NOT NULL,
+	reactionCount INT,
 	likeCount INT,
 	fbLikeCount INT, 
 	twitterLikeCOunt INT,
@@ -108,8 +108,8 @@ CREATE TABLE modules(
 	likeCount INT,
 	fbLikeCount INT, 
 	twitterLikeCOunt INT,
-	shareCount INT NOT NULL,
-	retweetCount INT NOT NULL,
+	shareCount INT,
+	retweetCount INT,
 	tags VARCHAR(255),
 	isQuestionnaire BIT NOT NULL,
 
@@ -130,9 +130,6 @@ CREATE TABLE phases(
 	CONSTRAINT chk_phases_startDate CHECK (startDate <= endDate),
 	CONSTRAINT chk_phases_endDate CHECK (endDate >= startDate)
 )
-
-ALTER TABLE projects ADD CONSTRAINT fk_projects_phases FOREIGN KEY (currentPhaseID) references phases(phaseID)
-
 
 CREATE TABLE projectimages(
 	projectID INT NOT NULL,
