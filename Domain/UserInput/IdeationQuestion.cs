@@ -12,21 +12,21 @@ namespace Domain.UserInput
         public string SiteURL { get; set; }
         public List<Idea> Ideas { get; set; }
 
-        public List<Field> AcceptedAnswerTypes { get; set; }
+        public List<string> AcceptedAnswerTypes { get; set; }
+
+        public string QuestionTitle { get; set; }
+        public IOT_Device Device { get; set; }
+
         // Question about this property, how ironic: Is this property necessary at all because we can
         // get this class by accessing the centralQuestion property within Ideation ? - NVZ
         //public Ideation Ideation { get; set; }
-        
+
         // Added by EKT
         // Modified by NVZ
         // Methods
+
         #region
 
-        public void AcceptField(Field field)
-        {
-            AcceptedAnswerTypes.Add(field);
-        }
-        
         public IdeationQuestion GetIdeationQuestionInfo()
         {
             IdeationQuestion info = new IdeationQuestion
@@ -34,7 +34,6 @@ namespace Domain.UserInput
                 Description = this.Description,
                 SiteURL = this.SiteURL,
                 Ideas = this.Ideas,
-                AcceptedAnswerTypes = this.AcceptedAnswerTypes
             };
             return info;
         }
@@ -43,6 +42,7 @@ namespace Domain.UserInput
         {
             Ideas.Add(idea);
         }
+
         #endregion
     }
 }

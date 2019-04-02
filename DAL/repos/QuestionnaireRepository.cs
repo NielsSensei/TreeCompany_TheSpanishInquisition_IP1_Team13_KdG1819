@@ -63,7 +63,7 @@ namespace DAL
 
         public IEnumerable<Questionnaire> ReadAll(int projectID)
         {
-            return questionnaires.FindAll(q => q.CreatedPhase.Project.Id == projectID);
+            return questionnaires.FindAll(q => q.ParentPhase.Project.Id == projectID);
         }
         #endregion   
     }

@@ -2,7 +2,12 @@ namespace Domain.Projects
 {
     public enum LikeVisibility
     {
-        EnkelLikecount, FbLikeCount,TwitterLikeCount, LikeCountAndFbLikeCount,
-         LikeCountAndTwitterLikeCount, FbLikeCountAndTwitterLikeCount, LikeFbAndTwitterCount
+        EnkelLikecount = 0,
+        FbLikeCount,
+        TwitterLikeCount,
+        LikeCountAndFbLikeCount,
+        LikeCountAndTwitterLikeCount,
+        FbLikeCountAndTwitterLikeCount,
+        LikeFbAndTwitterCount = 6
     }
 }
