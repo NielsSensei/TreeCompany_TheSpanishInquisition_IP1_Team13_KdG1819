@@ -19,9 +19,9 @@ namespace Domain
             {
                 UserCount = this.UserCount,
                 OnGoing = this.OnGoing,
-                NumberOfVotes = this.NumberOfVotes,
-                NumberOfShares = this.NumberOfShares,
-                NumberOfRetweets = this.NumberOfRetweets
+                LikeCount = this.LikeCount,
+                ShareCount = this.ShareCount,
+                RetweetCount = this.RetweetCount
             };
             return info;
         }

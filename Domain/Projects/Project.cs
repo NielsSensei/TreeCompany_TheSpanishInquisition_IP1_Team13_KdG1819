@@ -13,8 +13,9 @@ namespace Domain.Projects
 
         public Platform Platform { get; set; }
 
-        public List<User> Users { get; set; }
+        public User User{ get; set; }
 
+        public List<User> PlatFormOwner { get; set; }
         public List<Phase> Phases { get; set; }
 
         public List<Image> PreviewImages { get; set; }
@@ -35,7 +36,7 @@ namespace Domain.Projects
         public List<Module> Modules { get; set; }
 
         public Phase CurrentPhase { get; set; }
-        public int MyPlatformOwner { get; set; }
+   
 
         // Added by EKT
         // Modified by NVZ
