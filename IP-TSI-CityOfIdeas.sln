@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{6C5C4862-42AD-4F9E-AF77-811F4E40BBCD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI-MVC", "UI-MVC\UI-MVC.csproj", "{7D5EB7EB-2C0B-4534-B68E-68AA9AF98926}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIMVC", "UI-MVC\UIMVC.csproj", "{7D5EB7EB-2C0B-4534-B68E-68AA9AF98926}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
