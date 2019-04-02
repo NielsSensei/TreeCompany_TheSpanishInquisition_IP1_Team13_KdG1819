@@ -7,12 +7,73 @@ using Domain.Common;
 using Domain.UserInput;
 using Domain.Users;
 using Domain;
+using DAL.Data_Transfer_Objects;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace DAL.Contexts
 {
     class CityOfIdeasDbContext : DbContext
     {
-       
+
+        public CityOfIdeasDbContext(DbContextOptions<CityOfIdeasDbContext> options) : base(options)
+        {
+            COI_DbInitializer.Initialize(this, false);
+        }
+
+
+        
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder
+                    .UseSqlServer("Data Source=DESKTOP-ALPBF26;Initial Catalog=treecompany;Integrated Security=True", providerOptions => providerOptions.CommandTimeout(60))
+                    .UseLoggerFactory(new LoggerFactory(
+                        new[]
+                        {
+                            new DebugLoggerProvider(
+                                (category, level) =>
+                                    category == DbLoggerCategory.Database.Command.Name
+                                    && level == LogLevel.Information
+                                    )
+
+
+                        }
+                        ));
+            }
+            
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Relaties al gelegd
+        }
+
+        public DbSet<AnswersDTO> Answers { get; set; }
+        public DbSet<ChoicesDTO> Choices { get; set; }
+        public DbSet<DevicesDTO> Devices { get; set; }
+        public DbSet<IdeaFieldsDTO> IdeaFields { get; set; }
+        public DbSet<IdeasDTO> Ideas { get; set; }
+        public DbSet<IdeationQuestionsDTO> IdeationQuestion { get; set; }
+        public DbSet<ModulesDTO> Modules { get; set; }
+        public DbSet<OptionsDTO> Options { get; set; }
+        public DbSet<OrganisationEventsDTO> OrganisationEvents { get; set; }
+        public DbSet<PhasesDTO> Phases { get; set; }
+        public DbSet<PlatformsDTO> Platforms { get; set; }
+        public DbSet<ProjectImagesDTO> ProjectImages { get; set; }
+        public DbSet<ProjectsDTO> Projects { get; set; }
+        public DbSet<QuestionnaireQuestionsDTO> QuestionnaireQuestions { get; set; }
+        public DbSet<UserActivitiesDTO> UserActivities { get; set; }
+        public DbSet<UserDetailsDTO> UserDetails { get; set; }
+        public DbSet<UsersDTO> Users { get; set; }
+        public DbSet<VotesDTO> Votes { get; set; }
+
+
+
+
+
 
     }
 }
