@@ -11,8 +11,6 @@ namespace Domain.Users
         public string OrgUrl { get; set; }
         public string Description { get; set; }
 
-        // Added by EKT
-        // Modified by NVZ
-        // Methods
+        public List<Ideation> Ideations { get; set; }
     }
 }

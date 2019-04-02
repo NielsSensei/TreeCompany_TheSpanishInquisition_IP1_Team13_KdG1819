@@ -14,17 +14,21 @@ namespace Domain.Users
         public string Email { get; set; }
         public string Password { get; set; }
         public string ZipCode { get; set; }
+
+        public UserDetail UserDetail { get; set; }
         public Role Role { get; set; }
         public bool Banned { get; set; }
-        public bool? Gender { get; set; }
         public bool Active { get; set; }
-        public DateTime? BirthDate { get; set; }
 
-        public List<Interaction> Interactions{ get; set; }
-            // Added by EKT
+        public List<Interaction> Interactions { get; set; }
+
+        public List<Answer> Answers { get; set; }
+
+        public List<Idea> Ideas { get; set; }
+        
+        // Added by EKT
         // Modified by NVZ
         // Methods
-
         #region
 
         public User GetUserInfo()
@@ -35,8 +39,7 @@ namespace Domain.Users
                 ZipCode = this.ZipCode,
                 Role = this.Role,
                 Banned = this.Banned,
-                Gender = this.Gender,
-                BirthDate = this.BirthDate
+                UserDetail = this.UserDetail
             };
             return info;
         }
@@ -55,6 +58,7 @@ namespace Domain.Users
         {
             Role = role;
         }
+
         #endregion
     }
 }
