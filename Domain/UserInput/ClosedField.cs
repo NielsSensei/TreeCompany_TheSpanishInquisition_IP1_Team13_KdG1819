@@ -6,8 +6,8 @@ namespace Domain.UserInput
     {
         // Added by NG
         public bool MultipleChoice { get; set; }
-        public ICollection<string> Options { get; set; }
-        public ICollection<string> Answer { get; set; }
+        public List<string> Options { get; set; }
+        public List<string> Answer { get; set; }
         
         // Added by EKT
         // Modified by NVZ

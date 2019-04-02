@@ -122,7 +122,7 @@ namespace BL
             idea.AddField(field);
             
             idea.Visible = true;
-            idea.questionID = questionId;
+            idea.QuestionId = questionId;
             idea.ParentId = parentIdeaId;
             ideationQuestionRepo.Create(idea);
         }

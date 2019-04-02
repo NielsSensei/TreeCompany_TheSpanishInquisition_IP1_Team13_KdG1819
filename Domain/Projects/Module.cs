@@ -11,16 +11,24 @@ namespace Domain
         public ICollection<Phase> Phases { get; set; }
         public Phase CreatedPhase { get; set; }
         public bool OnGoing { get; set; }
+
         public int NumberOfVotes { get; set; }
+
+        public int NumberOfLikes { get; set; }
+        public int NumberOfTwitterLikes { get; set; }
+
         public int NumberOfShares { get; set; }
         public int NumberOfRetweets { get; set; }
         public ICollection<string> Tags { get; set; }
         public Role VoteLevel { get; set; }
 
+ 
         // Added by EKT
         // Modified by NVZ
         // Methods
+
         #region
+
         // NOTE ABOUT SHARING, RETWEETING & VOTING: These are pure UI requirements, in the domain it should be
         // persisted as an simple integer that increments whenever someone performs the action. - NVZ
         public void ShareModule()
@@ -47,6 +55,7 @@ namespace Domain
         {
             Tags.Add(tag);
         }
+
         #endregion
     }
 }
