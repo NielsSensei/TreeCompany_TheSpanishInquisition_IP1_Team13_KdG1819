@@ -1,3 +1,4 @@
+using Domain.Projects;
 
 namespace Domain.UserInput
 {
@@ -7,6 +8,6 @@ namespace Domain.UserInput
         // Modified by EKT & NVZ
         public int Id { get; set; }
         public string QuestionText { get; set; }
-       
+        public Module Module { get; set; }
     }
 }
