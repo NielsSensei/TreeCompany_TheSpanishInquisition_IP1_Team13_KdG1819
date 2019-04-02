@@ -1,4 +1,4 @@
-/*         CREATE SCRIPT IP1 VERSIE 2          */
+/*         CREATE SCRIPT IP1 VERSIE 4          */
 
 /*TABLES DROPPEN*/
 DROP TABLE IF EXISTS ideations
@@ -97,7 +97,8 @@ CREATE TABLE projects(
 
 	/*Constraints*/
 	CONSTRAINT fk_projects_platforms FOREIGN KEY (platformID) references platforms(platformID) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_projects_users FOREIGN KEY (userID) references users(userID) ON DELETE NO ACTION ON UPDATE NO ACTION
+	CONSTRAINT fk_projects_users FOREIGN KEY (userID) references users(userID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT ck_projects_status CHECK (status = UPPER(status))
 
 )
 
@@ -203,9 +204,8 @@ CREATE TABLE questionnairequestions(
 	moduleID INT NOT NULL,
 	questionText VARCHAR(100) NOT NULL,
 	qType BIT NOT NULL,
-	deviceID INT,
+	required BIT NOT NULL,
 
-	CONSTRAINT fk_questionnairequestions_devices FOREIGN KEY (deviceID) references devices(deviceID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT fk_questionnairequestions_modules FOREIGN KEY (moduleID) references modules(moduleID) ON DELETE CASCADE ON UPDATE CASCADE
 
 
