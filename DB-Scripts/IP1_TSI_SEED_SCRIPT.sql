@@ -90,13 +90,15 @@ VALUES(1,'Gebruik van nieuwe groene ruimte','2019-04-01','2019-04-30')
 INSERT INTO dbo.modules(projectID, onGoing, tags, isQuestionnaire)
 VALUES(1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1)
 
+INSERT INTO dbo.modules(projectID, onGoing, tags, isQuestionnaire)
+VALUES(1,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0)
+
 /* QuestionnaireQuestions 
 0 = open                                                                                                                                                       
 1 = single               
 2 = multi                                                                                                                                                       
 3 = drop                 
 4 = mail
-We still need required bit for the table, waiting for Sacha.
 */
 INSERT INTO dbo.questionnairequestions(moduleID, questionTEXT, qType, required)
 VALUES(1,'Waarom wil je de Groenplaats terug groen?',0,1)
@@ -117,25 +119,70 @@ VALUES(1,'Gelieve u email adres achter te halen als u updates wilt over het proj
 INSERT INTO dbo.answers(qQuestionID, userID, answerText)
 VALUES(1,1,'Een grijs stadshart is deprimerend.')
 
-/* Options
-Parent tables need updates atm, no inserts yet
-*/
+INSERT INTO dbo.answers(qQuestionID, userID)
+VALUES(2,1)
 
-/* Choices
-Parent tables need updates atm, no inserts yet
-*/
+INSERT INTO dbo.answers(qQuestionID, userID)
+VALUES(3,1)
 
-/* Ideations  
-Parent tables need updates atm, no inserts yet
-*/
+INSERT INTO dbo.answers(qQuestionID, userID)
+VALUES(4,1)
 
-/* Ideationquestions 
-Parent tables need updates atm, no inserts yet
-*/
+INSERT INTO dbo.answers(qQuestionID, userID, answerText)
+VALUES(5,1,'voorbeeldigeantwerpenaar@nva.be')
 
-/* ideas
-Parent tables need updates atm, no inserts yet
-*/
+/* Options */
+INSERT INTO dbo.options(optionText,qQuestionID)
+VALUES('Geen tram 4 meer op de groenplaats.',2)
+
+INSERT INTO dbo.options(optionText,qQuestionID)
+VALUES('Verkeer afsluiten op de groenplaats.',2)
+
+INSERT INTO dbo.options(optionText,qQuestionID)
+VALUES('De groenplaats vervangen door klein bos.',2)
+
+INSERT INTO dbo.options(optionText, qQuestionID)
+VALUES('Ja',3)
+
+INSERT INTO dbo.options(optionText, qQuestionID)
+VALUES('Nee',3)
+
+INSERT INTO dbo.options(optionText, qQuestionID)
+VALUES('10m²',4)
+
+INSERT INTO dbo.options(optionText, qQuestionID)
+VALUES('20m²',4)
+
+INSERT INTO dbo.options(optionText, qQuestionID)
+VALUES('30m²',4)
+
+INSERT INTO dbo.options(optionText, qQuestionID)
+VALUES('40m²',4)
+
+/* Choices */
+INSERT INTO dbo.choices(answerID, optionID)
+VALUES(2,1)
+
+INSERT INTO dbo.choices(answerID, optionID)
+VALUES(3,4)
+
+INSERT INTO dbo.choices(answerID, optionID)
+VALUES(4,6)
+
+INSERT INTO dbo.choices(answerID, optionID)
+VALUES(4,9)
+
+/* Ideations */
+INSERT INTO dbo.ideations(moduleID, userID, organisation, userIdea, requiredFields)
+VALUES(2,7,0,0,41)
+
+/* Ideationquestions */
+INSERT INTO dbo.ideationquestions(moduleID, questionTitle, description, websiteLink)
+VALUES(1,'Hoe maken we de Groenplaats groener?','Sinds 1990 is de Groenplaats niet meer groen zoals je kan zien via de link, dit is zeer jammer.','voorbeeldlink.be')
+
+/* ideas */
+INSERT INTO dbo.ideas(iQuestionID, userID, reported, reviewByAdmin, visible, status, verifiedUser)
+VALUES(1
 
 /* ideafields
 Parent tables need updates atm, no inserts yet
