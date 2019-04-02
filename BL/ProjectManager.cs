@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DAL;
 using Domain;
+using Domain.Projects;
 
 namespace BL
 {

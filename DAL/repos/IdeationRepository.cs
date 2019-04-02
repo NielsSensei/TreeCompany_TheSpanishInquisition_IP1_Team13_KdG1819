@@ -68,7 +68,7 @@ namespace DAL
 
         public IEnumerable<Ideation> ReadAll(int projectID)
         {
-            return ideations.FindAll(ideation => ideation.CreatedPhase.Project.Id == projectID);
+            return ideations.FindAll(ideation => ideation.ParentPhase.Project.Id == projectID);
         }
         #endregion
         
