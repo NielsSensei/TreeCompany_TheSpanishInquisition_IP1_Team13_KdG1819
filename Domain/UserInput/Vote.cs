@@ -18,9 +18,10 @@ namespace Domain.UserInput
         // IOT_Device.cs to read more about it. - NVZ
         // public IOT_Device IotDevice { get; set; }
         // public Idea Idea { get; set; }
-        public int IdeaID { get; set; }
-        public int deviceID { get; set; }
-        
+        public Idea Idea { get; set; }
+        public IOT_Device Device{ get; set; }
+
+        public List<string> Choices { get; set; }
         // Added by EKT
         // Modified by NVZ
         // Methods
