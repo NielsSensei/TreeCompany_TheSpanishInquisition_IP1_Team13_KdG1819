@@ -72,7 +72,7 @@ namespace DAL
             if (!ideas.Contains(idea))
             {
                 ideas.Add(idea);
-                IdeationQuestion iq = Read(idea.questionID);
+                IdeationQuestion iq = Read(idea.QuestionId);
                 iq.Ideas.Add(idea);
                 Update(iq);
                 return idea; 

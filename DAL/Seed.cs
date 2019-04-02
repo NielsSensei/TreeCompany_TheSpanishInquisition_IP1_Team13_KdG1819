@@ -493,7 +493,7 @@ namespace DAL
             i1Idea1.Fields.Add(field2);
             i1Idea1.Reported = true;
             #endregion
-            i1Idea1.questionID = iQuestion1.Id;
+            i1Idea1.QuestionId = iQuestion1.Id;
             iQuestion1.Ideas = new List<Idea>();
             iQuestion1.Ideas.Add(i1Idea1);
             
@@ -523,7 +523,7 @@ namespace DAL
             i1Idea2.VoteCount += 3;
             
             #endregion
-            i1Idea2.questionID = iQuestion1.Id;
+            i1Idea2.QuestionId = iQuestion1.Id;
             iQuestion1.Ideas.Add(i1Idea2);
             
             //idea 3
@@ -539,7 +539,7 @@ namespace DAL
             i2Idea1.Fields = new List<Field>();
             i2Idea1.Fields.Add(field5);
             #endregion
-            i2Idea1.questionID = iQuestion1.Id;
+            i2Idea1.QuestionId = iQuestion1.Id;
             
             
             //idea 4
@@ -555,7 +555,7 @@ namespace DAL
             i2Idea2.Fields = new List<Field>();
             i2Idea2.Fields.Add(field6);
             #endregion
-            i2Idea2.questionID = iQuestion1.Id;
+            i2Idea2.QuestionId = iQuestion1.Id;
             
             
             //INIT COLLECTIONS
@@ -564,7 +564,7 @@ namespace DAL
             PlatformOwners.Add(platformOwner1);
             PlatformOwners.Add(platformOwner2);
             PlatformOwners.Add(platformOwner3);
-            project.myPlatformOwner = platformOwner1.Id;
+            project.MyPlatformOwner = platformOwner1.Id;
             platformOwner1.Projects = new List<Project>();
             platformOwner1.addProject(project);
             
