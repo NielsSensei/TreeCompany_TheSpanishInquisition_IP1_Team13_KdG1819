@@ -3,7 +3,7 @@ using System.Data;
 using System.Linq;
 using Domain.UserInput;
 
-namespace DAL
+namespace DAL.repos
 {
     public class IdeationQuestionsRepository : IRepository<IdeationQuestion>
     {
@@ -72,7 +72,7 @@ namespace DAL
             if (!ideas.Contains(idea))
             {
                 ideas.Add(idea);
-                IdeationQuestion iq = Read(idea.QuestionId);
+                IdeationQuestion iq = Read(idea.Id);
                 iq.Ideas.Add(idea);
                 Update(iq);
                 return idea; 

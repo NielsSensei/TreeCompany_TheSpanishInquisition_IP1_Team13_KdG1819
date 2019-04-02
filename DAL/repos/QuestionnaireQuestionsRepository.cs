@@ -45,7 +45,7 @@ namespace DAL
             }
             foreach (MultipleAnswer m in mas)
             {
-                foreach (string opt in m.RegularAnswers)
+                foreach (string opt in m.Options)
                 {
                     if (!answerOptions.Contains(opt))
                     {
