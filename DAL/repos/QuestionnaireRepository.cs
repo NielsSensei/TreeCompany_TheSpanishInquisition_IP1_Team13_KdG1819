@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Domain;
+using Domain.Projects;
 
 namespace DAL
 {
