@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Domain.Projects;
 using Domain.Users;
 
-namespace Domain
+namespace Domain.Projects
 {
     public class Module
     {

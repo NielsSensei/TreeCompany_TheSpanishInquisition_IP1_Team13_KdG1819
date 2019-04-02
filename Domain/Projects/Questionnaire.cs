@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Domain.UserInput;
 
-namespace Domain
+namespace Domain.Projects
 {
     public class Questionnaire : Module
     {

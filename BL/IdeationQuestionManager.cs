@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using DAL;
+using DAL.repos;
 using Domain.UserInput;
 
 namespace BL

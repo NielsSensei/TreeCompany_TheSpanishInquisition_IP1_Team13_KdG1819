@@ -1,7 +1,6 @@
 ﻿using System;
-using Domain.Projects;
 
-namespace Domain
+namespace Domain.Projects
 {
     public class Phase
     {
