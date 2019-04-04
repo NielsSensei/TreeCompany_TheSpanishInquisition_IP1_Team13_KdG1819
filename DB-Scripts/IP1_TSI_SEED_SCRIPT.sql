@@ -174,27 +174,92 @@ VALUES(4,9)
 
 /* Ideations */
 INSERT INTO dbo.ideations(moduleID, userID, organisation, userIdea, requiredFields)
-VALUES(2,7,0,0,41)
+VALUES(2,7,0,1,41)
 
 /* Ideationquestions */
 INSERT INTO dbo.ideationquestions(moduleID, questionTitle, description, websiteLink)
 VALUES(1,'Hoe maken we de Groenplaats groener?','Sinds 1990 is de Groenplaats niet meer groen zoals je kan zien via de link, dit is zeer jammer.','voorbeeldlink.be')
 
 /* ideas */
-INSERT INTO dbo.ideas(iQuestionID, userID, reported, reviewByAdmin, visible, status, verifiedUser)
-VALUES(1
+INSERT INTO dbo.ideas(iQuestionID, userID, reported, reviewByAdmin, visible, title, status, verifiedUser)
+VALUES(1,1,0,0,1,'#MakeGroenplaatsGreenAgain','NIET GESELECTEERD',0)
 
-/* ideafields
-Parent tables need updates atm, no inserts yet
-*/
+INSERT INTO dbo.ideas(iQuestionID, userID, reported, reviewByAdmin, visible, title, status, verifiedUser)
+VALUES(1,1,0,0,1,'Groenplaats Stadspark','NIET GESELECTEERD',0)
 
-/* votes
-Parent tables need updates atm, no inserts yet
-*/
+INSERT INTO dbo.ideas(iQuestionID, userID, reported, reviewByAdmin, visible, title, status, verifiedUser)
+VALUES(1,1,0,0,1,'Theater','NIET GESELECTEERD',0)
 
-/* useractivities
-Parent tables need updates atm, no inserts yet
-*/
+INSERT INTO dbo.ideas(iQuestionID, userID, reported, reviewByAdmin, visible, title, status, verifiedUser)
+VALUES(1,1,0,0,1,'Cinema','NIET GESELECTEERD',0)
+
+/* ideafields */
+INSERT INTO dbo.ideafields(ideaID, fieldText)
+VALUES(1,'We maken een grote haag van bomen en struiken rond de Groenplaats om de grijze beton erbuiten te houden!')
+
+INSERT INTO dbo.ideafields(ideaID, fieldText)
+VALUES(2,'Maken een aantal graspleintjes en bloembakken aan met stenen wandelpaden en een pleintje in het midden rond het standbeeld :)')
+
+INSERT INTO dbo.ideafields(ideaID, fieldStrings)
+VALUES(2,'I see a gray square and I want to ' + 'paint' + ' it green - Rolling Stoned')
+
+INSERT INTO dbo.ideafields(ideaID, fieldText)
+VALUES(3, 'Een locatie zo nabij het oude centrum moet evenveel cultuur hebben als het centrum zelf. Dus stel ik voor om hier regelmatige theater voorstelling te houden, zodat we de jongeren echte cultuur kunnen aanleren.')
+
+INSERT INTO dbo.ideafields(ideaID, fieldText)
+VALUES(4,'Nope, dom idee. Wij wille gewoon goeie films kunne zien, buiten op de Groenplaats. Ff pintje op café, laatste nieve film om middernacht opt gras buite. Der woont tog niemand, dus ook geen lawaaid overlast.')
 
 /* Devices */
 INSERT INTO dbo.devices(locationX, locationY) VALUES(55,55)
+
+/* votes */
+INSERT INTO dbo.votes(deviceID, inputID, userID, inputType, userMail, choices)
+VALUES(1,2,1,2,'niels.vanzandbergen@student.kdg.be','Yes')
+
+INSERT INTO dbo.votes(deviceID, inputID, userID, inputType, userMail, choices)
+VALUES(1,2,3,2,'niels.vanzandbergen@student.kdg.be','No')
+
+INSERT INTO dbo.votes(deviceID, inputID, userID, inputType, userMail, choices)
+VALUES(1,2,6,2,'niels.vanzandbergen@student.kdg.be','Yes')
+
+/* useractivities 
+Note: de bedoeling van de keywords hier is dat ze vervangen worden door obj.
+*/
+INSERT INTO dbo.useractivities(userID, platformID, eventID, actionDescription)
+VALUES(5,1,1,'username heeft een event georganiseerd.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, actionDescription)
+VALUES(7,1,1, 'platform heeft een nieuw project geintroduceerd.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, phaseID, actionDescription)
+VALUES(7,1,1,2,'Nieuwe phase gestart binnen project.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, actionDescription)
+VALUES(7,1,1,1,'Nieuwe questionnaire toegevoegd aan project.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, actionDescription)
+VALUES(7,1,1,2,'Nieuwe ideation toegevoegd aan project.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, iQuestionID, actionDescription)
+VALUES(7,1,1,2,1,'Nieuwe discussie gestart binnen ideation.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, iQuestionID, ideaID, actionDescription)
+VALUES(1,1,1,2,1,1,'User heeft een nieuw idee gegeven binnen een ideation.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, iQuestionID, ideaID, actionDescription)
+VALUES(1,1,1,2,1,2,'User heeft een nieuw idee gegeven binnen een ideation.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, iQuestionID, ideaID, actionDescription)
+VALUES(1,1,1,2,1,3,'User heeft een nieuw idee gegeven binnen een ideation.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, iQuestionID, ideaID, actionDescription)
+VALUES(1,1,1,2,1,4,'User heeft een nieuw idee gegeven binnen een ideation.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, iQuestionID, ideaID, voteID, actionDescription)
+VALUES(1,1,1,2,1,2,1,'User heeft gestemd op een idee.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, iQuestionID, ideaID, voteID, actionDescription)
+VALUES(3,1,1,2,1,2,1,'User heeft gestemd op een idee.')
+
+INSERT INTO dbo.useractivities(userID, platformID, projectID, moduleID, iQuestionID, ideaID, voteID, actionDescription)
+VALUES(6,1,1,2,1,2,1,'User heeft gestemd op een idee.')

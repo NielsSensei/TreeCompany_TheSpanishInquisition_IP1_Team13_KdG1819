@@ -172,6 +172,7 @@ CREATE TABLE ideas(
 	voteCount INT,
 	retweetCount INT,
 	shareCount INT,
+	title VARCHAR(100) NOT NULL,
 	status VARCHAR(100),
 	verifiedUser BIT NOT NULL,
 	parentID INT,
@@ -249,7 +250,7 @@ CREATE TABLE ideafields(
 	fieldStrings varchar(800),
 	locationX FLOAT,
 	locationY FLOAT,
-	searchable BIT NOT NULL,
+	searchable BIT,
 	url VARCHAR(50),
 	uploadedImage VARBINARY(MAX),
 	uploadedMedia VARBINARY(MAX),
@@ -278,11 +279,13 @@ CREATE TABLE useractivities(
 	activityID INT IDENTITY PRIMARY KEY,
 	userID INT NOT NULL,
 	platformID INT NOT NULL,
+	eventID INT,
 	projectID INT,
-	voteID INT, 
+	phaseID INT,
 	moduleID INT,
 	iQuestionID INT,
 	ideaID INT,
+	voteID INT,
 	actionDescription VARCHAR(150),
 
 	/*Constraints*/
@@ -292,7 +295,9 @@ CREATE TABLE useractivities(
 	CONSTRAINT fk_useractivities_modules FOREIGN KEY (moduleID) references modules(moduleID),
 	CONSTRAINT fk_useractivities_ideationquestions FOREIGN KEY (iQuestionID) references ideationquestions(iQuestionID),
 	CONSTRAINT fk_useractivities_ideas FOREIGN KEY (ideaID) references ideas(ideaID),
-	CONSTRAINT fk_useractivities_votes FOREIGN KEY (voteID) references votes(voteID)
+	CONSTRAINT fk_useractivities_votes FOREIGN KEY (voteID) references votes(voteID),
+	CONSTRAINT fk_useractivities_events FOREIGN KEY (eventID) references organisationevents(eventID),
+	CONSTRAINT fk_useractivities_phase FOREIGN KEY (phaseID) references phases(phaseID)
 )
 
 
