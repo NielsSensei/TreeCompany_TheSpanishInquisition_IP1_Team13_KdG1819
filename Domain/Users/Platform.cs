@@ -7,7 +7,6 @@ namespace Domain.Users
     {
         // Added by NG
         // Modified by EKT & NVZ & XV
-        public int Id { get; set; }
         public List<User> Owners { get; set; }
         public List<User> Users { get; set; }
         public string Name { get; set; }
