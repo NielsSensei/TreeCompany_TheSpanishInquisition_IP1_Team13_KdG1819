@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using DAL;
+using DAL.repos;
 using Domain.UserInput;
 
 namespace BL
@@ -122,7 +123,7 @@ namespace BL
             idea.AddField(field);
             
             idea.Visible = true;
-            idea.questionID = questionId;
+            idea.QuestionId = questionId;
             idea.ParentId = parentIdeaId;
             ideationQuestionRepo.Create(idea);
         }

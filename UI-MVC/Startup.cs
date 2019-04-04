@@ -6,11 +6,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using UIMVC.Areas.Identity.Data;
+using UIMVC.Models;
+using UIMVC.Services;
 
-namespace UI_MVC
+namespace UIMVC
 {
     public class Startup
     {
@@ -32,7 +37,11 @@ namespace UI_MVC
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // Configuring SendGrid email sender
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +59,11 @@ namespace UI_MVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            // See UIMVC/Areas/Identity/IdentityHostingStartup for configuration
+            app.UseAuthentication();
             app.UseCookiePolicy();
+            
+            
 
             app.UseMvc(routes =>
             {

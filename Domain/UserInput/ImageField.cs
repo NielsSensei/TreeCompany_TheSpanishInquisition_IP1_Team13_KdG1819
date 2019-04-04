@@ -2,12 +2,9 @@ using Domain.Common;
 
 namespace Domain.UserInput
 {
-    public class ImageField : Field
+    public class ImageField: Field
     {
-        // Added by NG
-        // Modified by EKT & NVZ
-        public string URL { get; set; }
-        public Image UploadImage { get; set; }
-        
+        public string Url { get; set; }
+        public Image UploadedImage { get; set; }
     }
 }

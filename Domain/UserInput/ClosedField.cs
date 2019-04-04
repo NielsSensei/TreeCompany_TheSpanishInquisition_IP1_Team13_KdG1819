@@ -6,8 +6,8 @@ namespace Domain.UserInput
     {
         // Added by NG
         public bool MultipleChoice { get; set; }
-        public ICollection<string> Options { get; set; }
-        public ICollection<string> Answer { get; set; }
+        public List<string> Options { get; set; }
+        public List<string> Answers { get; set; }
         
         // Added by EKT
         // Modified by NVZ
@@ -21,7 +21,7 @@ namespace Domain.UserInput
 
         public void AddAnswer(string answer)
         {
-            Answer.Add(answer);
+            Answers.Add(answer);
         }
         
         #endregion

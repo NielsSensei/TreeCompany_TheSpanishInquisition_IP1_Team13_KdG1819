@@ -76,7 +76,7 @@ namespace DAL
             if (!userEvents.Contains(obj))
             {
                 userEvents.Add(obj);
-                Organisation u = (Organisation) Users.Find(us => us.Id == obj.organiserID);
+                Organisation u = (Organisation) Users.Find(us => us.Id == obj.OrganiserId);
                 u.AddEvent(obj);
                 Update(u);
             }
@@ -95,7 +95,7 @@ namespace DAL
         
         public void Update(Event obj)
         {
-            DeleteUserEvent(obj.organiserID, obj.Id);
+            DeleteUserEvent(obj.OrganiserId, obj.Id);
             Create(obj);
         }
         
@@ -117,7 +117,7 @@ namespace DAL
 
         public IEnumerable<Event> ReadAllEventsByUser(int userID)
         {
-            return userEvents.FindAll(e => e.organiserID == userID);
+            return userEvents.FindAll(e => e.OrganiserId == userID);
         }
         
         public IEnumerable<Event> ReadAllEvents(int platformID)

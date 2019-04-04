@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Domain;
+using Domain.Projects;
 
 namespace DAL
 {
@@ -63,7 +64,7 @@ namespace DAL
 
         public IEnumerable<Questionnaire> ReadAll(int projectID)
         {
-            return questionnaires.FindAll(q => q.CreatedPhase.Project.Id == projectID);
+            return questionnaires.FindAll(q => q.ParentPhase.Project.Id == projectID);
         }
         #endregion   
     }
