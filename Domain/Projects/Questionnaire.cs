@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using Domain.UserInput;
 
-namespace Domain
+namespace Domain.Projects
 {
     public class Questionnaire : Module
     {
         // Added by NG
         public int UserCount { get; set; }
-        public ICollection<QuestionnaireQuestion> Questions { get; set; }
+        public List<QuestionnaireQuestion> Questions { get; set; }
         
         // Added by EKT
         // Modified by NVZ
@@ -19,9 +19,9 @@ namespace Domain
             {
                 UserCount = this.UserCount,
                 OnGoing = this.OnGoing,
-                NumberOfVotes = this.NumberOfVotes,
-                NumberOfShares = this.NumberOfShares,
-                NumberOfRetweets = this.NumberOfRetweets
+                LikeCount = this.LikeCount,
+                ShareCount = this.ShareCount,
+                RetweetCount = this.RetweetCount
             };
             return info;
         }
