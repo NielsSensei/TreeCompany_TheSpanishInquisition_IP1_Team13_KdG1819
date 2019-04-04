@@ -18,51 +18,7 @@ namespace DAL
         // Added by NVZ
         public QuestionnaireQuestionsRepository()
         {
-            Seed seed = new Seed();
-            QuestionnaireQuestions = seed.QuestionnaireQuestions;
-            answers = seed.Answers;
-            List<SingleAnswer> sas = new List<SingleAnswer>();
-            List<MultipleAnswer> mas = new List<MultipleAnswer>();
-            for (int i = 0; i < answers.Count; i++)
-            {
-                if (answers[i].GetType() == typeof(SingleAnswer))
-                {
-                    sas.Add((SingleAnswer) answers[i]);
-                }else if (answers[i].GetType() == typeof(MultipleAnswer))
-                {
-                    mas.Add((MultipleAnswer) answers[i]);
-                }
-            }
-            foreach (SingleAnswer s in sas)
-            {
-                foreach (string opt in s.Options)
-                {
-                    if (!answerOptions.Contains(opt))
-                    {
-                        answerOptions.Add(opt);
-                    }
-                }
-            }
-            foreach (MultipleAnswer m in mas)
-            {
-                foreach (string opt in m.Options)
-                {
-                    if (!answerOptions.Contains(opt))
-                    {
-                        answerOptions.Add(opt);
-                    }
-                }
-                if (m.ExtraAnswers.Count > 0)
-                {
-                    foreach (string opt in m.ExtraAnswers)
-                    {
-                        if (!answerOptions.Contains(opt))
-                        {
-                            answerOptions.Add(opt);
-                        }
-                    }
-                }
-            }
+            //TODO: Initalisatie
         }
 
         // Added by NVZ
@@ -107,6 +63,7 @@ namespace DAL
             return QuestionnaireQuestions;
         }
 
+        //TODO: (Hotfix) QQ now has a Q
         public IEnumerable<QuestionnaireQuestion> ReadAllByQuestionnaireId(int questionnaireId)
         {
             return QuestionnaireQuestions.Where(c => c.QuestionnaireId == questionnaireId).AsEnumerable();
@@ -115,6 +72,7 @@ namespace DAL
         
         // Added by NVZ
         // Answer CRUD
+        //TODO: Reform this.
         #region
         public Answer Create(Answer obj)
         {
@@ -171,6 +129,7 @@ namespace DAL
         
         // Added by NVZ
         // Options CRUD
+        //TODO: Reform this.
         #region
         public string Create(string obj)
         {

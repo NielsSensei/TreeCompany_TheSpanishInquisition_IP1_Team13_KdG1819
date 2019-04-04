@@ -7,7 +7,6 @@ namespace Domain.UserInput
         // Added by NG
         // Modified by XV, EKT & NVZ
         public int Id { get; set; }
-        public User User { get; set; }
-        
+        public User User { get; set; }      
     }
 }

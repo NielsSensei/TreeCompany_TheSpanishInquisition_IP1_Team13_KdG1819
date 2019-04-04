@@ -21,28 +21,13 @@ namespace DAL
         // Modified by NVZ & XV
         public ProjectRepository()
         {
-            Seed seed = new Seed();
-            Phases = seed.Phases;
-            projects = new List<Project>();
-            projects.Add(seed.project);
-            images = new List<Image>();
-            images.AddRange(seed.project.PreviewImages);
-            tags = new List<string>();
-            foreach (Module module in projects[0].Modules)
-            {
-                foreach (string tag in module.Tags)
-                {
-                    if (!tags.Contains(tag))
-                    {
-                        tags.Add(tag);
-                    }
-                }
-            }
+            //TODO: Initialisatie
         }
 
         // Added by NVZ
         // Project CRUD
         #region
+        //TODO: Projecten zijn in dit geval op gelijkaardigheid van de naam dus met een compare.
         public Project Create(Project obj)
         {
             if (!projects.Contains(obj))
@@ -82,6 +67,7 @@ namespace DAL
             return projects;
         }
 
+        //TODO: (Hotfix) What was I thinking here?
         public IEnumerable<Project> ReadAll(int platformID)
         {
             return ReadAll().ToList().FindAll(p => p.MyPlatformOwner == platformID);
@@ -136,6 +122,7 @@ namespace DAL
         
         // Added by NVZ
         // Images CRUD
+        // TODO: Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
         #region
         public Image Create(Image obj)
         {
@@ -169,7 +156,7 @@ namespace DAL
         #endregion
         
         // Added by NVZ
-        // Tags CRUD verlagen naar module.
+        //TODO: Tags CRUD verlagen naar module.
         #region
         public string createTag(string obj)
         {

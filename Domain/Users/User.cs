@@ -7,23 +7,20 @@ namespace Domain.Users
     public class User
     {
         // Added by NG
-        // Modified by XV & NVZ
+        // Modified by XV & NVZ & EKT & DM
         public int Id { get; set; }
         public Platform Platform { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string ZipCode { get; set; }
-
         public UserDetail UserDetail { get; set; }
         public Role Role { get; set; }
         public bool Banned { get; set; }
         public bool Active { get; set; }
 
         public List<Interaction> Interactions { get; set; }
-
         public List<Answer> Answers { get; set; }
-
         public List<Idea> Ideas { get; set; }
         
         // Added by EKT
