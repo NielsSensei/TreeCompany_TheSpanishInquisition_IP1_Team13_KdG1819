@@ -63,10 +63,9 @@ namespace DAL
             return QuestionnaireQuestions;
         }
 
-        //TODO: (Hotfix) QQ now has a Q
         public IEnumerable<QuestionnaireQuestion> ReadAllByQuestionnaireId(int questionnaireId)
         {
-            return QuestionnaireQuestions.Where(c => c.QuestionnaireId == questionnaireId).AsEnumerable();
+            return QuestionnaireQuestions.Where(c => c.Questionnaire.Id == questionnaireId).AsEnumerable();
         }
         #endregion       
         

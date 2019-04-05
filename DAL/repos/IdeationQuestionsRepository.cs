@@ -121,10 +121,9 @@ namespace DAL.repos
             return Read(questionID).Ideas;
         }
 
-        //TODO (Hotfix) parentId has evolved into ParentIdea, how ironic and confusing. (JK)
         public IEnumerable<Idea> ReadAllChilds(int parentId)
         {
-            return ideas.FindAll(idea => idea.ParentId == parentId);
+            return ideas.FindAll(idea => idea.ParentIdea.Id == parentId);
         }
         #endregion
     }

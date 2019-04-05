@@ -61,24 +61,22 @@ namespace DAL
             return Users;
         }
 
-        //TODO: (Hotfix) User heeft een platform nu
         public IEnumerable<User> ReadAll(int platformID)
         {
-            return Users.FindAll(u => u.platformID == platformID);
+            return Users.FindAll(u => u.Platform.Id == platformID);
         }
         #endregion
 
         // Added by NVZ
         // Event CRUD
-        //TODO: (Hotfix) Events binnen Organisation.cs
         #region
         public Event Create(Event obj)
         {
             if (!userEvents.Contains(obj))
             {
                 userEvents.Add(obj);
-                Organisation u = (Organisation) Users.Find(us => us.Id == obj.OrganiserId);
-                u.AddEvent(obj);
+                Organisation u = (Organisation) Users.Find(us => us.Id == obj.Organisation.Id);
+                u.organisationEvents.Add(obj);
                 Update(u);
             }
             throw new DuplicateNameException("This Event already exists!");
