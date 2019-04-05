@@ -18,8 +18,8 @@ namespace Domain.Users
         public Role Role { get; set; }
         public bool Banned { get; set; }
         public bool Active { get; set; }
+        public string Description { get; set; }
 
-        public List<Interaction> Interactions { get; set; }
         public List<Answer> Answers { get; set; }
         public List<Idea> Ideas { get; set; }
         

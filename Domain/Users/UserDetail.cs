@@ -6,7 +6,7 @@ namespace Domain.Users
     {
         // Added by EKT & DM
         public User User { get; set; }
-        public bool Gender { get; set; }
+        public byte Gender { get; set; }
         public DateTime Birthdate { get; set; }
     }
 }

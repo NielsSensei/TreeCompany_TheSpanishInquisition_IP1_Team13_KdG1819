@@ -74,6 +74,43 @@ namespace DAL
                 EndDate = DTO.endDate
             };
         }
+
+        private UserDetailsDTO convertToDTO(UserDetail detail)
+        {
+            String orgname = null;
+            String description = null;
+            if (detail.User.Role == Role.LOGGEDINORG)
+            {
+                orgname = detail.User.Name;
+                description = detail.User.Description;
+            }
+            return new UserDetailsDTO
+            {
+                UserID = detail.User.Id,
+                Zipcode = detail.User.ZipCode,
+                Banned = detail.User.Banned,
+                Gender = detail.Gender,
+                Active = detail.User.Active,
+                BirthDate = detail.Birthdate,
+                OrgName = orgname,
+                Description = description
+            };
+        }
+
+        /*private UserDetail convertToDomain(UserDetailsDTO)
+        {
+            return new UserDetail
+            {
+                UserID = detail.User.Id,
+                Zipcode = detail.User.ZipCode,
+                Banned = detail.User.Banned,
+                Gender = detail.Gender,
+                Active = detail.User.Active,
+                BirthDate = detail.Birthdate,
+                OrgName = orgname,
+                Description = description
+            };
+        }*/
         #endregion
 
         //Added by DM
@@ -152,7 +189,59 @@ namespace DAL
         //Added by NVZ
         //UserDetails CRUD
         #region
-                
+        /*
+         *Deze create is ietsje simpeler, dit kom omdat als hij een User aan mag maken dat we zeker zijn dat de details erbij mogen. Het is dus vrijwel
+         *best practise van UserDetails in dezelfde Manager aan te maken als User maar er vlak na.
+         */
+        public UserDetail Create(UserDetail obj)
+        {
+            ctx.UserDetails.Add(convertToDTO(obj));
+            ctx.SaveChanges();
+
+            return obj;
+        }
+
+        /*public UserDetail ReadDetail(int id, bool details)
+        {
+            UserDetailsDTO udDTO = null;
+
+            if (details)
+            {
+                udDTO = ctx.UserDetails.AsNoTracking().First(p => p.ProjectID == id);
+            }
+            else
+            {
+                udDTO = ctx.UserDetails.First(p => p.ProjectID == id);
+            }
+
+            return convertToDomain(udDTO);
+        }
+
+        public void Update(Project obj)
+        {
+            ProjectsDTO newProj = convertToDTO(obj);
+            ProjectsDTO foundProj = convertToDTO(Read(newProj.ProjectID, false));
+            foundProj = newProj;
+            ctx.SaveChanges();
+        }
+
+        public void DeleteDetail(int id)
+        {
+            ctx.Projects.Remove(convertToDTO(Read(id, false)));
+            ctx.SaveChanges();
+        }
+
+        public IEnumerable<Project> ReadAllDetails()
+        {
+            IEnumerable<Project> myQuery = new List<Project>();
+
+            foreach (ProjectsDTO DTO in ctx.Projects)
+            {
+                myQuery.Append(convertToDomain(DTO));
+            }
+
+            return myQuery;
+        } */
         #endregion
 
         // Added by NVZ
