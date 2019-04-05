@@ -10,7 +10,7 @@ namespace DAL
         //TODO: Get rid of platformowner
         // Added by DM
         private List<Platform> Platforms;
-        private List<PlatformOwner> platformsOwners;
+        //private List<PlatformOwner> platformsOwners;
 
         // Added by NVZ
         public PlatformRepository()
@@ -66,7 +66,7 @@ namespace DAL
         // Added by NVZ
         // PlatformOwner CRUD
         //TODO update this so it's about users.
-        #region
+       /* #region
         public PlatformOwner Create(PlatformOwner obj)
         {
             if (!platformsOwners.Contains(obj))
@@ -115,6 +115,6 @@ namespace DAL
         {
             return platformsOwners.FindAll(p => p.PlatformID == platformID);
         }
-        #endregion     
+        #endregion */ 
     }
 }

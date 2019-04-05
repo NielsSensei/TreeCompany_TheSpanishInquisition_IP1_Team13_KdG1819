@@ -105,8 +105,8 @@ namespace DAL
         
         public void Update(Answer obj)
         {
-            Delete(obj.questionID, obj.Id);
-            Create(obj);
+            //Delete(obj.questionID, obj.Id);
+            //Create(obj);
         }
 
         public void Delete(int questionID, int answerID)

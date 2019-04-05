@@ -5,6 +5,7 @@ using System.Linq;
 using Domain;
 using Domain.Common;
 using Domain.Projects;
+using DAL.Contexts;
 
 namespace DAL
 {
@@ -12,16 +13,13 @@ namespace DAL
     {
         // Added by DM
         // Modified by NVZ
-        private List<Project> projects;
-        private List<Phase> Phases;
-        private List<Image> images;
-        private List<string> tags;
+        private CityOfIdeasDbContext ctx;
 
         // Added by DM
         // Modified by NVZ & XV
         public ProjectRepository()
         {
-            //TODO: Initialisatie
+            //ctx = new CityOfIdeasDbContext();
         }
 
         // Added by NVZ
@@ -30,20 +28,21 @@ namespace DAL
         //TODO: Projecten zijn in dit geval op gelijkaardigheid van de naam dus met een compare.
         public Project Create(Project obj)
         {
-            if (!projects.Contains(obj))
+            /*if (!projects.Contains(obj))
             {
                 projects.Add(obj);
             }
-            throw new DuplicateNameException("This Project already exists!");
+            throw new DuplicateNameException("This Project already exists!"); */
+            return null;
         }
 
         public Project Read(int id)
         {
-            Project p = projects.Find(pr => pr.Id == id);
+            /* Project p = projects.Find(pr => pr.Id == id);
             if (p != null)
             {
                 return p;
-            }
+            } */
             throw new KeyNotFoundException("This Project can't be found!");
         }
 
@@ -58,13 +57,14 @@ namespace DAL
             Project p = Read(id);
             if (p != null)
             {
-                projects.Remove(p);
+                //projects.Remove(p);
             }
         }
         
         public IEnumerable<Project> ReadAll()
         {
-            return projects;
+            return null;
+            //return projects;
         }
 
         public IEnumerable<Project> ReadAll(int platformID)
@@ -78,11 +78,11 @@ namespace DAL
         #region
         public Phase Create(Phase obj)
         {
-            if (!Phases.Contains(obj))
+            /* if (!Phases.Contains(obj))
             {
                 Phases.Add(obj);
                 Read(obj.Project.Id).Phases.Add(obj);
-            }
+            } */
             throw new DuplicateNameException("This Phase already exists!");
         }
 
@@ -108,14 +108,15 @@ namespace DAL
             Phase p = ReadPhase(projectID, phaseID);
             if (p != null)
             {
-                Phases.Remove(p);
+                //Phases.Remove(p);
                 Read(projectID).Phases.Remove(p);
             }
         }
 
         public IEnumerable<Phase> ReadAllPhases(int projectID)
         {
-            return Phases.FindAll(p => p.Project.Id == projectID);
+            return null;
+            //return Phases.FindAll(p => p.Project.Id == projectID);
         }
         #endregion
         
@@ -125,10 +126,10 @@ namespace DAL
         #region
         public Image Create(Image obj)
         {
-            if (!images.Contains(obj))
+            /* if (!images.Contains(obj))
             {
                 images.Add(obj);
-            }
+            } */
             throw new DuplicateNameException("This Image already exists!");
         }
 
@@ -150,7 +151,7 @@ namespace DAL
 
         public void DeleteImage(Image obj)
         {
-            images.Remove(obj);
+            //images.Remove(obj);
         }
         #endregion
         
@@ -159,21 +160,22 @@ namespace DAL
         #region
         public string createTag(string obj)
         {
-            if (!tags.Contains(obj))
+            /*if (!tags.Contains(obj))
             {
                 tags.Add(obj);
-            }
+            } */
             throw new DuplicateNameException("This Tag already exists!");
         }
 
         public void DeleteTag(int projectID, int tagID)
         {
-            tags.RemoveAt(tagID - 1);
+            //tags.RemoveAt(tagID - 1);
         }
 
         public IEnumerable<String> ReadAllTags()
         {
-            return tags;
+            return null;
+            //return tags;
         }
         #endregion
     }

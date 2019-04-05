@@ -28,6 +28,7 @@ namespace DAL.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
+                //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen.
                 optionsBuilder
                     .UseSqlServer("Data Source=DESKTOP-ALPBF26;Initial Catalog=treecompany;Integrated Security=True", providerOptions => providerOptions.CommandTimeout(60))
                     .UseLoggerFactory(new LoggerFactory(
