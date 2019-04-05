@@ -61,6 +61,7 @@ namespace DAL
             return Users;
         }
 
+        //TODO: (Hotfix) User heeft een platform nu
         public IEnumerable<User> ReadAll(int platformID)
         {
             return Users.FindAll(u => u.Platform.Id == platformID);
@@ -69,6 +70,7 @@ namespace DAL
 
         // Added by NVZ
         // Event CRUD
+        //TODO: (Hotfix) Events binnen Organisation.cs
         #region
         public Event Create(Event obj)
         {
