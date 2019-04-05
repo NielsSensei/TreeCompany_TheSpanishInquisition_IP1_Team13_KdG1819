@@ -7,6 +7,7 @@ namespace DAL
 {
     public class PlatformRepository : IRepository<Platform>
     {
+        //TODO: Get rid of platformowner
         // Added by DM
         private List<Platform> Platforms;
         private List<PlatformOwner> platformsOwners;
@@ -14,14 +15,13 @@ namespace DAL
         // Added by NVZ
         public PlatformRepository()
         {
-            Seed seed = new Seed();
-            Platforms.Add(seed.platform1);
-            platformsOwners = seed.PlatformOwners;
+           //TODO: Initialisatie
         }
         
         // Added by NVZ
         // Platform CRUD
         #region
+        //TODO compare op name & postcode
         public Platform Create(Platform obj)
         {
             if (!Platforms.Contains(obj))
@@ -65,6 +65,7 @@ namespace DAL
         
         // Added by NVZ
         // PlatformOwner CRUD
+        //TODO update this so it's about users.
         #region
         public PlatformOwner Create(PlatformOwner obj)
         {

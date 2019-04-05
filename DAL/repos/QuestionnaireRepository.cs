@@ -15,14 +15,13 @@ namespace DAL
         // Modified by XV
         public QuestionnaireRepository()
         {
-            Seed seed = new Seed();
-            questionnaires = new List<Questionnaire>();
-            questionnaires.Add(seed.questionnaire);
+            //TODO: Initalisatie
         }
 
         // Added by NVZ
         // Questionnaire CRUD
         #region
+        //TODO: Compare function?
         public Questionnaire Create(Questionnaire obj)
         {
             if (!questionnaires.Contains(obj))
@@ -48,6 +47,7 @@ namespace DAL
             Create(obj);
         }
 
+        //TODO: Delete associated QuestionnaireQuestions
         public void Delete(int id)
         {
             Questionnaire q = Read(id);
@@ -62,6 +62,7 @@ namespace DAL
             return questionnaires;
         }
 
+        //TODO: (Hotfix) Module now has project.
         public IEnumerable<Questionnaire> ReadAll(int projectID)
         {
             return questionnaires.FindAll(q => q.ParentPhase.Project.Id == projectID);

@@ -15,10 +15,9 @@ namespace DAL
         // Added by NVZ
         public UserRepository()
         {
-            Seed seed = new Seed();
-            Users = seed.Users;
+            //TODO: Initalisatie
         }
-        
+
         //Added by DM
         //Modified by NVZ
         //User CRUD
@@ -31,7 +30,7 @@ namespace DAL
             }
             throw new DuplicateNameException("This User already exist!");
         }
-        
+
         public User Read(int id)
         {
             User u = Users.Find(user => user.Id == id);
@@ -62,14 +61,16 @@ namespace DAL
             return Users;
         }
 
+        //TODO: (Hotfix) User heeft een platform nu
         public IEnumerable<User> ReadAll(int platformID)
         {
             return Users.FindAll(u => u.platformID == platformID);
         }
         #endregion
-        
+
         // Added by NVZ
         // Event CRUD
+        //TODO: (Hotfix) Events binnen Organisation.cs
         #region
         public Event Create(Event obj)
         {

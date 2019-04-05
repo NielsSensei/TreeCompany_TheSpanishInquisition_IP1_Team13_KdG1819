@@ -5,10 +5,12 @@ namespace Domain.UserInput
     public class MultipleAnswer : Answer
     {
         // Added by NG
-        public List<string> Options { get; set; }
+        // Modified by EKT & DM
         public string CustomOption { get; set; }
-        public List<string> Choices { get; set; }
         public bool DropdownList { get; set; }
+
+        public List<string> Choices { get; set; }
+        public List<string> Options { get; set; }
 
         // Added by EKT
         // Modified by NVZ

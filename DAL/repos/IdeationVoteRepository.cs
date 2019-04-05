@@ -6,20 +6,14 @@ namespace DAL
     public class IdeationVoteRepository : IRepository<Vote>
     {
         // Added by NVZ
+        //TODO: Get rid of interactions, maybe.
         private List<Vote> votes;
         private List<IOT_Device> devices;
         private List<Interaction> interactions;
 
         public IdeationVoteRepository()
         {
-            Seed seed = new Seed();  
-            devices.Add(seed.device);
-            votes.Add(seed.vote1);
-            votes.Add(seed.vote2);
-            votes.Add(seed.vote3);
-            interactions.Add(seed.iter1);
-            interactions.Add(seed.iter2);
-            interactions.Add(seed.iter3);
+            //TODO: Initialisatie
         }
         
         // Added by NVZ
@@ -69,6 +63,7 @@ namespace DAL
         // Devices CRUD
         #region
 
+        //TODO: Compare of location.
         public IOT_Device Create(IOT_Device obj)
         {
             devices.Add(obj);
