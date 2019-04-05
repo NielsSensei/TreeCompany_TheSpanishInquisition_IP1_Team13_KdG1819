@@ -9,7 +9,7 @@ namespace DAL
         //TODO: Get rid of interactions, maybe.
         private List<Vote> votes;
         private List<IOT_Device> devices;
-        private List<Interaction> interactions;
+        //private List<Interaction> interactions;
 
         public IdeationVoteRepository()
         {
@@ -52,10 +52,10 @@ namespace DAL
             return votes;
         }
 
-        public IEnumerable<Vote> ReadAll(int deviceID)
+        /* public IEnumerable<Vote> ReadAll(int deviceID)
         {
             return votes.FindAll(vote => vote.deviceID == deviceID);
-        }
+        } */
         #endregion
                
         
@@ -100,7 +100,7 @@ namespace DAL
         
         // Added by NVZ
         // Interactions CRUD
-        public Interaction Create(Interaction obj)
+        /*public Interaction Create(Interaction obj)
         {
             interactions.Add(obj);
             return obj;
@@ -122,6 +122,6 @@ namespace DAL
         public IEnumerable<Interaction> ReadAllInteractions(int deviceID)
         {
             return interactions.FindAll(i => i.DeviceId == deviceID);
-        }
+        } */
     }
 }

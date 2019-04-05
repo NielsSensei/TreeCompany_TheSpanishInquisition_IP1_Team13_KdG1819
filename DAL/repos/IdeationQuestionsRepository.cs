@@ -5,7 +5,7 @@ using Domain.UserInput;
 
 namespace DAL.repos
 {
-    public class IdeationQuestionsRepository : IRepository<IdeationQuestion>
+    public class IdeationQuestionsRepository //: IRepository<IdeationQuestion>
     {
         // Added by DM
         // Modified by NVZ
@@ -124,8 +124,8 @@ namespace DAL.repos
         //TODO (Hotfix) parentId has evolved into ParentIdea, how ironic and confusing. (JK)
         public IEnumerable<Idea> ReadAllChilds(int parentId)
         {
-            return ideas.FindAll(idea => idea.ParentId == parentId);
+            return ideas.FindAll(idea => idea.ParentIdea.Id == parentId);
         }
-        #endregion
+        #endregion 
     }
 }
