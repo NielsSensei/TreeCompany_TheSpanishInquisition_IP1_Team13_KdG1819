@@ -71,7 +71,7 @@ namespace DAL
 
         // Added by NVZ
         // Media CRUD     
-        // TODO: Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
+        // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
         #region
 
         public Media Create(Media obj)
@@ -100,6 +100,29 @@ namespace DAL
             {
                 mediafiles.Remove(m);
             }
+        }
+        #endregion
+
+        // Added by NVZ
+        #region
+        public string createTag(string obj)
+        {
+            /*if (!tags.Contains(obj))
+            {
+                tags.Add(obj);
+            } */
+            throw new DuplicateNameException("This Tag already exists!");
+        }
+
+        public void DeleteTag(int projectID, int tagID)
+        {
+            //tags.RemoveAt(tagID - 1);
+        }
+
+        public IEnumerable<String> ReadAllTags()
+        {
+            return null;
+            //return tags;
         }
         #endregion
     }

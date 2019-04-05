@@ -16,7 +16,9 @@ namespace DAL.Contexts
     class CityOfIdeasDbContext : DbContext
     {
         /*
-         * Naar deployment toe is dit wel nuttig. -NVZ
+         * Naar deployment toe is dit wel nuttig. Options wordt wel vaak gebruikt voor de connectionstring mee te geven als deze in een aparte
+         * file zit. Je hebt de optie om ou db te linken via de onconfiguring de .usedataprovider (in ons geval .usesqlserver) te gebruiken. Of
+         * alle connectionstrings in een app.config achtige file ramt. -NVZ (Uitleg door Kenneth De Keulenaer).
          */ 
         public CityOfIdeasDbContext(DbContextOptions<CityOfIdeasDbContext> options) : base(options)
         {

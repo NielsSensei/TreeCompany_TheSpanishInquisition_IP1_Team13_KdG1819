@@ -47,7 +47,6 @@ namespace DAL
             Create(obj);
         }
 
-        //TODO: Delete associated QuestionnaireQuestions
         public void Delete(int id)
         {
             Questionnaire q = Read(id);
@@ -62,11 +61,33 @@ namespace DAL
             return questionnaires;
         }
 
-        //TODO: (Hotfix) Module now has project.
         public IEnumerable<Questionnaire> ReadAll(int projectID)
         {
             return questionnaires.FindAll(q => q.Project.Id == projectID);
         }
         #endregion   
+
+        // Added by NVZ
+        #region
+        public string createTag(string obj)
+        {
+            /*if (!tags.Contains(obj))
+            {
+                tags.Add(obj);
+            } */
+            throw new DuplicateNameException("This Tag already exists!");
+        }
+
+        public void DeleteTag(int projectID, int tagID)
+        {
+            //tags.RemoveAt(tagID - 1);
+        }
+
+        public IEnumerable<String> ReadAllTags()
+        {
+            return null;
+            //return tags;
+        }
+        #endregion
     }
 }
