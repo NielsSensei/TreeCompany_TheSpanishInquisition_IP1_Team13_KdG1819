@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using Domain.Common;
 using Domain.Projects;
+using DAL.Contexts;
 
 namespace DAL
 {
@@ -13,11 +14,12 @@ namespace DAL
         // Modified by NVZ & XV
         private List<Ideation> ideations;
         private List<Media> mediafiles;
+        private CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         public IdeationRepository()
         {
-           //TODO: Initialisatie
+            ctx = new CityOfIdeasDbContext();
         }
         
         // Added by NVZ

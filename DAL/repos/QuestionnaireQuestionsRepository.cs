@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using Domain.UserInput;
+using DAL.Contexts;
 
 namespace DAL
 {
@@ -14,11 +15,12 @@ namespace DAL
         private List<QuestionnaireQuestion> QuestionnaireQuestions;
         private List<Answer> answers;
         private List<string> answerOptions;
+        private CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         public QuestionnaireQuestionsRepository()
         {
-            //TODO: Initalisatie
+            ctx = new CityOfIdeasDbContext();
         }
 
         // Added by NVZ

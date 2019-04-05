@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Domain.UserInput;
+using DAL.Contexts;
 
 namespace DAL.repos
 {
@@ -11,11 +12,12 @@ namespace DAL.repos
         // Modified by NVZ
         private List<IdeationQuestion> ideationQuestions;
         private List<Idea> ideas;
-        
+        private CityOfIdeasDbContext ctx;
+
         // Added by NVZ
         public IdeationQuestionsRepository()
         {
-            //TODO: Initalisatie
+            ctx = new CityOfIdeasDbContext();
         }
         
         // Added by NVZ

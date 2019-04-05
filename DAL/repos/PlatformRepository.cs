@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Domain.Users;
+using DAL.Contexts;
 
 namespace DAL
 {
@@ -11,11 +12,12 @@ namespace DAL
         // Added by DM
         private List<Platform> Platforms;
         //private List<PlatformOwner> platformsOwners;
+        private CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         public PlatformRepository()
         {
-           //TODO: Initialisatie
+            ctx = new CityOfIdeasDbContext();
         }
         
         // Added by NVZ

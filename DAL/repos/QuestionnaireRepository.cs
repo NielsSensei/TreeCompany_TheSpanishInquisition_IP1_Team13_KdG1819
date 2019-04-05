@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Domain;
 using Domain.Projects;
+using DAL.Contexts;
 
 namespace DAL
 {
@@ -10,12 +11,13 @@ namespace DAL
     {
         // Added by DM
         private List<Questionnaire> questionnaires;
-        
+        private CityOfIdeasDbContext ctx;
+
         // Added by NVZ
         // Modified by XV
         public QuestionnaireRepository()
         {
-            //TODO: Initalisatie
+            ctx = new CityOfIdeasDbContext();
         }
 
         // Added by NVZ

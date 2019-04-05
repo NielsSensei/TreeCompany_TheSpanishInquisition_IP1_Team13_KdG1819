@@ -106,14 +106,14 @@ namespace DAL
          * 
          */
             public Project Create(Project obj)
-        {
+            {
             IEnumerable<Project> projects = ReadAll(obj.Platform.Id);
 
             foreach(Project p in projects){
                 if(ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
                 {
-                    throw new DuplicateNameException("Dit project bestaat al of is misschien gelijkaardig. Project dat je wil aanmaken: " + obj.Title +
-                        ". Project dat al bestaat: " + p.Title + ".");
+                    throw new DuplicateNameException("Dit project bestaat al of is misschien gelijkaardig. Project(ID=" + obj.Id + ") dat je wil aanmaken: " + 
+                        obj.Title + ". Project(ID=" + p.Title + ") dat al bestaat: " + p.Title + ".");
                 }
             }
 
@@ -121,7 +121,7 @@ namespace DAL
             ctx.SaveChanges();
 
             return obj; 
-        }
+            }
 
         /*
          *Hij haalt het project op, hij kijkt of het null is en gooit anders een exception als het zo is. De exception wordt hier gegooid binnen

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Domain.UserInput;
+using DAL.Contexts;
 
 namespace DAL
 {
@@ -10,10 +11,11 @@ namespace DAL
         private List<Vote> votes;
         private List<IOT_Device> devices;
         //private List<Interaction> interactions;
+        private CityOfIdeasDbContext ctx;
 
         public IdeationVoteRepository()
         {
-            //TODO: Initialisatie
+            ctx = new CityOfIdeasDbContext();
         }
         
         // Added by NVZ
