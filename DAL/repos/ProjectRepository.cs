@@ -67,6 +67,7 @@ namespace DAL
             //return projects;
         }
 
+        //TODO: (Hotfix) What was I thinking here?
         public IEnumerable<Project> ReadAll(int platformID)
         {
             return ReadAll().ToList().FindAll(p => p.Platform.Id == platformID);

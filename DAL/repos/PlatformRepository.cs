@@ -66,6 +66,7 @@ namespace DAL
         // Added by NVZ
         // PlatformOwner CRUD
         //TODO update this so it's about users.
+       
        /* #region
         public PlatformOwner Create(PlatformOwner obj)
         {
