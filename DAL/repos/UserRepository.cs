@@ -64,7 +64,7 @@ namespace DAL
         //TODO: (Hotfix) User heeft een platform nu
         public IEnumerable<User> ReadAll(int platformID)
         {
-            return Users.FindAll(u => u.platformID == platformID);
+            return Users.FindAll(u => u.Platform.Id == platformID);
         }
         #endregion
 
@@ -77,8 +77,8 @@ namespace DAL
             if (!userEvents.Contains(obj))
             {
                 userEvents.Add(obj);
-                Organisation u = (Organisation) Users.Find(us => us.Id == obj.OrganiserId);
-                u.AddEvent(obj);
+                Organisation u = (Organisation) Users.Find(us => us.Id == obj.Organisation.Id);
+                u.organisationEvents.Add(obj);
                 Update(u);
             }
             throw new DuplicateNameException("This Event already exists!");
@@ -96,19 +96,19 @@ namespace DAL
         
         public void Update(Event obj)
         {
-            DeleteUserEvent(obj.OrganiserId, obj.Id);
-            Create(obj);
+            //DeleteUserEvent(obj.OrganiserId, obj.Id);
+            //Create(obj);
         }
         
         public void DeleteUserEvent(int userID, int eventID)
         {
-            Event e = ReadUserEvent(eventID);
+            /*Event e = ReadUserEvent(eventID);
             if (e != null)
             {
                 userEvents.Remove(e);
                 Organisation u = (Organisation) Users.Find(us => us.Id == userID);
                 u.Events.Remove(e);
-            }
+            } */
         }
         
         public IEnumerable<Event> ReadAllEvents()
@@ -118,7 +118,8 @@ namespace DAL
 
         public IEnumerable<Event> ReadAllEventsByUser(int userID)
         {
-            return userEvents.FindAll(e => e.OrganiserId == userID);
+            return null;
+            //return userEvents.FindAll(e => e.OrganiserId == userID);
         }
         
         public IEnumerable<Event> ReadAllEvents(int platformID)
@@ -126,10 +127,10 @@ namespace DAL
             List<Event> events = new List<Event>();
             foreach (Organisation user in Users)
             {
-                if (user.platformID == platformID)
+                /* if (user.platformID == platformID)
                 {
                     events.AddRange(user.Events);
-                }
+                } */
             }
             return events;
         }
