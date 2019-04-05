@@ -8,16 +8,16 @@ namespace Domain.Projects
     public class Ideation : Module
     {
         // Added by NG
-        // Modified by NVZ
-        
-        public User User { get; set; } //organisation erft van over
+        // Modified by NVZ & EKT & DM
+        public User User { get; set; } 
         public bool UserIdea { get; set; }  
-        public List<IdeationQuestion> CentralQuestions { get; set; }
-
         public Event Event{ get; set; }
         public Media Media { get; set; }
         public string ExtraInfo { get; set; }
-        public string RequiredFields { get; set; }
+        //Note: This is a code to dertemine what fields are needed. - NVZ
+        public int RequiredFields { get; set; }
+
+        public List<IdeationQuestion> CentralQuestions { get; set; }
 
         // Added by EKT
         // Modified by NVZ

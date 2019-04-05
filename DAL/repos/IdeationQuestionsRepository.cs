@@ -15,9 +15,7 @@ namespace DAL.repos
         // Added by NVZ
         public IdeationQuestionsRepository()
         {
-            Seed seed = new Seed();
-            ideationQuestions = seed.IdeationQuestions;
-            ideas = seed.Ideas;
+            //TODO: Initalisatie
         }
         
         // Added by NVZ
@@ -49,6 +47,7 @@ namespace DAL.repos
             Create(obj);
         }
 
+        //TODO: set op [deleted]
         public void Delete(int id)
         {
             IdeationQuestion iq = Read(id);
@@ -106,6 +105,7 @@ namespace DAL.repos
             Create(obj);
         }
 
+        //TODO: set op [deleted]
         public void Delete(int questionID, int ideaID)
         {
             Idea toDelete = Read(questionID, ideaID);
@@ -121,6 +121,7 @@ namespace DAL.repos
             return Read(questionID).Ideas;
         }
 
+        //TODO (Hotfix) parentId has evolved into ParentIdea, how ironic and confusing. (JK)
         public IEnumerable<Idea> ReadAllChilds(int parentId)
         {
             return ideas.FindAll(idea => idea.ParentId == parentId);

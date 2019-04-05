@@ -17,16 +17,13 @@ namespace DAL
         // Added by NVZ
         public IdeationRepository()
         {
-            Seed seed = new Seed();
-            ideations = new List<Ideation>();
-            ideations.Add((Ideation) seed.project.Modules.ToList()[1]);
-            mediafiles = new List<Media>();
-            mediafiles.Add(ideations[0].Media);
+           //TODO: Initialisatie
         }
         
         // Added by NVZ
         // Ideation CRUD
         #region
+        //TODO: compare op name?
         public Ideation Create(Ideation obj)
         {
             if (!ideations.Contains(obj))
@@ -71,9 +68,10 @@ namespace DAL
             return ideations.FindAll(ideation => ideation.ParentPhase.Project.Id == projectID);
         }
         #endregion
-        
+
         // Added by NVZ
         // Media CRUD     
+        // TODO: Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
         #region
 
         public Media Create(Media obj)
