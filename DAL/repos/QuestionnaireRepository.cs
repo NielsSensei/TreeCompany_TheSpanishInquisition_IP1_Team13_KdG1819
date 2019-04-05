@@ -15,9 +15,9 @@ namespace DAL
         // Modified by XV
         public QuestionnaireRepository()
         {
-            Seed seed = new Seed();
+            //Seed seed = new Seed();
             questionnaires = new List<Questionnaire>();
-            questionnaires.Add(seed.questionnaire);
+            //questionnaires.Add(seed.questionnaire);
         }
 
         // Added by NVZ

@@ -123,8 +123,8 @@ namespace BL
             idea.AddField(field);
             
             idea.Visible = true;
-            idea.QuestionId = questionId;
-            idea.ParentId = parentIdeaId;
+            //idea.QuestionId = questionId;
+            //idea.ParentId = parentIdeaId;
             ideationQuestionRepo.Create(idea);
         }
 

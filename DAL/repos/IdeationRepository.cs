@@ -17,9 +17,9 @@ namespace DAL
         // Added by NVZ
         public IdeationRepository()
         {
-            Seed seed = new Seed();
+            //Seed seed = new Seed();
             ideations = new List<Ideation>();
-            ideations.Add((Ideation) seed.project.Modules.ToList()[1]);
+            //ideations.Add((Ideation) seed.project.Modules.ToList()[1]);
             mediafiles = new List<Media>();
             mediafiles.Add(ideations[0].Media);
         }

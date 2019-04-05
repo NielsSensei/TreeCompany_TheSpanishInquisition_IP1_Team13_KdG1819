@@ -15,9 +15,9 @@ namespace DAL.repos
         // Added by NVZ
         public IdeationQuestionsRepository()
         {
-            Seed seed = new Seed();
-            ideationQuestions = seed.IdeationQuestions;
-            ideas = seed.Ideas;
+            //Seed seed = new Seed();
+            //ideationQuestions = seed.IdeationQuestions;
+            //ideas = seed.Ideas;
         }
         
         // Added by NVZ
@@ -121,10 +121,11 @@ namespace DAL.repos
             return Read(questionID).Ideas;
         }
 
+        /*
         public IEnumerable<Idea> ReadAllChilds(int parentId)
         {
             return ideas.FindAll(idea => idea.ParentId == parentId);
-        }
+        }*/
         #endregion
     }
 }

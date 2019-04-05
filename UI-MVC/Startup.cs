@@ -36,6 +36,12 @@ namespace UIMVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // Whilst it's more secure, it's actually quite annoying
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+            });
+
 
             // Configuring SendGrid email sender
             services.AddTransient<IEmailSender, EmailSender>();
