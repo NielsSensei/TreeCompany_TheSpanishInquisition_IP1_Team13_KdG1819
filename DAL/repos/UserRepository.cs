@@ -15,8 +15,8 @@ namespace DAL
         // Added by NVZ
         public UserRepository()
         {
-            Seed seed = new Seed();
-            Users = seed.Users;
+            //Seed seed = new Seed();
+            //Users = seed.Users;
         }
         
         //Added by DM
@@ -61,23 +61,24 @@ namespace DAL
         {
             return Users;
         }
-
+        /*
         public IEnumerable<User> ReadAll(int platformID)
         {
             return Users.FindAll(u => u.platformID == platformID);
-        }
+        }*/
         #endregion
         
         // Added by NVZ
         // Event CRUD
         #region
+            /*
         public Event Create(Event obj)
         {
             if (!userEvents.Contains(obj))
             {
                 userEvents.Add(obj);
-                Organisation u = (Organisation) Users.Find(us => us.Id == obj.OrganiserId);
-                u.AddEvent(obj);
+                //Organisation u = (Organisation) Users.Find(us => us.Id == obj.OrganiserId);
+                //u.AddEvent(obj);
                 Update(u);
             }
             throw new DuplicateNameException("This Event already exists!");
@@ -132,6 +133,7 @@ namespace DAL
             }
             return events;
         }
+        */
         #endregion       
     }
 }

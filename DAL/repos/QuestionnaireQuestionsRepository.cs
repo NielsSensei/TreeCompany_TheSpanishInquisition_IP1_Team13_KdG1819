@@ -16,11 +16,12 @@ namespace DAL
         private List<string> answerOptions;
 
         // Added by NVZ
+        /*
         public QuestionnaireQuestionsRepository()
         {
-            Seed seed = new Seed();
-            QuestionnaireQuestions = seed.QuestionnaireQuestions;
-            answers = seed.Answers;
+            //Seed seed = new Seed();
+            //QuestionnaireQuestions = seed.QuestionnaireQuestions;
+            //answers = seed.Answers;
             List<SingleAnswer> sas = new List<SingleAnswer>();
             List<MultipleAnswer> mas = new List<MultipleAnswer>();
             for (int i = 0; i < answers.Count; i++)
@@ -64,6 +65,7 @@ namespace DAL
                 }
             }
         }
+        */
 
         // Added by NVZ
         // QuestionnaireQuestion CRUD
@@ -107,10 +109,11 @@ namespace DAL
             return QuestionnaireQuestions;
         }
 
+        /*
         public IEnumerable<QuestionnaireQuestion> ReadAllByQuestionnaireId(int questionnaireId)
         {
             return QuestionnaireQuestions.Where(c => c.QuestionnaireId == questionnaireId).AsEnumerable();
-        }
+        }*/
         #endregion       
         
         // Added by NVZ
@@ -146,11 +149,12 @@ namespace DAL
             throw new KeyNotFoundException("This Answer can't be found!"); 
         }
         
+        /*
         public void Update(Answer obj)
         {
             Delete(obj.questionID, obj.Id);
             Create(obj);
-        }
+        }*/
 
         public void Delete(int questionID, int answerID)
         {

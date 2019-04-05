@@ -7,5 +7,7 @@
     @if (User.Identity.IsAuthenticated)
     {
         <p>You're logged in</p>
+        <h1 class="test">All of the available platforms</h1>
+        <partial name="PlatformTemplates/PlatformList.cshtml"/>
     }
 </div>

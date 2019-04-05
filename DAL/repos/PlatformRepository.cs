@@ -9,14 +9,14 @@ namespace DAL
     {
         // Added by DM
         private List<Platform> Platforms;
-        private List<PlatformOwner> platformsOwners;
+        //private List<PlatformOwner> platformsOwners;
 
         // Added by NVZ
         public PlatformRepository()
         {
-            Seed seed = new Seed();
-            Platforms.Add(seed.platform1);
-            platformsOwners = seed.PlatformOwners;
+            //Seed seed = new Seed();
+            //Platforms.Add(seed.platform1);
+            //platformsOwners = seed.PlatformOwners;
         }
         
         // Added by NVZ
@@ -61,59 +61,62 @@ namespace DAL
         {
             return Platforms;
         }
-        #endregion  
-        
+        #endregion
+
         // Added by NVZ
         // PlatformOwner CRUD
         #region
-        public PlatformOwner Create(PlatformOwner obj)
+        /*
+    public PlatformOwner Create(PlatformOwner obj)
+    {
+        if (!platformsOwners.Contains(obj))
         {
-            if (!platformsOwners.Contains(obj))
-            {
-                platformsOwners.Add(obj);
-                Read(obj.PlatformID).AddOwner(obj);
-                return obj;
-            }
-            throw new DuplicateNameException("This PlatformOwner already exists!");
+            platformsOwners.Add(obj);
+            Read(obj.PlatformID).AddOwner(obj);
+            return obj;
         }
+        throw new DuplicateNameException("This PlatformOwner already exists!");
+    }
 
-        public PlatformOwner Read(int platformID, int ownerID)
+    public PlatformOwner Read(int platformID, int ownerID)
+    {
+        PlatformOwner po = Read(platformID).Owners.ToList().Find(o => o.Id == ownerID);
+        if (po != null)
         {
-            PlatformOwner po = Read(platformID).Owners.ToList().Find(o => o.Id == ownerID);
-            if (po != null)
-            {
-                return po;
-            }
-            throw new KeyNotFoundException("This PlatformOwner can't be found!");
+            return po;
         }
+        throw new KeyNotFoundException("This PlatformOwner can't be found!");
+    }
 
-        public void Update(PlatformOwner obj)
-        {
-            Delete(obj.PlatformID, obj.Id);
-            Create(obj);
-        }
+    public void Update(PlatformOwner obj)
+    {
+        Delete(obj.PlatformID, obj.Id);
+        Create(obj);
+    }
 
-        public void Delete(int platformID, int ownerID)
+    public void Delete(int platformID, int ownerID)
+    {
+        PlatformOwner po = Read(platformID, ownerID);
+        if (po != null)
         {
-            PlatformOwner po = Read(platformID, ownerID);
-            if (po != null)
-            {
-                platformsOwners.Remove(po);
-                Platform p = Read(platformID);
-                p.Owners.Remove(po);
-                Update(p);
-            }
+            platformsOwners.Remove(po);
+            Platform p = Read(platformID);
+            p.Owners.Remove(po);
+            Update(p);
         }
+    }
 
-        public IEnumerable<PlatformOwner> ReadAllOwners()
-        {
-            return platformsOwners;
-        }
+    public IEnumerable<PlatformOwner> ReadAllOwners()
+    {
+        return platformsOwners;
+    }
 
-        public IEnumerable<PlatformOwner> ReadAllOwners(int platformID)
-        {
-            return platformsOwners.FindAll(p => p.PlatformID == platformID);
-        }
-        #endregion     
+    public IEnumerable<PlatformOwner> ReadAllOwners(int platformID)
+    {
+        return platformsOwners.FindAll(p => p.PlatformID == platformID);
+    }
+    */
+        #endregion
+
     }
 }
