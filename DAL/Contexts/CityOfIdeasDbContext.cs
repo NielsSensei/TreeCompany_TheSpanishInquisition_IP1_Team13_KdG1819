@@ -15,22 +15,26 @@ namespace DAL.Contexts
 {
     class CityOfIdeasDbContext : DbContext
     {
-
+        /*
+         * Naar deployment toe is dit wel nuttig. -NVZ
+         */ 
         public CityOfIdeasDbContext(DbContextOptions<CityOfIdeasDbContext> options) : base(options)
         {
             COI_DbInitializer.Initialize(this, false);
         }
 
-
+        public CityOfIdeasDbContext()
+        {
+            COI_DbInitializer.Initialize(this, false);
+        }
         
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen.
+                //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen. Dit wordt veranderd naar deployment 'pad'.
                 optionsBuilder
-                    .UseSqlServer("Data Source=DESKTOP-ALPBF26;Initial Catalog=treecompany;Integrated Security=True", providerOptions => providerOptions.CommandTimeout(60))
+                    .UseSqlServer("Data Source=LAPTOP-MESCK2VS;Initial Catalog=IP1_TSI_DB;Integrated Security=True", providerOptions => providerOptions.CommandTimeout(60))
                     .UseLoggerFactory(new LoggerFactory(
                         new[]
                         {

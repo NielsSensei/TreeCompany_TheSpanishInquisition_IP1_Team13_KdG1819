@@ -6,7 +6,7 @@ using Domain.Projects;
 
 namespace DAL
 {
-    public class QuestionnaireRepository : IRepository<Questionnaire>
+    public class QuestionnaireRepository //: IRepository<Questionnaire>
     {
         // Added by DM
         private List<Questionnaire> questionnaires;

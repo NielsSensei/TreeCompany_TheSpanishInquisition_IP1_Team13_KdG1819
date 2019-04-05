@@ -5,7 +5,7 @@ using Domain.Users;
 
 namespace DAL
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository //: IRepository<User>
     {
         //Added by DM 
         //Modified by NVZ

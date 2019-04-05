@@ -7,7 +7,7 @@ using Domain.Projects;
 
 namespace DAL
 {
-    public class IdeationRepository : IRepository<Ideation>
+    public class IdeationRepository //: IRepository<Ideation>
     {
         // Added by DM
         // Modified by NVZ & XV

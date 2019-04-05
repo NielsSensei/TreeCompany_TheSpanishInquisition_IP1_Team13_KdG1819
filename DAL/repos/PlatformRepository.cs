@@ -5,7 +5,7 @@ using Domain.Users;
 
 namespace DAL
 {
-    public class PlatformRepository : IRepository<Platform>
+    public class PlatformRepository //: IRepository<Platform>
     {
         //TODO: Get rid of platformowner
         // Added by DM

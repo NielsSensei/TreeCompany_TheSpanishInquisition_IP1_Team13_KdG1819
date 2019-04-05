@@ -6,6 +6,8 @@ using Domain;
 using Domain.Common;
 using Domain.Projects;
 using DAL.Contexts;
+using DAL.Data_Transfer_Objects;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL
 {
@@ -25,25 +27,46 @@ namespace DAL
         // Added by NVZ
         // Project CRUD
         #region
-        //TODO: Projecten zijn in dit geval op gelijkaardigheid van de naam dus met een compare.
+        /* 
+         * Binnen deze methode vergelijkt hij de titels van heel het platform met de titel van het nieuwe project. Als hij een gelijkenis gevonden heeft
+         * dan gooit hij de Exception. Hij doet de vergelijking op basis van een extensionmethod die zeer uitbreidbaar is.
+         * 
+         * @author Niels Van Zandbergen
+         * @see Extensionmethods.HasMatchingWords(string left, string right);
+         * @return Het aangemaakte object.
+         * 
+         */
         public Project Create(Project obj)
         {
-            /*if (!projects.Contains(obj))
-            {
-                projects.Add(obj);
+            IEnumerable<Project> projects = ReadAll(obj.Platform.Id);
+            foreach(Project p in projects){
+                if(ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
+                {
+                    throw new DuplicateNameException("Dit project bestaat al of is misschien gelijkaardig. Project dat je wil aanmaken: " + obj.Title +
+                        ". Project dat al bestaat: " + p.Title + ".");
+                }
             }
-            throw new DuplicateNameException("This Project already exists!"); */
-            return null;
+
+            return obj; 
         }
 
-        public Project Read(int id)
+        public Project Read(int id, bool details)
         {
-            /* Project p = projects.Find(pr => pr.Id == id);
-            if (p != null)
+            ProjectsDTO projectsDTO = null;
+            Project projectreturn = null;
+
+            if (details)
             {
-                return p;
-            } */
-            throw new KeyNotFoundException("This Project can't be found!");
+                projectsDTO = ctx.Projects.AsNoTracking().First(p => p.ProjectID == id);
+                ExtensionMethods.CheckForNotFound(projectsDTO, "Project", projectsDTO.ProjectID);
+            
+            }else
+            {
+                projectsDTO = ctx.Projects.First(p => p.ProjectID == id);
+                ExtensionMethods.CheckForNotFound(projectsDTO, "Project", projectsDTO.ProjectID);
+            }
+            
+            return projectreturn;
         }
 
         public void Update(Project obj)
@@ -54,7 +77,7 @@ namespace DAL
 
         public void Delete(int id)
         {
-            Project p = Read(id);
+            //Project p = Read(id);
             if (p != null)
             {
                 //projects.Remove(p);
@@ -87,12 +110,12 @@ namespace DAL
         }
 
         public Phase ReadPhase(int projectID, int phaseID)
-        {
-            Phase p = Read(projectID).Phases.ToList().Find(ph => ph.Id == phaseID);
+        { 
+            /* Phase p = Read(projectID).Phases.ToList().Find(ph => ph.Id == phaseID);
             if (p != null)
             {
                 return p;
-            }
+            } */
             throw new KeyNotFoundException("This Phase can't be found!");
         }
 
@@ -109,7 +132,7 @@ namespace DAL
             if (p != null)
             {
                 //Phases.Remove(p);
-                Read(projectID).Phases.Remove(p);
+                //Read(projectID).Phases.Remove(p);
             }
         }
 
@@ -135,11 +158,11 @@ namespace DAL
 
         public Image Read(int projectID, int imageID)
         {
-            Image i = Read(projectID).PreviewImages.ToList()[imageID - 1];
+            /* Image i = Read(projectID).PreviewImages.ToList()[imageID - 1];
             if (i != null)
             {
                 return i;
-            }
+            } */
             throw new KeyNotFoundException("This Image can't be found!");
         }
 

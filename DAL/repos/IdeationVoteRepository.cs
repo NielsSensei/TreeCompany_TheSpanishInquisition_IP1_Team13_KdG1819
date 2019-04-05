@@ -3,7 +3,7 @@ using Domain.UserInput;
 
 namespace DAL
 {
-    public class IdeationVoteRepository : IRepository<Vote>
+    public class IdeationVoteRepository //: IRepository<Vote>
     {
         // Added by NVZ
         //TODO: Get rid of interactions, maybe.

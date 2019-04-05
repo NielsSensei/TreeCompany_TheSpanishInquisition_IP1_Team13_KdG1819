@@ -7,7 +7,7 @@ using Domain.UserInput;
 
 namespace DAL
 {
-    public class QuestionnaireQuestionsRepository : IRepository<QuestionnaireQuestion>
+    public class QuestionnaireQuestionsRepository //: IRepository<QuestionnaireQuestion>
     {
         // Added by DM
         // Modified by NVZ
