@@ -14,11 +14,11 @@ namespace Domain.Users
         public string Email { get; set; }
         public string Password { get; set; }
         public string ZipCode { get; set; }
-        public UserDetail UserDetail { get; set; }
         public Role Role { get; set; }
         public bool Banned { get; set; }
         public bool Active { get; set; }
-        public string Description { get; set; }
+        public byte Gender { get; set; }
+        public DateTime Birthdate { get; set; }
 
         public List<Answer> Answers { get; set; }
         public List<Idea> Ideas { get; set; }
@@ -35,8 +35,7 @@ namespace Domain.Users
                 Name = this.Name,
                 ZipCode = this.ZipCode,
                 Role = this.Role,
-                Banned = this.Banned,
-                UserDetail = this.UserDetail
+                Banned = this.Banned
             };
             return info;
         }

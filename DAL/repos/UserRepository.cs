@@ -32,7 +32,7 @@ namespace DAL
                 Name = obj.Name,
                 Email = obj.Email,
                 Password = obj.Password,
-                Role = (byte) obj.Role,
+                Role = (byte) (obj.Role-1),
                 PlatformID = obj.Platform.Id
             };
         }
@@ -45,8 +45,51 @@ namespace DAL
                 Name = DTO.Name,
                 Email = DTO.Email,
                 Password = DTO.Password,
-                Role = (Role) DTO.Role,
+                Role = (Role) DTO.Role+1,
                 Platform = new Platform() { Id = DTO.PlatformID }
+            };
+        }
+
+        private User UserWithDetails(User user, UserDetailsDTO DTO)
+        {
+            user.Id = DTO.UserID;
+            user.ZipCode = DTO.Zipcode;
+            user.Gender = DTO.Gender;
+            user.Banned = DTO.Banned;
+            user.Active = DTO.Active;
+            user.Birthdate = DTO.BirthDate;
+            return user;
+        }
+
+        private UserDetailsDTO retrieveDetailsFromUser(User user)
+        {
+            return new UserDetailsDTO
+            {
+                UserID = user.Id,
+                Zipcode = user.ZipCode,
+                Gender = user.Gender,
+                Banned = user.Banned,
+                Active = user.Active,
+                BirthDate = user.Birthdate
+            };
+        }
+
+        private Organisation retrieveOrganisation(Organisation user, UserDetailsDTO DTO)
+        {
+            user.Id = DTO.UserID;
+            user.OrgName = DTO.OrgName;
+            user.Description = DTO.Description;
+
+            return user;
+        }
+
+        private UserDetailsDTO retrieveOrganisationInfo(Organisation user)
+        {
+            return new UserDetailsDTO
+            {
+                UserID = user.Id,
+                OrgName = user.OrgName,
+                Description = user.Description
             };
         }
 
@@ -75,42 +118,6 @@ namespace DAL
             };
         }
 
-        private UserDetailsDTO convertToDTO(UserDetail detail)
-        {
-            String orgname = null;
-            String description = null;
-            if (detail.User.Role == Role.LOGGEDINORG)
-            {
-                orgname = detail.User.Name;
-                description = detail.User.Description;
-            }
-            return new UserDetailsDTO
-            {
-                UserID = detail.User.Id,
-                Zipcode = detail.User.ZipCode,
-                Banned = detail.User.Banned,
-                Gender = detail.Gender,
-                Active = detail.User.Active,
-                BirthDate = detail.Birthdate,
-                OrgName = orgname,
-                Description = description
-            };
-        }
-
-        /*private UserDetail convertToDomain(UserDetailsDTO)
-        {
-            return new UserDetail
-            {
-                UserID = detail.User.Id,
-                Zipcode = detail.User.ZipCode,
-                Banned = detail.User.Banned,
-                Gender = detail.Gender,
-                Active = detail.User.Active,
-                BirthDate = detail.Birthdate,
-                OrgName = orgname,
-                Description = description
-            };
-        }*/
         #endregion
 
         //Added by DM
@@ -131,6 +138,27 @@ namespace DAL
             }
 
             ctx.Users.Add(convertToDTO(obj));
+            ctx.UserDetails.Add(retrieveDetailsFromUser(obj));
+            ctx.SaveChanges();
+
+            return obj;
+        }
+
+        public Organisation Create(Organisation obj)
+        {
+            IEnumerable<Organisation> users = ReadAllOrganisations(obj.Platform.Id);
+
+            foreach (Organisation o in users)
+            {
+                if (ExtensionMethods.HasMatchingWords(o.OrgName, obj.OrgName) > 0)
+                {
+                    throw new DuplicateNameException("Deze Organisatie is al gevonden. Gegeven Organisatie(ID=" + obj.Id + ") met naam: " + obj.OrgName + 
+                        ". Gevonden Organisatie(ID=" + o.Id + ") met naam: " + o.OrgName + ".");
+                }
+            }
+
+            ctx.Users.Add(convertToDTO(obj));
+            ctx.UserDetails.Add(retrieveDetailsFromUser(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -153,18 +181,39 @@ namespace DAL
 
             return convertToDomain(usersDTO);
         }
-        
+       
+        public User ReadWithDetails(int id)
+        {
+            User user = Read(id, true);
+            UserDetailsDTO DTO = ctx.UserDetails.First(u => u.UserID == id);
+
+            user = UserWithDetails(user, DTO);
+
+            return user;
+        }
+
+        public Organisation ReadOrganisation(int id)
+        {
+            return (Organisation) ReadWithDetails(id);
+        }
+
         public void Update(User obj)
         {
             UsersDTO newUser = convertToDTO(obj);
             UsersDTO foundUser = convertToDTO(Read(obj.Id, false));
             foundUser = newUser;
+
+            UserDetailsDTO newDetails = retrieveDetailsFromUser(obj);
+            UserDetailsDTO foundDetails = retrieveDetailsFromUser(ReadWithDetails(obj.Id));
+            foundDetails = newDetails;
+
             ctx.SaveChanges();
         }
         
         public void Delete(int id)
         {
             ctx.Users.Remove(convertToDTO(Read(id, false)));
+            ctx.UserDetails.Remove(retrieveDetailsFromUser(Read(id, false)));
             ctx.SaveChanges();
         }
         
@@ -173,8 +222,23 @@ namespace DAL
             IEnumerable<User> myQuery = new List<User>();
 
             foreach (UsersDTO DTO in ctx.Users)
+            {              
+                myQuery.Append(ReadWithDetails(DTO.UserID));
+            }
+
+            return myQuery;
+        }
+
+        public IEnumerable<Organisation> ReadAllOrganisations()
+        {
+            IEnumerable<Organisation> myQuery = new List<Organisation>();
+
+            foreach (UsersDTO DTO in ctx.Users)
             {
-                myQuery.Append(convertToDomain(DTO));
+                if(DTO.Role == 3)
+                {
+                    myQuery.Append(ReadWithDetails(DTO.UserID));
+                } 
             }
 
             return myQuery;
@@ -184,64 +248,11 @@ namespace DAL
         {
             return ReadAll().ToList().FindAll(u => u.Platform.Id == platformID);
         }
-        #endregion
 
-        //Added by NVZ
-        //UserDetails CRUD
-        #region
-        /*
-         *Deze create is ietsje simpeler, dit kom omdat als hij een User aan mag maken dat we zeker zijn dat de details erbij mogen. Het is dus vrijwel
-         *best practise van UserDetails in dezelfde Manager aan te maken als User maar er vlak na.
-         */
-        public UserDetail Create(UserDetail obj)
+        public IEnumerable<Organisation> ReadAllOrganisations(int platformID)
         {
-            ctx.UserDetails.Add(convertToDTO(obj));
-            ctx.SaveChanges();
-
-            return obj;
+            return ReadAllOrganisations().ToList().FindAll(u => u.Platform.Id == platformID);
         }
-
-        /*public UserDetail ReadDetail(int id, bool details)
-        {
-            UserDetailsDTO udDTO = null;
-
-            if (details)
-            {
-                udDTO = ctx.UserDetails.AsNoTracking().First(p => p.ProjectID == id);
-            }
-            else
-            {
-                udDTO = ctx.UserDetails.First(p => p.ProjectID == id);
-            }
-
-            return convertToDomain(udDTO);
-        }
-
-        public void Update(Project obj)
-        {
-            ProjectsDTO newProj = convertToDTO(obj);
-            ProjectsDTO foundProj = convertToDTO(Read(newProj.ProjectID, false));
-            foundProj = newProj;
-            ctx.SaveChanges();
-        }
-
-        public void DeleteDetail(int id)
-        {
-            ctx.Projects.Remove(convertToDTO(Read(id, false)));
-            ctx.SaveChanges();
-        }
-
-        public IEnumerable<Project> ReadAllDetails()
-        {
-            IEnumerable<Project> myQuery = new List<Project>();
-
-            foreach (ProjectsDTO DTO in ctx.Projects)
-            {
-                myQuery.Append(convertToDomain(DTO));
-            }
-
-            return myQuery;
-        } */
         #endregion
 
         // Added by NVZ
