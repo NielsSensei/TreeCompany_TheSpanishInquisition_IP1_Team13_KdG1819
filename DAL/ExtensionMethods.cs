@@ -29,5 +29,31 @@ namespace DAL
             if (obj == null)
                 throw new KeyNotFoundException("This " + datatype + " can't be found! The ID was: " + ID);
         }
+
+        internal static String ListToString(List<String> myStrings)
+        {
+            String myString = "";
+
+            for(int i = 0; i < myStrings.Count; i++)
+            {
+                myString += myStrings[i];
+                if (i != myStrings.Count - 1) myString += ",";
+            }
+
+            return myString;
+        }
+
+        internal static List<String> StringToList(String myString)
+        {
+            string[] myArray = myString.Split(",", StringSplitOptions.RemoveEmptyEntries);
+            List<String> myList = new List<string>();
+
+            foreach(String s in myArray)
+            {
+                myList.Add(s);
+            }
+
+            return myList;
+        }
     }
 }

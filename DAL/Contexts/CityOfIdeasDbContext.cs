@@ -64,6 +64,7 @@ namespace DAL.Contexts
         public DbSet<IdeaFieldsDTO> IdeaFields { get; set; }
         public DbSet<IdeasDTO> Ideas { get; set; }
         public DbSet<IdeationQuestionsDTO> IdeationQuestion { get; set; }
+        public DbSet<IdeationsDTO> Ideations { get; set; }
         public DbSet<ModulesDTO> Modules { get; set; }
         public DbSet<OptionsDTO> Options { get; set; }
         public DbSet<OrganisationEventsDTO> OrganisationEvents { get; set; }
@@ -76,11 +77,6 @@ namespace DAL.Contexts
         public DbSet<UserDetailsDTO> UserDetails { get; set; }
         public DbSet<UsersDTO> Users { get; set; }
         public DbSet<VotesDTO> Votes { get; set; }
-
-
-
-
-
 
     }
 }

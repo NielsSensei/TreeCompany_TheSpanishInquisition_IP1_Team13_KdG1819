@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <Compile Remove="UserInput\Interaction.cs" />
+      <Compile Remove="Users\UserDetail.cs" />
     </ItemGroup>
 
 </Project>
