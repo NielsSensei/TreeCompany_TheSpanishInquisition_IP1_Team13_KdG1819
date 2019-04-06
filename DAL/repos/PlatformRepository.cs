@@ -3,15 +3,15 @@ using System.Data;
 using System.Linq;
 using Domain.Users;
 using DAL.Contexts;
+using DAL.Data_Transfer_Objects;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL
 {
-    public class PlatformRepository //: IRepository<Platform>
+    public class PlatformRepository : IRepository<Platform>
     {
-        //TODO: Get rid of platformowner
         // Added by DM
-        private List<Platform> Platforms;
-        //private List<PlatformOwner> platformsOwners;
+        // Modified by NVZ
         private CityOfIdeasDbContext ctx;
 
         // Added by NVZ
@@ -19,105 +19,101 @@ namespace DAL
         {
             ctx = new CityOfIdeasDbContext();
         }
-        
+
+        // Added by NVZ
+        // Standard Methods
+        #region
+        private PlatformsDTO convertToDTO(Platform p)
+        {
+            return new PlatformsDTO
+            {
+                PlatformID = p.Id,
+                Name = p.Name,
+                SiteUrl = p.Url
+                // TODO: (SPRINT2?) Dit kunnen oplossen
+                // IconImage = p.Image 
+            };
+        }
+
+        private Platform convertToDomain(PlatformsDTO DTO)
+        {
+            return new Platform
+            {
+                Id = DTO.PlatformID,
+                Name = DTO.Name,
+                Url = DTO.SiteUrl
+                // TODO: (SPRINT2?) Dit kunnen oplossen
+                // IconImage = p.Image 
+            };
+        }
+        #endregion
+
         // Added by NVZ
         // Platform CRUD
         #region
-        //TODO compare op name & postcode
         public Platform Create(Platform obj)
         {
-            if (!Platforms.Contains(obj))
+            IEnumerable<Platform> platforms = ReadAll();
+
+            foreach (Platform p in platforms)
             {
-                Platforms.Add(obj);
-                return obj;
+                if (ExtensionMethods.HasMatchingWords(p.Name, obj.Name) > 0)
+                {
+                    throw new DuplicateNameException("Platform(ID=" + obj.Id + ") met naam " + obj.Name +" heeft dezelfde naam als Platform(ID=" + p.Id + 
+                        " met naam " + p.Name);
+                }
             }
-            throw new DuplicateNameException("This Platform already exists!");
+
+            ctx.Platforms.Add(convertToDTO(obj));
+            ctx.SaveChanges();
+
+            return obj;
         }
 
-        public Platform Read(int id)
+        public Platform Read(int id, bool details)
         {
-            Platform p = Platforms.Find(pl => pl.Id == id);
-            if (p != null)
+            PlatformsDTO platformDTO = null;
+
+            if (details)
             {
-                return p;
+                platformDTO = ctx.Platforms.AsNoTracking().First(p => p.PlatformID == id);
+                ExtensionMethods.CheckForNotFound(platformDTO, "Platform", platformDTO.PlatformID);
             }
-            throw new KeyNotFoundException("This Platform can't be found!");
+            else
+            {
+                platformDTO = ctx.Platforms.First(p => p.PlatformID == id);
+                ExtensionMethods.CheckForNotFound(platformDTO, "Platform", platformDTO.PlatformID);
+            }
+
+            return convertToDomain(platformDTO);
         }
 
         public void Update(Platform obj)
         {
-            Delete(obj.Id);
-            Create(obj);
+            PlatformsDTO newPlatform = convertToDTO(obj);
+            PlatformsDTO foundPlatform = convertToDTO(Read(obj.Id, false));
+            foundPlatform = newPlatform;
+            ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            Platform p = Read(id);
-            if (p != null)
-            {
-                Platforms.Remove(p);
-            }
+            ctx.Platforms.Remove(convertToDTO(Read(id, false)));
+            ctx.SaveChanges();
         }
         
         public IEnumerable<Platform> ReadAll()
         {
-            return Platforms;
+            IEnumerable<Platform> myQuery = new List<Platform>();
+
+            foreach (PlatformsDTO DTO in ctx.Platforms)
+            {
+                myQuery.Append(convertToDomain(DTO));
+            }
+
+            return myQuery;
         }
         #endregion  
-        
-        // Added by NVZ
-        // PlatformOwner CRUD
-        //TODO update this so it's about users.
-       
-       /* #region
-        public PlatformOwner Create(PlatformOwner obj)
-        {
-            if (!platformsOwners.Contains(obj))
-            {
-                platformsOwners.Add(obj);
-                Read(obj.PlatformID).AddOwner(obj);
-                return obj;
-            }
-            throw new DuplicateNameException("This PlatformOwner already exists!");
-        }
 
-        public PlatformOwner Read(int platformID, int ownerID)
-        {
-            PlatformOwner po = Read(platformID).Owners.ToList().Find(o => o.Id == ownerID);
-            if (po != null)
-            {
-                return po;
-            }
-            throw new KeyNotFoundException("This PlatformOwner can't be found!");
-        }
-
-        public void Update(PlatformOwner obj)
-        {
-            Delete(obj.PlatformID, obj.Id);
-            Create(obj);
-        }
-
-        public void Delete(int platformID, int ownerID)
-        {
-            PlatformOwner po = Read(platformID, ownerID);
-            if (po != null)
-            {
-                platformsOwners.Remove(po);
-                Platform p = Read(platformID);
-                p.Owners.Remove(po);
-                Update(p);
-            }
-        }
-
-        public IEnumerable<PlatformOwner> ReadAllOwners()
-        {
-            return platformsOwners;
-        }
-
-        public IEnumerable<PlatformOwner> ReadAllOwners(int platformID)
-        {
-            return platformsOwners.FindAll(p => p.PlatformID == platformID);
-        }
-        #endregion */ 
     }
 }
