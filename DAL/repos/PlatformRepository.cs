@@ -12,6 +12,7 @@ namespace DAL
         // Added by DM
         private List<Platform> Platforms;
         //private List<PlatformOwner> platformsOwners;
+
         private CityOfIdeasDbContext ctx;
 
         // Added by NVZ
