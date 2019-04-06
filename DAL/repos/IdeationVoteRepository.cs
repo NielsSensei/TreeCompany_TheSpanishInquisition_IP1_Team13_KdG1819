@@ -1,130 +1,214 @@
 using System.Collections.Generic;
 using Domain.UserInput;
 using DAL.Contexts;
+using System.Data;
+using DAL.Data_Transfer_Objects;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DAL
 {
-    public class IdeationVoteRepository //: IRepository<Vote>
+    public class IdeationVoteRepository : IRepository<Vote>
     {
         // Added by NVZ
-        //TODO: Get rid of interactions, maybe.
-        private List<Vote> votes;
-        private List<IOT_Device> devices;
-        //private List<Interaction> interactions;
-
         private CityOfIdeasDbContext ctx;
 
         public IdeationVoteRepository()
         {
             ctx = new CityOfIdeasDbContext();
         }
-        
+
+        // Added by NVZ
+        // Standard Methods
+        #region
+        private VotesDTO convertToDTO(Vote obj)
+        {
+            return new VotesDTO
+            {
+                VoteID = obj.Id,
+                DeviceID = obj.Device.Id,
+                InputID = obj.Idea.Id,
+                InputType = 2, //Voorlopig Idee
+                UserMail = obj.UserMail,
+                LocationX = obj.LocationX,
+                LocationY = obj.LocationY,
+                Choices = ExtensionMethods.ListToString(obj.Choices)
+            };
+        }    
+
+        private Vote convertToDomain(VotesDTO DTO)
+        {
+            return new Vote
+            {
+                Id = DTO.VoteID,
+                Device = new IOT_Device { Id = DTO.DeviceID },
+                Idea = new Idea { Id = DTO.InputID },
+                UserMail = DTO.UserMail,
+                LocationX = DTO.LocationX,
+                LocationY = DTO.LocationY,
+                Choices = ExtensionMethods.StringToList(DTO.Choices)
+            };
+        }
+
+        private DevicesDTO convertToDTO(IOT_Device obj)
+        {
+            return new DevicesDTO
+            {
+                DeviceID = obj.Id,
+                LocationX = obj.LocationX,
+                LocationY = obj.LocationY
+            };
+        }
+
+        private IOT_Device convertToDomain(DevicesDTO DTO)
+        {
+            return new IOT_Device
+            {
+                Id = DTO.DeviceID,
+                LocationX = DTO.LocationX,
+                LocationY = DTO.LocationY
+            };
+        }
+        #endregion
+
         // Added by NVZ
         // Vote CRUD
         #region
         public Vote Create(Vote obj)
         {
-            votes.Add(obj);
+            IEnumerable<Vote> votes = ReadAll(obj.Device.Id);
+
+            foreach (Vote v in votes)
+            {
+                if(v.UserMail == obj.UserMail)
+                {
+                    throw new DuplicateNameException("Vote(ID=" + obj.Id + ") en Vote(ID=" + v.Id + ") hebben dezelfde email en Device(ID=" + 
+                        obj.Device.Id + "), dit is absoluut niet toegestaan!");
+                }
+            }
+
+            ctx.Votes.Add(convertToDTO(obj));
+            ctx.SaveChanges();
+
             return obj;
         }
         
-        public Vote Read(int id)
+        public Vote Read(int id, bool details)
         {
-            return votes.Find(vote => vote.Id == id);
+            VotesDTO voteDTO = null;
+
+            if (details)
+            {
+                voteDTO = ctx.Votes.AsNoTracking().First(p => p.VoteID == id);
+                ExtensionMethods.CheckForNotFound(voteDTO, "Vote", voteDTO.VoteID);
+            }
+            else
+            {
+                voteDTO = ctx.Votes.First(p => p.VoteID == id);
+                ExtensionMethods.CheckForNotFound(voteDTO, "Vote", voteDTO.VoteID);
+            }
+
+            return convertToDomain(voteDTO);
         }
         
         public void Update(Vote obj)
         {
-            if (Read(obj.Id) != null)
-            {
-                votes[obj.Id - 1] = obj;
-            }
-            else
-            {
-                throw new KeyNotFoundException("Vote with id " + obj.Id + " not found!");
-            }
+            VotesDTO newVote = convertToDTO(obj);
+            VotesDTO foundVote = convertToDTO(Read(obj.Id, false));
+            foundVote = newVote;
+            ctx.SaveChanges();
         }
         
         public void Delete(int id)
         {
-            votes.RemoveAt(id-1);
+            ctx.Votes.Remove(convertToDTO(Read(id, false)));
+            ctx.SaveChanges();
         }
         
         public IEnumerable<Vote> ReadAll()
         {
-            return votes;
+            IEnumerable<Vote> myQuery = new List<Vote>();
+
+            foreach (VotesDTO DTO in ctx.Votes)
+            {
+                myQuery.Append(convertToDomain(DTO));
+            }
+
+            return myQuery;
         }
 
-        /* public IEnumerable<Vote> ReadAll(int deviceID)
+        public IEnumerable<Vote> ReadAll(int deviceID)
         {
-            return votes.FindAll(vote => vote.deviceID == deviceID);
-        } */
+            return ReadAll().ToList().FindAll(vote => vote.Device.Id == deviceID);
+        } 
         #endregion
                
         
         // Added by NVZ
         // Devices CRUD
         #region
-
-        //TODO: Compare of location.
         public IOT_Device Create(IOT_Device obj)
         {
-            devices.Add(obj);
+            IEnumerable<IOT_Device> devices = ReadAllDevices();
+
+            foreach (IOT_Device iot in devices)
+            {
+                if (iot.LocationX == obj.LocationX && iot.LocationY == obj.LocationY)
+                {
+                    throw new DuplicateNameException("Device(ID=" + iot.Id + ") en Device(ID=" + obj.Id + ") delen dezelfde locatie nl. " + obj.LocationX +
+                        "," + obj.LocationY + ".");
+                }
+            }
+
+            ctx.Devices.Add(convertToDTO(obj));
+            ctx.SaveChanges();
+
             return obj;
         }
 
-        public IOT_Device ReadDevice(int deviceID)
+        public IOT_Device ReadDevice(int deviceID, bool details)
         {
-            return devices.Find(device => device.Id == deviceID);
+            DevicesDTO deviceDTO = null;
+
+            if (details)
+            {
+                deviceDTO = ctx.Devices.AsNoTracking().First(d => d.DeviceID == deviceID);
+                ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
+            }
+            else
+            {
+                deviceDTO = ctx.Devices.First(d => d.DeviceID == deviceID);
+                ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
+            }
+
+            return convertToDomain(deviceDTO);
         }
 
         public void Update(IOT_Device obj)
         {
-            if (Read(obj.Id) != null)
-            {
-                devices[obj.Id - 1] = obj;
-            }
-            else
-            {
-                throw new KeyNotFoundException("Device with id " + obj.Id + " not found!");
-            }
+            DevicesDTO newDevice = convertToDTO(obj);
+            DevicesDTO foundDevice = convertToDTO(ReadDevice(obj.Id, false));
+            foundDevice = newDevice;
+            ctx.SaveChanges();
         }
 
         public void DeleteDevice(int id)
         {
-            devices.RemoveAt(id-1);
+            ctx.Devices.Remove(convertToDTO(ReadDevice(id, false)));
+            ctx.SaveChanges();
         }
 
         public IEnumerable<IOT_Device> ReadAllDevices()
         {
-            return devices;
+            IEnumerable<IOT_Device> myQuery = new List<IOT_Device>();
+
+            foreach (DevicesDTO DTO in ctx.Devices)
+            {
+                myQuery.Append(convertToDomain(DTO));
+            }
+
+            return myQuery;
         }
         #endregion
-        
-        // Added by NVZ
-        // Interactions CRUD
-        /*public Interaction Create(Interaction obj)
-        {
-            interactions.Add(obj);
-            return obj;
-        }
-
-        public void DeleteInteraction(int deviceID, int userID)
-        {
-            bool deleted = false;
-            foreach (Interaction i in interactions)
-            {
-                if (i.DeviceId == deviceID && i.UserId == userID && !deleted)
-                {
-                    interactions.Remove(i);
-                    deleted = true;
-                }                   
-            }
-        }
-
-        public IEnumerable<Interaction> ReadAllInteractions(int deviceID)
-        {
-            return interactions.FindAll(i => i.DeviceId == deviceID);
-        } */
     }
 }

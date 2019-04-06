@@ -11,8 +11,8 @@ namespace DAL.Data_Transfer_Objects
         public int InputID { get; set; }
         public byte InputType { get; set; }
         public string UserMail { get; set; }
-        public float LocationX { get; set; }
-        public float LocationY { get; set; }
+        public float? LocationX { get; set; }
+        public float? LocationY { get; set; }
         public string Choices { get; set; }
     }
 }

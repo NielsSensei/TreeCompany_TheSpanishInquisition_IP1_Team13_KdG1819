@@ -7,9 +7,9 @@ namespace Domain.UserInput
         // Added by NG
         // Modified by EKT, XV and NVZ & DM
         public int Id { get; set; }
-        private string UserMail { get; set; }
-        internal float? LocationX { get; set; }
-        internal float? LocationY { get; set; }
+        public string UserMail { get; set; }
+        public float? LocationX { get; set; }
+        public float? LocationY { get; set; }
         public bool Positive { get; set; }
         public Idea Idea { get; set; }
         public IOT_Device Device{ get; set; }
