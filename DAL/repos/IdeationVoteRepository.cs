@@ -11,6 +11,7 @@ namespace DAL
         private List<Vote> votes;
         private List<IOT_Device> devices;
         //private List<Interaction> interactions;
+
         private CityOfIdeasDbContext ctx;
 
         public IdeationVoteRepository()
