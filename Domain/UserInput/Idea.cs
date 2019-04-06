@@ -8,7 +8,7 @@ namespace Domain.UserInput
         // Added by NG
         // Modified by XV, EKT & NVZ
         public int Id { get; set; }
-        public IdeationQuestion IdeationQuestion { get; set; }
+        public IdeationQuestion IdeaQuestion { get; set; }
         public User User { get; set; }
         public bool Reported { get; set; }
         public bool ReviewByAdmin { get; set; }
@@ -36,7 +36,11 @@ namespace Domain.UserInput
         // not accidentally fix this.
         // I wrote this so there will not be any confusion like I had before writing this - NVZ
 
-        public List<Field> Fields { get; set; }
+        public Field Field { get; set; }
+        public ClosedField Cfield { get; set; }
+        public ImageField Ifield { get; set; }
+        public VideoField Vfield { get; set; }
+        public MapField Mfield { get; set; }
 
         // Added by EKT
         // Modified by NVZ
@@ -51,8 +55,7 @@ namespace Domain.UserInput
                 Title = this.Title,
                 VoteCount = this.VoteCount,
                 User = this.User,
-                ParentIdea = this.ParentIdea,
-                Fields = this.Fields
+                ParentIdea = this.ParentIdea
             };
 
             return info;
@@ -62,12 +65,6 @@ namespace Domain.UserInput
         {
             VoteCount++;
         }
-
-        public void AddField(Field field)
-        {
-            Fields.Add(field);
-        }
-
         #endregion
     }
 }
