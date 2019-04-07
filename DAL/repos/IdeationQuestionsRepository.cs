@@ -258,6 +258,8 @@ namespace DAL.repos
             ctx.SaveChanges();
         }
 
+        /* Ik heb momenteel de optie opengehouden zoals het zoals reddit te doen. https://imgur.com/a/oeLkyL2 zodat de Ideën niet mee verwijderd worden.
+         Een hard delete van de vraag en de hele "thread" zal waarschijnlijk ook nog kunnen, dat mag je veranderen naar bespreking met mij. -NVZ */
         public void Delete(int id)
         {
             IdeationQuestion iq = Read(id, false);
@@ -366,26 +368,57 @@ namespace DAL.repos
             foundIdea = newIdea;
 
             IdeaFieldsDTO newTextField = convertToDTO(obj.Field);
-            //IdeaFieldsDTO foundTextField = convertToDTO
+            IdeaFieldsDTO foundTextField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Field.Id));
+            newTextField = foundTextField;
 
+            IdeaFieldsDTO newCField = convertToDTO(obj.Cfield);
+            IdeaFieldsDTO foundCField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Cfield.Id));
+            newCField = foundCField;
+
+            IdeaFieldsDTO newMField = convertToDTO(obj.Mfield);
+            IdeaFieldsDTO foundMField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Mfield.Id));
+            newMField = foundMField;
+
+            IdeaFieldsDTO newIField = convertToDTO(obj.Ifield);
+            IdeaFieldsDTO foundIField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Ifield.Id));
+            newIField = foundIField;
+
+            IdeaFieldsDTO newVField = convertToDTO(obj.Vfield);
+            IdeaFieldsDTO foundVField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Vfield.Id));
+            newVField = foundVField;
 
             ctx.SaveChanges();
         }
 
-        //TODO: set op [deleted]
-        public void Delete(int questionID, int ideaID)
+        /* Het veiligste is het zoals reddit te doen: https://imgur.com/a/oeLkyL2. Anders worden de childs mee gedelete misschien of bestaan ze wel db wise
+         * maar worden ze niet getoond. Het beste is enkel de 2 deleted tonen in dit geval. - NVZ
+        */
+        public void DeleteIdea(int ideaID)
         {
-            Idea toDelete = Read(questionID, ideaID);
-            if (toDelete != null)
-            {
-                ideas.Remove(toDelete);
-                Read(questionID).Ideas.Remove(toDelete);
-            }
+            Idea i = ReadWithFields(ideaID);
+            i.Title = "[deleted]";
+            i.Field.Text = "[deleted]";
+            i.Cfield.Options = null;
+            i.Ifield.UploadedImage = null;
+            i.Ifield.Url = null;
+            i.Mfield.LocationX = 0;
+            i.Mfield.LocationY = 0;
+            i.Vfield.Url = null;
+            i.Vfield.UploadedVideo = null;
+       
+            Update(i);
         }
 
         public IEnumerable<Idea> ReadAllIdeas()
         {
-            return null;
+            IEnumerable<Idea> myQuery = new List<Idea>();
+
+            foreach (IdeasDTO DTO in ctx.Ideas)
+            {
+                myQuery.Append(ReadWithFields(DTO.IdeaID));
+            }
+
+            return myQuery;
         }
 
         public IEnumerable<Idea> ReadAllIdeasByQuestion(int questionID)
@@ -400,7 +433,33 @@ namespace DAL.repos
 
         public IEnumerable<Field> ReadAllFields()
         {
-            return null;
+            IEnumerable<Field> myQuery = new List<Field>();
+
+            foreach (IdeaFieldsDTO DTO in ctx.IdeaFields)
+            {
+                if (DTO.FieldText != null)
+                {
+                    myQuery.Append(convertFieldToDomain(DTO));
+                }
+                else if (DTO.FieldStrings != null)
+                {
+                    myQuery.Append(convertClosedFieldToDomain(DTO));
+                }
+                else if (DTO.LocationX != null)
+                {
+                    myQuery.Append(convertMapFieldToDomain(DTO));
+                }
+                else if (DTO.UploadedImage != null)
+                {
+                    myQuery.Append(convertImageFieldToDomain(DTO));
+                }
+                else if (DTO.uploadedMedia != null)
+                {
+                    myQuery.Append(convertVideoFieldToDomain(DTO));
+                }
+            }
+
+            return myQuery;
         }
 
         public IEnumerable<Field> ReadAllFields(int ideaID)
