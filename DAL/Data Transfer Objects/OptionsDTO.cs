@@ -9,6 +9,5 @@ namespace DAL.Data_Transfer_Objects
         public int OptionID { get; set; }
         public string OptionText { get; set; }
         public int qQuestionID { get; set; }
-
     }
 }

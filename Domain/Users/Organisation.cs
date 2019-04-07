@@ -8,7 +8,6 @@ namespace Domain.Users
         // Added by NG
         // Modified by XV & NVZ & DM & EKT
         public string OrgName { get; set; }
-        public string OrgUrl { get; set; }
         public string Description { get; set; }
         
         public List<Event> organisationEvents { get; set; }

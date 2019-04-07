@@ -102,23 +102,6 @@ CREATE TABLE projects(
 
 )
 
-CREATE TABLE modules(
-	moduleID INT IDENTITY PRIMARY KEY,
-	projectID INT NOT NULL,
-	onGoing BIT NOT NULL,
-	likeCount INT,
-	fbLikeCount INT, 
-	twitterLikeCOunt INT,
-	shareCount INT,
-	retweetCount INT,
-	tags VARCHAR(255),
-	isQuestionnaire BIT NOT NULL,
-
-	/*Constraints*/
-	CONSTRAINT fk_modules_projects FOREIGN KEY (projectID) references projects(projectID) ON DELETE CASCADE ON UPDATE CASCADE
-
-)
-
 CREATE TABLE phases(
 	phaseID INT IDENTITY PRIMARY KEY,
 	projectID INT NOT NULL,
@@ -130,6 +113,24 @@ CREATE TABLE phases(
 	CONSTRAINT fk_phases_projects FOREIGN KEY (projectID) references projects(projectID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT chk_phases_startDate CHECK (startDate <= endDate),
 	CONSTRAINT chk_phases_endDate CHECK (endDate >= startDate)
+)
+
+CREATE TABLE modules(
+	moduleID INT IDENTITY PRIMARY KEY,
+	projectID INT NOT NULL,
+	phaseID INT NOT NULL,
+	onGoing BIT NOT NULL,
+	likeCount INT,
+	fbLikeCount INT, 
+	twitterLikeCOunt INT,
+	shareCount INT,
+	retweetCount INT,
+	tags VARCHAR(255),
+	isQuestionnaire BIT NOT NULL,
+
+	/*Constraints*/
+	CONSTRAINT fk_modules_projects FOREIGN KEY (projectID) references projects(projectID) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_modules_phases FOREIGN KEY (phaseID) references phases(phaseID) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
 CREATE TABLE projectimages(

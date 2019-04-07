@@ -8,9 +8,9 @@ namespace Domain.Users
         // Modified by EKT & NVZ & DM
         public int Id { get; set; }
         public Organisation Organisation { get; set; }
-        internal string Name { get; set; }
-        internal string Description { get; set; }
-        internal DateTime StartDate { get; set; }
-        internal DateTime EndDate { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

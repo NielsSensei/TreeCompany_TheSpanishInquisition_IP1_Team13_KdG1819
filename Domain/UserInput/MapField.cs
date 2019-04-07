@@ -6,8 +6,7 @@ namespace Domain.UserInput
     {
         // Added by NG
         // Modified by EKT & NVZ & DM
-        public double LocationX { get; set; }
-        public double LocationY { get; set; }
-        public bool Searchable { get; set; }
+        public float LocationX { get; set; }
+        public float LocationY { get; set; }
     }
 }

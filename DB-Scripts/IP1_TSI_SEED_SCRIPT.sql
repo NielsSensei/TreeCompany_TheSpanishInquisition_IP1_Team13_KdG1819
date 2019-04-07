@@ -87,11 +87,11 @@ INSERT INTO dbo.phases(projectID, description, startDate, endDate)
 VALUES(1,'Gebruik van nieuwe groene ruimte','2019-04-01','2019-04-30')
 
 /* Modules */
-INSERT INTO dbo.modules(projectID, onGoing, tags, isQuestionnaire)
-VALUES(1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1)
+INSERT INTO dbo.modules(projectID, phaseID, onGoing, tags, isQuestionnaire)
+VALUES(1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1)
 
-INSERT INTO dbo.modules(projectID, onGoing, tags, isQuestionnaire)
-VALUES(1,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0)
+INSERT INTO dbo.modules(projectID, phaseID, onGoing, tags, isQuestionnaire)
+VALUES(1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0)
 
 /* QuestionnaireQuestions 
 0 = open                                                                                                                                                       
