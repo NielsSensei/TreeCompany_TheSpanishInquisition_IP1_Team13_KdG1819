@@ -26,6 +26,7 @@ namespace Domain.Users
         // Added by EKT
         // Modified by NVZ
         // Methods
+
         #region
 
         public User GetUserInfo()
@@ -54,7 +55,6 @@ namespace Domain.Users
         {
             Role = role;
         }
-
         #endregion
     }
 }
