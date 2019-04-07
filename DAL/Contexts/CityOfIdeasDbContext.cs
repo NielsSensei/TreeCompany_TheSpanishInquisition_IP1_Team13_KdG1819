@@ -15,22 +15,28 @@ namespace DAL.Contexts
 {
     class CityOfIdeasDbContext : DbContext
     {
-
+        /*
+         * Naar deployment toe is dit wel nuttig. Options wordt wel vaak gebruikt voor de connectionstring mee te geven als deze in een aparte
+         * file zit. Je hebt de optie om ou db te linken via de onconfiguring de .usedataprovider (in ons geval .usesqlserver) te gebruiken. Of
+         * alle connectionstrings in een app.config achtige file ramt. -NVZ (Uitleg door Kenneth De Keulenaer).
+         */ 
         public CityOfIdeasDbContext(DbContextOptions<CityOfIdeasDbContext> options) : base(options)
         {
             COI_DbInitializer.Initialize(this, false);
         }
 
-
+        public CityOfIdeasDbContext()
+        {
+            COI_DbInitializer.Initialize(this, false);
+        }
         
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen.
+                //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen. Dit wordt veranderd naar deployment 'pad'.
                 optionsBuilder
-                    .UseSqlServer("Data Source=DESKTOP-ALPBF26;Initial Catalog=treecompany;Integrated Security=True", providerOptions => providerOptions.CommandTimeout(60))
+                    .UseSqlServer("Data Source=LAPTOP-MESCK2VS;Initial Catalog=IP1_TSI_DB;Integrated Security=True", providerOptions => providerOptions.CommandTimeout(60))
                     .UseLoggerFactory(new LoggerFactory(
                         new[]
                         {
@@ -58,6 +64,7 @@ namespace DAL.Contexts
         public DbSet<IdeaFieldsDTO> IdeaFields { get; set; }
         public DbSet<IdeasDTO> Ideas { get; set; }
         public DbSet<IdeationQuestionsDTO> IdeationQuestion { get; set; }
+        public DbSet<IdeationsDTO> Ideations { get; set; }
         public DbSet<ModulesDTO> Modules { get; set; }
         public DbSet<OptionsDTO> Options { get; set; }
         public DbSet<OrganisationEventsDTO> OrganisationEvents { get; set; }
@@ -70,11 +77,6 @@ namespace DAL.Contexts
         public DbSet<UserDetailsDTO> UserDetails { get; set; }
         public DbSet<UsersDTO> Users { get; set; }
         public DbSet<VotesDTO> Votes { get; set; }
-
-
-
-
-
 
     }
 }

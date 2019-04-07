@@ -2,7 +2,7 @@ using Domain.Common;
 
 namespace Domain.UserInput
 {
-    public class MediaField : Field
+    public class VideoField : Field
     {
         // Added by NG
         // Modified by EKT & NVZ & DM

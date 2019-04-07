@@ -14,6 +14,5 @@ namespace DAL.Data_Transfer_Objects
         public DateTime BirthDate { get; set; }
         public string OrgName { get; set; }
         public string Description { get; set; }
-
     }
 }

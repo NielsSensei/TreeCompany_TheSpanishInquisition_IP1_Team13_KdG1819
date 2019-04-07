@@ -18,6 +18,6 @@ namespace DAL.Data_Transfer_Objects
         public int LikeCount { get; set; }
         public int FbLikeCount { get; set; }
         public int TwitterLikeCount { get; set; }
-        public bool LikeVisibility { get; set; }
+        public int LikeVisibility { get; set; }
     }
 }

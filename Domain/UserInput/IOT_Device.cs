@@ -7,7 +7,7 @@ namespace Domain.UserInput
         // Added by NG
         // Modified by XV & NVZ & EKT & DM
         public int Id { get; set; }
-        public double LocationX { get; set; }
-        public double LocationY { get; set; }
+        public float LocationX { get; set; }
+        public float LocationY { get; set; }
     }
 }

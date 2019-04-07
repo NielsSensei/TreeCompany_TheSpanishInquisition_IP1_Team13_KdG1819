@@ -15,12 +15,6 @@ namespace Domain.Users
         public List<User> Owners { get; set; }
         public List<User> Users { get; set; }
 
-        //Added by NG
-        public Platform(int id)
-        {
-            Id = id;
-        }
-
         // Added by EKT
         // Modified by NVZ
         // Methods
