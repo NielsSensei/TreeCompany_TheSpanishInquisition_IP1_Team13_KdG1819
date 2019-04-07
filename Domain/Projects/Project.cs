@@ -8,35 +8,24 @@ namespace Domain.Projects
     public class Project
     {
         // Added by NG
-        // Modified by XV & NVZ
+        // Modified by XV & NVZ & EKT & DM
         public int Id { get; set; }
-
         public Platform Platform { get; set; }
-
-        public User User{ get; set; }
-
-        public List<User> PlatFormOwner { get; set; }
-        public List<Phase> Phases { get; set; }
-
-        public List<Image> PreviewImages { get; set; }
-
+        public User User { get; set; }
         public string Title { get; set; }
         public string Goal { get; set; }
-
         public string Status { get; set; }
-
         public bool Visible { get; set; }
-
         public int ReactionCount { get; set; }
         public int LikeCount { get; set; }
         public int FbLikeCount { get; set; }
         public int TwitterLikeCount { get; set; }
         public int LikeVisibility { get; set; }
-
-        public List<Module> Modules { get; set; }
-
         public Phase CurrentPhase { get; set; }
-   
+
+        public List<Phase> Phases { get; set; }
+        public List<Image> PreviewImages { get; set; }
+        public List<Module> Modules { get; set; }
 
         // Added by EKT
         // Modified by NVZ
@@ -57,7 +46,7 @@ namespace Domain.Projects
 
         public void CloseProject()
         {
-            Status = "Afgesloten";
+            Status = "AFGESLOTEN";
         }
 
         public void AddModule(Module module)

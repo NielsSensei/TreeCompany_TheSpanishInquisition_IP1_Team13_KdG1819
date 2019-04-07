@@ -8,18 +8,18 @@ namespace Domain.UserInput
         // Added by NG
         // Modified by XV, EKT & NVZ
         public int Id { get; set; }
-
-        public IdeationQuestion IdeationQuestion { get; set; }
+        public IdeationQuestion IdeaQuestion { get; set; }
         public User User { get; set; }
-
-
         public bool Reported { get; set; }
         public bool ReviewByAdmin { get; set; }
         public string Title { get; set; }
-
-
-        public List<Field> Fields { get; set; }
-        public List<Vote> Votes { get; set; }
+        public int RetweetCount { get; set; }
+        public int ShareCount { get; set; }
+        public bool Visible { get; set; }
+        public int VoteCount { get; set; }
+        public string Status { set; get; }
+        public Idea ParentIdea { get; set; }
+        public bool VerifiedUser { get; set; }
 
         // NOTES about boolean properties Reported & Visible.
         // 1. When an idea is reported it is still visible while the Moderation team takes its time to
@@ -31,25 +31,17 @@ namespace Domain.UserInput
         // be false and it will not be shown again on the Ideation until a Moderator reverts this.
         // At this time the User may be banned as well but that again is one of the responsibilities of
         // the Moderator and not of the system. Automatic bans will not be done.
+        // 4. An moderator is also allow to pass the review to an admin which in that case this 
+        // will become true as well but reported will become falls so another moderator does
+        // not accidentally fix this.
         // I wrote this so there will not be any confusion like I had before writing this - NVZ
 
-        public int RetweetCount { get; set; }
-        public int ShareCount { get; set; }
+        public Field Field { get; set; }
+        public ClosedField Cfield { get; set; }
+        public ImageField Ifield { get; set; }
+        public VideoField Vfield { get; set; }
+        public MapField Mfield { get; set; }
 
-        public bool Visible { get; set; }
-        public int VoteCount { get; set; }
-
-        public string Status { set; get; }
-
-        public Idea ParentIdea { get; set; }
-
-        public bool VerifiedUser { get; set; }
-
-        // NOTE about votes: As I noted in the User.cs file, Tree Company strives to keep voting as
-        // anonymous as possible. We just need the count for the project and thus we will not keep
-        // this property. I would love some feedback on this, thanks! - NVZ
-        // public ICollection<Vote> Votes { get; set; }
-       
         // Added by EKT
         // Modified by NVZ
         // Methods
@@ -73,8 +65,7 @@ namespace Domain.UserInput
                 Title = this.Title,
                 VoteCount = this.VoteCount,
                 User = this.User,
-                ParentIdea = this.ParentIdea,
-                Fields = this.Fields
+                ParentIdea = this.ParentIdea
             };
 
             return info;
@@ -84,12 +75,6 @@ namespace Domain.UserInput
         {
             VoteCount++;
         }
-
-        public void AddField(Field field)
-        {
-            Fields.Add(field);
-        }
-
         #endregion
     }
 }
