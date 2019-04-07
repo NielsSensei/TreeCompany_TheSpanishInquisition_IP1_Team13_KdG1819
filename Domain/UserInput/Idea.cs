@@ -48,6 +48,16 @@ namespace Domain.UserInput
 
         #region
 
+        public bool IsVeriefiedUser()
+        {
+            if (User.Role == Role.LOGGEDINVERIFIED)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public Idea GetIdeaInfo()
         {
             Idea info = new Idea()
