@@ -55,7 +55,7 @@ namespace DAL.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Relaties al gelegd
+            //Relaties al gelegd - SB
         }
 
         public DbSet<AnswersDTO> Answers { get; set; }
