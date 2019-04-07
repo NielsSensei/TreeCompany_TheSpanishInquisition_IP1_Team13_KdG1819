@@ -6,13 +6,11 @@ namespace Domain.Users
     public class Organisation : User
     {
         // Added by NG
-        // Modified by XV
+        // Modified by XV & NVZ & DM & EKT
         public string OrgName { get; set; }
-        public string OrgUrl { get; set; }
         public string Description { get; set; }
-
-        // Added by EKT
-        // Modified by NVZ
-        // Methods
+        
+        public List<Event> organisationEvents { get; set; }
+        public List<Ideation> Ideations { get; set; }
     }
 }

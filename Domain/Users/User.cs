@@ -7,7 +7,7 @@ namespace Domain.Users
     public class User
     {
         // Added by NG
-        // Modified by XV & NVZ
+        // Modified by XV & NVZ & EKT & DM
         public int Id { get; set; }
         public Platform Platform { get; set; }
         public string Name { get; set; }
@@ -16,12 +16,14 @@ namespace Domain.Users
         public string ZipCode { get; set; }
         public Role Role { get; set; }
         public bool Banned { get; set; }
-        public bool? Gender { get; set; }
         public bool Active { get; set; }
-        public DateTime? BirthDate { get; set; }
+        public byte Gender { get; set; }
+        public DateTime Birthdate { get; set; }
 
-        public List<Interaction> Interactions{ get; set; }
-            // Added by EKT
+        public List<Answer> Answers { get; set; }
+        public List<Idea> Ideas { get; set; }
+        
+        // Added by EKT
         // Modified by NVZ
         // Methods
 
@@ -34,9 +36,7 @@ namespace Domain.Users
                 Name = this.Name,
                 ZipCode = this.ZipCode,
                 Role = this.Role,
-                Banned = this.Banned,
-                Gender = this.Gender,
-                BirthDate = this.BirthDate
+                Banned = this.Banned
             };
             return info;
         }
