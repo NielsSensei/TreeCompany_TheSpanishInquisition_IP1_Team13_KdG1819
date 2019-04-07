@@ -15,7 +15,7 @@ namespace Domain.UserInput
         public IOT_Device Device{ get; set; }
 
         public List<string> Choices { get; set; }
-        
+
         // Added by EKT
         // Modified by NVZ
         // Methods

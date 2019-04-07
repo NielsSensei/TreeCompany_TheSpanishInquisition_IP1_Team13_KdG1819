@@ -258,6 +258,7 @@ namespace DAL.repos
             ctx.SaveChanges();
         }
 
+
         /* Ik heb momenteel de optie opengehouden zoals het zoals reddit te doen. https://imgur.com/a/oeLkyL2 zodat de Ide�n niet mee verwijderd worden.
          Een hard delete van de vraag en de hele "thread" zal waarschijnlijk ook nog kunnen, dat mag je veranderen naar bespreking met mij. -NVZ */
         public void Delete(int id)
