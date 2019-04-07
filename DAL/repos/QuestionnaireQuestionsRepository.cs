@@ -8,6 +8,7 @@ using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
+using Domain.Users;
 
 namespace DAL
 {
@@ -94,6 +95,34 @@ namespace DAL
                 AnswerID = answerID,
                 OptionID = optionID
             };
+        }
+
+        private OpenAnswer convertToDomain(AnswersDTO DTO)
+        {
+            return new OpenAnswer
+            {
+                Id = DTO.AnswerID,
+                User = new User { Id = DTO.UserID },
+                Question = new QuestionnaireQuestion { Id = DTO.qQuestionID },
+                IsUserEmail = DTO.AnswerText.Contains("@"),
+                AnswerText = DTO.AnswerText
+            };
+        }
+
+        private MultipleAnswer convertToDomain(AnswersDTO answersDTO, List<OptionsDTO> chosenOptionsDTO)
+        {
+            MultipleAnswer ma = null;
+            ma.Id = answersDTO.AnswerID;
+            ma.User = new User { Id = answersDTO.UserID };
+            ma.Question = new QuestionnaireQuestion { Id = answersDTO.qQuestionID };
+            ma.DropdownList = chosenOptionsDTO.Count == 1;
+
+            foreach(OptionsDTO DTO in chosenOptionsDTO)
+            {
+                ma.Choices.Add(DTO.OptionText);
+            }
+
+            return ma;
         }
         #endregion
 
@@ -198,17 +227,58 @@ namespace DAL
             return obj;
         }
 
-        //TODO: HEY DO ME PLS
-        public OpenAnswer Read(int questionID, int answerID)
+        
+        public OpenAnswer ReadOpenAnswer(int answerID, bool details)
         {
-            Answer a = Read(questionID).Answers.ToList().Find(an => an.Id == answerID);
-            if (a != null)
+            AnswersDTO answersDTO = null;
+
+            if (details)
             {
-                return a;
+                answersDTO = ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID);
+                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
             }
-            throw new KeyNotFoundException("This Answer can't be found!");
+            else
+            {
+                answersDTO = ctx.Answers.First(i => i.AnswerID == answerID);
+                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
+            }
+
+            return convertToDomain(answersDTO);
         }
-       
+
+        //TODO: HEY DO ME PLS
+        public MultipleAnswer ReadMultipleAnswer(int answerID, bool details)
+        {
+            AnswersDTO answersDTO = null;
+
+            if (details)
+            {
+                answersDTO = ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID);
+                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
+            }
+            else
+            {
+                answersDTO = ctx.Answers.First(i => i.AnswerID == answerID);
+                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
+            }
+
+            List<ChoicesDTO> choicesDTO = ctx.Choices.ToList().FindAll(c => c.AnswerID == answerID);
+            List<OptionsDTO> optionsDTO = ctx.Options.ToList().FindAll(o => o.qQuestionID == answersDTO.qQuestionID);
+            List<OptionsDTO> chosenOptionsDTO = new List<OptionsDTO>();
+
+            foreach(OptionsDTO DTO in optionsDTO)
+            {
+                ChoicesDTO choice = ctx.Choices.First(c => c.OptionID == DTO.OptionID);   
+                
+                if(choice.ChoiceID != null)
+                {
+                    chosenOptionsDTO.Add(DTO);
+                }
+            }
+
+            return convertToDomain(answersDTO, chosenOptionsDTO);
+        }
+
         public void Update(Answer obj)
         {
             //Delete(obj.questionID, obj.Id);
