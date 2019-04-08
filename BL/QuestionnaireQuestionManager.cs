@@ -128,12 +128,11 @@ namespace BL
         {
             throw new System.NotImplementedException("I might need this!");
         }
-        
+
         public IEnumerable<QuestionnaireQuestion> getAllByQuestionnaireId(int questionnaireId)
         {
             return questionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId);
         }
-        
         #endregion
 
 
