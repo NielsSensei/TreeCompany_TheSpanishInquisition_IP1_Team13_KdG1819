@@ -114,8 +114,6 @@ namespace DAL
         {
             return platformsOwners.FindAll(p => p.PlatformID == platformID);
         }
-
         #endregion
-
     }
 }

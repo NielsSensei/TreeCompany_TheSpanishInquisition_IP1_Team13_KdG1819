@@ -57,7 +57,7 @@ namespace DAL
         {
             return votes;
         }
-        
+
         public IEnumerable<Vote> ReadAll(int deviceID)
         {
             return votes.FindAll(vote => vote.deviceID == deviceID);
@@ -110,7 +110,7 @@ namespace DAL
             interactions.Add(obj);
             return obj;
         }
-        
+
         public void DeleteInteraction(int deviceID, int userID)
         {
             bool deleted = false;

@@ -61,7 +61,7 @@ namespace DAL
         {
             return Users;
         }
-        
+
         public IEnumerable<User> ReadAll(int platformID)
         {
             return Users.FindAll(u => u.platformID == platformID);

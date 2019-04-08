@@ -81,7 +81,7 @@ namespace DAL
         {
             return projects;
         }
-        
+
         public IEnumerable<Project> ReadAll(int platformID)
         {
             return ReadAll().ToList().FindAll(p => p.MyPlatformOwner == platformID);

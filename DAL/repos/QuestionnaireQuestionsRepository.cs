@@ -106,7 +106,7 @@ namespace DAL
         {
             return QuestionnaireQuestions;
         }
-        
+
         public IEnumerable<QuestionnaireQuestion> ReadAllByQuestionnaireId(int questionnaireId)
         {
             return QuestionnaireQuestions.Where(c => c.QuestionnaireId == questionnaireId).AsEnumerable();
