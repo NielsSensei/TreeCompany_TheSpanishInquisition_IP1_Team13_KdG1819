@@ -12,14 +12,14 @@ namespace DAL
 
         public IdeationVoteRepository()
         {
-            /*Seed seed = new Seed();  
+            Seed seed = new Seed();  
             devices.Add(seed.device);
             votes.Add(seed.vote1);
             votes.Add(seed.vote2);
             votes.Add(seed.vote3);
             interactions.Add(seed.iter1);
             interactions.Add(seed.iter2);
-            interactions.Add(seed.iter3);*/
+            interactions.Add(seed.iter3);
         }
         
         // Added by NVZ
@@ -57,11 +57,11 @@ namespace DAL
         {
             return votes;
         }
-        /*
+        
         public IEnumerable<Vote> ReadAll(int deviceID)
         {
             return votes.FindAll(vote => vote.deviceID == deviceID);
-        }*/
+        }
         #endregion
                
         
@@ -110,8 +110,7 @@ namespace DAL
             interactions.Add(obj);
             return obj;
         }
-
-        /*
+        
         public void DeleteInteraction(int deviceID, int userID)
         {
             bool deleted = false;
@@ -128,6 +127,6 @@ namespace DAL
         public IEnumerable<Interaction> ReadAllInteractions(int deviceID)
         {
             return interactions.FindAll(i => i.DeviceId == deviceID);
-        }*/
+        }
     }
 }

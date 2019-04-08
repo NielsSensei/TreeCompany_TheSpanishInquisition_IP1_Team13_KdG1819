@@ -5,7 +5,7 @@ using Domain.UserInput;
 
 namespace BL
 {
-    public class QuestionnaireQuestionManager
+    public class QuestionnaireQuestionManager : IQuestionManager<QuestionnaireQuestion>
     {
         // Added by NVZ
         private QuestionnaireQuestionsRepository questionnaireQuestionRepo { get; set; }
@@ -128,12 +128,12 @@ namespace BL
         {
             throw new System.NotImplementedException("I might need this!");
         }
-        /*
+        
         public IEnumerable<QuestionnaireQuestion> getAllByQuestionnaireId(int questionnaireId)
         {
             return questionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId);
         }
-        */
+        
         #endregion
 
 
