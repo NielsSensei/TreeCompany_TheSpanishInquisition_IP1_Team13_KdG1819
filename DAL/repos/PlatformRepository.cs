@@ -48,6 +48,27 @@ namespace DAL
         }
         #endregion
 
+        public void Update(Platform obj)
+        {
+            Delete(obj.Id);
+            Create(obj);
+        }
+
+        public void Delete(int id)
+        {
+            Platform p = Read(id);
+            if (p != null)
+            {
+                Platforms.Remove(p);
+            }
+        }
+
+        public IEnumerable<Platform> ReadAll()
+        {
+            return Platforms;
+        }
+        #endregion
+
         // Added by NVZ
         // Platform CRUD
         #region
@@ -115,5 +136,10 @@ namespace DAL
         }
         #endregion  
 
+        public IEnumerable<PlatformOwner> ReadAllOwners(int platformID)
+        {
+            return platformsOwners.FindAll(p => p.PlatformID == platformID);
+        }
+        #endregion
     }
 }
