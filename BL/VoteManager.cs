@@ -30,7 +30,7 @@ namespace BL
                 int dID = (int) deviceID;
                 
                 if (!locationCheck(dID, x, y)) { return false; }
-                //voteRepo.Create(new Interaction() {UserId = userID, DeviceId = dID});
+                voteRepo.Create(new Interaction() {UserId = userID, DeviceId = dID});
             }
             Vote obj = new Vote();
             obj.Id = feedbackID;

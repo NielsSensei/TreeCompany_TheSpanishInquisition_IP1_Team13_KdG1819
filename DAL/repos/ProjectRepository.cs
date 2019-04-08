@@ -21,12 +21,12 @@ namespace DAL
         // Modified by NVZ & XV
         public ProjectRepository()
         {
-            //Seed seed = new Seed();
-            //Phases = seed.Phases;
+            Seed seed = new Seed();
+            Phases = seed.Phases;
             projects = new List<Project>();
-            //projects.Add(seed.project);
+            projects.Add(seed.project);
             images = new List<Image>();
-            //images.AddRange(seed.project.PreviewImages);
+            images.AddRange(seed.project.PreviewImages);
             tags = new List<string>();
             foreach (Module module in projects[0].Modules)
             {
@@ -81,11 +81,11 @@ namespace DAL
         {
             return projects;
         }
-        /*
+        
         public IEnumerable<Project> ReadAll(int platformID)
         {
             return ReadAll().ToList().FindAll(p => p.MyPlatformOwner == platformID);
-        }*/
+        }
         #endregion        
         
         // Added by NVZ
