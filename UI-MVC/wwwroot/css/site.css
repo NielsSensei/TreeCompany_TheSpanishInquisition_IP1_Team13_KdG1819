@@ -1,10 +1,23 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿.test {
+    color: red;
 }
 
-.test {
-    color: red;
+.layoutTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Home/Index.cs/PlatformList layout*/
+.home-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column
+}
+
+.home-flex form {
+    width: 75%;
+    margin: 5px 0;
 }
 
 /* Wrapping element */
@@ -32,8 +45,6 @@
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
-    }
+
+    
 }
