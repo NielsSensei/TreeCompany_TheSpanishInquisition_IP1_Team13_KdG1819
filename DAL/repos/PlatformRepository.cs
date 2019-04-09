@@ -47,7 +47,7 @@ namespace DAL
             };
         }
         #endregion
-
+        /*
         public void Update(Platform obj)
         {
             Delete(obj.Id);
@@ -67,7 +67,7 @@ namespace DAL
         {
             return Platforms;
         }
-        #endregion
+        #endregion*/
 
         // Added by NVZ
         // Platform CRUD
@@ -108,7 +108,7 @@ namespace DAL
 
             return convertToDomain(platformDTO);
         }
-
+        
         public void Update(Platform obj)
         {
             PlatformsDTO newPlatform = convertToDTO(obj);
@@ -135,11 +135,11 @@ namespace DAL
             return myQuery;
         }
         #endregion  
-
+        /*
         public IEnumerable<PlatformOwner> ReadAllOwners(int platformID)
         {
             return platformsOwners.FindAll(p => p.PlatformID == platformID);
         }
-        #endregion
+        #endregion*/
     }
 }

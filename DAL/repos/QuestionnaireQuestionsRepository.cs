@@ -284,7 +284,7 @@ namespace DAL
             //Delete(obj.questionID, obj.Id);
             //Create(obj);
         }
-
+        /*
         public void Delete(int questionID, int answerID)
         {
             Answer a = Read(questionID, answerID);
@@ -298,7 +298,7 @@ namespace DAL
         public IEnumerable<Answer> ReadAll(int questionID)
         {
             return Read(questionID).Answers;
-        }
+        }*/
         #endregion
         
         
