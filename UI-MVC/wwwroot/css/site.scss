@@ -12,13 +12,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column
+    flex-direction: column;
+
+    form {
+        width: 75%;
+        * {
+            margin: 5px;
+        }
+    }
 }
 
-.home-flex form {
-    width: 75%;
-    margin: 5px 0;
-}
+
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
