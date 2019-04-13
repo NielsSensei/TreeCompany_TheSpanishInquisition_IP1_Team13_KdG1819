@@ -23,7 +23,7 @@
 }
 
 /* Login page*/
-.loginPage {
+.accountFormPage {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,6 +31,18 @@
 
     div {
         width: 300px;
+    }
+
+    h4 {
+        text-align: center;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    p {
+        text-align: center;
     }
 }
 
