@@ -42,6 +42,11 @@ namespace UIMVC
                 options.Password.RequireNonAlphanumeric = false;
             });
 
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
 
             // Configuring SendGrid email sender
             services.AddTransient<IEmailSender, EmailSender>();

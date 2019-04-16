@@ -7,6 +7,21 @@
     font-weight: bold;
 }
 
+/* SVG icons */
+.btn-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.svg-icon {
+    height: 1em;
+    width: 1em;
+    top: .125em;
+    position: relative;
+}
+
 /* Home/Index.cs/PlatformList layout*/
 .home-flex {
     display: flex;

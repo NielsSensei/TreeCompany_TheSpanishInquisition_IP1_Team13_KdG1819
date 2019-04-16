@@ -45,6 +45,20 @@
                     </div>
                 </form>
             </section>
+            <hr />
+            <div>
+                <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <div>
+                        <p>
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
+                                <button type="submit" class="btn btn-secondary btn-icon" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><img class="svg-icon" src="~/images/@(provider.DisplayName).svg"/>@provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            </div>
+            
         </div>
         @*
                 <div class="col-md-6 col-md-offset-2">
