@@ -9,17 +9,17 @@ namespace BL
     {
         // Added by NG
         // Modified by NVZ
-        private UserRepository userRepo { get; set; }
-        private PlatformManager platformMan { get; set; }
-        private ProjectManager projectMan { get; set; }       
+        private UserRepository UserRepo { get; set; }
+        private PlatformManager PlatformMan { get; set; }
+        private ProjectManager ProjectMan { get; set; }       
 
         // Added by NG
         // Modified by NVZ
         public UserManager()
         {
-            userRepo = new UserRepository();
-            platformMan = new PlatformManager();
-            projectMan = new ProjectManager();
+            UserRepo = new UserRepository();
+            PlatformMan = new PlatformManager();
+            ProjectMan = new ProjectManager();
         }
         
         // Added by NG
@@ -33,7 +33,7 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-       public void editUser(string propName, int userID)
+       public void ChangeUser(string propName, int userId)
        {
             throw new NotImplementedException("I might need this");
        }
@@ -44,17 +44,17 @@ namespace BL
         * it is Out of Scope. - NVZ
         * 
         */
-       public User getUser(int platformID, int userID, bool details)
+       public User GetUser(int platformId, int userId, bool details)
        {
            throw new NotImplementedException("I might need this");
        }
 
-       public List<User> getUsers(int platformID, Role? roleLevel, bool details)
+       public List<User> GetUsers(int platformId, Role? roleLevel, bool details)
        {
            throw new NotImplementedException("Out of Scope!");
        }
 
-       public void makeAnonymousUser(User user)
+       public void AddAnonymousUser(User user)
        {
            throw new NotImplementedException("Out of Scope!");
        } 
@@ -62,12 +62,12 @@ namespace BL
        /*
         * We might use this for initialisation - NVZ
         */
-       public void makeUser()
+       public void AddUser()
        {
            throw new NotImplementedException("I might need this");
        }
 
-       public void removeUser(int id)
+       public void RemoveUser(int id)
        {
            throw new NotImplementedException("Out of Scope!");
        }
@@ -78,22 +78,22 @@ namespace BL
         // Modified by NVZ
         //Event 
        #region
-       public void editOrgEvent(int userID, int eventID)
+       public void ChangeOrgEvent(int userId, int eventId)
        {
            throw new NotImplementedException("Out of Scope!");
        }
         
-       public Event getEvent(int eventID)
+       public Event GetEvent(int eventId)
        {
            throw new NotImplementedException("Out of Scope!");
        }
 
-       public void makeEvent(int userID, Event orgEvent)
+       public void AddEvent(int userId, Event orgEvent)
        {
            throw new NotImplementedException("Out of Scope!");
        }
 
-       public void removeOrgEvent(int id, int userID)
+       public void RemoveOrgEvent(int id, int userId)
        {
            throw new NotImplementedException("Out of Scope!");
        }
@@ -103,7 +103,7 @@ namespace BL
         // Modified by NVZ
         //Organisation 
        #region
-       public void makeOrganisation(int userID)
+       public void AddOrganisation(int userId)
        {
            throw new NotImplementedException("Out of Scope!");
        }       
@@ -112,7 +112,7 @@ namespace BL
         // Added by NVZ
         // Other Methods
         #region 
-        private void enactPromotion(User toPromote, User enactor, Role newRole)
+        private void EnactPromotion(User toPromote, User enactor, Role newRole)
         {
             throw new NotImplementedException("Out of scope!");
         }
@@ -128,7 +128,7 @@ namespace BL
          * - NVZ
          * 
          */
-        private Role verifyAction(String actionName)
+        private Role VerifyAction(String actionName)
         {
            throw new NotImplementedException("I might need this!"); 
         }
@@ -142,7 +142,7 @@ namespace BL
          * - NVZ
          * 
          */
-        private bool verifyPermission(User user, Role roleLevel)
+        private bool VerifyPermission(User user, Role roleLevel)
         {
             throw new NotImplementedException("I might need this!"); 
         }
@@ -159,7 +159,7 @@ namespace BL
          * if we have the time I'll explain why. - NVZ
          * 
          */
-        public void handleUserAction(int userID, string actionName)
+        public void HandleUserAction(int userId, string actionName)
         {
             throw new NotImplementedException("I need this!");
         }

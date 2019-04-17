@@ -9,30 +9,32 @@ namespace BL
     {
         // Added by NG
         // Modified by NVZ
-        private PlatformRepository platformRep { get; set; }
+        private PlatformRepository PlatformRepo { get; set; }
+        private UserManager UserMan { get; set; }
         
         // Added by NG
         // Modified by NVZ
         public PlatformManager()
         {
-            platformRep = new PlatformRepository();
+            PlatformRepo = new PlatformRepository();
+            UserMan = new UserManager();
         }
         
         // Added by NG
         // Modified by NVZ
         //Platform 
         #region   
-        public Platform getPlatform(int id)
+        public Platform GetPlatform(int platformId)
         {
             throw new NotImplementedException("Out of scope!");
         }
         
-        public void makePlatform()
+        public void AddPlatform()
         {
             throw new NotImplementedException("Out of scope!");
         }
 
-        public void removePlatform(int id)
+        public void RemovePlatform(int platformId)
         {
             throw new NotImplementedException("Out of scope!");
         }
@@ -42,44 +44,40 @@ namespace BL
         // Modified by NVZ
         //PlatformOwner
         #region
-        public void addOwner(int platformID, User Owner)
+        public void AddOwner(int platformId, int userId)
+        {
+            var newOwner = UserMan.GetUser(platformId, userId, true);
+            PlatformRepo.Read(platformId,false).Owners.Add(newOwner);
+        }
+        
+        public User GetPlatformOwner(int userId)
         {
             throw new NotImplementedException("Out of scope!");
         }
         
-        public PlatformOwner getPlatformOwner(int id)
-        {
-            throw new NotImplementedException("Out of scope!");
-        }
-        
-        public void removePlatformOwner(int id)
+        public void removePlatformOwner(int userId)
         {
             throw new NotImplementedException("Out of scope!");
         }
 
-        public List<PlatformOwner> getOwners(int platformID)
+        public List<User> GetAllPlatformOwners(int platformId)
         {
-            throw new NotImplementedException("Out of scope!");
+            return PlatformRepo.Read(platformId, true).Owners;
         }
         #endregion
         
         // Added by NVZ
         // Other Methods
         #region
-        private PlatformOwner parseUserToOwner(User owner)
-        {
-            throw new NotImplementedException("Out of scope!");
-        }
-
         /*
          * We might use this for initialisation. - NVZ
          */
-        public void addUserToPlatform(int platformID, User user)
+        public void AdUserToPlatform(int platformId, User user)
         {
             throw new NotImplementedException("I might need this!");
         }
 
-        public void editUserFromPlatform(int platformID, User user)
+        public void ChangeUserFromPlatform(int platformId, User user)
         {
             throw new NotImplementedException("Out of scope!");
         }     

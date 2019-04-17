@@ -10,15 +10,15 @@ namespace BL
     {
         // Added by NG
         // Modified by NVZ
-        private ProjectRepository projectRepo { get; set; }
-        private ModuleManager moduleMan { get; set; }
+        private ProjectRepository ProjectRepo { get; set; }
+        private ModuleManager ModuleMan { get; set; }
 
         // Added by NG
         // Modified by NVZ
         public ProjectManager()
         {
-            projectRepo = new ProjectRepository();
-            moduleMan = new ModuleManager();
+            ProjectRepo = new ProjectRepository();
+            ModuleMan = new ModuleManager();
         }
         
         // Added by NG
@@ -31,17 +31,17 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void editProject(string propName, int projectID)
+        public void ChangeProject(Project project)
         {
-            throw new NotImplementedException("I might need this!");
+            ProjectRepo.Update(project);
         }
         
         /*
          * Simple getter to get information about our Project. - NVZ
          */
-        public Project getProject(int id, bool details)
+        public Project GetProject(int projectId, bool details)
         {
-            return projectRepo.Read(1);
+            return ProjectRepo.Read(projectId,details);
             
             // throw new NotImplementedException("I might need this!");
         }
@@ -49,14 +49,14 @@ namespace BL
         /*
          * Might need this for initialisation. - NVZ
          */
-        public void CreateProject()
+        public void AddProject(Project project)
         {
-            throw new NotImplementedException("I might need this!");
+            ProjectRepo.Create(project);
         }
 
-        public void DeleteProject(int id)
+        public void RemoveProject(int projectId)
         {
-            throw new NotImplementedException("Out of Scope!");
+            ProjectRepo.Delete(projectId);
         }       
         #endregion
         
@@ -70,21 +70,21 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void editPhase(string propName, int projectID, int phaseID)
+        public void ChangePhase(Phase phase)
         {
-            throw new NotImplementedException("I might need this!");
+            ProjectRepo.Update(phase);
         }
         
         /*
          * Might need this for initialisation - NVZ
          * 
          */
-        public void makePhase(Phase newPhase, int projectID)
+        public void AddPhase(Phase newPhase, int projectId)
         {
             throw new NotImplementedException("I might need this!");
         }
 
-        public void removePhase(int id, int projectID)
+        public void RemovePhase(int phaseId, int projectId)
         {
             throw new NotImplementedException("Out of Scope!");
         }      
@@ -93,7 +93,7 @@ namespace BL
         // Added by NVZ
         // Other Methods
         #region
-        private bool verifyProjectEditable(int projectID)
+        private bool VerifyProjectEditable(int projectId)
         {
             throw new NotImplementedException("Out of scope!");
         }
@@ -101,7 +101,7 @@ namespace BL
         /*
          *  In case we want to show the projectpage for the POC. -NVZ
          */
-        public List<Module> getModules(int projectID, bool details)
+        public List<Module> GetModules(int projectId, bool details)
         {
             throw new NotImplementedException("I might need this!");
         }
@@ -118,7 +118,7 @@ namespace BL
          * if we have the time I'll explain why. - NVZ
          * 
          */
-        public void handleProjectAction(int projectID, string actionName)
+        public void HandleProjectAction(int projectId, string actionName)
         {
             throw new NotImplementedException("I need this!");
         }
