@@ -42,6 +42,7 @@ namespace UIMVC
                 options.Password.RequireNonAlphanumeric = false;
             });
 
+
             services.AddAuthentication().AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
@@ -64,7 +65,8 @@ namespace UIMVC
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                // app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 

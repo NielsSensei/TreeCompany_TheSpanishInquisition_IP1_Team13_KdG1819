@@ -7,6 +7,19 @@
     font-weight: bold;
 }
 
+/* ErrorPage */
+.errorPage {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    img {
+        width: 100%
+    }
+}
+
 /* SVG icons */
 .btn-icon {
     display: flex;
