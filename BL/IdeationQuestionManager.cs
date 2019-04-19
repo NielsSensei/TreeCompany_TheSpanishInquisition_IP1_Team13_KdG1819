@@ -77,7 +77,7 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void ChangeFeedback(string propName, int feedbackId, int questionId)
+        public void ChangeIdea(string propName, int ideaId, int questionId)
         {
             throw new NotImplementedException("I might need this!");
         }
@@ -85,11 +85,9 @@ namespace BL
         /*
          * Getter for all Ideas on an Ideation. - NVZ
          */
-        public List<Idea> GetFeedback(int questionId, bool details)
+        public List<Idea> GetIdeas(int questionId)
         {
-            var ideationQuestion = GetQuestion(questionId, details);
-            var feedbacksList = ideationQuestion.Ideas;
-            return feedbacksList;
+            return IdeationQuestionRepo.ReadAllIdeas().ToList();
         }
 
         /*
@@ -97,9 +95,10 @@ namespace BL
          * moduling process but it is needed. - NVZ
          */
         // Modified by EKT
-        public void AddFeedback(int feedbackId, int questionId, int? parentId)
+        public void AddIdea(int questionId, Idea idea)
         {
             throw new NotImplementedException();
+            
         }
 
         #endregion

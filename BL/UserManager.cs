@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Domain.Users;
 using DAL;
 
@@ -33,9 +34,9 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-       public void ChangeUser(string propName, int userId)
+       public void ChangeUser(User user)
        {
-            throw new NotImplementedException("I might need this");
+            UserRepo.Update(user);
        }
        
        /*
@@ -44,14 +45,24 @@ namespace BL
         * it is Out of Scope. - NVZ
         * 
         */
-       public User GetUser(int platformId, int userId, bool details)
+       public User GetUser(int userId, bool details)
        {
-           throw new NotImplementedException("I might need this");
+           return UserRepo.Read(userId, details);
        }
 
-       public List<User> GetUsers(int platformId, Role? roleLevel, bool details)
+       public List<User> GetUsers(int platformId, Role? roleLevel)
        {
-           throw new NotImplementedException("Out of Scope!");
+           var userList = UserRepo.ReadAll(platformId).ToList();
+           if (roleLevel == null) return userList;
+           var filteredUserList = new List<User>();
+           foreach (var user in userList)
+           {
+               if(user.Role.Equals(roleLevel))
+                   filteredUserList.Add(user);
+           }
+
+           return filteredUserList;
+
        }
 
        public void AddAnonymousUser(User user)
@@ -62,12 +73,13 @@ namespace BL
        /*
         * We might use this for initialisation - NVZ
         */
-       public void AddUser()
+       public void AddUser(User user)
        {
-           throw new NotImplementedException("I might need this");
+           UserRepo.Create(user);
+           PlatformMan.AddUserToPlatform(user.Platform.Id, user);
        }
 
-       public void RemoveUser(int id)
+       public void RemoveUser(int userId)
        {
            throw new NotImplementedException("Out of Scope!");
        }
@@ -81,11 +93,12 @@ namespace BL
        public void ChangeOrgEvent(int userId, int eventId)
        {
            throw new NotImplementedException("Out of Scope!");
+           
        }
         
        public Event GetEvent(int eventId)
        {
-           throw new NotImplementedException("Out of Scope!");
+           return UserRepo.ReadUserEvent(eventId, true);
        }
 
        public void AddEvent(int userId, Event orgEvent)
@@ -93,9 +106,9 @@ namespace BL
            throw new NotImplementedException("Out of Scope!");
        }
 
-       public void RemoveOrgEvent(int id, int userId)
+       public void RemoveOrgEvent(int userId, int eventId)
        {
-           throw new NotImplementedException("Out of Scope!");
+           UserRepo.DeleteUserEvent(userId, eventId);
        }
        #endregion
        
@@ -106,7 +119,12 @@ namespace BL
        public void AddOrganisation(int userId)
        {
            throw new NotImplementedException("Out of Scope!");
-       }       
+       }
+
+       public User GetOrganisation(int userId)
+       {
+           return UserRepo.ReadOrganisation(userId);
+       }
        #endregion
         
         // Added by NVZ

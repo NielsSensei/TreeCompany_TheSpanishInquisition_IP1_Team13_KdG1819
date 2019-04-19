@@ -42,8 +42,6 @@ namespace BL
         public Project GetProject(int projectId, bool details)
         {
             return ProjectRepo.Read(projectId,details);
-            
-            // throw new NotImplementedException("I might need this!");
         }
 
         /*

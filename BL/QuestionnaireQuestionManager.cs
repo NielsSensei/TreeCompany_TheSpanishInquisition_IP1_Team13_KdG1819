@@ -27,7 +27,7 @@ namespace BL
         */
         public void ChangeQuestion(QuestionnaireQuestion question)
         {
-            throw new NotImplementedException("I might need this!");
+            QuestionnaireQuestionRepo.Update(question);
         }
         
         /*
@@ -36,7 +36,7 @@ namespace BL
          */
         public QuestionnaireQuestion GetQuestion(int questionId, bool details)
         {
-            throw new NotImplementedException("I might need this!");
+            return QuestionnaireQuestionRepo.Read(questionId, details);
         }
         
         /*
@@ -68,7 +68,7 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void ChangeFeedback(string propName, int feedbackId, int questionId)
+        public void ChangeAnswer(string propName, int answerId, int questionId)
         {
             throw new NotImplementedException("I might need this!");
         }
@@ -76,7 +76,7 @@ namespace BL
         /*
          * This getter is good to show the result. - NVZ
          */
-        public List<object> GetFeedback(int questionId, bool details)
+        public List<Answer> GetAnswers(int questionId, bool details)
         {
             throw new NotImplementedException("I might need this!");
         }
@@ -85,7 +85,7 @@ namespace BL
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ
          */
-        public void AddFeedback(Object feedback, int moduleId, int questionId)
+        public void AddAnswer(Answer answer, int moduleId, int questionId)
         {
             throw new NotImplementedException("I need this!");
         }

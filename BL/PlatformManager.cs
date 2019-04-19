@@ -26,17 +26,18 @@ namespace BL
         #region   
         public Platform GetPlatform(int platformId)
         {
-            throw new NotImplementedException("Out of scope!");
+            return PlatformRepo.Read(platformId, true);
         }
         
-        public void AddPlatform()
+        public void AddPlatform(Platform platform)
         {
-            throw new NotImplementedException("Out of scope!");
+            PlatformRepo.Create(platform);
         }
 
         public void RemovePlatform(int platformId)
         {
             throw new NotImplementedException("Out of scope!");
+//            PlatformRepo.Delete(platformId);
         }
         #endregion
         
@@ -46,23 +47,25 @@ namespace BL
         #region
         public void AddOwner(int platformId, int userId)
         {
-            var newOwner = UserMan.GetUser(platformId, userId, true);
+            var newOwner = UserMan.GetUser(userId, true);
             PlatformRepo.Read(platformId,false).Owners.Add(newOwner);
         }
         
-        public User GetPlatformOwner(int userId)
+        public User GetPlatformOwner(int platformId, int userId)
         {
             throw new NotImplementedException("Out of scope!");
         }
         
-        public void removePlatformOwner(int userId)
+        public void RemovePlatformOwner(int platformId, int userId)
         {
-            throw new NotImplementedException("Out of scope!");
+            var alteredPlatform = PlatformRepo.Read(platformId, true);
+            var removedOwner = UserMan.GetUser(userId, true);
+            alteredPlatform.Owners.Remove(removedOwner);
         }
 
         public List<User> GetAllPlatformOwners(int platformId)
         {
-            return PlatformRepo.Read(platformId, true).Owners;
+            return PlatformRepo.Read(platformId, false).Owners;
         }
         #endregion
         
@@ -72,15 +75,29 @@ namespace BL
         /*
          * We might use this for initialisation. - NVZ
          */
-        public void AdUserToPlatform(int platformId, User user)
+        public void AddUserToPlatform(int platformId, User user)
         {
             throw new NotImplementedException("I might need this!");
+//            var alteredPlatform = PlatformRepo.Read(platformId, true);
+//            alteredPlatform.AddUser(user);
+//            PlatformRepo.Update(alteredPlatform);
         }
 
-        public void ChangeUserFromPlatform(int platformId, User user)
+        public void ChangeUserFromPlatform(int newPlatformId, User user)
         {
             throw new NotImplementedException("Out of scope!");
-        }     
+//            var currentPlatform = PlatformRepo.Read(user.Platform.Id, false);
+//            currentPlatform.Users.Remove(user);
+//            PlatformRepo.Update(currentPlatform);
+//            var newPlatform = PlatformRepo.Read(newPlatformId, false);
+//            newPlatform.AddUser(user);
+//            PlatformRepo.Update(newPlatform);
+        }
+
+        public void RemoveUserFromPlatform(int platformId, int userId)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

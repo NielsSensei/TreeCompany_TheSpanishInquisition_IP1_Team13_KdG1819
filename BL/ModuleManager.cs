@@ -12,7 +12,7 @@ namespace BL
         // Modified by NVZ
         private IdeationRepository IdeationRepo { get; set; }
         private QuestionnaireRepository QuestionnaireRepo { get; set; }
-        private ProjectRepository ProjectRepo { get; set; }        //for linking a module to its project
+        private ProjectManager ProjectMan { get; set; }        //for linking a module to its project
         private IQuestionManager<QuestionnaireQuestion> QuestionaireQuestionMan { get; set; }
         private IQuestionManager<IdeationQuestion> IdeationQuestionMan { get; set; }
 
@@ -51,15 +51,18 @@ namespace BL
         //Modified by NG
         public void AddModule(Module module, int projectId, bool questionnaire)
         {
+            var alteredProject = ProjectMan.GetProject(projectId, true);
             if (questionnaire)
             {
                 Questionnaire newQuestionnaire = (Questionnaire) module;
-                ProjectRepo.Read(module.Id, false).Modules.Add(newQuestionnaire);
+                alteredProject.Modules.Add(newQuestionnaire);
+                ProjectMan.ChangeProject(alteredProject);
             }
             else
             {
                 Ideation newIdeation = (Ideation) module;
-                ProjectRepo.Read(module.Id, false).Modules.Add(newIdeation);
+                alteredProject.Modules.Add(newIdeation);
+                ProjectMan.ChangeProject(alteredProject);
             }
         }
         
@@ -80,7 +83,18 @@ namespace BL
 
         public void RemoveModule(int moduleId, int projectId, bool questionnaire)
         {
-            throw new NotImplementedException("Out of Scope!");
+            if (questionnaire)
+            {
+                var removedQuestionnaire = QuestionnaireRepo.Read(moduleId, true);
+                ProjectMan.GetProject(projectId, false).Modules.Remove(removedQuestionnaire);
+                QuestionnaireRepo.Delete(moduleId);    
+            }
+            else
+            {
+                var removedIdeation = IdeationRepo.Read(moduleId, true);
+                ProjectMan.GetProject(projectId, false).Modules.Remove(removedIdeation);
+                IdeationRepo.Delete(moduleId);
+            }
         }
         #endregion
         
