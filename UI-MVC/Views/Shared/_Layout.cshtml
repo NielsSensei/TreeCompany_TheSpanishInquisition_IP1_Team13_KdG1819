@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - UI_MVC</title>
 
+    @RenderSection("CssTags", required: false)
+
     <script type="module" src="~/dist/site.entry.js" defer></script>
     <link rel="stylesheet" href="~/dist/site.css">
 </head>
@@ -13,7 +15,7 @@
         <div class="container">
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item layouttitle"><a class="nav-link test" asp-area="" asp-controller="Home" asp-action="Index">City of Ideas</a></li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
