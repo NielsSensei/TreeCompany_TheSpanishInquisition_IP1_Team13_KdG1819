@@ -47,6 +47,7 @@ namespace BL
             throw new NotImplementedException("Out of scope!");
         }
         
+        
         public PlatformOwner getPlatformOwner(int id)
         {
             throw new NotImplementedException("Out of scope!");
@@ -61,6 +62,7 @@ namespace BL
         {
             throw new NotImplementedException("Out of scope!");
         }
+        
         #endregion
         
         // Added by NVZ
@@ -70,6 +72,7 @@ namespace BL
         {
             throw new NotImplementedException("Out of scope!");
         }
+        
 
         /*
          * We might use this for initialisation. - NVZ
