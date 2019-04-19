@@ -1,8 +1,8 @@
 ﻿TODO
-Redirect maken naar confirm email page na register
+Redirect maken naar confirm email page na register DONE
 Button style verduidelijken
 Google Authentication automatisch forwarden
-EMail confirmed -> redirect na login (na 10s)
+EMail confirmed -> redirect na login (na 10s) DONE
 	JS
 	Countdown timer
 
