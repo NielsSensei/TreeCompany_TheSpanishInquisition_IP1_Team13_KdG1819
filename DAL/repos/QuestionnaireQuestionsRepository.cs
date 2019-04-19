@@ -246,7 +246,6 @@ namespace DAL
             return convertToDomain(answersDTO);
         }
 
-        //TODO: HEY DO ME PLS
         public MultipleAnswer ReadMultipleAnswer(int answerID, bool details)
         {
             AnswersDTO answersDTO = null;
@@ -279,29 +278,35 @@ namespace DAL
             return convertToDomain(answersDTO, chosenOptionsDTO);
         }
 
-        public void Update(Answer obj)
-        {
-            //Delete(obj.questionID, obj.Id);
-            //Create(obj);
-        }
-        /*
-        public void Delete(int questionID, int answerID)
-        {
-            Answer a = Read(questionID, answerID);
-            if (a != null)
-            {
-                answers.Remove(a);
-                Read(questionID).Answers.Remove(a);
-            }
-        }
+        /* Eens de questionnaire is ingevuld door de gebruiker is em ingevuld. Ik denk niet dat er enkel nut is van het te veranderen of te verwijderen.
+         * Dit is nog altijd open tot discussie of course. -NVZ
+         * 
+         * public void Update(Answer obj)
+         * public void Delete(int questionID, int answerID)
+         * 
+        */
         
         public IEnumerable<Answer> ReadAll(int questionID)
         {
-            return Read(questionID).Answers;
-        }*/
+            IEnumerable<Answer> myQuery = new List<Answer>();
+
+            foreach (AnswersDTO DTO in ctx.Answers.ToList().FindAll(a => a.qQuestionID == questionID))
+            {
+                if(ctx.Choices.Where(c => c.AnswerID == DTO.AnswerID).Count() == 0)
+                {
+                    myQuery.Append(convertToDomain(DTO));
+                }
+                else
+                {
+                    myQuery.Append(ReadMultipleAnswer(DTO.AnswerID, false));
+                }
+            }
+
+            return myQuery;
+        }
         #endregion
-        
-        
+
+
         // Added by NVZ
         // Options CRUD
         #region

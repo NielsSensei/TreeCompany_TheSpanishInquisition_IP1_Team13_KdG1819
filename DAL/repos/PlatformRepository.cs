@@ -47,27 +47,6 @@ namespace DAL
             };
         }
         #endregion
-        /*
-        public void Update(Platform obj)
-        {
-            Delete(obj.Id);
-            Create(obj);
-        }
-
-        public void Delete(int id)
-        {
-            Platform p = Read(id);
-            if (p != null)
-            {
-                Platforms.Remove(p);
-            }
-        }
-
-        public IEnumerable<Platform> ReadAll()
-        {
-            return Platforms;
-        }
-        #endregion*/
 
         // Added by NVZ
         // Platform CRUD
@@ -80,7 +59,7 @@ namespace DAL
             {
                 if (ExtensionMethods.HasMatchingWords(p.Name, obj.Name) > 0)
                 {
-                    throw new DuplicateNameException("Platform(ID=" + obj.Id + ") met naam " + obj.Name +" heeft dezelfde naam als Platform(ID=" + p.Id + 
+                    throw new DuplicateNameException("Platform(ID=" + obj.Id + ") met naam " + obj.Name + " heeft dezelfde naam als Platform(ID=" + p.Id +
                         " met naam " + p.Name);
                 }
             }
@@ -108,7 +87,7 @@ namespace DAL
 
             return convertToDomain(platformDTO);
         }
-        
+
         public void Update(Platform obj)
         {
             PlatformsDTO newPlatform = convertToDTO(obj);
@@ -122,7 +101,7 @@ namespace DAL
             ctx.Platforms.Remove(convertToDTO(Read(id, false)));
             ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Platform> ReadAll()
         {
             IEnumerable<Platform> myQuery = new List<Platform>();
@@ -134,12 +113,6 @@ namespace DAL
 
             return myQuery;
         }
-        #endregion  
-        /*
-        public IEnumerable<PlatformOwner> ReadAllOwners(int platformID)
-        {
-            return platformsOwners.FindAll(p => p.PlatformID == platformID);
-        }
-        #endregion*/
+        #endregion 
     }
 }
