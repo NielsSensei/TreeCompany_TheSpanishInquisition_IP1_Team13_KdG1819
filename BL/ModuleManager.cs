@@ -56,13 +56,13 @@ namespace BL
             {
                 Questionnaire newQuestionnaire = (Questionnaire) module;
                 alteredProject.Modules.Add(newQuestionnaire);
-                ProjectMan.ChangeProject(alteredProject);
+                ProjectMan.EditProject(alteredProject);
             }
             else
             {
                 Ideation newIdeation = (Ideation) module;
                 alteredProject.Modules.Add(newIdeation);
-                ProjectMan.ChangeProject(alteredProject);
+                ProjectMan.EditProject(alteredProject);
             }
         }
         

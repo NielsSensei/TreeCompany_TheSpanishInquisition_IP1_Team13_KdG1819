@@ -21,7 +21,7 @@ namespace DAL
         // Added by NVZ
         // Standard Methods
         #region
-        private VotesDTO convertToDTO(Vote obj)
+        private VotesDTO ConvertToDTO(Vote obj)
         {
             return new VotesDTO
             {
@@ -36,7 +36,7 @@ namespace DAL
             };
         }    
 
-        private Vote convertToDomain(VotesDTO DTO)
+        private Vote ConvertToDomain(VotesDTO DTO)
         {
             return new Vote
             {
@@ -50,7 +50,7 @@ namespace DAL
             };
         }
 
-        private DevicesDTO convertToDTO(IOT_Device obj)
+        private DevicesDTO ConvertToDTO(IOT_Device obj)
         {
             return new DevicesDTO
             {
@@ -60,7 +60,7 @@ namespace DAL
             };
         }
 
-        private IOT_Device convertToDomain(DevicesDTO DTO)
+        private IOT_Device ConvertToDomain(DevicesDTO DTO)
         {
             return new IOT_Device
             {
@@ -87,7 +87,7 @@ namespace DAL
                 }
             }
 
-            ctx.Votes.Add(convertToDTO(obj));
+            ctx.Votes.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -108,20 +108,20 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(voteDTO, "Vote", voteDTO.VoteID);
             }
 
-            return convertToDomain(voteDTO);
+            return ConvertToDomain(voteDTO);
         }
         
         public void Update(Vote obj)
         {
-            VotesDTO newVote = convertToDTO(obj);
-            VotesDTO foundVote = convertToDTO(Read(obj.Id, false));
+            VotesDTO newVote = ConvertToDTO(obj);
+            VotesDTO foundVote = ConvertToDTO(Read(obj.Id, false));
             foundVote = newVote;
             ctx.SaveChanges();
         }
         
         public void Delete(int id)
         {
-            ctx.Votes.Remove(convertToDTO(Read(id, false)));
+            ctx.Votes.Remove(ConvertToDTO(Read(id, false)));
             ctx.SaveChanges();
         }
         
@@ -131,7 +131,7 @@ namespace DAL
 
             foreach (VotesDTO DTO in ctx.Votes)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -160,7 +160,7 @@ namespace DAL
                 }
             }
 
-            ctx.Devices.Add(convertToDTO(obj));
+            ctx.Devices.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -181,20 +181,20 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
             }
 
-            return convertToDomain(deviceDTO);
+            return ConvertToDomain(deviceDTO);
         }
 
         public void Update(IOT_Device obj)
         {
-            DevicesDTO newDevice = convertToDTO(obj);
-            DevicesDTO foundDevice = convertToDTO(ReadDevice(obj.Id, false));
+            DevicesDTO newDevice = ConvertToDTO(obj);
+            DevicesDTO foundDevice = ConvertToDTO(ReadDevice(obj.Id, false));
             foundDevice = newDevice;
             ctx.SaveChanges();
         }
 
         public void DeleteDevice(int id)
         {
-            ctx.Devices.Remove(convertToDTO(ReadDevice(id, false)));
+            ctx.Devices.Remove(ConvertToDTO(ReadDevice(id, false)));
             ctx.SaveChanges();
         }
 
@@ -204,7 +204,7 @@ namespace DAL
 
             foreach (DevicesDTO DTO in ctx.Devices)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;

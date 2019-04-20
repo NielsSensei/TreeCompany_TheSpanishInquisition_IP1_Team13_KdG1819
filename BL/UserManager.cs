@@ -74,7 +74,7 @@ namespace BL
        public void MakeUser(User user)
        {
            UserRepo.Create(user);
-           PlatformMan.AddUserToPlatform(user.Platform.Id, user);
+           PlatformMan.MakeUserToPlatform(user.Platform.Id, user);
        }
 
        public void RemoveUser(int userId)
@@ -85,7 +85,7 @@ namespace BL
            if (platformOwners.Contains(removedUser))
                alteredPlatform.Owners.Remove(removedUser);
            alteredPlatform.Users.Remove(removedUser);
-           PlatformMan.ChangePlatform(alteredPlatform);
+           PlatformMan.EditPlatform(alteredPlatform);
            UserRepo.Delete(userId);
        }
 
@@ -129,7 +129,7 @@ namespace BL
        public void MakeOrganisation(Organisation organisation)
        {
            UserRepo.Create(organisation);
-           PlatformMan.AddUserToPlatform(organisation.Platform.Id,organisation);
+           PlatformMan.MakeUserToPlatform(organisation.Platform.Id,organisation);
        }
 
        public User GetOrganisation(int userId)

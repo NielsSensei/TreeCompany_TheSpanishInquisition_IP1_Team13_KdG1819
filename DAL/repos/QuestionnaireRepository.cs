@@ -26,7 +26,7 @@ namespace DAL
         // Added by NVZ
         // Standard Methods
         #region
-        private ModulesDTO convertToDTO(Questionnaire obj)
+        private ModulesDTO ConvertToDTO(Questionnaire obj)
         {
             return new ModulesDTO
             {
@@ -44,7 +44,7 @@ namespace DAL
             };
         }
 
-        private Questionnaire convertToDomain(ModulesDTO module)
+        private Questionnaire ConvertToDomain(ModulesDTO module)
         {
             return new Questionnaire
             {
@@ -78,7 +78,7 @@ namespace DAL
                 }
             }
 
-            ctx.Modules.Add(convertToDTO(obj));
+            ctx.Modules.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -99,13 +99,13 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(moduleDTO, "Questionnaire", moduleDTO.ModuleID);
             }
 
-            return convertToDomain(moduleDTO);
+            return ConvertToDomain(moduleDTO);
         }
 
         public void Update(Questionnaire obj)
         {
-            ModulesDTO newModule = convertToDTO(obj);
-            ModulesDTO foundModule = convertToDTO(Read(obj.Id,false));
+            ModulesDTO newModule = ConvertToDTO(obj);
+            ModulesDTO foundModule = ConvertToDTO(Read(obj.Id,false));
             foundModule = newModule;
 
             ctx.SaveChanges();
@@ -113,7 +113,7 @@ namespace DAL
 
         public void Delete(int id)
         {
-            ctx.Modules.Remove(convertToDTO(Read(id, false)));
+            ctx.Modules.Remove(ConvertToDTO(Read(id, false)));
             ctx.SaveChanges();
         }
         
@@ -123,7 +123,7 @@ namespace DAL
 
             foreach (ModulesDTO DTO in ctx.Modules)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -137,9 +137,9 @@ namespace DAL
 
         // Added by NVZ
         #region
-        public string createTag(string obj, int moduleID)
+        public string CreateTag(string obj, int moduleID)
         {
-            ModulesDTO module = convertToDTO(Read(moduleID, false));
+            ModulesDTO module = ConvertToDTO(Read(moduleID, false));
             module.Tags += "," + obj;
             ctx.SaveChanges();
 
@@ -149,7 +149,7 @@ namespace DAL
         public void DeleteTag(int moduleID, int tagID)
         {
             List<String> keptTags = new List<string>();
-            ModulesDTO module = convertToDTO(Read(moduleID, false));
+            ModulesDTO module = ConvertToDTO(Read(moduleID, false));
             keptTags = ExtensionMethods.StringToList(module.Tags);
             keptTags.RemoveAt(tagID - 1);
             module.Tags = ExtensionMethods.ListToString(keptTags);

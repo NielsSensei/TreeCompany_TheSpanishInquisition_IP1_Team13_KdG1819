@@ -31,10 +31,10 @@ namespace DAL
         {
             return new QuestionnaireQuestionsDTO
             {
-                qQuestionID = obj.Id,
+                QQuestionID = obj.Id,
                 ModuleID = obj.Module.Id,
                 QuestionText = obj.QuestionText,
-                qType = (byte) obj.QuestionType,
+                QType = (byte) obj.QuestionType,
                 Required = obj.Optional
             };
         }
@@ -43,10 +43,10 @@ namespace DAL
         {
             return new QuestionnaireQuestion
             {
-                Id = DTO.qQuestionID,
+                Id = DTO.QQuestionID,
                 Module = new Questionnaire { Id = DTO.ModuleID },
                 QuestionText = DTO.QuestionText,
-                QuestionType = (QuestionType) DTO.qType,
+                QuestionType = (QuestionType) DTO.QType,
                 Optional = DTO.Required
             };
         }
@@ -57,7 +57,7 @@ namespace DAL
             {
                 OptionID = id,
                 OptionText = obj,
-                qQuestionID = qID
+                QQuestionID = qID
             };
         }
 
@@ -71,7 +71,7 @@ namespace DAL
             return new AnswersDTO
             {
                 AnswerID = obj.Id,
-                qQuestionID = obj.Question.Id,
+                QQuestionID = obj.Question.Id,
                 UserID = obj.User.Id,
                 AnswerText = obj.AnswerText,
             };
@@ -82,7 +82,7 @@ namespace DAL
             return new AnswersDTO
             {
                 AnswerID = obj.Id,
-                qQuestionID = obj.Question.Id,
+                QQuestionID = obj.Question.Id,
                 UserID = obj.User.Id
             };
         }
@@ -103,7 +103,7 @@ namespace DAL
             {
                 Id = DTO.AnswerID,
                 User = new User { Id = DTO.UserID },
-                Question = new QuestionnaireQuestion { Id = DTO.qQuestionID },
+                Question = new QuestionnaireQuestion { Id = DTO.QQuestionID },
                 IsUserEmail = DTO.AnswerText.Contains("@"),
                 AnswerText = DTO.AnswerText
             };
@@ -114,7 +114,7 @@ namespace DAL
             MultipleAnswer ma = null;
             ma.Id = answersDTO.AnswerID;
             ma.User = new User { Id = answersDTO.UserID };
-            ma.Question = new QuestionnaireQuestion { Id = answersDTO.qQuestionID };
+            ma.Question = new QuestionnaireQuestion { Id = answersDTO.QQuestionID };
             ma.DropdownList = chosenOptionsDTO.Count == 1;
 
             foreach(OptionsDTO DTO in chosenOptionsDTO)
@@ -154,13 +154,13 @@ namespace DAL
 
             if (details)
             {
-                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.qQuestionID == id);
-                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.qQuestionID);
+                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QQuestionID == id);
+                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.QQuestionID);
             }
             else
             {
-                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.First(q => q.qQuestionID == id);
-                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.qQuestionID);
+                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.First(q => q.QQuestionID == id);
+                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.QQuestionID);
             }
 
             return ConvertToDomain(questionnaireQuestionDTO);
@@ -262,7 +262,7 @@ namespace DAL
             }
 
             List<ChoicesDTO> choicesDTO = ctx.Choices.ToList().FindAll(c => c.AnswerID == answerID);
-            List<OptionsDTO> optionsDTO = ctx.Options.ToList().FindAll(o => o.qQuestionID == answersDTO.qQuestionID);
+            List<OptionsDTO> optionsDTO = ctx.Options.ToList().FindAll(o => o.QQuestionID == answersDTO.QQuestionID);
             List<OptionsDTO> chosenOptionsDTO = new List<OptionsDTO>();
 
             foreach(OptionsDTO DTO in optionsDTO)
@@ -290,7 +290,7 @@ namespace DAL
         {
             IEnumerable<Answer> myQuery = new List<Answer>();
 
-            foreach (AnswersDTO DTO in ctx.Answers.ToList().FindAll(a => a.qQuestionID == questionID))
+            foreach (AnswersDTO DTO in ctx.Answers.ToList().FindAll(a => a.QQuestionID == questionID))
             {
                 if (ctx.Choices.Where(c => c.AnswerID == DTO.AnswerID).Count() == 0)
                 {
@@ -360,7 +360,7 @@ namespace DAL
 
             foreach (OptionsDTO DTO in ctx.Options)
             {
-                if (DTO.qQuestionID == QuestionID)
+                if (DTO.QQuestionID == QuestionID)
                 {
                     myQuery.Append(ConvertToDomain(DTO));
                 }

@@ -15,6 +15,6 @@ namespace DAL.Data_Transfer_Objects
         public bool Required { get; set; }
         public string Url { get; set; }
         public byte[] UploadedImage { get; set; }
-        public byte[] uploadedMedia { get; set; }
+        public byte[] UploadedMedia { get; set; }
     }
 }

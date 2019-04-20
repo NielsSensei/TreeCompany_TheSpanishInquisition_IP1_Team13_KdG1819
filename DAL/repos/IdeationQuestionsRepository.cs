@@ -25,11 +25,11 @@ namespace DAL.repos
         // Added by NVZ
         // Standard Methods
         #region
-        private IdeationQuestionsDTO convertToDTO(IdeationQuestion obj)
+        private IdeationQuestionsDTO ConvertToDTO(IdeationQuestion obj)
         {
             return new IdeationQuestionsDTO
             {
-                iQuestionID = obj.Id,
+                IQuestionID = obj.Id,
                 ModuleID = obj.Ideation.Id,
                 QuestionTitle = obj.QuestionTitle,
                 Description = obj.Description,
@@ -38,12 +38,12 @@ namespace DAL.repos
             };
         }
 
-        private IdeasDTO convertToDTO(Idea obj)
+        private IdeasDTO ConvertToDTO(Idea obj)
         {
             return new IdeasDTO
             {
                 IdeaID = obj.Id,
-                iQuestionID = obj.IdeaQuestion.Id,
+                IQuestionID = obj.IdeaQuestion.Id,
                 UserID = obj.User.Id,
                 Reported = obj.Reported,
                 ReviewByAdmin = obj.ReviewByAdmin,
@@ -57,7 +57,7 @@ namespace DAL.repos
             };
         }
 
-        private IdeaFieldsDTO convertToDTO(Field obj)
+        private IdeaFieldsDTO ConvertToDTO(Field obj)
         {
             return new IdeaFieldsDTO
             {
@@ -68,7 +68,7 @@ namespace DAL.repos
             };
         }
 
-        private IdeaFieldsDTO convertToDTO(ClosedField obj)
+        private IdeaFieldsDTO ConvertToDTO(ClosedField obj)
         {
             return new IdeaFieldsDTO
             {
@@ -80,7 +80,7 @@ namespace DAL.repos
             };
         }
 
-        private IdeaFieldsDTO convertToDTO(ImageField obj)
+        private IdeaFieldsDTO ConvertToDTO(ImageField obj)
         {
             return new IdeaFieldsDTO
             {
@@ -93,7 +93,7 @@ namespace DAL.repos
             };
         }
 
-        private IdeaFieldsDTO convertToDTO(VideoField obj)
+        private IdeaFieldsDTO ConvertToDTO(VideoField obj)
         {
             return new IdeaFieldsDTO
             {
@@ -106,7 +106,7 @@ namespace DAL.repos
             };
         }
 
-        private IdeaFieldsDTO convertToDTO(MapField obj)
+        private IdeaFieldsDTO ConvertToDTO(MapField obj)
         {
             return new IdeaFieldsDTO
             {
@@ -119,11 +119,11 @@ namespace DAL.repos
             };
         }
 
-        private IdeationQuestion convertToDomain(IdeationQuestionsDTO DTO)
+        private IdeationQuestion ConvertToDomain(IdeationQuestionsDTO DTO)
         {
             return new IdeationQuestion
             {
-                Id = DTO.iQuestionID,
+                Id = DTO.IQuestionID,
                 Description = DTO.Description,
                 SiteURL = DTO.WebsiteLink,
                 QuestionTitle = DTO.QuestionTitle,
@@ -132,12 +132,12 @@ namespace DAL.repos
             };
         }
 
-        private Idea convertToDomain(IdeasDTO DTO)
+        private Idea ConvertToDomain(IdeasDTO DTO)
         {
             return new Idea
             {
                 Id = DTO.IdeaID,
-                IdeaQuestion = new IdeationQuestion { Id = DTO.iQuestionID },
+                IdeaQuestion = new IdeationQuestion { Id = DTO.IQuestionID },
                 User = new User { Id = DTO.UserID },
                 Reported = DTO.Reported,
                 ReviewByAdmin = DTO.ReviewByAdmin,
@@ -151,7 +151,7 @@ namespace DAL.repos
             };
         }
 
-        private Field convertFieldToDomain(IdeaFieldsDTO DTO)
+        private Field ConvertFieldToDomain(IdeaFieldsDTO DTO)
         {
             return new Field {
                 Id = DTO.FieldID,
@@ -161,7 +161,7 @@ namespace DAL.repos
             };
         }
 
-        private ClosedField convertClosedFieldToDomain(IdeaFieldsDTO DTO)
+        private ClosedField ConvertClosedFieldToDomain(IdeaFieldsDTO DTO)
         {
             return new ClosedField
             {
@@ -172,19 +172,19 @@ namespace DAL.repos
             };
         }
 
-        private MapField convertMapFieldToDomain(IdeaFieldsDTO DTO)
+        private MapField ConvertMapFieldToDomain(IdeaFieldsDTO DTO)
         {
             return new MapField
             {
                 Id = DTO.FieldID,
                 Idea = new Idea { Id = DTO.IdeaID },
                 Required = DTO.Required,
-                LocationX = DTO.LocationX,
+                LocationX = (float) DTO.LocationX,
                 LocationY = DTO.LocationY
             };
         }
 
-        private ImageField convertImageFieldToDomain(IdeaFieldsDTO DTO)
+        private ImageField ConvertImageFieldToDomain(IdeaFieldsDTO DTO)
         {
             return new ImageField
             {
@@ -196,7 +196,7 @@ namespace DAL.repos
             };
         }
 
-        private VideoField convertVideoFieldToDomain(IdeaFieldsDTO DTO)
+        private VideoField ConvertVideoFieldToDomain(IdeaFieldsDTO DTO)
         {
             return new VideoField
             {
@@ -225,7 +225,7 @@ namespace DAL.repos
                 }
             }
 
-            ctx.IdeationQuestion.Add(convertToDTO(obj));
+            ctx.IdeationQuestion.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -237,22 +237,22 @@ namespace DAL.repos
 
             if (details)
             {
-                ideationQuestionDTO = ctx.IdeationQuestion.AsNoTracking().First(i => i.iQuestionID == id);
-                ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.iQuestionID);
+                ideationQuestionDTO = ctx.IdeationQuestion.AsNoTracking().First(i => i.IQuestionID == id);
+                ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.IQuestionID);
             }
             else
             {
-                ideationQuestionDTO = ctx.IdeationQuestion.First(i => i.iQuestionID == id);
-                ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.iQuestionID);
+                ideationQuestionDTO = ctx.IdeationQuestion.First(i => i.IQuestionID == id);
+                ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.IQuestionID);
             }
 
-            return convertToDomain(ideationQuestionDTO);
+            return ConvertToDomain(ideationQuestionDTO);
         }
 
         public void Update(IdeationQuestion obj)
         {
-            IdeationQuestionsDTO newIdeationQuestion = convertToDTO(obj);
-            IdeationQuestionsDTO foundIdeationQuestion = convertToDTO(Read(obj.Id, false));
+            IdeationQuestionsDTO newIdeationQuestion = ConvertToDTO(obj);
+            IdeationQuestionsDTO foundIdeationQuestion = ConvertToDTO(Read(obj.Id, false));
             foundIdeationQuestion = newIdeationQuestion;
 
             ctx.SaveChanges();
@@ -276,7 +276,7 @@ namespace DAL.repos
 
             foreach (IdeationQuestionsDTO DTO in ctx.IdeationQuestion)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -304,12 +304,12 @@ namespace DAL.repos
                 }
             }
 
-            ctx.Ideas.Add(convertToDTO(idea));
-            ctx.IdeaFields.Add(convertToDTO(idea.Field));
-            ctx.IdeaFields.Add(convertToDTO(idea.Cfield));
-            ctx.IdeaFields.Add(convertToDTO(idea.Ifield));
-            ctx.IdeaFields.Add(convertToDTO(idea.Vfield));
-            ctx.IdeaFields.Add(convertToDTO(idea.Mfield));
+            ctx.Ideas.Add(ConvertToDTO(idea));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Field));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Cfield));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Ifield));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Vfield));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Mfield));
 
             ctx.SaveChanges();
 
@@ -331,7 +331,7 @@ namespace DAL.repos
                 ExtensionMethods.CheckForNotFound(ideasDTO, "Idea", ideasDTO.IdeaID);
             }
 
-            return convertToDomain(ideasDTO);
+            return ConvertToDomain(ideasDTO);
         }
         
         public Idea ReadWithFields(int id)
@@ -343,19 +343,19 @@ namespace DAL.repos
             {
                 if (fields[i].FieldText != null)
                 {
-                    idea.Field = convertFieldToDomain(fields[i]);
+                    idea.Field = ConvertFieldToDomain(fields[i]);
                 } else if (fields[i].FieldStrings != null)
                 {
-                    idea.Cfield = convertClosedFieldToDomain(fields[i]);
+                    idea.Cfield = ConvertClosedFieldToDomain(fields[i]);
                 } else if(fields[i].LocationX != null)
                 {
-                    idea.Mfield = convertMapFieldToDomain(fields[i]);
+                    idea.Mfield = ConvertMapFieldToDomain(fields[i]);
                 } else if(fields[i].UploadedImage != null)
                 {
-                    idea.Ifield = convertImageFieldToDomain(fields[i]);
-                } else if(fields[i].uploadedMedia != null)
+                    idea.Ifield = ConvertImageFieldToDomain(fields[i]);
+                } else if(fields[i].UploadedMedia != null)
                 {
-                    idea.Vfield = convertVideoFieldToDomain(fields[i]);
+                    idea.Vfield = ConvertVideoFieldToDomain(fields[i]);
                 }
             }
 
@@ -364,28 +364,28 @@ namespace DAL.repos
 
         public void Update(Idea obj)
         {
-            IdeasDTO newIdea = convertToDTO(obj);
-            IdeasDTO foundIdea = convertToDTO(ReadIdea(obj.Id, false));
+            IdeasDTO newIdea = ConvertToDTO(obj);
+            IdeasDTO foundIdea = ConvertToDTO(ReadIdea(obj.Id, false));
             foundIdea = newIdea;
 
-            IdeaFieldsDTO newTextField = convertToDTO(obj.Field);
-            IdeaFieldsDTO foundTextField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Field.Id));
+            IdeaFieldsDTO newTextField = ConvertToDTO(obj.Field);
+            IdeaFieldsDTO foundTextField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Field.Id));
             newTextField = foundTextField;
 
-            IdeaFieldsDTO newCField = convertToDTO(obj.Cfield);
-            IdeaFieldsDTO foundCField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Cfield.Id));
+            IdeaFieldsDTO newCField = ConvertToDTO(obj.Cfield);
+            IdeaFieldsDTO foundCField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Cfield.Id));
             newCField = foundCField;
 
-            IdeaFieldsDTO newMField = convertToDTO(obj.Mfield);
-            IdeaFieldsDTO foundMField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Mfield.Id));
+            IdeaFieldsDTO newMField = ConvertToDTO(obj.Mfield);
+            IdeaFieldsDTO foundMField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Mfield.Id));
             newMField = foundMField;
 
-            IdeaFieldsDTO newIField = convertToDTO(obj.Ifield);
-            IdeaFieldsDTO foundIField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Ifield.Id));
+            IdeaFieldsDTO newIField = ConvertToDTO(obj.Ifield);
+            IdeaFieldsDTO foundIField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Ifield.Id));
             newIField = foundIField;
 
-            IdeaFieldsDTO newVField = convertToDTO(obj.Vfield);
-            IdeaFieldsDTO foundVField = convertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Vfield.Id));
+            IdeaFieldsDTO newVField = ConvertToDTO(obj.Vfield);
+            IdeaFieldsDTO foundVField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Vfield.Id));
             newVField = foundVField;
 
             ctx.SaveChanges();
@@ -440,23 +440,23 @@ namespace DAL.repos
             {
                 if (DTO.FieldText != null)
                 {
-                    myQuery.Append(convertFieldToDomain(DTO));
+                    myQuery.Append(ConvertFieldToDomain(DTO));
                 }
                 else if (DTO.FieldStrings != null)
                 {
-                    myQuery.Append(convertClosedFieldToDomain(DTO));
+                    myQuery.Append(ConvertClosedFieldToDomain(DTO));
                 }
                 else if (DTO.LocationX != null)
                 {
-                    myQuery.Append(convertMapFieldToDomain(DTO));
+                    myQuery.Append(ConvertMapFieldToDomain(DTO));
                 }
                 else if (DTO.UploadedImage != null)
                 {
-                    myQuery.Append(convertImageFieldToDomain(DTO));
+                    myQuery.Append(ConvertImageFieldToDomain(DTO));
                 }
-                else if (DTO.uploadedMedia != null)
+                else if (DTO.UploadedMedia != null)
                 {
-                    myQuery.Append(convertVideoFieldToDomain(DTO));
+                    myQuery.Append(ConvertVideoFieldToDomain(DTO));
                 }
             }
 

@@ -33,7 +33,7 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void ChangeProject(Project project)
+        public void EditProject(Project project)
         {
             ProjectRepo.Update(project);
         }
@@ -49,7 +49,7 @@ namespace BL
         /*
          * Might need this for initialisation. - NVZ
          */
-        public void AddProject(Project project)
+        public void MakeProject(Project project)
         {
             ProjectRepo.Create(project);
         }
@@ -73,7 +73,7 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void ChangePhase(Phase phase)
+        public void EditPhase(Phase phase)
         {
             ProjectRepo.Update(phase);
         }
@@ -82,7 +82,7 @@ namespace BL
          * Might need this for initialisation - NVZ
          * 
          */
-        public void AddPhase(Phase newPhase, int projectId)
+        public void MakePhase(Phase newPhase, int projectId)
         {
             ProjectRepo.Create(newPhase);
             var alteredProject = ProjectRepo.Read(projectId, false);
@@ -93,7 +93,7 @@ namespace BL
                 var moduleType = newPhase.Module.GetType() == typeof(Questionnaire);
                 var alteredModule = ModuleMan.GetModule(newPhase.Module.Id, false, moduleType);
                 alteredModule.Phases.Add(newPhase);
-                ModuleMan.ChangeModule(alteredModule);
+                ModuleMan.EditModule(alteredModule);
             }
         }
 
@@ -107,7 +107,7 @@ namespace BL
                 var moduleType = removedPhase.Module.GetType() == typeof(Questionnaire);
                 var alteredModule = ModuleMan.GetModule(removedPhase.Module.Id, false, moduleType);
                 alteredModule.Phases.Remove(removedPhase);
-                ModuleMan.ChangeModule(alteredModule);
+                ModuleMan.EditModule(alteredModule);
             }
             ProjectRepo.Delete(projectId, phaseId);
         }

@@ -51,7 +51,7 @@ namespace BL
             IdeationQuestionRepo.Create(question);
             var alteredIdeation = (Ideation)ModuleMan.GetModule(moduleId, false, false);
             alteredIdeation.CentralQuestions.Add(question);
-            ModuleMan.ChangeModule(alteredIdeation);
+            ModuleMan.EditModule(alteredIdeation);
         }
 
         public void RemoveQuestion(int questionId)
