@@ -29,7 +29,7 @@ namespace BL
 
         #region
 
-        public void ChangeQuestion(IdeationQuestion question)
+        public void EditQuestion(IdeationQuestion question)
         {
             IdeationQuestionRepo.Update(question);
         }
@@ -46,7 +46,7 @@ namespace BL
         /*
          * Initialisation might be useful. - NVZ
          */
-        public void AddQuestion(IdeationQuestion question, int moduleId)
+        public void MakeQuestion(IdeationQuestion question, int moduleId)
         {
             IdeationQuestionRepo.Create(question);
             var alteredIdeation = (Ideation)ModuleMan.GetModule(moduleId, false, false);
@@ -77,7 +77,7 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void ChangeIdea(string propName, int ideaId, int questionId)
+        public void EditIdea(string propName, int ideaId, int questionId)
         {
             throw new NotImplementedException("I might need this!");
         }
@@ -95,7 +95,7 @@ namespace BL
          * moduling process but it is needed. - NVZ
          */
         // Modified by EKT
-        public void AddIdea(int questionId, Idea idea)
+        public void MakeIdea(int questionId, Idea idea)
         {
             throw new NotImplementedException();
             
@@ -105,7 +105,7 @@ namespace BL
 
         // Added by NG
         // Vote
-        public void CreateVote(int feedbackId, int userId, int? deviceId, double? x, double? y)
+        public void MakeVote(int feedbackId, int userId, int? deviceId, double? x, double? y)
         {
             Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
             if (VoteMan.HandleVotingOnFeedback(feedbackId, userId, deviceId, x, y))
