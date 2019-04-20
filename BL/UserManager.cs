@@ -60,9 +60,7 @@ namespace BL
                if(user.Role.Equals(roleLevel))
                    filteredUserList.Add(user);
            }
-
            return filteredUserList;
-
        }
 
        public void AddAnonymousUser(User user)
@@ -81,7 +79,14 @@ namespace BL
 
        public void RemoveUser(int userId)
        {
-           throw new NotImplementedException("Out of Scope!");
+           var removedUser = UserRepo.Read(userId, false);
+           var platformOwners = PlatformMan.GetAllPlatformOwners(removedUser.Platform.Id);
+           var alteredPlatform = PlatformMan.GetPlatform(removedUser.Platform.Id);
+           if (platformOwners.Contains(removedUser))
+               alteredPlatform.Owners.Remove(removedUser);
+           alteredPlatform.Users.Remove(removedUser);
+           PlatformMan.ChangePlatform(alteredPlatform);
+           UserRepo.Delete(userId);
        }
 
        #endregion
@@ -90,10 +95,9 @@ namespace BL
         // Modified by NVZ
         //Event 
        #region
-       public void ChangeOrgEvent(int userId, int eventId)
+       public void ChangeOrgEvent(Event orgEvent)
        {
-           throw new NotImplementedException("Out of Scope!");
-           
+           UserRepo.Update(orgEvent);
        }
         
        public Event GetEvent(int eventId)
@@ -103,11 +107,17 @@ namespace BL
 
        public void AddEvent(int userId, Event orgEvent)
        {
-           throw new NotImplementedException("Out of Scope!");
+           UserRepo.Create(orgEvent);
+           var alteredOrganisation = UserRepo.ReadOrganisation(userId);
+           alteredOrganisation.organisationEvents.Add(orgEvent);
        }
 
        public void RemoveOrgEvent(int userId, int eventId)
        {
+           var alteredOrganisation = UserRepo.ReadOrganisation(userId);
+           var removedEvent = UserRepo.ReadUserEvent(eventId, false);
+           alteredOrganisation.organisationEvents.Remove(removedEvent);
+           UserRepo.Update(alteredOrganisation);
            UserRepo.DeleteUserEvent(userId, eventId);
        }
        #endregion
@@ -116,9 +126,10 @@ namespace BL
         // Modified by NVZ
         //Organisation 
        #region
-       public void AddOrganisation(int userId)
+       public void AddOrganisation(Organisation organisation)
        {
-           throw new NotImplementedException("Out of Scope!");
+           UserRepo.Create(organisation);
+           PlatformMan.AddUserToPlatform(organisation.Platform.Id,organisation);
        }
 
        public User GetOrganisation(int userId)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using Domain.UserInput;
 
@@ -52,9 +53,9 @@ namespace BL
             QuestionnaireQuestionRepo.Delete(questionId);
         }
 
-        public IEnumerable<QuestionnaireQuestion> GetAll()
+        public List<QuestionnaireQuestion> GetAll()
         {
-            return QuestionnaireQuestionRepo.ReadAll();
+            return QuestionnaireQuestionRepo.ReadAll().ToList();
         }
 
         #endregion
@@ -129,9 +130,9 @@ namespace BL
             throw new NotImplementedException("I might need this!");
         }
 
-        public IEnumerable<QuestionnaireQuestion> GetAllByModuleId(int questionnaireId)
+        public List<QuestionnaireQuestion> GetAllByModuleId(int questionnaireId)
         {
-            return QuestionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId);
+            return QuestionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId).ToList();
         }
         #endregion
 

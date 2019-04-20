@@ -49,10 +49,10 @@ namespace BL
          * 
          */
         //Modified by NG
-        public void AddModule(Module module, int projectId, bool questionnaire)
+        public void AddModule(Module module, int projectId)
         {
-            var alteredProject = ProjectMan.GetProject(projectId, true);
-            if (questionnaire)
+            var alteredProject = ProjectMan.GetProject(projectId, false);
+            if (module.GetType() == typeof(Questionnaire))
             {
                 Questionnaire newQuestionnaire = (Questionnaire) module;
                 alteredProject.Modules.Add(newQuestionnaire);

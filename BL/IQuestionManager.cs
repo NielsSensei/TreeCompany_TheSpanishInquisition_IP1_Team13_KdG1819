@@ -16,7 +16,7 @@ namespace BL
         void AddQuestion(T question, int moduleId);
         void RemoveQuestion(int id);
 
-        IEnumerable<T> GetAll();
-        IEnumerable<T> GetAllByModuleId(int id);
+        List<T> GetAll();
+        List<T> GetAllByModuleId(int id);
     }
 }
