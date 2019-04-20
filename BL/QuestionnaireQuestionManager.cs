@@ -26,7 +26,7 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void ChangeQuestion(QuestionnaireQuestion question)
+        public void EditQuestion(QuestionnaireQuestion question)
         {
             QuestionnaireQuestionRepo.Update(question);
         }
@@ -43,7 +43,7 @@ namespace BL
         /*
          * This is going to be useful for initialisation. - NVZ
          */
-        public void AddQuestion(QuestionnaireQuestion question, int moduleId)
+        public void MakeQuestion(QuestionnaireQuestion question, int moduleId)
         {
             QuestionnaireQuestionRepo.Create(question);
         }
@@ -68,8 +68,10 @@ namespace BL
         * certainly not all of them. Please make a difference between
         * properties you need and the ones you do not. - NVZ
         * 
+        * UPDATE 20/4 see @QQRepo voor editen van antwoorden.
+        * 
         */
-        public void ChangeAnswer(string propName, int answerId, int questionId)
+        public void EditAnswer(string propName, int answerId, int questionId)
         {
             throw new NotImplementedException("I might need this!");
         }
@@ -86,7 +88,7 @@ namespace BL
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ
          */
-        public void AddAnswer(Answer answer, int moduleId, int questionId)
+        public void MakeAnswer(Answer answer, int moduleId, int questionId)
         {
             throw new NotImplementedException("I need this!");
         }
