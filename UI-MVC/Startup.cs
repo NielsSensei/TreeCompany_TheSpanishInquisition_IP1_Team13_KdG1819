@@ -43,6 +43,12 @@ namespace UIMVC
             });
 
 
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
+
             // Configuring SendGrid email sender
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
@@ -59,7 +65,8 @@ namespace UIMVC
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                // app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 

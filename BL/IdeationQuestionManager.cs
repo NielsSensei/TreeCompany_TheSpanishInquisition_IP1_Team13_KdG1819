@@ -59,9 +59,9 @@ namespace BL
             IdeationQuestionRepo.Delete(questionId);
         }
 
-        public IEnumerable<IdeationQuestion> GetAll()
+        public List<IdeationQuestion> GetAll()
         {
-            return IdeationQuestionRepo.ReadAll();
+            return IdeationQuestionRepo.ReadAll().ToList();
         }
 
         #endregion
@@ -157,7 +157,7 @@ namespace BL
             throw new NotImplementedException("I might need this!");
         }
 
-        public IEnumerable<IdeationQuestion> GetAllByModuleId(int id)
+        public List<IdeationQuestion> GetAllByModuleId(int id)
         {
             throw new NotImplementedException();
         }

@@ -34,10 +34,14 @@ namespace BL
             PlatformRepo.Create(platform);
         }
 
+        public void ChangePlatform(Platform platform)
+        {
+            PlatformRepo.Update(platform);
+        }
+
         public void RemovePlatform(int platformId)
         {
-            throw new NotImplementedException("Out of scope!");
-//            PlatformRepo.Delete(platformId);
+            PlatformRepo.Delete(platformId);
         }
         #endregion
         
@@ -53,7 +57,9 @@ namespace BL
         
         public User GetPlatformOwner(int platformId, int userId)
         {
-            throw new NotImplementedException("Out of scope!");
+            var platform = PlatformRepo.Read(platformId, true);
+            var user = UserMan.GetUser(userId, true);
+            return platform.Owners.Find(u => u.Equals(user));
         }
         
         public void RemovePlatformOwner(int platformId, int userId)

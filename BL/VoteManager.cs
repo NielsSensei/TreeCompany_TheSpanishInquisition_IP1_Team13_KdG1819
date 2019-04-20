@@ -23,39 +23,41 @@ namespace BL
         /*
          * This is needed for the voting feature. - NVZ
          */
-        public bool handleVotingOnFeedback(int feedbackID, int userID, int? deviceID, double? x, double? y)
+        public bool HandleVotingOnFeedback(int feedbackId, int userId, int? deviceId, double? x, double? y)
         {
-            if (deviceID.HasValue)
-            {
-                int dID = (int) deviceID;
-                
-                if (!locationCheck(dID, x, y)) { return false; }
-                voteRepo.Create(new Interaction() {UserId = userID, DeviceId = dID});
-            }
-            Vote obj = new Vote();
-            obj.Id = feedbackID;
-            
-            List<float> coordinates = new List<float>();
-            coordinates.Add((float) x);
-            coordinates.Add((float) y);
-            obj.SetLocation(coordinates);
-
-            voteRepo.Create(obj);
-            return true;
+//            if (deviceID.HasValue)
+//            {
+//                int dID = (int) deviceID;
+//                
+//                if (!locationCheck(dID, x, y)) { return false; }
+//                voteRepo.Create(new Interaction() {UserId = userID, DeviceId = dID});
+//            }
+//            Vote obj = new Vote();
+//            obj.Id = feedbackID;
+//            
+//            List<float> coordinates = new List<float>();
+//            coordinates.Add((float) x);
+//            coordinates.Add((float) y);
+//            obj.SetLocation(coordinates);
+//
+//            voteRepo.Create(obj);
+//            return true;
+            throw new NotImplementedException("Sorry, not implemented yet!");
         }
 
-        public bool locationCheck(int deviceId, double? x, double? y)
+        public bool LocationCheck(int deviceId, double? x, double? y)
         {
-            IOT_Device device = voteRepo.ReadDevice(deviceId);
-            // deltas squared to make positive
-            double? deltaX = device.LocationX - x;
-            deltaX *= deltaX;
-            double? deltaY = device.LocationY - y;
-            deltaY *= deltaY;
-
-            // arbitrary numbers
-            if (deltaX < 10 && deltaY < 10) { return true; }
-            return false;
+//            IOT_Device device = voteRepo.ReadDevice(deviceId);
+//            // deltas squared to make positive
+//            double? deltaX = device.LocationX - x;
+//            deltaX *= deltaX;
+//            double? deltaY = device.LocationY - y;
+//            deltaY *= deltaY;
+//
+//            // arbitrary numbers
+//            if (deltaX < 10 && deltaY < 10) { return true; }
+//            return false;
+            throw new NotImplementedException("Sorry, not implemented yet!");
         }
         #endregion
     }

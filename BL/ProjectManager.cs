@@ -20,11 +20,13 @@ namespace BL
             ProjectRepo = new ProjectRepository();
             ModuleMan = new ModuleManager();
         }
-        
+
         // Added by NG
         // Modified by NVZ & XV
         //Project 
+
         #region
+
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between
@@ -35,13 +37,13 @@ namespace BL
         {
             ProjectRepo.Update(project);
         }
-        
+
         /*
          * Simple getter to get information about our Project. - NVZ
          */
         public Project GetProject(int projectId, bool details)
         {
-            return ProjectRepo.Read(projectId,details);
+            return ProjectRepo.Read(projectId, details);
         }
 
         /*
@@ -55,13 +57,16 @@ namespace BL
         public void RemoveProject(int projectId)
         {
             ProjectRepo.Delete(projectId);
-        }       
+        }
+
         #endregion
-        
+
         // Added by NG
         // Modified by NVZ
         //Phase 
+
         #region
+
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between
@@ -72,25 +77,48 @@ namespace BL
         {
             ProjectRepo.Update(phase);
         }
-        
+
         /*
          * Might need this for initialisation - NVZ
          * 
          */
         public void AddPhase(Phase newPhase, int projectId)
         {
-            throw new NotImplementedException("I might need this!");
+            ProjectRepo.Create(newPhase);
+            var alteredProject = ProjectRepo.Read(projectId, false);
+            alteredProject.Phases.Add(newPhase);
+            ProjectRepo.Update(alteredProject);
+            if (newPhase.Module != null)
+            {
+                var moduleType = newPhase.Module.GetType() == typeof(Questionnaire);
+                var alteredModule = ModuleMan.GetModule(newPhase.Module.Id, false, moduleType);
+                alteredModule.Phases.Add(newPhase);
+                ModuleMan.ChangeModule(alteredModule);
+            }
         }
 
-        public void RemovePhase(int phaseId, int projectId)
+        public void RemovePhase(int projectId, int phaseId)
         {
-            throw new NotImplementedException("Out of Scope!");
-        }      
+            var removedPhase = ProjectRepo.ReadPhase(projectId, phaseId, false);
+            var alteredProject = ProjectRepo.Read(projectId, false);
+            alteredProject.Phases.Remove(removedPhase);
+            if (removedPhase.Module != null)
+            {
+                var moduleType = removedPhase.Module.GetType() == typeof(Questionnaire);
+                var alteredModule = ModuleMan.GetModule(removedPhase.Module.Id, false, moduleType);
+                alteredModule.Phases.Remove(removedPhase);
+                ModuleMan.ChangeModule(alteredModule);
+            }
+            ProjectRepo.Delete(projectId, phaseId);
+        }
+
         #endregion
-        
+
         // Added by NVZ
         // Other Methods
+
         #region
+
         private bool VerifyProjectEditable(int projectId)
         {
             throw new NotImplementedException("Out of scope!");
@@ -103,7 +131,7 @@ namespace BL
         {
             throw new NotImplementedException("I might need this!");
         }
-        
+
         /*
          * We have two options with this method:
          * 
@@ -120,6 +148,7 @@ namespace BL
         {
             throw new NotImplementedException("I need this!");
         }
+
         #endregion
     }
 }
