@@ -8,12 +8,10 @@ namespace BL
     {
         void DefineQuestionType();
         bool VerifyQuestion(int questionId);
-//        void editFeedback(string propName, int feedbackID, int questionID);
-        void ChangeQuestion(T question);
-//        List<T> getFeedback(int questionID, bool details);
+        void EditQuestion(T question);
         T GetQuestion(int questionId, bool details);
         void HandleQuestionAction(int questionId, string actionName);
-        void AddQuestion(T question, int moduleId);
+        void MakeQuestion(T question, int moduleId);
         void RemoveQuestion(int id);
 
         List<T> GetAll();
