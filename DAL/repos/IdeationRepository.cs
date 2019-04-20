@@ -44,7 +44,7 @@ namespace DAL
             };
         }
 
-        private IdeationsDTO convertToDTO(Ideation obj)
+        private IdeationsDTO ConvertToDTO(Ideation obj)
         {
             bool Org = false;
 
@@ -64,7 +64,7 @@ namespace DAL
             };
         }
 
-        private Ideation convertToDomain(IdeationsDTO DTO)
+        private Ideation ConvertToDomain(IdeationsDTO DTO)
         {
             return new Ideation
             {
@@ -110,7 +110,7 @@ namespace DAL
             }
 
             ctx.Modules.Add(GrabModuleInformationDTO(obj));
-            ctx.Ideations.Add(convertToDTO(obj));
+            ctx.Ideations.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -131,7 +131,7 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", ideationDTO.ModuleID);
             }
 
-            return convertToDomain(ideationDTO);
+            return ConvertToDomain(ideationDTO);
         }
 
         public Ideation ReadWithModule(int id)
@@ -146,8 +146,8 @@ namespace DAL
 
         public void Update(Ideation obj)
         {
-            IdeationsDTO newIdeation = convertToDTO(obj);
-            IdeationsDTO foundIdeation = convertToDTO(Read(obj.Id, false));
+            IdeationsDTO newIdeation = ConvertToDTO(obj);
+            IdeationsDTO foundIdeation = ConvertToDTO(Read(obj.Id, false));
             foundIdeation = newIdeation;
 
             ModulesDTO newModule = GrabModuleInformationDTO(obj);
@@ -159,7 +159,7 @@ namespace DAL
 
         public void Delete(int id)
         {
-            ctx.Ideations.Remove(convertToDTO(Read(id, false)));
+            ctx.Ideations.Remove(ConvertToDTO(Read(id, false)));
             ctx.Modules.Remove(GrabModuleInformationDTO(Read(id, false)));
             ctx.SaveChanges();
         }
@@ -219,7 +219,7 @@ namespace DAL
         // Added by NVZ
         // Tag CRUD
         #region
-        public string createTag(string obj, int moduleID)
+        public string CreateTag(string obj, int moduleID)
         {
             ModulesDTO module = GrabModuleInformationDTO(Read(moduleID, false));
             module.Tags += "," + obj;

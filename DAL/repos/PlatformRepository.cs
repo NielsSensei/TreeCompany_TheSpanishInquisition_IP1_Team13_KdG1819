@@ -23,7 +23,7 @@ namespace DAL
         // Added by NVZ
         // Standard Methods
         #region
-        private PlatformsDTO convertToDTO(Platform p)
+        private PlatformsDTO ConvertToDTO(Platform p)
         {
             return new PlatformsDTO
             {
@@ -35,7 +35,7 @@ namespace DAL
             };
         }
 
-        private Platform convertToDomain(PlatformsDTO DTO)
+        private Platform ConvertToDomain(PlatformsDTO DTO)
         {
             return new Platform
             {
@@ -48,6 +48,8 @@ namespace DAL
         }
         #endregion
 
+       
+
         // Added by NVZ
         // Platform CRUD
         #region
@@ -59,12 +61,12 @@ namespace DAL
             {
                 if (ExtensionMethods.HasMatchingWords(p.Name, obj.Name) > 0)
                 {
-                    throw new DuplicateNameException("Platform(ID=" + obj.Id + ") met naam " + obj.Name + " heeft dezelfde naam als Platform(ID=" + p.Id +
+                    throw new DuplicateNameException("Platform(ID=" + obj.Id + ") met naam " + obj.Name +" heeft dezelfde naam als Platform(ID=" + p.Id + 
                         " met naam " + p.Name);
                 }
             }
 
-            ctx.Platforms.Add(convertToDTO(obj));
+            ctx.Platforms.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -85,34 +87,34 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(platformDTO, "Platform", platformDTO.PlatformID);
             }
 
-            return convertToDomain(platformDTO);
+            return ConvertToDomain(platformDTO);
         }
 
         public void Update(Platform obj)
         {
-            PlatformsDTO newPlatform = convertToDTO(obj);
-            PlatformsDTO foundPlatform = convertToDTO(Read(obj.Id, false));
+            PlatformsDTO newPlatform = ConvertToDTO(obj);
+            PlatformsDTO foundPlatform = ConvertToDTO(Read(obj.Id, false));
             foundPlatform = newPlatform;
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            ctx.Platforms.Remove(convertToDTO(Read(id, false)));
+            ctx.Platforms.Remove(ConvertToDTO(Read(id, false)));
             ctx.SaveChanges();
         }
-
+        
         public IEnumerable<Platform> ReadAll()
         {
             IEnumerable<Platform> myQuery = new List<Platform>();
 
             foreach (PlatformsDTO DTO in ctx.Platforms)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;
         }
-        #endregion 
+        #endregion  
     }
 }
