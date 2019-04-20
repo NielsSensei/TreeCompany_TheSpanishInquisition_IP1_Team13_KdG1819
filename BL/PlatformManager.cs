@@ -9,32 +9,39 @@ namespace BL
     {
         // Added by NG
         // Modified by NVZ
-        private PlatformRepository platformRep { get; set; }
+        private PlatformRepository PlatformRepo { get; set; }
+        private UserManager UserMan { get; set; }
         
         // Added by NG
         // Modified by NVZ
         public PlatformManager()
         {
-            platformRep = new PlatformRepository();
+            PlatformRepo = new PlatformRepository();
+            UserMan = new UserManager();
         }
         
         // Added by NG
         // Modified by NVZ
         //Platform 
         #region   
-        public Platform getPlatform(int id)
+        public Platform GetPlatform(int platformId)
         {
-            throw new NotImplementedException("Out of scope!");
+            return PlatformRepo.Read(platformId, true);
         }
         
-        public void makePlatform()
+        public void MakePlatform(Platform platform)
         {
-            throw new NotImplementedException("Out of scope!");
+            PlatformRepo.Create(platform);
         }
 
-        public void removePlatform(int id)
+        public void EditPlatform(Platform platform)
         {
-            throw new NotImplementedException("Out of scope!");
+            PlatformRepo.Update(platform);
+        }
+
+        public void RemovePlatform(int platformId)
+        {
+            PlatformRepo.Delete(platformId);
         }
         #endregion
         
@@ -42,47 +49,61 @@ namespace BL
         // Modified by NVZ
         //PlatformOwner
         #region
-        public void addOwner(int platformID, User Owner)
+        public void MakeOwner(int platformId, int userId)
         {
-            throw new NotImplementedException("Out of scope!");
+            var newOwner = UserMan.GetUser(userId, true);
+            PlatformRepo.Read(platformId,false).Owners.Add(newOwner);
         }
         
-        public PlatformOwner getPlatformOwner(int id)
+        public User GetPlatformOwner(int platformId, int userId)
         {
-            throw new NotImplementedException("Out of scope!");
+            var platform = PlatformRepo.Read(platformId, true);
+            var user = UserMan.GetUser(userId, true);
+            return platform.Owners.Find(u => u.Equals(user));
         }
         
-        public void removePlatformOwner(int id)
+        public void RemovePlatformOwner(int platformId, int userId)
         {
-            throw new NotImplementedException("Out of scope!");
+            var alteredPlatform = PlatformRepo.Read(platformId, true);
+            var removedOwner = UserMan.GetUser(userId, true);
+            alteredPlatform.Owners.Remove(removedOwner);
         }
 
-        public List<PlatformOwner> getOwners(int platformID)
+        public List<User> GetAllPlatformOwners(int platformId)
         {
-            throw new NotImplementedException("Out of scope!");
+            return PlatformRepo.Read(platformId, false).Owners;
         }
         #endregion
         
         // Added by NVZ
         // Other Methods
         #region
-        private PlatformOwner parseUserToOwner(User owner)
-        {
-            throw new NotImplementedException("Out of scope!");
-        }
-
         /*
          * We might use this for initialisation. - NVZ
          */
-        public void addUserToPlatform(int platformID, User user)
+        public void MakeUserToPlatform(int platformId, User user)
         {
             throw new NotImplementedException("I might need this!");
+//            var alteredPlatform = PlatformRepo.Read(platformId, true);
+//            alteredPlatform.AddUser(user);
+//            PlatformRepo.Update(alteredPlatform);
         }
 
-        public void editUserFromPlatform(int platformID, User user)
+        public void EditUserFromPlatform(int newPlatformId, User user)
         {
             throw new NotImplementedException("Out of scope!");
-        }     
+//            var currentPlatform = PlatformRepo.Read(user.Platform.Id, false);
+//            currentPlatform.Users.Remove(user);
+//            PlatformRepo.Update(currentPlatform);
+//            var newPlatform = PlatformRepo.Read(newPlatformId, false);
+//            newPlatform.AddUser(user);
+//            PlatformRepo.Update(newPlatform);
+        }
+
+        public void RemoveUserFromPlatform(int platformId, int userId)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }
