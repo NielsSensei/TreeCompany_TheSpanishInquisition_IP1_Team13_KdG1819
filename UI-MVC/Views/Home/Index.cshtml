@@ -2,10 +2,26 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div>
-    <h1>Welcome to the superadmin landing page!</h1>
-    @if (User.Identity.IsAuthenticated)
+@section Scripts
     {
-        <p>You're logged in</p>
-    }
+    <script type="module" src="~/dist/index.entry.js" defer></script>
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
+<div>
+    <partial name="PlatformTemplates/PlatformList.cshtml" />
 </div>
+
+@*
+        <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+    </div>
+*@
+
