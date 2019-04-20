@@ -1,0 +1,1 @@
+﻿console.log('The Index bundle has been loaded')

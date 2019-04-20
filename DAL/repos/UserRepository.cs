@@ -24,7 +24,7 @@ namespace DAL
         //Added by NVZ
         //Standard Methods
         #region
-        private UsersDTO convertToDTO(User obj)
+        private UsersDTO ConvertToDTO(User obj)
         {
             return new UsersDTO
             {
@@ -37,7 +37,7 @@ namespace DAL
             };
         }
 
-        private User convertToDomain(UsersDTO DTO)
+        private User ConvertToDomain(UsersDTO DTO)
         {
             return new User
             {
@@ -61,7 +61,7 @@ namespace DAL
             return user;
         }
 
-        private UserDetailsDTO retrieveDetailsFromUser(User user)
+        private UserDetailsDTO RetrieveDetailsFromUser(User user)
         {
             return new UserDetailsDTO
             {
@@ -74,7 +74,7 @@ namespace DAL
             };
         }
 
-        private Organisation retrieveOrganisation(Organisation user, UserDetailsDTO DTO)
+        private Organisation RetrieveOrganisation(Organisation user, UserDetailsDTO DTO)
         {
             user.Id = DTO.UserID;
             user.OrgName = DTO.OrgName;
@@ -83,7 +83,7 @@ namespace DAL
             return user;
         }
 
-        private UserDetailsDTO retrieveOrganisationInfo(Organisation user)
+        private UserDetailsDTO RetrieveOrganisationInfo(Organisation user)
         {
             return new UserDetailsDTO
             {
@@ -93,19 +93,19 @@ namespace DAL
             };
         }
 
-        private OrganisationEventsDTO convertToDTO(Event e){
+        private OrganisationEventsDTO ConvertToDTO(Event e){
             return new OrganisationEventsDTO
             {
                  EventID = e.Id,
                  UserID = e.Organisation.Id,
                  Name = e.Name,
                  Description = e.Description,
-                 startDate = e.StartDate,
-                 endDate = e.EndDate
+                 StartDate = e.StartDate,
+                 EndDate = e.EndDate
             };
         }
 
-        private Event convertToDomain(OrganisationEventsDTO DTO)
+        private Event ConvertToDomain(OrganisationEventsDTO DTO)
         {
             return new Event
             {
@@ -113,8 +113,8 @@ namespace DAL
                 Organisation = new Organisation { Id = DTO.EventID },
                 Name = DTO.Name,
                 Description = DTO.Description,
-                StartDate = DTO.startDate,
-                EndDate = DTO.endDate
+                StartDate = DTO.StartDate,
+                EndDate = DTO.EndDate
             };
         }
 
@@ -137,8 +137,8 @@ namespace DAL
                 }
             }
 
-            ctx.Users.Add(convertToDTO(obj));
-            ctx.UserDetails.Add(retrieveDetailsFromUser(obj));
+            ctx.Users.Add(ConvertToDTO(obj));
+            ctx.UserDetails.Add(RetrieveDetailsFromUser(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -157,8 +157,8 @@ namespace DAL
                 }
             }
 
-            ctx.Users.Add(convertToDTO(obj));
-            ctx.UserDetails.Add(retrieveDetailsFromUser(obj));
+            ctx.Users.Add(ConvertToDTO(obj));
+            ctx.UserDetails.Add(RetrieveDetailsFromUser(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -179,7 +179,7 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(usersDTO, "User", usersDTO.UserID);
             }
 
-            return convertToDomain(usersDTO);
+            return ConvertToDomain(usersDTO);
         }
        
         public User ReadWithDetails(int id)
@@ -199,12 +199,12 @@ namespace DAL
 
         public void Update(User obj)
         {
-            UsersDTO newUser = convertToDTO(obj);
-            UsersDTO foundUser = convertToDTO(Read(obj.Id, false));
+            UsersDTO newUser = ConvertToDTO(obj);
+            UsersDTO foundUser = ConvertToDTO(Read(obj.Id, false));
             foundUser = newUser;
 
-            UserDetailsDTO newDetails = retrieveDetailsFromUser(obj);
-            UserDetailsDTO foundDetails = retrieveDetailsFromUser(ReadWithDetails(obj.Id));
+            UserDetailsDTO newDetails = RetrieveDetailsFromUser(obj);
+            UserDetailsDTO foundDetails = RetrieveDetailsFromUser(ReadWithDetails(obj.Id));
             foundDetails = newDetails;
 
             ctx.SaveChanges();
@@ -212,8 +212,8 @@ namespace DAL
         
         public void Delete(int id)
         {
-            ctx.Users.Remove(convertToDTO(Read(id, false)));
-            ctx.UserDetails.Remove(retrieveDetailsFromUser(Read(id, false)));
+            ctx.Users.Remove(ConvertToDTO(Read(id, false)));
+            ctx.UserDetails.Remove(RetrieveDetailsFromUser(Read(id, false)));
             ctx.SaveChanges();
         }
         
@@ -271,7 +271,7 @@ namespace DAL
                 }
             }
 
-            ctx.OrganisationEvents.Add(convertToDTO(obj));
+            ctx.OrganisationEvents.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -292,20 +292,20 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(orgEventDTO, "Event", orgEventDTO.EventID);
             }
 
-            return convertToDomain(orgEventDTO);
+            return ConvertToDomain(orgEventDTO);
         }
         
         public void Update(Event obj)
         {
-            OrganisationEventsDTO newEvent = convertToDTO(obj);
-            OrganisationEventsDTO foundEvent = convertToDTO(ReadUserEvent(obj.Id, false));
+            OrganisationEventsDTO newEvent = ConvertToDTO(obj);
+            OrganisationEventsDTO foundEvent = ConvertToDTO(ReadUserEvent(obj.Id, false));
             foundEvent = newEvent;
             ctx.SaveChanges();
         }
         
         public void DeleteUserEvent(int userID, int eventID)
         {
-            ctx.OrganisationEvents.Remove(convertToDTO(ReadUserEvent(eventID, false)));
+            ctx.OrganisationEvents.Remove(ConvertToDTO(ReadUserEvent(eventID, false)));
             ctx.SaveChanges();
         }
         
@@ -315,7 +315,7 @@ namespace DAL
 
             foreach (OrganisationEventsDTO DTO in ctx.OrganisationEvents)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;

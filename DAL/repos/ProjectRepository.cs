@@ -28,7 +28,7 @@ namespace DAL
         // Added by NVZ
         // Standard Methods
         #region
-        private Project convertToDomain(ProjectsDTO DTO)
+        private Project ConvertToDomain(ProjectsDTO DTO)
         {
             return new Project()
             {
@@ -48,7 +48,7 @@ namespace DAL
             };
         }
 
-        private ProjectsDTO convertToDTO(Project project)
+        private ProjectsDTO ConvertToDTO(Project project)
         {
             return new ProjectsDTO()
             {
@@ -68,27 +68,27 @@ namespace DAL
             };
         }
 
-        private Phase convertToDomain(PhasesDTO DTO)
+        private Phase ConvertToDomain(PhasesDTO DTO)
         {
             return new Phase
             {
                 Id = DTO.PhaseID,
                 Project = new Project { Id = DTO.ProjectID },
                 Description = DTO.Description,
-                StartDate = DTO.startDate,
-                EndDate = DTO.endDate
+                StartDate = DTO.StartDate,
+                EndDate = DTO.EndDate
             };
         }
 
-        private PhasesDTO convertToDTO(Phase phase)
+        private PhasesDTO ConvertToDTO(Phase phase)
         {
             return new PhasesDTO
             {
                 PhaseID = phase.Id,
                 ProjectID = phase.Project.Id,
                 Description = phase.Description,
-                startDate = phase.StartDate,
-                endDate = phase.EndDate
+                StartDate = phase.StartDate,
+                EndDate = phase.EndDate
             };
         }
         #endregion
@@ -117,7 +117,7 @@ namespace DAL
                 }
             }
 
-            ctx.Projects.Add(convertToDTO(obj));
+            ctx.Projects.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj; 
@@ -146,20 +146,20 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(projectsDTO, "Project", projectsDTO.ProjectID);
             }
             
-            return convertToDomain(projectsDTO);
+            return ConvertToDomain(projectsDTO);
         }
 
         public void Update(Project obj)
         {
-            ProjectsDTO newProj = convertToDTO(obj);
-            ProjectsDTO foundProj = convertToDTO(Read(newProj.ProjectID, false));
+            ProjectsDTO newProj = ConvertToDTO(obj);
+            ProjectsDTO foundProj = ConvertToDTO(Read(newProj.ProjectID, false));
             foundProj = newProj;
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            ctx.Projects.Remove(convertToDTO(Read(id, false)));
+            ctx.Projects.Remove(ConvertToDTO(Read(id, false)));
             ctx.SaveChanges();
         }
         
@@ -169,7 +169,7 @@ namespace DAL
 
             foreach(ProjectsDTO DTO in ctx.Projects)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -215,20 +215,20 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phasesDTO.PhaseID);
             }
 
-            return convertToDomain(phasesDTO);
+            return ConvertToDomain(phasesDTO);
         }
 
         public void Update(Phase obj)
         {
-            PhasesDTO newPhase = convertToDTO(obj);
-            PhasesDTO foundPhase = convertToDTO(ReadPhase(obj.Project.Id, obj.Id, false));
+            PhasesDTO newPhase = ConvertToDTO(obj);
+            PhasesDTO foundPhase = ConvertToDTO(ReadPhase(obj.Project.Id, obj.Id, false));
             foundPhase = newPhase;
             ctx.SaveChanges();
         }
 
         public void Delete(int projectID, int phaseID)
         {
-            ctx.Phases.Remove(convertToDTO(ReadPhase(projectID,phaseID, false)));
+            ctx.Phases.Remove(ConvertToDTO(ReadPhase(projectID,phaseID, false)));
             ctx.SaveChanges();
         }
 
@@ -238,7 +238,7 @@ namespace DAL
 
             foreach (PhasesDTO DTO in ctx.Phases)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;

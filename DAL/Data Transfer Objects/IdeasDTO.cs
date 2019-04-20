@@ -7,7 +7,7 @@ namespace DAL.Data_Transfer_Objects
     class IdeasDTO
     {
         public int IdeaID { get; set; }
-        public int iQuestionID { get; set; }
+        public int IQuestionID { get; set; }
         public int UserID { get; set; }
         public bool Reported { get; set; }
         public bool ReviewByAdmin { get; set; }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using Domain.UserInput;
 
@@ -8,12 +9,12 @@ namespace BL
     public class QuestionnaireQuestionManager : IQuestionManager<QuestionnaireQuestion>
     {
         // Added by NVZ
-        private QuestionnaireQuestionsRepository questionnaireQuestionRepo { get; set; }
+        private QuestionnaireQuestionsRepository QuestionnaireQuestionRepo { get; set; }
         
         // Added by NVZ
         public QuestionnaireQuestionManager()
         {
-            questionnaireQuestionRepo = new QuestionnaireQuestionsRepository();
+            QuestionnaireQuestionRepo = new QuestionnaireQuestionsRepository();
         }
         
         // Added by NVZ
@@ -25,36 +26,36 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void editQuestion(string propName, int questionID)
+        public void EditQuestion(QuestionnaireQuestion question)
         {
-            throw new System.NotImplementedException("I might need this!");
+            QuestionnaireQuestionRepo.Update(question);
         }
         
         /*
          * A getter that probably is very useful. - NVZ
          * 
          */
-        public QuestionnaireQuestion getQuestion(int questionID, bool details)
+        public QuestionnaireQuestion GetQuestion(int questionId, bool details)
         {
-            throw new System.NotImplementedException("I might need this!");
+            return QuestionnaireQuestionRepo.Read(questionId, details);
         }
         
         /*
          * This is going to be useful for initialisation. - NVZ
          */
-        public void makeQuestion(QuestionnaireQuestion question, int moduleID)
+        public void MakeQuestion(QuestionnaireQuestion question, int moduleId)
         {
-            throw new System.NotImplementedException("I might need this!");
+            QuestionnaireQuestionRepo.Create(question);
         }
         
-        public void removeQuestion(int id)
+        public void RemoveQuestion(int questionId)
         {
-            throw new System.NotImplementedException("Out of Scope!");
+            QuestionnaireQuestionRepo.Delete(questionId);
         }
 
-        public IEnumerable<QuestionnaireQuestion> GetAll()
+        public List<QuestionnaireQuestion> GetAll()
         {
-            throw new NotImplementedException();
+            return QuestionnaireQuestionRepo.ReadAll().ToList();
         }
 
         #endregion
@@ -67,27 +68,29 @@ namespace BL
         * certainly not all of them. Please make a difference between
         * properties you need and the ones you do not. - NVZ
         * 
+        * UPDATE 20/4 see @QQRepo voor editen van antwoorden.
+        * 
         */
-        public void editFeedback(string propName, int feedbackID, int questionID)
+        public void EditAnswer(string propName, int answerId, int questionId)
         {
-            throw new System.NotImplementedException("I might need this!");
+            throw new NotImplementedException("I might need this!");
         }
         
         /*
          * This getter is good to show the result. - NVZ
          */
-        public List<object> getFeedback(int questionID, bool details)
+        public List<Answer> GetAnswers(int questionId, bool details)
         {
-            throw new System.NotImplementedException("I might need this!");
+            throw new NotImplementedException("I might need this!");
         }
         
         /*
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ
          */
-        public void makeFeedback(Object feedback, int moduleID, int questionID)
+        public void MakeAnswer(Answer answer, int moduleId, int questionId)
         {
-            throw new System.NotImplementedException("I need this!");
+            throw new NotImplementedException("I need this!");
         }
         #endregion
            
@@ -97,9 +100,9 @@ namespace BL
         /*
          * This is to define the enum type of this question. - NVZ
          */
-        public void defineQuestionType()
+        public void DefineQuestionType()
         {
-            throw new System.NotImplementedException("I might need this!");
+            throw new NotImplementedException("I might need this!");
         }
         
         /*
@@ -107,9 +110,9 @@ namespace BL
          * done correctly, not sure. Other uses are welcome. - NVZ
          * 
          */
-        public bool verifyQuestion(int questionID)
+        public bool VerifyQuestion(int questionId)
         {
-            throw new System.NotImplementedException("I might need this!");
+            throw new NotImplementedException("I might need this!");
         }
         
         /*
@@ -124,14 +127,14 @@ namespace BL
          * if we have the time I'll explain why. - NVZ
          * 
          */
-        public void handleQuestionAction(int questionID, string actionName)
+        public void HandleQuestionAction(int questionId, string actionName)
         {
-            throw new System.NotImplementedException("I might need this!");
+            throw new NotImplementedException("I might need this!");
         }
 
-        public IEnumerable<QuestionnaireQuestion> getAllByQuestionnaireId(int questionnaireId)
+        public List<QuestionnaireQuestion> GetAllByModuleId(int questionnaireId)
         {
-            return questionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId);
+            return QuestionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId).ToList();
         }
         #endregion
 
