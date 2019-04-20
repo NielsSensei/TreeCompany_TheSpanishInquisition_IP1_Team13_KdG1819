@@ -29,12 +29,12 @@ namespace BL
             return PlatformRepo.Read(platformId, true);
         }
         
-        public void AddPlatform(Platform platform)
+        public void MakePlatform(Platform platform)
         {
             PlatformRepo.Create(platform);
         }
 
-        public void ChangePlatform(Platform platform)
+        public void EditPlatform(Platform platform)
         {
             PlatformRepo.Update(platform);
         }
@@ -49,7 +49,7 @@ namespace BL
         // Modified by NVZ
         //PlatformOwner
         #region
-        public void AddOwner(int platformId, int userId)
+        public void MakeOwner(int platformId, int userId)
         {
             var newOwner = UserMan.GetUser(userId, true);
             PlatformRepo.Read(platformId,false).Owners.Add(newOwner);
@@ -81,7 +81,7 @@ namespace BL
         /*
          * We might use this for initialisation. - NVZ
          */
-        public void AddUserToPlatform(int platformId, User user)
+        public void MakeUserToPlatform(int platformId, User user)
         {
             throw new NotImplementedException("I might need this!");
 //            var alteredPlatform = PlatformRepo.Read(platformId, true);
@@ -89,7 +89,7 @@ namespace BL
 //            PlatformRepo.Update(alteredPlatform);
         }
 
-        public void ChangeUserFromPlatform(int newPlatformId, User user)
+        public void EditUserFromPlatform(int newPlatformId, User user)
         {
             throw new NotImplementedException("Out of scope!");
 //            var currentPlatform = PlatformRepo.Read(user.Platform.Id, false);
