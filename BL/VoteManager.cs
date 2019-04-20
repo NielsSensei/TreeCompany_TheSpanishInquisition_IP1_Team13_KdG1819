@@ -8,12 +8,12 @@ namespace BL
     public class VoteManager
     {
         // Added by NVZ
-        private IdeationVoteRepository voteRepo { get; set; }
+        private IdeationVoteRepository VoteRepo { get; set; }
 
         // Added by NVZ
         public VoteManager()
         {
-            voteRepo = new IdeationVoteRepository();
+            VoteRepo = new IdeationVoteRepository();
         }
         
         // Added By NVZ

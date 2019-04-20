@@ -108,7 +108,7 @@ namespace BL
         public void CreateVote(int feedbackId, int userId, int? deviceId, double? x, double? y)
         {
             Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
-            if (VoteMan.handleVotingOnFeedback(feedbackId, userId, deviceId, x, y))
+            if (VoteMan.HandleVotingOnFeedback(feedbackId, userId, deviceId, x, y))
             {
                 feedback.VoteCount++;
             }
