@@ -49,7 +49,7 @@ namespace BL
          * 
          */
         //Modified by NG
-        public void AddModule(Module module, int projectId)
+        public void MakeModule(Module module, int projectId)
         {
             var alteredProject = ProjectMan.GetProject(projectId, false);
             if (module.GetType() == typeof(Questionnaire))
@@ -67,7 +67,7 @@ namespace BL
         }
         
         //Added by NG
-        public void ChangeModule(Module module)
+        public void EditModule(Module module)
         {
             if (module.GetType() == typeof(Questionnaire))
             {
