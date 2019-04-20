@@ -34,7 +34,7 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-       public void ChangeUser(User user)
+       public void EditUser(User user)
        {
             UserRepo.Update(user);
        }
@@ -63,7 +63,7 @@ namespace BL
            return filteredUserList;
        }
 
-       public void AddAnonymousUser(User user)
+       public void MakeAnonymousUser(User user)
        {
            throw new NotImplementedException("Out of Scope!");
        } 
@@ -71,7 +71,7 @@ namespace BL
        /*
         * We might use this for initialisation - NVZ
         */
-       public void AddUser(User user)
+       public void MakeUser(User user)
        {
            UserRepo.Create(user);
            PlatformMan.AddUserToPlatform(user.Platform.Id, user);
@@ -95,7 +95,7 @@ namespace BL
         // Modified by NVZ
         //Event 
        #region
-       public void ChangeOrgEvent(Event orgEvent)
+       public void EditOrgEvent(Event orgEvent)
        {
            UserRepo.Update(orgEvent);
        }
@@ -105,7 +105,7 @@ namespace BL
            return UserRepo.ReadUserEvent(eventId, true);
        }
 
-       public void AddEvent(int userId, Event orgEvent)
+       public void MakeEvent(int userId, Event orgEvent)
        {
            UserRepo.Create(orgEvent);
            var alteredOrganisation = UserRepo.ReadOrganisation(userId);
@@ -126,7 +126,7 @@ namespace BL
         // Modified by NVZ
         //Organisation 
        #region
-       public void AddOrganisation(Organisation organisation)
+       public void MakeOrganisation(Organisation organisation)
        {
            UserRepo.Create(organisation);
            PlatformMan.AddUserToPlatform(organisation.Platform.Id,organisation);
