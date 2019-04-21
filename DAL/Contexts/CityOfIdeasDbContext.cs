@@ -36,19 +36,7 @@ namespace DAL.Contexts
             {
                 //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen. Dit wordt veranderd naar deployment 'pad'.
                 optionsBuilder
-                    .UseSqlServer("Data Source=LAPTOP-MESCK2VS;Initial Catalog=IP1_TSI_DB;Integrated Security=True", providerOptions => providerOptions.CommandTimeout(60))
-                    .UseLoggerFactory(new LoggerFactory(
-                        new[]
-                        {
-                            new DebugLoggerProvider(
-                                (category, level) =>
-                                    category == DbLoggerCategory.Database.Command.Name
-                                    && level == LogLevel.Information
-                                    )
-
-
-                        }
-                        ));
+                    .UseSqlServer(@"Server=jdbc:sqlserver://LAPTOP-MESCK2VS\SQLSERVER2017:1433;Database=IP1_TSI_DB;Trusted_Connection=True;");
             }
             
         }
