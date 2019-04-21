@@ -14,9 +14,7 @@ namespace DAL.Contexts
                 ctx.Database.EnsureDeleted();
 
             }
-            else ctx.Database.EnsureCreated();
-
-            
+            else ctx.Database.EnsureCreated();         
         }
     }
 }

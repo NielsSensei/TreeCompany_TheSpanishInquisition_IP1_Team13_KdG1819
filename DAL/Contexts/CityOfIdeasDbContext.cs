@@ -36,14 +36,21 @@ namespace DAL.Contexts
             {
                 //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen. Dit wordt veranderd naar deployment 'pad'.
                 optionsBuilder
-                    .UseSqlServer(@"Server=jdbc:sqlserver://LAPTOP-MESCK2VS\SQLSERVER2017:1433;Database=IP1_TSI_DB;Trusted_Connection=True;");
+                    .UseSqlServer(@"Server=LAPTOP-MESCK2VS\SQLSERVER2017:1433;Database=IP1_TSI_DB;Trusted_Connection=True;");
             }
             
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Relaties al gelegd - SB
+            modelBuilder.Entity<AnswersDTO>().HasKey(a => a.AnswerID);
+            /*
+             modelBuilder.Entity<Ticket>().HasIndex(t => t.State);
+
+            modelBuilder.Entity<TicketResponse>().Property<int>("TicketFK");
+            modelBuilder.Entity<TicketResponse>().HasOne(tr => tr.Ticket).WithMany(t => t.Responses)
+                                                 .HasForeignKey("TicketFK");
+             */
         }
 
         public DbSet<AnswersDTO> Answers { get; set; }
@@ -65,6 +72,5 @@ namespace DAL.Contexts
         public DbSet<UserDetailsDTO> UserDetails { get; set; }
         public DbSet<UsersDTO> Users { get; set; }
         public DbSet<VotesDTO> Votes { get; set; }
-
     }
 }
