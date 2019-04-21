@@ -44,20 +44,31 @@ namespace DAL.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AnswersDTO>().HasKey(a => a.AnswerID);
-            /*
-             modelBuilder.Entity<Ticket>().HasIndex(t => t.State);
-
-            modelBuilder.Entity<TicketResponse>().Property<int>("TicketFK");
-            modelBuilder.Entity<TicketResponse>().HasOne(tr => tr.Ticket).WithMany(t => t.Responses)
-                                                 .HasForeignKey("TicketFK");
-             */
+            modelBuilder.Entity<ChoicesDTO>().HasKey(c => c.ChoiceID);
+            modelBuilder.Entity<DevicesDTO>().HasKey(d => d.DeviceID);
+            modelBuilder.Entity<IdeaFieldsDTO>().HasKey(f => f.FieldID);
+            modelBuilder.Entity<IdeasDTO>().HasKey(i => i.IdeaID);
+            modelBuilder.Entity<IdeationQuestionsDTO>().HasKey(i => i.IQuestionID);
+            modelBuilder.Entity<IdeationsDTO>().HasKey(i => i.ModuleID);
+            modelBuilder.Entity<ModulesDTO>().HasKey(m => m.ModuleID);
+            modelBuilder.Entity<OptionsDTO>().HasKey(o => o.OptionID);
+            modelBuilder.Entity<OrganisationEventsDTO>().HasKey(o => o.EventID);
+            modelBuilder.Entity<PhasesDTO>().HasKey(p => p.PhaseID);
+            modelBuilder.Entity<PlatformsDTO>().HasKey(p => p.PlatformID);
+            modelBuilder.Entity<ProjectImagesDTO>().HasKey(p => p.ImageID);
+            modelBuilder.Entity<ProjectsDTO>().HasKey(p => p.ProjectID);
+            modelBuilder.Entity<QuestionnaireQuestionsDTO>().HasKey(q => q.QQuestionID);
+            modelBuilder.Entity<UserActivitiesDTO>().HasKey(u => u.ActivityID);
+            modelBuilder.Entity<UserDetailsDTO>().HasKey(u => u.UserID);
+            modelBuilder.Entity<UsersDTO>().HasKey(u => u.UserID);
+            modelBuilder.Entity<VotesDTO>().HasKey(v => v.VoteID);
         }
 
         public DbSet<AnswersDTO> Answers { get; set; }
         public DbSet<ChoicesDTO> Choices { get; set; }
         public DbSet<DevicesDTO> Devices { get; set; }
         public DbSet<IdeaFieldsDTO> IdeaFields { get; set; }
-        public DbSet<IdeasDTO> Ideas { get; set; }
+        public DbSet<IdeasDTO> Ideas { get; set; }        
         public DbSet<IdeationQuestionsDTO> IdeationQuestion { get; set; }
         public DbSet<IdeationsDTO> Ideations { get; set; }
         public DbSet<ModulesDTO> Modules { get; set; }
