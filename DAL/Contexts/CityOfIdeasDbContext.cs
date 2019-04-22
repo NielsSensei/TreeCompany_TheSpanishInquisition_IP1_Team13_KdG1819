@@ -57,7 +57,7 @@ namespace DAL.Contexts
         public DbSet<DevicesDTO> Devices { get; set; }
         public DbSet<IdeaFieldsDTO> IdeaFields { get; set; }
         public DbSet<IdeasDTO> Ideas { get; set; }        
-        public DbSet<IdeationQuestionsDTO> IdeationQuestion { get; set; }
+        public DbSet<IdeationQuestionsDTO> IdeationQuestions { get; set; }
         public DbSet<IdeationsDTO> Ideations { get; set; }
         public DbSet<ModulesDTO> Modules { get; set; }
         public DbSet<OptionsDTO> Options { get; set; }

@@ -177,90 +177,84 @@ INSERT INTO ideations(moduleID,userID,organisation,userIdea,requiredFields,event
 VALUES(2,7,0,1,41,0)
 
 /* Ideationquestions */
-INSERT INTO ideationquestions(iQuestionID,moduleID,questionTitle,description,websiteLink)
-VALUES(1,1,'Hoe maken we de Groenplaats groener?','Sinds 1990 is de Groenplaats niet meer groen zoals je kan zien via de link, dit is zeer jammer.','voorbeeldlink.be')
+INSERT INTO ideationquestions(iQuestionID,moduleID,questionTitle,description,websiteLink,deviceID)
+VALUES(1,1,'Hoe maken we de Groenplaats groener?','Sinds 1990 is de Groenplaats niet meer groen zoals je kan zien via de link, dit is zeer jammer.','voorbeeldlink.be',0)
 
 /* ideas */
-INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser)
-VALUES(1,1,1,0,0,1,'#MakeGroenplaatsGreenAgain','NIET GESELECTEERD',0)
+INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser,voteCount,retweetCount,shareCount,parentID)
+VALUES(1,1,1,0,0,1,'#MakeGroenplaatsGreenAgain','NIET GESELECTEERD',0,0,0,0,0)
 
-INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser)
-VALUES(2,1,1,0,0,1,'Groenplaats Stadspark','NIET GESELECTEERD',0)
+INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser,voteCount,retweetCount,shareCount,parentID)
+VALUES(2,1,1,0,0,1,'Groenplaats Stadspark','NIET GESELECTEERD',0,0,0,0,0)
 
-INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser)
-VALUES(3,1,1,0,0,1,'Theater','NIET GESELECTEERD',0)
+INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser,voteCount,retweetCount,shareCount,parentID)
+VALUES(3,1,1,0,0,1,'Theater','NIET GESELECTEERD',0,0,0,0,0)
 
-INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser)
-VALUES(4,1,1,0,0,1,'Cinema','NIET GESELECTEERD',0)
+INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser,voteCount,retweetCount,shareCount,parentID)
+VALUES(4,1,1,0,0,1,'Cinema','NIET GESELECTEERD',0,0,0,0,0)
 
 /* ideafields */
-INSERT INTO ideafields(fieldID,ideaID,fieldText)
-VALUES(1,1,'We maken een grote haag van bomen en struiken rond de Groenplaats om de grijze beton erbuiten te houden!')
+INSERT INTO ideafields(fieldID,ideaID,fieldText,locationX,locationY,Required)
+VALUES(1,1,'We maken een grote haag van bomen en struiken rond de Groenplaats om de grijze beton erbuiten te houden!',0,0,0)
 
-INSERT INTO ideafields(fieldID,ideaID,fieldText)
-VALUES(2,2,'Maken een aantal graspleintjes en bloembakken aan met stenen wandelpaden en een pleintje in het midden rond het standbeeld :)')
+INSERT INTO ideafields(fieldID,ideaID,fieldText,locationX,locationY,Required)
+VALUES(2,2,'Maken een aantal graspleintjes en bloembakken aan met stenen wandelpaden en een pleintje in het midden rond het standbeeld :)',0,0,0)
 
-INSERT INTO ideafields(fieldID,ideaID,fieldStrings)
-VALUES(3,2,'I see a gray square and I want to paint it green - Rolling Stoned')
+INSERT INTO ideafields(fieldID,ideaID,fieldStrings,locationX,locationY,Required)
+VALUES(3,2,'I see a gray square and I want to paint it green - Rolling Stoned',0,0,0)
 
-INSERT INTO ideafields(fieldID,ideaID,fieldText)
-VALUES(4,3,'Een locatie zo nabij het oude centrum moet evenveel cultuur hebben als het centrum zelf. Dus stel ik voor om hier regelmatige theater voorstelling te houden, zodat we de jongeren echte cultuur kunnen aanleren.')
+INSERT INTO ideafields(fieldID,ideaID,fieldText,locationX,locationY,Required)
+VALUES(4,3,'Een locatie zo nabij het oude centrum moet evenveel cultuur hebben als het centrum zelf. Dus stel ik voor om hier regelmatige theater voorstelling te houden, zodat we de jongeren echte cultuur kunnen aanleren.',0,0,0)
 
-INSERT INTO ideafields(fieldID,ideaID,fieldText)
-VALUES(5,4,'Nope, dom idee. Wij wille gewoon goeie films kunne zien, buiten op de Groenplaats. Ff pintje op café, laatste nieve film om middernacht opt gras buite. Der woont tog niemand, dus ook geen lawaaid overlast.')
+INSERT INTO ideafields(fieldID,ideaID,fieldText,locationX,locationY,Required)
+VALUES(5,4,'Nope, dom idee. Wij wille gewoon goeie films kunne zien, buiten op de Groenplaats. Ff pintje op café, laatste nieve film om middernacht opt gras buite. Der woont tog niemand, dus ook geen lawaaid overlast.',0,0,0)
 
 /* Devices */
 INSERT INTO devices(deviceID,locationX,locationY) 
 VALUES(1,55,55)
 
 /* votes */
-INSERT INTO votes(voteID,deviceID,inputID,userID,inputType,userMail,choices)
-VALUES(1,1,2,1,2,'niels.vanzandbergen@student.kdg.be','Yes')
+INSERT INTO votes(voteID,deviceID,inputID,inputType,userMail,choices)
+VALUES(1,1,2,2,'niels.vanzandbergen@student.kdg.be','Yes')
 
-INSERT INTO votes(voteID,deviceID,inputID,userID,inputType,userMail,choices)
-VALUES(2,1,2,3,2,'niels.vanzandbergen@student.kdg.be','No')
+INSERT INTO votes(voteID,deviceID,inputID,inputType,userMail,choices)
+VALUES(2,1,2,2,'niels.vanzandbergen@student.kdg.be','No')
 
-INSERT INTO votes(voteID,deviceID,inputID,userID,inputType,userMail,choices)
-VALUES(3,1,2,6,2,'niels.vanzandbergen@student.kdg.be','Yes')
+INSERT INTO votes(voteID,deviceID,inputID,inputType,userMail,choices)
+VALUES(3,1,2,2,'niels.vanzandbergen@student.kdg.be','Yes')
 
 /* useractivities 
 Note: de bedoeling van de keywords hier is dat ze vervangen worden door obj.
 */
-INSERT INTO useractivities(activityID,userID,platformID,eventID,actionDescription)
-VALUES(1,5,1,1,'username heeft een event georganiseerd.')
-
 INSERT INTO useractivities(activityID,userID,platformID,projectID,actionDescription)
-VALUES(2,7,1,1,'platform heeft een nieuw project geintroduceerd.')
-
-INSERT INTO useractivities(activityID,userID,platformID,projectID,phaseID,actionDescription)
-VALUES(3,7,1,1,2,'Nieuwe phase gestart binnen project.')
+VALUES(1,7,1,1,'platform heeft een nieuw project geintroduceerd.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,actionDescription)
-VALUES(4,7,1,1,1,'Nieuwe questionnaire toegevoegd aan project.')
+VALUES(2,7,1,1,1,'Nieuwe questionnaire toegevoegd aan project.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,actionDescription)
-VALUES(5,7,1,1,2,'Nieuwe ideation toegevoegd aan project.')
+VALUES(3,7,1,1,2,'Nieuwe ideation toegevoegd aan project.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,actionDescription)
-VALUES(6,7,1,1,2,1,'Nieuwe discussie gestart binnen ideation.')
+VALUES(4,7,1,1,2,1,'Nieuwe discussie gestart binnen ideation.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,ideaID,actionDescription)
-VALUES(7,1,1,1,2,1,1,'User heeft een nieuw idee gegeven binnen een ideation.')
+VALUES(5,1,1,1,2,1,1,'User heeft een nieuw idee gegeven binnen een ideation.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,ideaID,actionDescription)
-VALUES(8,1,1,1,2,1,2,'User heeft een nieuw idee gegeven binnen een ideation.')
+VALUES(6,1,1,1,2,1,2,'User heeft een nieuw idee gegeven binnen een ideation.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,ideaID,actionDescription)
-VALUES(9,1,1,1,2,1,3,'User heeft een nieuw idee gegeven binnen een ideation.')
+VALUES(7,1,1,1,2,1,3,'User heeft een nieuw idee gegeven binnen een ideation.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,ideaID,actionDescription)
-VALUES(10,1,1,1,2,1,4,'User heeft een nieuw idee gegeven binnen een ideation.')
+VALUES(8,1,1,1,2,1,4,'User heeft een nieuw idee gegeven binnen een ideation.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,ideaID,voteID,actionDescription)
-VALUES(11,1,1,1,2,1,2,1,'User heeft gestemd op een idee.')
+VALUES(9,1,1,1,2,1,2,1,'User heeft gestemd op een idee.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,ideaID,voteID,actionDescription)
-VALUES(12,3,1,1,2,1,2,1,'User heeft gestemd op een idee.')
+VALUES(10,3,1,1,2,1,2,1,'User heeft gestemd op een idee.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,ideaID,voteID,actionDescription)
-VALUES(13,6,1,1,2,1,2,1,'User heeft gestemd op een idee.')
+VALUES(11,6,1,1,2,1,2,1,'User heeft gestemd op een idee.')

@@ -225,7 +225,7 @@ namespace DAL.repos
                 }
             }
 
-            ctx.IdeationQuestion.Add(ConvertToDTO(obj));
+            ctx.IdeationQuestions.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -237,12 +237,12 @@ namespace DAL.repos
 
             if (details)
             {
-                ideationQuestionDTO = ctx.IdeationQuestion.AsNoTracking().First(i => i.IQuestionID == id);
+                ideationQuestionDTO = ctx.IdeationQuestions.AsNoTracking().First(i => i.IQuestionID == id);
                 ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.IQuestionID);
             }
             else
             {
-                ideationQuestionDTO = ctx.IdeationQuestion.First(i => i.IQuestionID == id);
+                ideationQuestionDTO = ctx.IdeationQuestions.First(i => i.IQuestionID == id);
                 ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.IQuestionID);
             }
 
@@ -274,7 +274,7 @@ namespace DAL.repos
         {
             IEnumerable<IdeationQuestion> myQuery = new List<IdeationQuestion>();
 
-            foreach (IdeationQuestionsDTO DTO in ctx.IdeationQuestion)
+            foreach (IdeationQuestionsDTO DTO in ctx.IdeationQuestions)
             {
                 myQuery.Append(ConvertToDomain(DTO));
             }
