@@ -4,6 +4,7 @@
     Layout = "_Layout";
 }
 
+<title>Overzicht van Ideeën</title>
 <h2>Hier zie je een overzicht van alle ideeën</h2>
 
 <table class="table">
@@ -18,21 +19,8 @@
         <th>Aantal Shares</th>
         <th>Aantal Retweets</th>
     </tr>
-    @foreach (Domain.UserInput.Idea idea in Model)
-    {
-        <tr>
-            <td>@idea.Id</td>
-            <!-- TODO: link naar Ideation Thread -->
-            <td>@idea.IdeaQuestion.Id</td>
-            <!-- TODO: link naar User profiel? -->
-            <td>@idea.User.Id</td>
-            <td>@idea.Reported</td>
-            <td>@idea.ReviewByAdmin</td>
-            <td>@idea.Title</td>
-            <td>@idea.VoteCount</td>
-            <td>@idea.ShareCount</td>
-            <td>@idea.RetweetCount</td>
-        </tr>
-    }
+    <!-- TODO: link naar Ideation Thread -->
+    <!-- TODO: link naar User profiel? -->
 </table>
+
 

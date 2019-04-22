@@ -24,8 +24,7 @@ namespace DAL.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen. Dit wordt veranderd naar deployment 'pad'.
-                optionsBuilder.UseSqlite("Data Source=IP1_TSI_DB.sqlite");
+                optionsBuilder.UseSqlite("Data Source=IP1_TSI_DB.db");
             }
             
         }

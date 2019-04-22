@@ -347,7 +347,7 @@ namespace DAL.repos
                 } else if (fields[i].FieldStrings != null)
                 {
                     idea.Cfield = ConvertClosedFieldToDomain(fields[i]);
-                } else if(fields[i].LocationX != null)
+                } else if(fields[i].LocationX > 0)
                 {
                     idea.Mfield = ConvertMapFieldToDomain(fields[i]);
                 } else if(fields[i].UploadedImage != null)
@@ -416,7 +416,7 @@ namespace DAL.repos
 
             foreach (IdeasDTO DTO in ctx.Ideas)
             {
-                myQuery.Append(ReadWithFields(DTO.IdeaID));
+                myQuery.Append(ReadIdea(DTO.IdeaID,false));
             }
 
             return myQuery;
@@ -446,7 +446,7 @@ namespace DAL.repos
                 {
                     myQuery.Append(ConvertClosedFieldToDomain(DTO));
                 }
-                else if (DTO.LocationX != null)
+                else if (DTO.LocationX > 0)
                 {
                     myQuery.Append(ConvertMapFieldToDomain(DTO));
                 }

@@ -38,28 +38,28 @@ VALUES(8,'TSI_SuperAdmin','niels.vanzandbergen@student.kdg.be',6,1)
 BIT 0 = true | 1 = false 
 */
 INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate)
-VALUES(1,'9120',0,0,1,'1997-09-08')
+VALUES(1,'9120',0,1,1,'1997-09-08')
 
 INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate)
-VALUES(2,'9120',1,1,0,'1997-09-08')
+VALUES(2,'9120',1,2,0,'1997-09-08')
 
 INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate)
-VALUES(3,'9120',0,2,0,'1997-09-08')
+VALUES(3,'9120',0,3,0,'1997-09-08')
 
 INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate)
-VALUES(4,'9120',0,0,1,'1997-09-08')
+VALUES(4,'9120',0,1,1,'1997-09-08')
 
-INSERT INTO userdetails(userID,zipcode,banned,active,orgName,description)
-Values(5,'9120',0,1,'The Spanish Inquisition','Een groep programmeurs die klaar is om de wereld over te nemen omdat niemand hen verwacht')
-
-INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate)
-VALUES(6,'9120',0,0,1,'1997-09-08')
+INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate,orgName,description)
+Values(5,'9120',0,0,1,'30-01-2019','The Spanish Inquisition','Een groep programmeurs die klaar is om de wereld over te nemen omdat niemand hen verwacht')
 
 INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate)
-VALUES(7,'9120',0,0,1,'1997-09-08')
+VALUES(6,'9120',0,1,1,'1997-09-08')
 
 INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate)
-VALUES(8,'9120',0,0,1,'1997-09-08')
+VALUES(7,'9120',0,1,1,'1997-09-08')
+
+INSERT INTO userdetails(userID,zipcode,banned,gender,active,birthDate)
+VALUES(8,'9120',0,1,1,'1997-09-08')
 
 /* Organisationevents */
 INSERT INTO organisationevents(eventID,userID,name,description,startDate,endDate)
@@ -76,8 +76,8 @@ likeVisbility
 5 = fblikecount & twitterlikecount
 6 = alle 3
 */
-INSERT INTO projects(projectID,currentPhaseID,userID,platformID,title,goal,status,visible,likeVisibility)
-VALUES(1,1,7,1,'GROENplaats','De Antwerpse Groenplaats terug groen maken','NIET GESTART',1,6)
+INSERT INTO projects(projectID,currentPhaseID,userID,platformID,title,goal,status,visible,likeVisibility,reactionCount,likeCount,fbLikeCount,twitterLikeCOunt)
+VALUES(1,1,7,1,'GROENplaats','De Antwerpse Groenplaats terug groen maken','NIET GESTART',1,6,0,0,0,0)
 
 /* Phases */
 INSERT INTO phases(phaseID,projectID,description,startDate,endDate)
@@ -87,11 +87,11 @@ INSERT INTO phases(phaseID,projectID,description,startDate,endDate)
 VALUES(2,1,'Gebruik van nieuwe groene ruimte','2019-04-01','2019-04-30')
 
 /* Modules */
-INSERT INTO modules(moduleID,projectID,phaseID,onGoing,tags,isQuestionnaire)
-VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1)
+INSERT INTO modules(moduleID,projectID,phaseID,onGoing,tags,isQuestionnaire,likeCount,fbLikeCount,twitterLikeCOunt,shareCount,retweetCount)
+VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1,0,0,0,0,0)
 
-INSERT INTO modules(moduleID,projectID,phaseID,onGoing,tags,isQuestionnaire)
-VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0)
+INSERT INTO modules(moduleID,projectID,phaseID,onGoing,tags,isQuestionnaire,likeCount,fbLikeCount,twitterLikeCOunt,shareCount,retweetCount)
+VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0,0,0,0,0,0)
 
 /* QuestionnaireQuestions 
 0 = open                                                                                                                                                       
@@ -173,8 +173,8 @@ INSERT INTO choices(choiceID,answerID,optionID)
 VALUES(4,4,9)
 
 /* Ideations */
-INSERT INTO ideations(moduleID,userID,organisation,userIdea,requiredFields)
-VALUES(2,7,0,1,41)
+INSERT INTO ideations(moduleID,userID,organisation,userIdea,requiredFields,eventID)
+VALUES(2,7,0,1,41,0)
 
 /* Ideationquestions */
 INSERT INTO ideationquestions(iQuestionID,moduleID,questionTitle,description,websiteLink)
