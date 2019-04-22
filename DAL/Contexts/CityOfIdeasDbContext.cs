@@ -1,15 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain.Projects;
-using Domain.Common;
-using Domain.UserInput;
-using Domain.Users;
-using Domain;
 using DAL.Data_Transfer_Objects;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace DAL.Contexts
 {
@@ -35,8 +25,7 @@ namespace DAL.Contexts
             if (!optionsBuilder.IsConfigured)
             {
                 //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen. Dit wordt veranderd naar deployment 'pad'.
-                optionsBuilder
-                    .UseSqlServer(@"Server=LAPTOP-MESCK2VS\SQLSERVER2017:1433;Database=IP1_TSI_DB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlite("Data Source=IP1_TSI_DB.sqlite");
             }
             
         }
