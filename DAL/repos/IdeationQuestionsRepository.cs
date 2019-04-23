@@ -7,6 +7,7 @@ using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
 using Domain.Users;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL.repos
 {
@@ -225,7 +226,7 @@ namespace DAL.repos
                 }
             }
 
-            ctx.IdeationQuestion.Add(ConvertToDTO(obj));
+            ctx.IdeationQuestions.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -237,12 +238,12 @@ namespace DAL.repos
 
             if (details)
             {
-                ideationQuestionDTO = ctx.IdeationQuestion.AsNoTracking().First(i => i.IQuestionID == id);
+                ideationQuestionDTO = ctx.IdeationQuestions.AsNoTracking().First(i => i.IQuestionID == id);
                 ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.IQuestionID);
             }
             else
             {
-                ideationQuestionDTO = ctx.IdeationQuestion.First(i => i.IQuestionID == id);
+                ideationQuestionDTO = ctx.IdeationQuestions.First(i => i.IQuestionID == id);
                 ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.IQuestionID);
             }
 
@@ -274,7 +275,7 @@ namespace DAL.repos
         {
             IEnumerable<IdeationQuestion> myQuery = new List<IdeationQuestion>();
 
-            foreach (IdeationQuestionsDTO DTO in ctx.IdeationQuestion)
+            foreach (IdeationQuestionsDTO DTO in ctx.IdeationQuestions)
             {
                 myQuery.Append(ConvertToDomain(DTO));
             }
@@ -347,7 +348,7 @@ namespace DAL.repos
                 } else if (fields[i].FieldStrings != null)
                 {
                     idea.Cfield = ConvertClosedFieldToDomain(fields[i]);
-                } else if(fields[i].LocationX != null)
+                } else if(fields[i].LocationX > 0)
                 {
                     idea.Mfield = ConvertMapFieldToDomain(fields[i]);
                 } else if(fields[i].UploadedImage != null)
@@ -412,11 +413,12 @@ namespace DAL.repos
 
         public IEnumerable<Idea> ReadAllIdeas()
         {
-            IEnumerable<Idea> myQuery = new List<Idea>();
+            List<Idea> myQuery = new List<Idea>();
 
             foreach (IdeasDTO DTO in ctx.Ideas)
             {
-                myQuery.Append(ReadWithFields(DTO.IdeaID));
+                Idea idea = ReadIdea(DTO.IdeaID, false);
+                myQuery.Add(idea);
             }
 
             return myQuery;
@@ -446,7 +448,7 @@ namespace DAL.repos
                 {
                     myQuery.Append(ConvertClosedFieldToDomain(DTO));
                 }
-                else if (DTO.LocationX != null)
+                else if (DTO.LocationX > 0)
                 {
                     myQuery.Append(ConvertMapFieldToDomain(DTO));
                 }
