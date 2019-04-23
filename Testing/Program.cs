@@ -13,7 +13,7 @@ namespace Testing
             IdeationQuestionsRepository repo = new IdeationQuestionsRepository();
             
             
-            Console.WriteLine(repo.ReadAllIdeas().Count());
+            Console.WriteLine(repo.ReadAllIdeas());
             Console.WriteLine(mgr.GetIdeas().Count);
         }
     }

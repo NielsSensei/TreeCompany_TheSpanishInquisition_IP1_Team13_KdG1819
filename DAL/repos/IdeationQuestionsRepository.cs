@@ -7,6 +7,7 @@ using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
 using Domain.Users;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL.repos
 {
@@ -412,11 +413,12 @@ namespace DAL.repos
 
         public IEnumerable<Idea> ReadAllIdeas()
         {
-            IEnumerable<Idea> myQuery = new List<Idea>();
+            List<Idea> myQuery = new List<Idea>();
 
             foreach (IdeasDTO DTO in ctx.Ideas)
             {
-                myQuery.Append(ReadIdea(DTO.IdeaID,false));
+                Idea idea = ReadIdea(DTO.IdeaID, false);
+                myQuery.Add(idea);
             }
 
             return myQuery;
