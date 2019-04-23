@@ -72,7 +72,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = Url.Content("~/ConfirmAccount");
             if (ModelState.IsValid)
             {
                 var user = new UIMVCUser {
