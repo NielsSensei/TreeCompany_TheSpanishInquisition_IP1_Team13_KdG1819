@@ -43,6 +43,12 @@ namespace BL
         {
             PlatformRepo.Delete(platformId);
         }
+
+        // Added by XV
+        public IEnumerable<Platform> ReadAllPlatforms()
+        {
+            return PlatformRepo.ReadAll();
+        }
         #endregion
         
         // Added by NG
