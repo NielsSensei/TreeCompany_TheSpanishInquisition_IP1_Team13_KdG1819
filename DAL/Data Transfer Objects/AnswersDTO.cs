@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DAL.Data_Transfer_Objects
+﻿namespace DAL.Data_Transfer_Objects
 {
     class AnswersDTO
     {
