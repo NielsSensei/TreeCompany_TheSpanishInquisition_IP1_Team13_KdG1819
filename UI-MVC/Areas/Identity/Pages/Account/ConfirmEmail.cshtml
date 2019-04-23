@@ -1,0 +1,18 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Email bevestigd.";
+}
+
+@section Tags {
+    <script type="module" src="~/js/confirmemail.js" defer></script>
+}
+
+
+
+<h1>@ViewData["Title"]</h1>
+<div>
+    <p>
+        Bedankt om je mail te bevestigen, je wordt omgeleid naar de loginpagina in <span id="countdown">10</span>
+    </p>
+</div>
