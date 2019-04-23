@@ -31,7 +31,7 @@ CREATE TABLE platforms(
 	platformID INT IDENTITY  PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	siteUrl VARCHAR(50) NOT NULL,
-	iconImage VARBINARY(MAX)
+	iconImage VARBINARY(255)
 	
 )
 
@@ -70,12 +70,10 @@ CREATE TABLE organisationevents(
 	name VARCHAR(100) NOT NULL,
 	description VARCHAR(255) NOT NULL,
 	startDate DATE NOT NULL,
-	endDate DATE NOT NULL
+	endDate DATE NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT fk_userevents_users FOREIGN KEY (userID) references users(userID)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
+	CONSTRAINT fk_userevents_users FOREIGN KEY (userID) references users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT chk_userevents_startDate CHECK (startDate <= enddate),
 	CONSTRAINT chk_userevents_endDate CHECK (endDate >= startDate)
 )
@@ -136,7 +134,7 @@ CREATE TABLE modules(
 CREATE TABLE projectimages(
 	projectID INT NOT NULL,
 	imageID INT IDENTITY PRIMARY KEY,
-	projectImage VARBINARY(MAX),
+	projectImage VARBINARY(255),
 
 	/*Constraints*/
 	CONSTRAINT fk_projectimages_projects FOREIGN KEY (projectID) references projects(projectID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -190,7 +188,7 @@ CREATE TABLE ideations (
 	organisation BIT NOT NULL,
 	eventID INT,
 	userIdea BIT NOT NULL,
-	mediaFile VARBINARY(MAX),
+	mediaFile VARBINARY(255),
 	requiredFields tinyint NOT NULL,
 	extraInfo VARCHAR(100),
 
@@ -253,8 +251,8 @@ CREATE TABLE ideafields(
 	locationY FLOAT,
 	searchable BIT,
 	url VARCHAR(50),
-	uploadedImage VARBINARY(MAX),
-	uploadedMedia VARBINARY(MAX),
+	uploadedImage VARBINARY(255),
+	uploadedMedia VARBINARY(255),
 
 	CONSTRAINT fk_ideafields_ideas FOREIGN KEY (ideaID) references ideas(ideaID) 
 
