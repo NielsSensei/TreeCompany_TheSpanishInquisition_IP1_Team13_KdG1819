@@ -253,7 +253,8 @@ namespace DAL.repos
         public void Update(IdeationQuestion obj)
         {
             IdeationQuestionsDTO newIdeationQuestion = ConvertToDTO(obj);
-            IdeationQuestionsDTO foundIdeationQuestion = ConvertToDTO(Read(obj.Id, false));
+            IdeationQuestion found = Read(obj.Id, false);
+            IdeationQuestionsDTO foundIdeationQuestion = ConvertToDTO(found);
             foundIdeationQuestion = newIdeationQuestion;
 
             ctx.SaveChanges();
@@ -273,11 +274,11 @@ namespace DAL.repos
 
         public IEnumerable<IdeationQuestion> ReadAll()
         {
-            IEnumerable<IdeationQuestion> myQuery = new List<IdeationQuestion>();
+            List<IdeationQuestion> myQuery = new List<IdeationQuestion>();
 
             foreach (IdeationQuestionsDTO DTO in ctx.IdeationQuestions)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -366,27 +367,33 @@ namespace DAL.repos
         public void Update(Idea obj)
         {
             IdeasDTO newIdea = ConvertToDTO(obj);
-            IdeasDTO foundIdea = ConvertToDTO(ReadIdea(obj.Id, false));
+            Idea found = ReadIdea(obj.Id, false);
+            IdeasDTO foundIdea = ConvertToDTO(found);
             foundIdea = newIdea;
 
             IdeaFieldsDTO newTextField = ConvertToDTO(obj.Field);
-            IdeaFieldsDTO foundTextField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Field.Id));
+            Field foundText = ReadAllFields().ToList().First(f => f.Id == obj.Field.Id);
+            IdeaFieldsDTO foundTextField = ConvertToDTO(foundText);
             newTextField = foundTextField;
 
             IdeaFieldsDTO newCField = ConvertToDTO(obj.Cfield);
-            IdeaFieldsDTO foundCField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Cfield.Id));
+            ClosedField foundClosed = (ClosedField) ReadAllFields().ToList().First(f => f.Id == obj.Cfield.Id);
+            IdeaFieldsDTO foundCField = ConvertToDTO(foundClosed);
             newCField = foundCField;
 
             IdeaFieldsDTO newMField = ConvertToDTO(obj.Mfield);
-            IdeaFieldsDTO foundMField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Mfield.Id));
+            MapField foundMap = (MapField) ReadAllFields().ToList().First(f => f.Id == obj.Mfield.Id);
+            IdeaFieldsDTO foundMField = ConvertToDTO(foundMap);
             newMField = foundMField;
 
             IdeaFieldsDTO newIField = ConvertToDTO(obj.Ifield);
-            IdeaFieldsDTO foundIField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Ifield.Id));
+            ImageField foundImage = (ImageField) ReadAllFields().ToList().First(f => f.Id == obj.Ifield.Id);
+            IdeaFieldsDTO foundIField = ConvertToDTO(foundImage);
             newIField = foundIField;
 
             IdeaFieldsDTO newVField = ConvertToDTO(obj.Vfield);
-            IdeaFieldsDTO foundVField = ConvertToDTO(ReadAllFields().ToList().First(f => f.Id == obj.Vfield.Id));
+            VideoField foundVideo = (VideoField) ReadAllFields().ToList().First(f => f.Id == obj.Vfield.Id);
+            IdeaFieldsDTO foundVField = ConvertToDTO(foundVideo);
             newVField = foundVField;
 
             ctx.SaveChanges();
@@ -436,29 +443,29 @@ namespace DAL.repos
 
         public IEnumerable<Field> ReadAllFields()
         {
-            IEnumerable<Field> myQuery = new List<Field>();
+            List<Field> myQuery = new List<Field>();
 
             foreach (IdeaFieldsDTO DTO in ctx.IdeaFields)
             {
                 if (DTO.FieldText != null)
                 {
-                    myQuery.Append(ConvertFieldToDomain(DTO));
+                    myQuery.Add(ConvertFieldToDomain(DTO));
                 }
                 else if (DTO.FieldStrings != null)
                 {
-                    myQuery.Append(ConvertClosedFieldToDomain(DTO));
+                    myQuery.Add(ConvertClosedFieldToDomain(DTO));
                 }
                 else if (DTO.LocationX > 0)
                 {
-                    myQuery.Append(ConvertMapFieldToDomain(DTO));
+                    myQuery.Add(ConvertMapFieldToDomain(DTO));
                 }
                 else if (DTO.UploadedImage != null)
                 {
-                    myQuery.Append(ConvertImageFieldToDomain(DTO));
+                    myQuery.Add(ConvertImageFieldToDomain(DTO));
                 }
                 else if (DTO.UploadedMedia != null)
                 {
-                    myQuery.Append(ConvertVideoFieldToDomain(DTO));
+                    myQuery.Add(ConvertVideoFieldToDomain(DTO));
                 }
             }
 

@@ -152,24 +152,26 @@ namespace DAL
         public void Update(Project obj)
         {
             ProjectsDTO newProj = ConvertToDTO(obj);
-            ProjectsDTO foundProj = ConvertToDTO(Read(newProj.ProjectID, false));
+            Project found = Read(newProj.ProjectID, false);
+            ProjectsDTO foundProj = ConvertToDTO(found);
             foundProj = newProj;
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            ctx.Projects.Remove(ConvertToDTO(Read(id, false)));
+            Project toDelete = Read(id, false);
+            ctx.Projects.Remove(ConvertToDTO(toDelete));
             ctx.SaveChanges();
         }
         
         public IEnumerable<Project> ReadAll()
         {
-            IEnumerable<Project> myQuery = new List<Project>();
+            List<Project> myQuery = new List<Project>();
 
             foreach(ProjectsDTO DTO in ctx.Projects)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -221,24 +223,26 @@ namespace DAL
         public void Update(Phase obj)
         {
             PhasesDTO newPhase = ConvertToDTO(obj);
-            PhasesDTO foundPhase = ConvertToDTO(ReadPhase(obj.Project.Id, obj.Id, false));
+            Phase found = ReadPhase(obj.Project.Id, obj.Id, false);
+            PhasesDTO foundPhase = ConvertToDTO(found);
             foundPhase = newPhase;
             ctx.SaveChanges();
         }
 
         public void Delete(int projectID, int phaseID)
         {
-            ctx.Phases.Remove(ConvertToDTO(ReadPhase(projectID,phaseID, false)));
+            Phase toDelete = ReadPhase(projectID, phaseID, false);
+            ctx.Phases.Remove(ConvertToDTO(toDelete));
             ctx.SaveChanges();
         }
 
         public IEnumerable<Phase> ReadAllPhases(int projectID)
         {
-            IEnumerable<Phase> myQuery = new List<Phase>();
+            List<Phase> myQuery = new List<Phase>();
 
             foreach (PhasesDTO DTO in ctx.Phases)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(DTO));
             }
 
             return myQuery;
