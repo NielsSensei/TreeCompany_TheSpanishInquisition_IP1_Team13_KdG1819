@@ -5,39 +5,32 @@
     ViewData["Title"] = "Overzicht van Ideeën";
     Layout = "_Layout";
 }
-<body>
-    <h2>Hier zie je een overzicht van alle ideeën</h2>
-    <hr/>
-    <div class="form-group">
-        <div class="container">
-           <div class="row" id="combo">
-                <div class="col-2">
-                    <label >Selecteer een filter:</label>
-                </div>
-                <div class="col-10">
-                    <select class="form-control">
-                        <option>Alle ideeën</option>
-                        <option>Gerapporteerde ideeën</option>
-                        <option>Ideeën die een admin moet verwerken</option>
-                    </select> 
-                </div>
+
+<h2>Hier zie je een overzicht van alle ideeën</h2>
+<hr/>
+<div class="form-group">
+    <div class="container">
+        <div class="row" id="combo">
+            <div class="col-2">
+                <label >Selecteer een filter:</label>
             </div>
-        </div>    
-    </div>
-    <table class="table">
-        <tr>
-            <th>Id</th>
-            <th>CentraleVraag</th>
-            <th>User</th>
-            <th>Review door Moderator nodig?</th>
-            <th>Review door Admin nodig?</th>
-            <th>Titel</th>
-            <th>Aantal Stemmen</th>
-            <th>Aantal Shares</th>
-            <th>Aantal Retweets</th>
-        </tr>
-        <!-- TODO: link naar Ideation Thread -->
-        <!-- TODO: link naar User profiel? -->
+            <div class="col-10">
+                <select class="form-control">
+                    <option>Alle ideeën</option>
+                    <option>Gerapporteerde ideeën</option>
+                    <option>Ideeën die een admin moet verwerken</option>
+                </select> 
+            </div>
+        </div>
+    </div>    
+</div>
+<table class="table">
+    <tr><th>Id</th><th>CentraleVraag</th><th>User</th><th>Review door Moderator nodig?</th>' +
+        '<th>Review door Admin nodig?</th><th>Titel</th><th>Aantal Stemmen</th><th>Aantal Shares</th>' +
+        '<th>Aantal Retweets</th></tr>
+    <!-- TODO: link naar Ideation Thread -->
+    <!-- TODO: link naar User profiel? -->
+    <form asp-controller="Moderation" asp-action="CollectAllIdeas">
         @foreach (Idea idea in Model)
         {
             <tr>
@@ -52,5 +45,6 @@
                 <td>@idea.RetweetCount</td>
             </tr>
         }
-    </table>
-</body>
+
+    </form>
+</table>

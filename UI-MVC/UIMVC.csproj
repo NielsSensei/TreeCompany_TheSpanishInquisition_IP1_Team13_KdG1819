@@ -22,6 +22,7 @@
   <ItemGroup>
     <Content Remove="$(WWWRoot)**" />
     <Content Include="$(WWWRoot)**" Exclude="$(WWWRoot)js\**; $(WWWRoot)css\**; $(WWWRoot)ts\**; $(WWWRoot)scss\**; $(WWWRoot)sass\**" />
+    <Content Include="wwwroot\js\collectallideas.js" />
     <None Remove="$(WWWRoot)**" />
     <None Include="$(WWWRoot)**" Exclude="$(WWWRoot)dist\**" />
   </ItemGroup>
