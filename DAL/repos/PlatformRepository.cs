@@ -47,9 +47,7 @@ namespace DAL
             };
         }
         #endregion
-
-       
-
+        
         // Added by NVZ
         // Platform CRUD
         #region
@@ -61,7 +59,7 @@ namespace DAL
             {
                 if (ExtensionMethods.HasMatchingWords(p.Name, obj.Name) > 0)
                 {
-                    throw new DuplicateNameException("Platform(ID=" + obj.Id + ") met naam " + obj.Name +" heeft dezelfde naam als Platform(ID=" + p.Id + 
+                    throw new DuplicateNameException("Platform(ID=" + obj.Id + ") met naam " + obj.Name + " heeft dezelfde naam als Platform(ID=" + p.Id +
                         " met naam " + p.Name);
                 }
             }
@@ -103,7 +101,7 @@ namespace DAL
             ctx.Platforms.Remove(ConvertToDTO(Read(id, false)));
             ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Platform> ReadAll()
         {
             IEnumerable<Platform> myQuery = new List<Platform>();
