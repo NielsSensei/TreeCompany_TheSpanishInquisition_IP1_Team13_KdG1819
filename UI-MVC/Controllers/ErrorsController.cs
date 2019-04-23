@@ -36,5 +36,12 @@ namespace UIMVC.Controllers
 
             return View();
         }
+
+        // Redirect after registering an account
+        [Route("ConfirmAccount")]
+        public IActionResult ConfirmAccount()
+        {
+            return View();
+        }
     }
 }

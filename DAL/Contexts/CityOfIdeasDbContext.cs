@@ -1,15 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain.Projects;
-using Domain.Common;
-using Domain.UserInput;
-using Domain.Users;
-using Domain;
 using DAL.Data_Transfer_Objects;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace DAL.Contexts
 {
@@ -34,36 +24,40 @@ namespace DAL.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //TODO: (IMPORTANT) Elk teammember moet dit voor hemzelf veranderen. Dit wordt veranderd naar deployment 'pad'.
-                optionsBuilder
-                    .UseSqlServer("Data Source=LAPTOP-MESCK2VS;Initial Catalog=IP1_TSI_DB;Integrated Security=True", providerOptions => providerOptions.CommandTimeout(60))
-                    .UseLoggerFactory(new LoggerFactory(
-                        new[]
-                        {
-                            new DebugLoggerProvider(
-                                (category, level) =>
-                                    category == DbLoggerCategory.Database.Command.Name
-                                    && level == LogLevel.Information
-                                    )
-
-
-                        }
-                        ));
+                optionsBuilder.UseSqlite("Data Source=IP1_TSI_DB.db");
             }
             
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Relaties al gelegd - SB
+            modelBuilder.Entity<AnswersDTO>().HasKey(a => a.AnswerID);
+            modelBuilder.Entity<ChoicesDTO>().HasKey(c => c.ChoiceID);
+            modelBuilder.Entity<DevicesDTO>().HasKey(d => d.DeviceID);
+            modelBuilder.Entity<IdeaFieldsDTO>().HasKey(f => f.FieldID);
+            modelBuilder.Entity<IdeasDTO>().HasKey(i => i.IdeaID);
+            modelBuilder.Entity<IdeationQuestionsDTO>().HasKey(i => i.IQuestionID);
+            modelBuilder.Entity<IdeationsDTO>().HasKey(i => i.ModuleID);
+            modelBuilder.Entity<ModulesDTO>().HasKey(m => m.ModuleID);
+            modelBuilder.Entity<OptionsDTO>().HasKey(o => o.OptionID);
+            modelBuilder.Entity<OrganisationEventsDTO>().HasKey(o => o.EventID);
+            modelBuilder.Entity<PhasesDTO>().HasKey(p => p.PhaseID);
+            modelBuilder.Entity<PlatformsDTO>().HasKey(p => p.PlatformID);
+            modelBuilder.Entity<ProjectImagesDTO>().HasKey(p => p.ImageID);
+            modelBuilder.Entity<ProjectsDTO>().HasKey(p => p.ProjectID);
+            modelBuilder.Entity<QuestionnaireQuestionsDTO>().HasKey(q => q.QQuestionID);
+            modelBuilder.Entity<UserActivitiesDTO>().HasKey(u => u.ActivityID);
+            modelBuilder.Entity<UserDetailsDTO>().HasKey(u => u.UserID);
+            modelBuilder.Entity<UsersDTO>().HasKey(u => u.UserID);
+            modelBuilder.Entity<VotesDTO>().HasKey(v => v.VoteID);
         }
 
         public DbSet<AnswersDTO> Answers { get; set; }
         public DbSet<ChoicesDTO> Choices { get; set; }
         public DbSet<DevicesDTO> Devices { get; set; }
         public DbSet<IdeaFieldsDTO> IdeaFields { get; set; }
-        public DbSet<IdeasDTO> Ideas { get; set; }
-        public DbSet<IdeationQuestionsDTO> IdeationQuestion { get; set; }
+        public DbSet<IdeasDTO> Ideas { get; set; }        
+        public DbSet<IdeationQuestionsDTO> IdeationQuestions { get; set; }
         public DbSet<IdeationsDTO> Ideations { get; set; }
         public DbSet<ModulesDTO> Modules { get; set; }
         public DbSet<OptionsDTO> Options { get; set; }
@@ -77,6 +71,5 @@ namespace DAL.Contexts
         public DbSet<UserDetailsDTO> UserDetails { get; set; }
         public DbSet<UsersDTO> Users { get; set; }
         public DbSet<VotesDTO> Votes { get; set; }
-
     }
 }

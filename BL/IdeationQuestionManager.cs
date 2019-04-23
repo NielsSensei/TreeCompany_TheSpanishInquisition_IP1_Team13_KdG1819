@@ -87,9 +87,13 @@ namespace BL
          */
         public List<Idea> GetIdeas(int questionId)
         {
-            return IdeationQuestionRepo.ReadAllIdeas().ToList();
+            return IdeationQuestionRepo.ReadAllIdeasByQuestion(questionId).ToList();
         }
 
+        public List<Idea> GetIdeas()
+        {
+            return IdeationQuestionRepo.ReadAllIdeas().ToList();
+        }
         /*
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ

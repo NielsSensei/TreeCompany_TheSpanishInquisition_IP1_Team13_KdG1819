@@ -14,13 +14,5 @@ namespace UIMVC.Controllers
         {
             return View();
         }
-
-        public IActionResult PageNotFound()
-        {
-            return View();
-        }
-
-
-        
     }
 }
