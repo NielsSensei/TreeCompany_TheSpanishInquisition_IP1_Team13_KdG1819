@@ -105,7 +105,8 @@ namespace DAL
         public void Update(Questionnaire obj)
         {
             ModulesDTO newModule = ConvertToDTO(obj);
-            ModulesDTO foundModule = ConvertToDTO(Read(obj.Id,false));
+            Questionnaire found = Read(obj.Id, false);
+            ModulesDTO foundModule = ConvertToDTO(found);
             foundModule = newModule;
 
             ctx.SaveChanges();
@@ -113,13 +114,14 @@ namespace DAL
 
         public void Delete(int id)
         {
-            ctx.Modules.Remove(ConvertToDTO(Read(id, false)));
+            Questionnaire toDelete = Read(id, false);
+            ctx.Modules.Remove(ConvertToDTO(toDelete));
             ctx.SaveChanges();
         }
         
         public IEnumerable<Questionnaire> ReadAll()
         {
-            IEnumerable<Questionnaire> myQuery = new List<Questionnaire>();
+            List<Questionnaire> myQuery = new List<Questionnaire>();
 
             foreach (ModulesDTO DTO in ctx.Modules)
             {
@@ -136,10 +138,12 @@ namespace DAL
         #endregion   
 
         // Added by NVZ
+        // Tag CRUD
         #region
         public string CreateTag(string obj, int moduleID)
         {
-            ModulesDTO module = ConvertToDTO(Read(moduleID, false));
+            Questionnaire moduleWTags = Read(moduleID, false);
+            ModulesDTO module = ConvertToDTO(moduleWTags);
             module.Tags += "," + obj;
             ctx.SaveChanges();
 
@@ -149,7 +153,8 @@ namespace DAL
         public void DeleteTag(int moduleID, int tagID)
         {
             List<String> keptTags = new List<string>();
-            ModulesDTO module = ConvertToDTO(Read(moduleID, false));
+            Questionnaire moduleWTags = Read(moduleID, false);
+            ModulesDTO module = ConvertToDTO(moduleWTags);
             keptTags = ExtensionMethods.StringToList(module.Tags);
             keptTags.RemoveAt(tagID - 1);
             module.Tags = ExtensionMethods.ListToString(keptTags);

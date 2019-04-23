@@ -169,7 +169,8 @@ namespace DAL
         public void Update(QuestionnaireQuestion obj)
         {
             QuestionnaireQuestionsDTO newQuestionnaireQuestion = ConvertToDTO(obj);
-            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = ConvertToDTO(Read(obj.Id, false));
+            QuestionnaireQuestion found = Read(obj.Id, false);
+            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = ConvertToDTO(found);
             foundQuestionnaireQuestion = newQuestionnaireQuestion;
 
             ctx.SaveChanges();
@@ -177,17 +178,18 @@ namespace DAL
 
         public void Delete(int id)
         {
-            ctx.QuestionnaireQuestions.Remove(ConvertToDTO(Read(id, false)));
+            QuestionnaireQuestion toDelete = Read(id, false);
+            ctx.QuestionnaireQuestions.Remove(ConvertToDTO(toDelete));
             ctx.SaveChanges();
         }
         
         public IEnumerable<QuestionnaireQuestion> ReadAll()
         {
-            IEnumerable<QuestionnaireQuestion> myQuery = new List<QuestionnaireQuestion>();
+            List<QuestionnaireQuestion> myQuery = new List<QuestionnaireQuestion>();
 
             foreach (QuestionnaireQuestionsDTO DTO in ctx.QuestionnaireQuestions)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -219,7 +221,8 @@ namespace DAL
                 ctx.Answers.Add(MultipleConvertToDTO(ma));
                 foreach(String s in ma.Choices)
                 {
-                    ctx.Choices.Add(ConvertToDTO(ReadOptionID(s,ma.Question.Id),ma.Id,ctx.Choices.Count()+1));
+                    int id = ReadOptionID(s, ma.Question.Id);
+                    ctx.Choices.Add(ConvertToDTO(id,ma.Id,ctx.Choices.Count()+1));
                 }
             }
             ctx.SaveChanges();
@@ -288,17 +291,18 @@ namespace DAL
 
         public IEnumerable<Answer> ReadAll(int questionID)
         {
-            IEnumerable<Answer> myQuery = new List<Answer>();
+            List<Answer> myQuery = new List<Answer>();
 
             foreach (AnswersDTO DTO in ctx.Answers.ToList().FindAll(a => a.QQuestionID == questionID))
             {
                 if (ctx.Choices.Where(c => c.AnswerID == DTO.AnswerID).Count() == 0)
                 {
-                    myQuery.Append(ConvertToDomain(DTO));
+                    myQuery.Add(ConvertToDomain(DTO));
                 }
                 else
                 {
-                    myQuery.Append(ReadMultipleAnswer(DTO.AnswerID, false));
+                    MultipleAnswer toAdd = ReadMultipleAnswer(DTO.AnswerID, false);
+                    myQuery.Add(toAdd);
                 }
             }
 
@@ -350,13 +354,14 @@ namespace DAL
 
         public void DeleteOption(int optionID, int questionID)
         {
-            ctx.Options.Remove(ConvertToDTO(optionID, ReadOption(optionID, questionID), questionID));
+            string toDelete = ReadOption(optionID, questionID);
+            ctx.Options.Remove(ConvertToDTO(optionID, toDelete, questionID));
             ctx.SaveChanges();
         }
         
         public IEnumerable<string> ReadAllOptions(int QuestionID)
         {
-            IEnumerable<string> myQuery = new List<string>();
+            List<string> myQuery = new List<string>();
 
             foreach (OptionsDTO DTO in ctx.Options)
             {

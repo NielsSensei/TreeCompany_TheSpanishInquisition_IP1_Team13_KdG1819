@@ -114,24 +114,26 @@ namespace DAL
         public void Update(Vote obj)
         {
             VotesDTO newVote = ConvertToDTO(obj);
-            VotesDTO foundVote = ConvertToDTO(Read(obj.Id, false));
+            Vote found = Read(obj.Id, false);
+            VotesDTO foundVote = ConvertToDTO(found);
             foundVote = newVote;
             ctx.SaveChanges();
         }
         
         public void Delete(int id)
         {
-            ctx.Votes.Remove(ConvertToDTO(Read(id, false)));
+            Vote toDelete = Read(id, false);
+            ctx.Votes.Remove(ConvertToDTO(toDelete));
             ctx.SaveChanges();
         }
         
         public IEnumerable<Vote> ReadAll()
         {
-            IEnumerable<Vote> myQuery = new List<Vote>();
+            List<Vote> myQuery = new List<Vote>();
 
             foreach (VotesDTO DTO in ctx.Votes)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -187,24 +189,26 @@ namespace DAL
         public void Update(IOT_Device obj)
         {
             DevicesDTO newDevice = ConvertToDTO(obj);
-            DevicesDTO foundDevice = ConvertToDTO(ReadDevice(obj.Id, false));
+            IOT_Device found = ReadDevice(obj.Id, false);
+            DevicesDTO foundDevice = ConvertToDTO(found);
             foundDevice = newDevice;
             ctx.SaveChanges();
         }
 
         public void DeleteDevice(int id)
         {
-            ctx.Devices.Remove(ConvertToDTO(ReadDevice(id, false)));
+            IOT_Device toDelete = ReadDevice(id, false);
+            ctx.Devices.Remove(ConvertToDTO(toDelete));
             ctx.SaveChanges();
         }
 
         public IEnumerable<IOT_Device> ReadAllDevices()
         {
-            IEnumerable<IOT_Device> myQuery = new List<IOT_Device>();
+            List<IOT_Device> myQuery = new List<IOT_Device>();
 
             foreach (DevicesDTO DTO in ctx.Devices)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(DTO));
             }
 
             return myQuery;
