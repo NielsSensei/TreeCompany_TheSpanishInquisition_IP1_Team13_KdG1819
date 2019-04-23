@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using BL;
-using Domain.UserInput;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UIMVC.Controllers

@@ -1,3 +1,4 @@
+@using Domain.UserInput
 @model IEnumerable<Domain.UserInput.Idea>
 
 @{
@@ -21,6 +22,18 @@
     </tr>
     <!-- TODO: link naar Ideation Thread -->
     <!-- TODO: link naar User profiel? -->
+    @foreach (Idea idea in Model)
+    {
+        <tr>
+            <td>@idea.Id</td>
+            <td>@idea.IdeaQuestion.Id</td>
+            <td>@idea.User.Id</td>
+            <td>@idea.Reported</td>
+            <td>@idea.ReviewByAdmin</td>
+            <td>@idea.Title</td>
+            <td>@idea.VoteCount</td>
+            <td>@idea.ShareCount</td>
+            <td>@idea.RetweetCount</td>
+        </tr>
+    }
 </table>
-
-
