@@ -102,3 +102,11 @@
 
     
 }
+
+/* Is used for to align a label with it's combobox (select) */
+/* Used in CollectAllIdeas.cshtml */
+#combo{
+    font-weight: bold;
+    display: flex;
+    align-items: flex-end;
+}

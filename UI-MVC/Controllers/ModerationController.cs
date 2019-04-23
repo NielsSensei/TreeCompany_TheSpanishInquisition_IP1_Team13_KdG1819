@@ -1,4 +1,5 @@
 using BL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UIMVC.Controllers
@@ -14,6 +15,7 @@ namespace UIMVC.Controllers
         
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
+        [Authorize]
         public IActionResult CollectAllIdeas()
         {
             return View(_ideaMgr.GetIdeas());
