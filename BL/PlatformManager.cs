@@ -10,14 +10,12 @@ namespace BL
         // Added by NG
         // Modified by NVZ
         private PlatformRepository PlatformRepo { get; set; }
-        private UserManager UserMan { get; set; }
         
         // Added by NG
         // Modified by NVZ
         public PlatformManager()
         {
             PlatformRepo = new PlatformRepository();
-            UserMan = new UserManager();
         }
         
         // Added by NG
@@ -49,24 +47,24 @@ namespace BL
         // Modified by NVZ
         //PlatformOwner
         #region
-        public void MakeOwner(int platformId, int userId)
+        public void MakeOwner(int platformId, User newOwner)
         {
-            var newOwner = UserMan.GetUser(userId, true);
-            PlatformRepo.Read(platformId,false).Owners.Add(newOwner);
+            var alteredPlatform = PlatformRepo.Read(platformId, false);
+            alteredPlatform.Owners.Add(newOwner);
+            PlatformRepo.Update(alteredPlatform);
         }
         
-        public User GetPlatformOwner(int platformId, int userId)
+        public User GetPlatformOwner(int platformId, User owner)
         {
             var platform = PlatformRepo.Read(platformId, true);
-            var user = UserMan.GetUser(userId, true);
-            return platform.Owners.Find(u => u.Equals(user));
+            return platform.Owners.Find(u => u.Equals(owner));
         }
         
-        public void RemovePlatformOwner(int platformId, int userId)
+        public void RemovePlatformOwner(int platformId, User removedOwner)
         {
-            var alteredPlatform = PlatformRepo.Read(platformId, true);
-            var removedOwner = UserMan.GetUser(userId, true);
+            var alteredPlatform = PlatformRepo.Read(platformId, false);
             alteredPlatform.Owners.Remove(removedOwner);
+            PlatformRepo.Update(alteredPlatform);
         }
 
         public List<User> GetAllPlatformOwners(int platformId)
