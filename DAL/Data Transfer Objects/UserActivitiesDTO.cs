@@ -12,7 +12,7 @@ namespace DAL.Data_Transfer_Objects
         public int ProjectID { get; set; }
         public int VoteID { get; set; }
         public int ModuleID { get; set; }
-        public int iQuestionID { get; set; }
+        public int IQuestionID { get; set; }
         public int IdeaID { get; set; }
         public string ActionDescription { get; set; }
     }

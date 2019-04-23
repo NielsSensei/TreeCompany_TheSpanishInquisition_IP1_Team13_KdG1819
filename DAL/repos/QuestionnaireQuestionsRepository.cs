@@ -27,41 +27,41 @@ namespace DAL
         // Added by NVZ
         // Standard Methods
         #region
-        private QuestionnaireQuestionsDTO convertToDTO(QuestionnaireQuestion obj)
+        private QuestionnaireQuestionsDTO ConvertToDTO(QuestionnaireQuestion obj)
         {
             return new QuestionnaireQuestionsDTO
             {
-                qQuestionID = obj.Id,
+                QQuestionID = obj.Id,
                 ModuleID = obj.Module.Id,
                 QuestionText = obj.QuestionText,
-                qType = (byte) obj.QuestionType,
+                QType = (byte) obj.QuestionType,
                 Required = obj.Optional
             };
         }
 
-        private QuestionnaireQuestion convertToDomain(QuestionnaireQuestionsDTO DTO)
+        private QuestionnaireQuestion ConvertToDomain(QuestionnaireQuestionsDTO DTO)
         {
             return new QuestionnaireQuestion
             {
-                Id = DTO.qQuestionID,
+                Id = DTO.QQuestionID,
                 Module = new Questionnaire { Id = DTO.ModuleID },
                 QuestionText = DTO.QuestionText,
-                QuestionType = (QuestionType) DTO.qType,
+                QuestionType = (QuestionType) DTO.QType,
                 Optional = DTO.Required
             };
         }
 
-        private OptionsDTO convertToDTO(int id, string obj, int qID)
+        private OptionsDTO ConvertToDTO(int id, string obj, int qID)
         {
             return new OptionsDTO
             {
                 OptionID = id,
                 OptionText = obj,
-                qQuestionID = qID
+                QQuestionID = qID
             };
         }
 
-        private String convertToDomain(OptionsDTO DTO)
+        private String ConvertToDomain(OptionsDTO DTO)
         {
             return DTO.OptionText;
         }
@@ -71,7 +71,7 @@ namespace DAL
             return new AnswersDTO
             {
                 AnswerID = obj.Id,
-                qQuestionID = obj.Question.Id,
+                QQuestionID = obj.Question.Id,
                 UserID = obj.User.Id,
                 AnswerText = obj.AnswerText,
             };
@@ -82,12 +82,12 @@ namespace DAL
             return new AnswersDTO
             {
                 AnswerID = obj.Id,
-                qQuestionID = obj.Question.Id,
+                QQuestionID = obj.Question.Id,
                 UserID = obj.User.Id
             };
         }
 
-        private ChoicesDTO convertToDTO(int optionID, int answerID, int choiceID)
+        private ChoicesDTO ConvertToDTO(int optionID, int answerID, int choiceID)
         {
             return new ChoicesDTO
             {
@@ -97,24 +97,24 @@ namespace DAL
             };
         }
 
-        private OpenAnswer convertToDomain(AnswersDTO DTO)
+        private OpenAnswer ConvertToDomain(AnswersDTO DTO)
         {
             return new OpenAnswer
             {
                 Id = DTO.AnswerID,
                 User = new User { Id = DTO.UserID },
-                Question = new QuestionnaireQuestion { Id = DTO.qQuestionID },
+                Question = new QuestionnaireQuestion { Id = DTO.QQuestionID },
                 IsUserEmail = DTO.AnswerText.Contains("@"),
                 AnswerText = DTO.AnswerText
             };
         }
 
-        private MultipleAnswer convertToDomain(AnswersDTO answersDTO, List<OptionsDTO> chosenOptionsDTO)
+        private MultipleAnswer ConvertToDomain(AnswersDTO answersDTO, List<OptionsDTO> chosenOptionsDTO)
         {
             MultipleAnswer ma = null;
             ma.Id = answersDTO.AnswerID;
             ma.User = new User { Id = answersDTO.UserID };
-            ma.Question = new QuestionnaireQuestion { Id = answersDTO.qQuestionID };
+            ma.Question = new QuestionnaireQuestion { Id = answersDTO.QQuestionID };
             ma.DropdownList = chosenOptionsDTO.Count == 1;
 
             foreach(OptionsDTO DTO in chosenOptionsDTO)
@@ -142,7 +142,7 @@ namespace DAL
                 }
             }
 
-            ctx.QuestionnaireQuestions.Add(convertToDTO(obj));
+            ctx.QuestionnaireQuestions.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
             return obj;
@@ -154,22 +154,22 @@ namespace DAL
 
             if (details)
             {
-                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.qQuestionID == id);
-                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.qQuestionID);
+                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QQuestionID == id);
+                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.QQuestionID);
             }
             else
             {
-                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.First(q => q.qQuestionID == id);
-                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.qQuestionID);
+                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.First(q => q.QQuestionID == id);
+                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.QQuestionID);
             }
 
-            return convertToDomain(questionnaireQuestionDTO);
+            return ConvertToDomain(questionnaireQuestionDTO);
         }
 
         public void Update(QuestionnaireQuestion obj)
         {
-            QuestionnaireQuestionsDTO newQuestionnaireQuestion = convertToDTO(obj);
-            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = convertToDTO(Read(obj.Id, false));
+            QuestionnaireQuestionsDTO newQuestionnaireQuestion = ConvertToDTO(obj);
+            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = ConvertToDTO(Read(obj.Id, false));
             foundQuestionnaireQuestion = newQuestionnaireQuestion;
 
             ctx.SaveChanges();
@@ -177,7 +177,7 @@ namespace DAL
 
         public void Delete(int id)
         {
-            ctx.QuestionnaireQuestions.Remove(convertToDTO(Read(id, false)));
+            ctx.QuestionnaireQuestions.Remove(ConvertToDTO(Read(id, false)));
             ctx.SaveChanges();
         }
         
@@ -187,7 +187,7 @@ namespace DAL
 
             foreach (QuestionnaireQuestionsDTO DTO in ctx.QuestionnaireQuestions)
             {
-                myQuery.Append(convertToDomain(DTO));
+                myQuery.Append(ConvertToDomain(DTO));
             }
 
             return myQuery;
@@ -219,7 +219,7 @@ namespace DAL
                 ctx.Answers.Add(MultipleConvertToDTO(ma));
                 foreach(String s in ma.Choices)
                 {
-                    ctx.Choices.Add(convertToDTO(ReadOptionID(s,ma.Question.Id),ma.Id,ctx.Choices.Count()+1));
+                    ctx.Choices.Add(ConvertToDTO(ReadOptionID(s,ma.Question.Id),ma.Id,ctx.Choices.Count()+1));
                 }
             }
             ctx.SaveChanges();
@@ -243,7 +243,7 @@ namespace DAL
                 ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
             }
 
-            return convertToDomain(answersDTO);
+            return ConvertToDomain(answersDTO);
         }
 
         public MultipleAnswer ReadMultipleAnswer(int answerID, bool details)
@@ -262,7 +262,7 @@ namespace DAL
             }
 
             List<ChoicesDTO> choicesDTO = ctx.Choices.ToList().FindAll(c => c.AnswerID == answerID);
-            List<OptionsDTO> optionsDTO = ctx.Options.ToList().FindAll(o => o.qQuestionID == answersDTO.qQuestionID);
+            List<OptionsDTO> optionsDTO = ctx.Options.ToList().FindAll(o => o.QQuestionID == answersDTO.QQuestionID);
             List<OptionsDTO> chosenOptionsDTO = new List<OptionsDTO>();
 
             foreach(OptionsDTO DTO in optionsDTO)
@@ -275,26 +275,26 @@ namespace DAL
                 }
             }
 
-            return convertToDomain(answersDTO, chosenOptionsDTO);
+            return ConvertToDomain(answersDTO, chosenOptionsDTO);
         }
 
         /* Eens de questionnaire is ingevuld door de gebruiker is em ingevuld. Ik denk niet dat er enkel nut is van het te veranderen of te verwijderen.
-         * Dit is nog altijd open tot discussie of course. -NVZ
-         * 
-         * public void Update(Answer obj)
-         * public void Delete(int questionID, int answerID)
-         * 
-        */
-        
+  * Dit is nog altijd open tot discussie of course. -NVZ
+  * 
+  * public void Update(Answer obj)
+  * public void Delete(int questionID, int answerID)
+  * 
+ */
+
         public IEnumerable<Answer> ReadAll(int questionID)
         {
             IEnumerable<Answer> myQuery = new List<Answer>();
 
-            foreach (AnswersDTO DTO in ctx.Answers.ToList().FindAll(a => a.qQuestionID == questionID))
+            foreach (AnswersDTO DTO in ctx.Answers.ToList().FindAll(a => a.QQuestionID == questionID))
             {
-                if(ctx.Choices.Where(c => c.AnswerID == DTO.AnswerID).Count() == 0)
+                if (ctx.Choices.Where(c => c.AnswerID == DTO.AnswerID).Count() == 0)
                 {
-                    myQuery.Append(convertToDomain(DTO));
+                    myQuery.Append(ConvertToDomain(DTO));
                 }
                 else
                 {
@@ -324,7 +324,7 @@ namespace DAL
                 }
             }
 
-            ctx.Options.Add(convertToDTO(newID, obj, questionID));
+            ctx.Options.Add(ConvertToDTO(newID, obj, questionID));
             ctx.SaveChanges();
 
             return obj;
@@ -332,7 +332,7 @@ namespace DAL
 
         public String ReadOption(int optionID, int questionID)
         {
-            return convertToDomain(ctx.Options.Find(optionID));
+            return ConvertToDomain(ctx.Options.Find(optionID));
         }
 
         public int ReadOptionID(string optionText, int questionID)
@@ -350,7 +350,7 @@ namespace DAL
 
         public void DeleteOption(int optionID, int questionID)
         {
-            ctx.Options.Remove(convertToDTO(optionID, ReadOption(optionID, questionID), questionID));
+            ctx.Options.Remove(ConvertToDTO(optionID, ReadOption(optionID, questionID), questionID));
             ctx.SaveChanges();
         }
         
@@ -360,9 +360,9 @@ namespace DAL
 
             foreach (OptionsDTO DTO in ctx.Options)
             {
-                if (DTO.qQuestionID == QuestionID)
+                if (DTO.QQuestionID == QuestionID)
                 {
-                    myQuery.Append(convertToDomain(DTO));
+                    myQuery.Append(ConvertToDomain(DTO));
                 }
             }
 
