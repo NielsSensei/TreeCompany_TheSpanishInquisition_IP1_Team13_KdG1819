@@ -32,7 +32,7 @@ namespace DAL
                 Name = obj.Name,
                 Email = obj.Email,
                 Password = obj.Password,
-                Role = (byte) (obj.Role-1),
+                Role = (byte) (obj.Role),
                 PlatformID = obj.Platform.Id
             };
         }
@@ -45,7 +45,7 @@ namespace DAL
                 Name = DTO.Name,
                 Email = DTO.Email,
                 Password = DTO.Password,
-                Role = (Role) DTO.Role+1,
+                Role = (Role) DTO.Role,
                 Platform = new Platform() { Id = DTO.PlatformID }
             };
         }

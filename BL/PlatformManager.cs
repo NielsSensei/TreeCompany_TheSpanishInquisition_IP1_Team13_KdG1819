@@ -73,6 +73,7 @@ namespace BL
         {
             return PlatformRepo.Read(platformId, false).Owners;
         }
+        
         #endregion
         
         // Added by NVZ
