@@ -91,24 +91,26 @@ namespace DAL
         public void Update(Platform obj)
         {
             PlatformsDTO newPlatform = ConvertToDTO(obj);
-            PlatformsDTO foundPlatform = ConvertToDTO(Read(obj.Id, false));
+            Platform found = Read(obj.Id, false);
+            PlatformsDTO foundPlatform = ConvertToDTO(found);
             foundPlatform = newPlatform;
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            ctx.Platforms.Remove(ConvertToDTO(Read(id, false)));
+            Platform toDelete = Read(id, false);
+            ctx.Platforms.Remove(ConvertToDTO(toDelete));
             ctx.SaveChanges();
         }
 
         public IEnumerable<Platform> ReadAll()
         {
-            IEnumerable<Platform> myQuery = new List<Platform>();
+            List<Platform> myQuery = new List<Platform>();
 
             foreach (PlatformsDTO DTO in ctx.Platforms)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(DTO));
             }
 
             return myQuery;

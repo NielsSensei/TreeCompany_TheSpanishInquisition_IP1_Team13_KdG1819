@@ -200,11 +200,13 @@ namespace DAL
         public void Update(User obj)
         {
             UsersDTO newUser = ConvertToDTO(obj);
-            UsersDTO foundUser = ConvertToDTO(Read(obj.Id, false));
+            User found = Read(obj.Id, false);
+            UsersDTO foundUser = ConvertToDTO(found);
             foundUser = newUser;
 
             UserDetailsDTO newDetails = RetrieveDetailsFromUser(obj);
-            UserDetailsDTO foundDetails = RetrieveDetailsFromUser(ReadWithDetails(obj.Id));
+            User foundWDetails = ReadWithDetails(obj.Id);
+            UserDetailsDTO foundDetails = RetrieveDetailsFromUser(foundWDetails);
             foundDetails = newDetails;
 
             ctx.SaveChanges();
@@ -212,18 +214,21 @@ namespace DAL
         
         public void Delete(int id)
         {
-            ctx.Users.Remove(ConvertToDTO(Read(id, false)));
-            ctx.UserDetails.Remove(RetrieveDetailsFromUser(Read(id, false)));
+            User toDelete = Read(id, false);
+            ctx.Users.Remove(ConvertToDTO(toDelete));
+            User toDeleteDetails = Read(id, false);
+            ctx.UserDetails.Remove(RetrieveDetailsFromUser(toDeleteDetails));
             ctx.SaveChanges();
         }
         
         public IEnumerable<User> ReadAll()
         {
-            IEnumerable<User> myQuery = new List<User>();
+            List<User> myQuery = new List<User>();
 
             foreach (UsersDTO DTO in ctx.Users)
-            {              
-                myQuery.Append(ReadWithDetails(DTO.UserID));
+            {
+                User toAdd = ReadWithDetails(DTO.UserID);
+                myQuery.Add(toAdd);
             }
 
             return myQuery;
@@ -231,13 +236,14 @@ namespace DAL
 
         public IEnumerable<Organisation> ReadAllOrganisations()
         {
-            IEnumerable<Organisation> myQuery = new List<Organisation>();
+            List<Organisation> myQuery = new List<Organisation>();
 
             foreach (UsersDTO DTO in ctx.Users)
             {
                 if(DTO.Role == 3)
                 {
-                    myQuery.Append(ReadWithDetails(DTO.UserID));
+                    Organisation user = (Organisation) ReadWithDetails(DTO.UserID);
+                    myQuery.Add(user);
                 } 
             }
 
