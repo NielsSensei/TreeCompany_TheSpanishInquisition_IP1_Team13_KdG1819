@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using BL;
+using Domain.UserInput;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,16 +19,23 @@ namespace UIMVC.Controllers
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize]
-        public IActionResult CollectAllIdeas(string filter)
+        public IActionResult CollectAllIdeas()
         {
-            if(filter.Contains("admin"))
+            return View();
+        }
+
+        public JsonResult CollectIdeas(string filter)
+        {
+            List<Idea> ideas = new List<Idea>();
+            
+            switch (filter)
             {
-                return View(_ideaMgr.GetIdeas().Where(i => i.ReviewByAdmin));
-            }else if (filter.Contains("report"))
-            {
-                return View(_ideaMgr.GetIdeas().Where(i => i.Reported && !i.ReviewByAdmin));
+                case null: ideas = _ideaMgr.GetIdeas(); break; 
+                case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
+                case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
             }
-            return View(_ideaMgr.GetIdeas());
-        } 
+
+            return Json(ideas);
+        }
     }
 }
