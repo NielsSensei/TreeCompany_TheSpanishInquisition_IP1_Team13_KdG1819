@@ -146,6 +146,19 @@ namespace BL
             throw new NotImplementedException("Out of scope!");
         }
 
+        private void VerifyUser(User toVerify, User enactor)
+        {
+            if (enactor.Role == Role.MODERATOR || enactor.Role == Role.ADMIN || enactor.Role == Role.SUPERADMIN)
+            {
+                var alteredUser = GetUser(toVerify.Id, false);
+                if (alteredUser.Role == Role.LOGGEDIN)
+                {
+                    alteredUser.Role = Role.LOGGEDINVERIFIED;
+                    UserRepo.Update(alteredUser);
+                }
+            }
+        }
+
         /*
          * This method receives an action name and is supposed to
          * return the lowest Role that has this permit.

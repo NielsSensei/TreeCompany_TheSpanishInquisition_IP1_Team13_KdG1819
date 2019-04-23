@@ -6,10 +6,12 @@ namespace UIMVC.Controllers
     public class ModerationController : Controller
     {
         private IdeationQuestionManager _ideaMgr;
+        private UserManager _userMgr;
 
         public ModerationController()
         {
             _ideaMgr = new IdeationQuestionManager();
+            _userMgr = new UserManager();
         }
         
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
