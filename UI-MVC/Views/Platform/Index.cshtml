@@ -1,0 +1,24 @@
+﻿@using Domain.Projects
+@using Domain.Users
+@using UIMVC.Services
+@model Domain.Users.Platform
+@inject ProjectService ProjectService
+@{
+    ViewData["Title"] = "Platforms";
+    IEnumerable<Domain.Users.Platform> platforms = (IEnumerable<Domain.Users.Platform>) ViewData["platforms"];
+}
+
+<section>
+    <h1>@Model.Name</h1>
+    <hr/>
+    <p>This is where I'd put an image if I (knew how I) could convert from BLOB</p>
+    <hr/>
+    <div class="row">
+        @foreach (Project project in ProjectService.GetPlatformProjects(Model))
+        {
+            <div class="col-md-3">
+                @Html.DisplayFor(m => project)
+            </div>
+        }
+    </div>
+</section>
