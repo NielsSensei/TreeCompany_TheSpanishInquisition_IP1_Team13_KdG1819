@@ -1,8 +1,12 @@
 document.addEventListener("load", init, false);
 
 function init(){
+    console.log('document loading...');
+    
     var comboFilter = document.getElementById('comboFilter');
     comboFilter.addEventListener("onchange",CollectAllIdeas(comboFilter.value), false);
+    
+    console.log('CollectAllIdeas now has Eventhandlers');
     
     CollectAllIdeas('all');
 }
@@ -14,6 +18,8 @@ function CollectAllIdeas(filter){
     {
         table.deleteRow(i);
     }
+    
+    console.log('Table ideas has been cleared');
     
     
 }
