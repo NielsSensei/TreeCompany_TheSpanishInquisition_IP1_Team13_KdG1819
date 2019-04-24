@@ -1,4 +1,3 @@
-@using Domain.UserInput
 @model IEnumerable<Domain.UserInput.Idea>
 
 @{
@@ -6,11 +5,42 @@
     Layout = "_Layout";
 }
 
+<script type="text/javascript">  
+    $(document).ready(function () {
+        $("#comboFilter").change(function() {
+            $("#ideasTable").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CollectIdeas")',  
+                dataType: 'json',
+                data: { id: $("#comboFilter").val() },
+                success: function(states) {
+                    
+                    $.each(states,
+                        function(i, state) {
+                            $("#State").append('<option value="' +
+                                state.Value +
+                                '">' +
+                                state.Text +
+                                '</option>');
+                            // here we are adding option for States  
+
+                        });
+                },
+                error: function(ex) {
+                    console.log('Failed to retrieve ideas.' + ex);
+                }
+            });
+            return false;
+        });
+    });  
+</script> 
+
 <h2>Hier zie je een overzicht van alle ideeën</h2>
 <hr/>
 <div class="form-group">
     <div class="container">
-        <div class="row" id="combo">
+        <div class="row" id="comboFilter">
             <div class="col-2">
                 <label >Selecteer een filter:</label>
             </div>
@@ -24,6 +54,6 @@
         </div>
     </div>    
 </div>
-<table class="table">
+<table class="table" id="ideasTable">
     
 </table>
