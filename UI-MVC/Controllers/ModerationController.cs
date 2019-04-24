@@ -30,7 +30,7 @@ namespace UIMVC.Controllers
             
             switch (filter)
             {
-                case null: ideas = _ideaMgr.GetIdeas(); break; 
+                case "all": ideas = _ideaMgr.GetIdeas(); break; 
                 case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
                 case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
             }

@@ -5,36 +5,9 @@
     Layout = "_Layout";
 }
 
-<script type="text/javascript">  
-    $(document).ready(function () {
-        $("#comboFilter").change(function() {
-            $("#ideasTable").empty();
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("CollectIdeas")',  
-                dataType: 'json',
-                data: { id: $("#comboFilter").val() },
-                success: function(states) {
-                    
-                    $.each(states,
-                        function(i, state) {
-                            $("#State").append('<option value="' +
-                                state.Value +
-                                '">' +
-                                state.Text +
-                                '</option>');
-                            // here we are adding option for States  
-
-                        });
-                },
-                error: function(ex) {
-                    console.log('Failed to retrieve ideas.' + ex);
-                }
-            });
-            return false;
-        });
-    });  
-</script> 
+@section Tags {
+    <script type="module" src="~/js/confirmemail.js" defer></script>
+}
 
 <h2>Hier zie je een overzicht van alle ideeën</h2>
 <hr/>
@@ -46,9 +19,9 @@
             </div>
             <div class="col-10">
                 <select class="form-control">
-                    <option>Alle ideeën</option>
-                    <option>Gerapporteerde ideeën</option>
-                    <option>Ideeën die een admin moet verwerken</option>
+                    <option value="all">Alle ideeën</option>
+                    <option value="admin">Gerapporteerde ideeën</option>
+                    <option value="report">Ideeën die een admin moet verwerken</option>
                 </select> 
             </div>
         </div>
