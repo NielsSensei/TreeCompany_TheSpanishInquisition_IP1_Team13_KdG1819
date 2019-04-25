@@ -34,8 +34,7 @@ namespace DAL.repos
                 ModuleID = obj.Ideation.Id,
                 QuestionTitle = obj.QuestionTitle,
                 Description = obj.Description,
-                WebsiteLink = obj.SiteURL,
-                DeviceID = obj.Device.Id
+                WebsiteLink = obj.SiteURL              
             };
         }
 
@@ -54,7 +53,8 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
-                ParentID = obj.ParentIdea.Id
+                ParentID = obj.ParentIdea.Id,
+                DeviceID = obj.Device.Id
             };
         }
 
@@ -128,7 +128,6 @@ namespace DAL.repos
                 Description = DTO.Description,
                 SiteURL = DTO.WebsiteLink,
                 QuestionTitle = DTO.QuestionTitle,
-                Device = new IOT_Device { Id = DTO.DeviceID },
                 Ideation = new Ideation { Id = DTO.ModuleID }
             };
         }
@@ -148,7 +147,8 @@ namespace DAL.repos
                 ShareCount= DTO.ShareCount,
                 Status = DTO.Status,
                 VerifiedUser = DTO.VerifiedUser,
-                ParentIdea = new Idea { Id = DTO.ParentID }
+                ParentIdea = new Idea { Id = DTO.ParentID },
+                Device = new IOT_Device { Id = DTO.DeviceID }
             };
         }
 
