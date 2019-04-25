@@ -73,17 +73,8 @@ namespace DAL
         public Platform Read(int id, bool details)
         {
             PlatformsDTO platformDTO = null;
-
-            if (details)
-            {
-                platformDTO = ctx.Platforms.AsNoTracking().First(p => p.PlatformID == id);
-                ExtensionMethods.CheckForNotFound(platformDTO, "Platform", platformDTO.PlatformID);
-            }
-            else
-            {
-                platformDTO = ctx.Platforms.First(p => p.PlatformID == id);
-                ExtensionMethods.CheckForNotFound(platformDTO, "Platform", platformDTO.PlatformID);
-            }
+            platformDTO = details ? ctx.Platforms.AsNoTracking().First(p => p.PlatformID == id) : ctx.Platforms.First(p => p.PlatformID == id);
+            ExtensionMethods.CheckForNotFound(platformDTO, "Platform", id);
 
             return ConvertToDomain(platformDTO);
         }

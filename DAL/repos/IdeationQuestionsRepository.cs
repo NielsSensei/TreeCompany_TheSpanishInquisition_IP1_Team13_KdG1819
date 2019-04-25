@@ -15,7 +15,7 @@ namespace DAL.repos
     {
         // Added by DM
         // Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         public IdeationQuestionsRepository()
@@ -152,6 +152,19 @@ namespace DAL.repos
             };
         }
 
+        private Report ConvertToDomain(ReportsDTO DTO)
+        {
+            return new Report()
+            {
+                Id = DTO.ReportID,
+                Idea = new Idea { Id = DTO.IdeaID },
+                Flagger = new User() { Id = DTO.FlaggerID },
+                Reportee = new User() { Id = DTO.ReporteeID },
+                Reason = DTO.Reason,
+                Status = (ReportStatus) DTO.ReportApproved
+            };
+        }
+        
         private Field ConvertFieldToDomain(IdeaFieldsDTO DTO)
         {
             return new Field {
@@ -211,14 +224,6 @@ namespace DAL.repos
 
         private ReportsDTO ConvertToDTO(Report obj)
         {
-            /*
-            public int ReportID{ get; set; }
-        public int IdeaID { get; set; }
-        public int FlaggerID { get; set; }
-        public int ReporteeID { get; set; }
-        public string Reason { get; set; }
-        public bool ReportApproved { get; set; }
-             */
             return new ReportsDTO()
             {
                 ReportID   = obj.Id,
@@ -256,17 +261,8 @@ namespace DAL.repos
         public IdeationQuestion Read(int id, bool details)
         {
             IdeationQuestionsDTO ideationQuestionDTO = null;
-
-            if (details)
-            {
-                ideationQuestionDTO = ctx.IdeationQuestions.AsNoTracking().First(i => i.IQuestionID == id);
-                ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.IQuestionID);
-            }
-            else
-            {
-                ideationQuestionDTO = ctx.IdeationQuestions.First(i => i.IQuestionID == id);
-                ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", ideationQuestionDTO.IQuestionID);
-            }
+            ideationQuestionDTO = details ? ctx.IdeationQuestions.AsNoTracking().First(i => i.IQuestionID == id) : ctx.IdeationQuestions.First(i => i.IQuestionID == id);
+            ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", id);
 
             return ConvertToDomain(ideationQuestionDTO);
         }
@@ -280,7 +276,6 @@ namespace DAL.repos
 
             ctx.SaveChanges();
         }
-
 
         /* Ik heb momenteel de optie opengehouden zoals het zoals reddit te doen. https://imgur.com/a/oeLkyL2 zodat de Ide�n niet mee verwijderd worden.
          Een hard delete van de vraag en de hele "thread" zal waarschijnlijk ook nog kunnen, dat mag je veranderen naar bespreking met mij. -NVZ */
@@ -344,17 +339,8 @@ namespace DAL.repos
         public Idea ReadIdea(int ideaID, bool details)
         {
             IdeasDTO ideasDTO = null;
-
-            if (details)
-            {
-                ideasDTO = ctx.Ideas.AsNoTracking().First(i => i.IdeaID == ideaID);
-                ExtensionMethods.CheckForNotFound(ideasDTO, "Idea", ideasDTO.IdeaID);
-            }
-            else
-            {
-                ideasDTO = ctx.Ideas.First(i => i.IdeaID == ideaID);
-                ExtensionMethods.CheckForNotFound(ideasDTO, "Idea", ideasDTO.IdeaID);
-            }
+            ideasDTO = details ? ctx.Ideas.AsNoTracking().First(i => i.IdeaID == ideaID) : ctx.Ideas.First(i => i.IdeaID == ideaID);          
+            ExtensionMethods.CheckForNotFound(ideasDTO, "Idea", ideaID);
 
             return ConvertToDomain(ideasDTO);
         }
@@ -501,5 +487,76 @@ namespace DAL.repos
             return ReadAllFields().ToList().FindAll(idea => idea.Idea.Id == ideaID);
         }
         #endregion 
+        
+        // Added by NVZ
+        // Report CRUD
+        #region
+        public Report Create(Report obj)
+        {
+            IEnumerable<Report> rs = ReadAllReportsByIdea(obj.Idea.Id);
+
+            foreach (Report r in rs)
+            {
+                if (ExtensionMethods.HasMatchingWords(obj.Reason ,r.Reason) > 0)
+                {
+                    throw new DuplicateNameException("Dit Idee heeft al een gelijkaardig rapport. Het gevonden Rapport(ID= " + r.Id + ") met tekst: " + r.Reason + "is gelijkaardig" +
+                                                     " aan het gegeven Rapport(ID= " + obj.Id + ") met tekst: " + obj.Reason + ".");
+                }
+            }
+
+            ctx.Reports.Add(ConvertToDTO(obj));
+            ctx.SaveChanges();
+
+            return obj;
+        }
+
+        public Report ReadReport(int id, bool details)
+        {
+            ReportsDTO reportsDTO = null;
+            reportsDTO = details ? ctx.Reports.AsNoTracking().First(i => i.ReportID == id) : ctx.Reports.First(i => i.ReportID == id);         
+            ExtensionMethods.CheckForNotFound(reportsDTO, "Report", id);
+
+            return ConvertToDomain(reportsDTO);
+        }
+
+        public void Update(Report obj)
+        {
+            ReportsDTO newReport = ConvertToDTO(obj);
+            Report found = ReadReport(obj.Id, false);
+            ReportsDTO foundReport = ConvertToDTO(found);
+            foundReport = newReport;
+
+            ctx.SaveChanges();
+        }
+
+        public void DeleteReport(int id)
+        {
+            Report toDelete = ReadReport(id, false);
+            ctx.Reports.Remove(ConvertToDTO(toDelete));
+            ctx.SaveChanges();
+        }
+
+        public IEnumerable<Report> ReadAllReports()
+        {
+            List<Report> myQuery = new List<Report>();
+
+            foreach (ReportsDTO DTO in ctx.Reports)
+            {
+                myQuery.Add(ConvertToDomain(DTO));
+            }
+
+            return myQuery;
+        }
+
+        public IEnumerable<Report> ReadAllReportsByIdea(int IdeaID)
+        {
+            return ReadAllReports().ToList().FindAll(r => r.Idea.Id == IdeaID);
+        }
+
+        public IEnumerable<Report> ReadAllReportsByUser(int UserID)
+        {
+            return ReadAllReports().ToList().FindAll(r => r.Reportee.Id == UserID);;
+        }
+        #endregion
     }
 }
