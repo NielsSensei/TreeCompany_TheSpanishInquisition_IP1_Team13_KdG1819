@@ -26,7 +26,6 @@ namespace BL
 
         // Added by NVZ
         // IdeationQuestion
-
         #region
 
         public void EditQuestion(IdeationQuestion question)
@@ -68,9 +67,7 @@ namespace BL
 
         // Added by NVZ
         // Idea
-
         #region
-
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between
@@ -82,6 +79,11 @@ namespace BL
             throw new NotImplementedException("I might need this!");
         }
 
+        public Idea GetIdea(int ideaId)
+        {
+            return IdeationQuestionRepo.ReadWithFields(ideaId);
+        }
+                
         /*
          * Getter for all Ideas on an Ideation. - NVZ
          */
@@ -119,10 +121,22 @@ namespace BL
         }
 
         // Added by NVZ
+        // Field
+        public IEnumerable<Field> GetAllFields(int ideaID)
+        {
+            return IdeationQuestionRepo.ReadAllFields(ideaID);
+        }
+        
+        // Added by NVZ
+        // Report
+        public IEnumerable<Report> GetAllReportsByIdea(int ideaID)
+        {
+            return IdeationQuestionRepo.ReadAllReportsByIdea(ideaID);
+        }
+        
+        // Added by NVZ
         // Other Methods
-
         #region
-
         /*
          * Unlike QuestionnaireQuestion this has noting to do with the enum.
          * This is rather a system where we we work with FieldTypes. - NVZ
@@ -165,7 +179,6 @@ namespace BL
         {
             throw new NotImplementedException();
         }
-
         #endregion
     }
 }

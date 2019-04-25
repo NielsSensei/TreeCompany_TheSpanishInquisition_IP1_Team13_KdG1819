@@ -1,31 +1,55 @@
+@using Domain.UserInput
 @model Domain.UserInput.Idea
 
 @{
     Layout = "_Layout";
 }
 
+@section Tags
+{
+    <title>Overview Of Idea @Model.Id</title>    
+}
+
 <div class="container">
     <div class="row">
-        <div class="col-6 col-sm-12">
-            <h2>Idee</h2>
-            <p>Id</p>
-            <p>User</p>
-            <p>Aantal Stemmen</p>
-            <p>Aantal Retweets</p>
-            <p>Aantal Shares</p>
-            <p>Titel</p>
-            <p>Inhoud</p>
-            <!-- TODO: Hier met ViewData["Fields"] werken -->
+        <div class="col-6">
+            <h2>Idea</h2>
+            <p>Id: @Model.Id</p>
+            <p>User: @Model.User.Name</p>
+            <p>Number Of Votes: @Model.VoteCount</p>
+            <p>Number Of Shares: @Model.ShareCount</p>
+            <p>Number Of Retweets: @Model.RetweetCount</p>
+            <p>Title: @Model.Title</p>
+            <p>Content: </p>
+            @if (Model.Field.Text != null || !Model.Field.Text.Contains("[deleted]"))
+            {    
+                <p>Field: @Model.Field.Text</p>
+            }
+            else if (Model.Cfield.Options.Count > 0)
+            {
+                <p>Closed Field:</p>
+                <p>Is it multiplechoice? @Model.Cfield.MultipleChoice</p>
+                foreach (string opt in Model.Cfield.Options)
+                {
+                    <p>Option: @opt</p>
+                }
+            }
+           
+            <!-- TODO: (sprint2)
+            public ImageField Ifield { get; set; }
+            public VideoField Vfield { get; set; }
+            public MapField Mfield { get; set; }
+            -->            
         </div>
-        <div class="col-6 col-sm-12">
-            <h2>Rapporteringen</h2>
-            <h2>Acties</h2>
+        <div class="col-6">
+            <h2>Reports</h2>
+            <h2>Actions</h2>
             <!-- TODO: Hier met ViewData["Rapporteringen"] groepering per Status -->
+            <button href="#">Ask Review By Admin</button>
+            <button href="#">Approve Report</button>
+            <button href="#">Ignore Report</button>
+            <button href="#">Delete Report</button>
         </div>
-    </div>
-    <div>
-        <h2>Acties</h2>
-        <!-- TODO: Buttons "Vraag een review door een admin" | "Approve rapportering" | "Negeer rapportering" | "Verwijder Rapportering"-->
+    </div>     
         <!-- TODO: IPT13-60 Button voor dit idee te verwijderen -->
-    </div>
 </div>

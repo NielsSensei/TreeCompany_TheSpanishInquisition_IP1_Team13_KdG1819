@@ -51,6 +51,7 @@ namespace DAL.repos
                 VoteCount = obj.VoteCount,
                 RetweetCount = obj.RetweetCount,
                 ShareCount = obj.ShareCount,
+                Title = obj.Title,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
                 ParentID = obj.ParentIdea.Id,
@@ -64,8 +65,7 @@ namespace DAL.repos
             {
                 FieldID = obj.Id,
                 IdeaID = obj.Idea.Id,
-                FieldText = obj.Text,
-                Required = obj.Required
+                FieldText = obj.Text
             };
         }
 
@@ -76,7 +76,6 @@ namespace DAL.repos
                 FieldID = obj.Id,
                 IdeaID = obj.Idea.Id,
                 FieldText = obj.Text,
-                Required = obj.Required,
                 FieldStrings = ExtensionMethods.ListToString(obj.Options)
             };
         }
@@ -88,7 +87,6 @@ namespace DAL.repos
                 FieldID = obj.Id,
                 IdeaID = obj.Idea.Id,
                 FieldText = obj.Text,
-                Required = obj.Required,
                 Url = obj.Url
                 //UploadedImage = obj.UploadedImage,
             };
@@ -101,7 +99,6 @@ namespace DAL.repos
                 FieldID = obj.Id,
                 IdeaID = obj.Idea.Id,
                 FieldText = obj.Text,
-                Required = obj.Required,
                 Url = obj.Url
                 //UploadedVideo
             };
@@ -114,7 +111,6 @@ namespace DAL.repos
                 FieldID = obj.Id,
                 IdeaID = obj.Idea.Id,
                 FieldText = obj.Text,
-                Required = obj.Required,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY
             };
@@ -144,6 +140,7 @@ namespace DAL.repos
                 Visible = DTO.Visible,
                 VoteCount = DTO.VoteCount,
                 RetweetCount = DTO.RetweetCount,
+                Title = DTO.Title,
                 ShareCount= DTO.ShareCount,
                 Status = DTO.Status,
                 VerifiedUser = DTO.VerifiedUser,
@@ -170,7 +167,6 @@ namespace DAL.repos
             return new Field {
                 Id = DTO.FieldID,
                 Idea = new Idea { Id = DTO.IdeaID },
-                Required = DTO.Required,
                 Text = DTO.FieldText
             };
         }
@@ -181,7 +177,6 @@ namespace DAL.repos
             {
                 Id = DTO.FieldID,
                 Idea = new Idea { Id = DTO.IdeaID },
-                Required = DTO.Required,
                 Options = ExtensionMethods.StringToList(DTO.FieldStrings)
             };
         }
@@ -192,8 +187,7 @@ namespace DAL.repos
             {
                 Id = DTO.FieldID,
                 Idea = new Idea { Id = DTO.IdeaID },
-                Required = DTO.Required,
-                LocationX = (float) DTO.LocationX,
+                LocationX = DTO.LocationX,
                 LocationY = DTO.LocationY
             };
         }
@@ -204,7 +198,6 @@ namespace DAL.repos
             {
                 Id = DTO.FieldID,
                 Idea = new Idea { Id = DTO.IdeaID },
-                Required = DTO.Required,
                 Url = DTO.Url
                 //UploadedVideo= DTO.UploadedVideo
             };
@@ -216,7 +209,6 @@ namespace DAL.repos
             {
                 Id = DTO.FieldID,
                 Idea = new Idea { Id = DTO.IdeaID },
-                Required = DTO.Required,
                 Url = DTO.Url
                 //UploadedImage = DTO.UploadedImage
             };

@@ -5,20 +5,20 @@
     Layout = "_Layout";
 }
 
-<title>Overzicht van Ideeën</title>
-<h2>Hier zie je een overzicht van alle ideeën</h2>
+<title>Overview Of Ideas</title>
+<h2>Here you can see an overview of Ideas.</h2>
 
 <table class="table">
     <tr>
         <th>Id</th>
-        <th>CentraleVraag</th>
+        <th>CentralQuestion</th>
         <th>User</th>
-        <th>Review door Moderator nodig?</th>
-        <th>Review door Admin nodig?</th>
-        <th>Titel</th>
-        <th>Aantal Stemmen</th>
-        <th>Aantal Shares</th>
-        <th>Aantal Retweets</th>
+        <th>Has It Been Reported</th>
+        <th>Need Review By Admin</th>
+        <th>Title</th>
+        <th>Number Of Votes</th>
+        <th>Number Of Shares</th>
+        <th>Number Of Retweets</th>
     </tr>
     <!-- TODO: link naar Ideation Thread -->
     <!-- TODO: link naar User profiel? -->
@@ -36,7 +36,7 @@
                 <td>@idea.VoteCount</td>
                 <td>@idea.ShareCount</td>
                 <td>@idea.RetweetCount</td>
-                <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">Zie volledig idee</a></td>
+                <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">View Details For Idea</a></td>
             </tr>
         }
     }
