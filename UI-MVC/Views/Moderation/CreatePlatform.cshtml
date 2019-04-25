@@ -1,16 +1,23 @@
-﻿@{
+﻿@using Domain.Users
+@model CreatePlatformModel
+@{
     ViewData["Title"] = "Platforms";
+    IEnumerable<Domain.Users.Platform> platforms = (IEnumerable < Domain.Users.Platform >)  ViewData["platforms"];
+}
+
+@section Tags {
+    <script type="module" src="~/js/showmenu.js" defer></script>
 }
 
 
-
-<div class="container">
+@* TODO: Add multiple models: one for list of platforms and one for the creation of a platform*@
+<div class="container createPlatform">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
             <h2>Alle beschikbare platformen</h2>
         </div>
-        <div class="col-md-2">
-            <button class="btn-primary">Maak een platform</button>
+        <div class="col-md-3">
+            <button class="btn btn-primary" id="activateMenu">Maak een platform</button>
         </div>
     </div>
     <div>
@@ -21,7 +28,38 @@
                     <th>Eigenaar</th>
                     <th>Aanpassen</th>
                 </tr>
+                @foreach (Platform platform in ViewBag.Platforms)
+                {
+                    <tr>
+                        <td>@platform.Name</td>
+                        <td>Owner</td>
+                        <td><button class="btn btn-primary">Aanpassen</button></td>
+                    </tr>
+                }
             </table>
         </div>
     </div>
+</div>
+
+<div  id="menu">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Een nieuw platform maken</h1>
+            <form asp-controller="Moderation" asp-action="CreatePlatform" method="post">
+                <div class="form-group">
+                    <label asp-for="Name">Naam van het platform</label>
+                    <input asp-for="Name" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Url">Een verkorte URL</label>
+                    <input asp-for="Url" class="form-control"/>
+                </div>
+                <div class="row">
+                    <input type="submit" class="btn btn-primary" value="Maak dit platform aan" /><button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
+                </div>
+            </form>
+        </div>
+    </div>
+         
+    
 </div>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using Domain.Users;
 
@@ -47,6 +48,7 @@ namespace BL
         {
             return PlatformRepo.ReadAll();
         }
+        
         #endregion
         
         // Added by NG
@@ -109,6 +111,20 @@ namespace BL
         {
             throw new NotImplementedException();
         }
+        #endregion
+        
+        // Added by XV
+        // Methods used for creating new platforms
+        
+        #region PlatformCreation
+
+        public int GetNextAvailableId()
+        {
+            // Select the biggest current Id from the platforms and increment it by one
+            int newId = ReadAllPlatforms().Max(platform => platform.Id) + 1;
+            return newId;
+        }
+
         #endregion
     }
 }
