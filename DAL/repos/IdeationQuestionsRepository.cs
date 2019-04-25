@@ -208,6 +208,27 @@ namespace DAL.repos
                 //UploadedImage = DTO.UploadedImage
             };
         }
+
+        private ReportsDTO ConvertToDTO(Report obj)
+        {
+            /*
+            public int ReportID{ get; set; }
+        public int IdeaID { get; set; }
+        public int FlaggerID { get; set; }
+        public int ReporteeID { get; set; }
+        public string Reason { get; set; }
+        public bool ReportApproved { get; set; }
+             */
+            return new ReportsDTO()
+            {
+                ReportID   = obj.Id,
+                IdeaID = obj.Idea.Id,
+                FlaggerID = obj.Flagger.Id,
+                ReporteeID = obj.Reportee.Id,
+                Reason = obj.Reason,
+                ReportApproved = (byte) obj.Status
+            };
+        }
         #endregion
 
         // Added by NVZ
@@ -306,6 +327,8 @@ namespace DAL.repos
                 }
             }
 
+            idea.Visible = true;
+            
             ctx.Ideas.Add(ConvertToDTO(idea));
             ctx.IdeaFields.Add(ConvertToDTO(idea.Field));
             ctx.IdeaFields.Add(ConvertToDTO(idea.Cfield));
@@ -407,6 +430,7 @@ namespace DAL.repos
             Idea i = ReadWithFields(ideaID);
             i.Title = "[deleted]";
             i.Field.Text = "[deleted]";
+            i.Visible = false;
             i.Cfield.Options = null;
             i.Ifield.UploadedImage = null;
             i.Ifield.Url = null;

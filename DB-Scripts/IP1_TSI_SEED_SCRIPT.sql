@@ -193,6 +193,9 @@ VALUES(3,1,1,0,0,1,'Theater','NIET GESELECTEERD',0,0,0,0,0)
 INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser,voteCount,retweetCount,shareCount,parentID)
 VALUES(4,1,1,0,0,1,'Cinema','NIET GESELECTEERD',0,0,0,0,0)
 
+INSERT INTO ideas(ideaID,iQuestionID,userID,reported,reviewByAdmin,visible,title,status,verifiedUser,voteCount,retweetCount,shareCount,parentID)
+VALUES(5,1,1,0,0,1,'SPA','NIET GESELECTEERD',0,0,0,0,0)
+
 /* ideafields */
 INSERT INTO ideafields(fieldID,ideaID,fieldText,locationX,locationY,Required)
 VALUES(1,1,'We maken een grote haag van bomen en struiken rond de Groenplaats om de grijze beton erbuiten te houden!',0,0,0)
@@ -208,6 +211,9 @@ VALUES(4,3,'Een locatie zo nabij het oude centrum moet evenveel cultuur hebben a
 
 INSERT INTO ideafields(fieldID,ideaID,fieldText,locationX,locationY,Required)
 VALUES(5,4,'Nope, dom idee. Wij wille gewoon goeie films kunne zien, buiten op de Groenplaats. Ff pintje op café, laatste nieve film om middernacht opt gras buite. Der woont tog niemand, dus ook geen lawaaid overlast.',0,0,0)
+
+INSERT INTO ideafields(fieldID,ideaID,fieldText,locationX,locationY,Required)
+VALUES(6,5,'30 jaar geleden was de groenplaats nog groen toen dat SPA aan het roer hing in antwerpen. Sinds de NVA zich kwam moeien is er een echte vergrijzing in de stad!',0,0,0)
 
 /* Devices */
 INSERT INTO devices(deviceID,locationX,locationY) 
@@ -258,3 +264,4 @@ VALUES(10,3,1,1,2,1,2,1,'User heeft gestemd op een idee.')
 
 INSERT INTO useractivities(activityID,userID,platformID,projectID,moduleID,iQuestionID,ideaID,voteID,actionDescription)
 VALUES(11,6,1,1,2,1,2,1,'User heeft gestemd op een idee.')
+

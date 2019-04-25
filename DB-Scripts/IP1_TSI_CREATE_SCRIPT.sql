@@ -274,7 +274,7 @@ CREATE TABLE votes(
 	CONSTRAINT fk_votes_user FOREIGN KEY (userID) references users(userID)
 )
 
-CREATE TABLE useractivities(
+CREATE TABLE Useractivities(
 	activityID INT IDENTITY PRIMARY KEY,
 	userID INT NOT NULL,
 	platformID INT NOT NULL,
@@ -299,6 +299,16 @@ CREATE TABLE useractivities(
 	CONSTRAINT fk_useractivities_phase FOREIGN KEY (phaseID) references phases(phaseID)
 )
 
+CREATE TABLE Reports(
+	ReportID       INT IDENTITY PRIMARY KEY,
+	IdeaID         INT NOT NULL,
+	FlaggerID      INT NOT NULL,
+	ReporteeID     INT NOT NULL,
+	Reason         VARCHAR(255),
+	ReportApproved TINYINT NOT NULL,
 
-
-
+	/*Constraints*/
+	CONSTRAINT fk_reports_ideas FOREIGN KEY (IdeaID) references ideas(IdeaID),
+	CONSTRAINT fk_reports_flaggingusers FOREIGN KEY (FlaggerID) references users(userID),
+	CONSTRAINT fk_reports_reportedusers FOREIGN KEY (ReporteeID) references users(userID)
+)
