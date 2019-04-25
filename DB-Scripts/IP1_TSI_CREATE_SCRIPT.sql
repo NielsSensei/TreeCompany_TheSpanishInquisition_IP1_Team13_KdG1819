@@ -122,7 +122,7 @@ CREATE TABLE Modules(
 	OnGoing BIT NOT NULL,
 	LikeCount INT,
 	FbLikeCount INT, 
-	TwitterLikeCOunt INT,
+	TwitterLikeCount INT,
 	ShareCount INT,
 	RetweetCount INT,
 	Tags VARCHAR(255),
