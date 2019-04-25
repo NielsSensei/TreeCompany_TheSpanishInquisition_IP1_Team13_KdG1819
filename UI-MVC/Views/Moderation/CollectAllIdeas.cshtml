@@ -24,16 +24,20 @@
     <!-- TODO: link naar User profiel? -->
     @foreach (Idea idea in Model)
     {
-        <tr>
-            <td>@idea.Id</td>
-            <td>@idea.IdeaQuestion.Id</td>
-            <td>@idea.User.Id</td>
-            <td>@idea.Reported</td>
-            <td>@idea.ReviewByAdmin</td>
-            <td>@idea.Title</td>
-            <td>@idea.VoteCount</td>
-            <td>@idea.ShareCount</td>
-            <td>@idea.RetweetCount</td>
-        </tr>
+        if (idea.Visible)
+        {
+            <tr>
+                <td>@idea.Id</td>
+                <td>@idea.IdeaQuestion.Id</td>
+                <td>@idea.User.Id</td>
+                <td>@idea.Reported</td>
+                <td>@idea.ReviewByAdmin</td>
+                <td>@idea.Title</td>
+                <td>@idea.VoteCount</td>
+                <td>@idea.ShareCount</td>
+                <td>@idea.RetweetCount</td>
+                <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">Zie volledig idee</a></td>
+            </tr>
+        }
     }
 </table>
