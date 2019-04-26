@@ -40,7 +40,7 @@ namespace UIMVC.Controllers
                 {
                     r.Flagger = _usrMgr.GetUser(r.Flagger.Id, false);
                 }
-                ViewData["Reports"] = null;
+                ViewData["Reports"] = reportWithoutFlagger;
             
                 return View(idea);  
             }

@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS Platforms
 
 CREATE TABLE Platforms(
 	PlatformID INT IDENTITY,
-	Name VARCHAR(100) NOT NULL,
+	Name NVARCHAR(100) NOT NULL,
 	SiteUrl VARCHAR(50) NOT NULL,
 	IconImage BINARY(255),
 
@@ -37,8 +37,8 @@ CREATE TABLE Platforms(
 
 CREATE TABLE Users(
 	UserID INT IDENTITY,
-	Name VARCHAR(100),
-	Email VARCHAR(100),
+	Name NVARCHAR(100),
+	Email NVARCHAR(100),
 	Password BINARY(25),
 	Role TINYINT NOT NULL,
 	PlatformID INT NOT NULL,
@@ -55,8 +55,8 @@ CREATE TABLE UserDetails(
 	Gender TINYINT,
 	Active BIT NOT NULL,
 	BirthDate DATE,
-	OrgName VARCHAR(100),
-	Description VARCHAR(255),
+	OrgName NVARCHAR(100),
+	Description NVARCHAR(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_UserDetails PRIMARY KEY(UserID),
@@ -66,8 +66,8 @@ CREATE TABLE UserDetails(
 CREATE TABLE OrganisationEvents(
 	EventID INT IDENTITY,
 	UserID INT NOT NULL,
-	Name VARCHAR(100) NOT NULL,
-	Description VARCHAR(255) NOT NULL,
+	Name NVARCHAR(100) NOT NULL,
+	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
 
@@ -83,8 +83,8 @@ CREATE TABLE Projects(
 	CurrentPhaseID INT NOT NULL,
 	UserID INT NOT NULL,
 	PlatformID INT NOT NULL,
-	Title VARCHAR(50) NOT NULL,
-	Goal VARCHAR(255) NOT NULL,
+	Title NVARCHAR(50) NOT NULL,
+	Goal NVARCHAR(255) NOT NULL,
 	Status VARCHAR(25) NOT NULL,
 	Visible BIT NOT NULL,
 	ReactionCount INT,
@@ -104,7 +104,7 @@ CREATE TABLE Projects(
 CREATE TABLE Phases(
 	PhaseID INT IDENTITY,
 	ProjectID INT NOT NULL,
-	Description VARCHAR(255) NOT NULL,
+	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
 
@@ -156,9 +156,9 @@ CREATE TABLE Devices(
 CREATE TABLE IdeationQuestions(
 	IQuestionID INT IDENTITY,
 	ModuleID INT NOT NULL,
-	QuestionTitle VARCHAR(50) NOT NULL,
-	Description VARCHAR(255) NOT NULL,
-	WebsiteLink VARCHAR(50) NOT NULL,
+	QuestionTitle NVARCHAR(50) NOT NULL,
+	Description NVARCHAR(255) NOT NULL,
+	WebsiteLink NVARCHAR(50) NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_IdeationQuestions PRIMARY KEY(IQuestionID),
@@ -175,7 +175,7 @@ CREATE TABLE Ideas(
 	VoteCount INT,
 	RetweetCount INT,
 	ShareCount INT,
-	Title VARCHAR(100) NOT NULL,
+	Title NVARCHAR(100) NOT NULL,
 	Status VARCHAR(100),
 	VerifiedUser BIT NOT NULL,
 	ParentID INT,
@@ -197,7 +197,7 @@ CREATE TABLE Ideations (
 	UserIdea BIT NOT NULL,
 	MediaFile BINARY(255),
 	RequiredFields tinyint NOT NULL,
-	ExtraInfo VARCHAR(100),
+	ExtraInfo NVARCHAR(100),
 
 	/*Constraints*/
 	CONSTRAINT pk_Ideations PRIMARY KEY(ModuleID),
@@ -209,7 +209,7 @@ CREATE TABLE Ideations (
 CREATE TABLE QuestionnaireQuestions(
 	QQuestionID INT IDENTITY,
 	ModuleID INT NOT NULL,
-	QuestionText VARCHAR(100) NOT NULL,
+	QuestionText NVARCHAR(100) NOT NULL,
 	QType BIT NOT NULL,
 	Required BIT NOT NULL,
 
@@ -222,7 +222,7 @@ CREATE TABLE Answers(
 	AnswerID INT IDENTITY,
 	QQuestionID INT NOT NULL,
 	UserID INT,
-	AnswerText VARCHAR(255),
+	AnswerText NVARCHAR(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_Answers PRIMARY KEY(AnswerID),
@@ -232,7 +232,7 @@ CREATE TABLE Answers(
 
 CREATE TABLE Options(
 	OptionID INT IDENTITY,
-	OptionText VARCHAR(150) NOT NULL,
+	OptionText NVARCHAR(150) NOT NULL,
 	QQuestionID INT NOT NULL,
 
 	/*Constraints*/
@@ -255,8 +255,8 @@ CREATE TABLE Choices(
 CREATE TABLE IdeaFields(
 	FieldID INT IDENTITY,
 	IdeaID INT NOT NULL,
-	FieldText VARCHAR(255),
-	FieldStrings VARCHAR(800),
+	FieldText NVARCHAR(255),
+	FieldStrings NVARCHAR(800),
 	LocationX FLOAT,
 	LocationY FLOAT,
 	Url VARCHAR(50),
@@ -275,10 +275,10 @@ CREATE TABLE Votes(
 	InputID INT NOT NULL,
 	UserID INT NOT NULL,
 	InputType TINYINT NOT NULL,
-	UserMail VARCHAR(100),
+	UserMail NVARCHAR(100),
 	LocationX FLOAT,
 	LocationY FLOAT,
-	Choices VARCHAR(255),
+	Choices NVARCHAR(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_Votes PRIMARY KEY(VoteID),
@@ -315,7 +315,7 @@ CREATE TABLE Reports(
 	IdeaID         INT NOT NULL,
 	FlaggerID      INT NOT NULL,
 	ReporteeID     INT NOT NULL,
-	Reason         VARCHAR(255),
+	Reason         NVARCHAR(255),
 	ReportApproved TINYINT NOT NULL,
 
 	/*Constraints*/
