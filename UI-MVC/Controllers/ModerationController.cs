@@ -49,12 +49,14 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         public IActionResult ReviewByAdmin(int idea, int  report)
         {
             Idea foundIdea = _ideaMgr.GetIdea(idea);
             Report foundReport = _ideaMgr.GetReport(report);
+
+            foundIdea.ReviewByAdmin = true;
+            foundReport.Status = ReportStatus.STATUS_NEEDADMIN;
             
             _ideaMgr.EditIdea(foundIdea);
             _ideaMgr.EditReport(foundReport);

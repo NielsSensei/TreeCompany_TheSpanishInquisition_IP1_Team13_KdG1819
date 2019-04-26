@@ -376,34 +376,80 @@ namespace DAL.repos
         public void Update(Idea obj)
         {
             IdeasDTO newIdea = ConvertToDTO(obj);
-            Idea found = ReadIdea(obj.Id, false);
-            IdeasDTO foundIdea = ConvertToDTO(found);
-            foundIdea = newIdea;
+            IdeasDTO foundIdea = ctx.Ideas.First(i => i.IdeaID == obj.Id);
+            if (foundIdea != null)
+            {
+                foundIdea.Title = newIdea.Title;
+                foundIdea.Reported = newIdea.Reported;
+                foundIdea.ReviewByAdmin = newIdea.ReviewByAdmin;
+                foundIdea.Visible = newIdea.Visible;
+                foundIdea.VoteCount = newIdea.VoteCount;
+                foundIdea.RetweetCount = newIdea.RetweetCount;
+                foundIdea.ShareCount = newIdea.ShareCount;
+                foundIdea.Status = newIdea.Status;
+                foundIdea.VerifiedUser = newIdea.VerifiedUser;
+                foundIdea.DeviceID = newIdea.DeviceID;
+                ctx.Ideas.Update(foundIdea);
+            }
+           
+            if (obj.Field != null)
+            {
+                IdeaFieldsDTO newTextField = ConvertToDTO(obj.Field);
+                IdeaFieldsDTO foundTextField = ctx.IdeaFields.First(f => f.FieldID == obj.Field.Id);
+                if (foundTextField != null)
+                {
+                    foundTextField.FieldText = newTextField.FieldText;
+                    ctx.IdeaFields.Update(foundTextField);
+                }
+            }
 
-            IdeaFieldsDTO newTextField = ConvertToDTO(obj.Field);
-            Field foundText = ReadAllFields().ToList().First(f => f.Id == obj.Field.Id);
-            IdeaFieldsDTO foundTextField = ConvertToDTO(foundText);
-            newTextField = foundTextField;
-
-            IdeaFieldsDTO newCField = ConvertToDTO(obj.Cfield);
-            ClosedField foundClosed = (ClosedField) ReadAllFields().ToList().First(f => f.Id == obj.Cfield.Id);
-            IdeaFieldsDTO foundCField = ConvertToDTO(foundClosed);
-            newCField = foundCField;
-
-            IdeaFieldsDTO newMField = ConvertToDTO(obj.Mfield);
-            MapField foundMap = (MapField) ReadAllFields().ToList().First(f => f.Id == obj.Mfield.Id);
-            IdeaFieldsDTO foundMField = ConvertToDTO(foundMap);
-            newMField = foundMField;
-
-            IdeaFieldsDTO newIField = ConvertToDTO(obj.Ifield);
-            ImageField foundImage = (ImageField) ReadAllFields().ToList().First(f => f.Id == obj.Ifield.Id);
-            IdeaFieldsDTO foundIField = ConvertToDTO(foundImage);
-            newIField = foundIField;
-
-            IdeaFieldsDTO newVField = ConvertToDTO(obj.Vfield);
-            VideoField foundVideo = (VideoField) ReadAllFields().ToList().First(f => f.Id == obj.Vfield.Id);
-            IdeaFieldsDTO foundVField = ConvertToDTO(foundVideo);
-            newVField = foundVField;
+            if (obj.Cfield != null)
+            {
+                IdeaFieldsDTO newCField = ConvertToDTO(obj.Cfield);
+                IdeaFieldsDTO foundCField = ctx.IdeaFields.First(f => f.FieldID == obj.Cfield.Id);
+                if (foundCField != null)
+                {
+                    foundCField.FieldStrings = newCField.FieldStrings;
+                    ctx.IdeaFields.Update(foundCField);
+                }
+            }
+            
+            if (obj.Mfield != null)
+            {
+                IdeaFieldsDTO newMField = ConvertToDTO(obj.Mfield);
+                IdeaFieldsDTO foundMField = ctx.IdeaFields.First(f => f.FieldID == obj.Mfield.Id);
+                if (foundMField != null)
+                {
+                    foundMField.LocationX = newMField.LocationX;
+                    foundMField.LocationY = newMField.LocationY;
+                    foundMField.Url = newMField.Url;
+                    ctx.IdeaFields.Update(foundMField);
+                }
+            }
+            
+            if (obj.Ifield != null)
+            {
+                IdeaFieldsDTO newIField = ConvertToDTO(obj.Ifield);
+                IdeaFieldsDTO foundIField = ctx.IdeaFields.First(f => f.FieldID == obj.Ifield.Id);
+                if (foundIField != null)
+                {
+                    foundIField.Url = newIField.Url;
+                    foundIField.UploadedImage = newIField.UploadedImage;
+                    ctx.IdeaFields.Update(foundIField);
+                }                               
+            }
+            
+            if (obj.Vfield != null)
+            {
+                IdeaFieldsDTO newVField = ConvertToDTO(obj.Vfield);
+                IdeaFieldsDTO foundVField = ctx.IdeaFields.First(f => f.FieldID == obj.Vfield.Id);
+                if (foundVField != null)
+                {
+                    foundVField.Url = newVField.Url;
+                    foundVField.UploadedMedia = newVField.UploadedMedia;
+                    ctx.IdeaFields.Update(foundVField);
+                }
+            }
 
             ctx.SaveChanges();
         }
@@ -522,10 +568,14 @@ namespace DAL.repos
         public void Update(Report obj)
         {
             ReportsDTO newReport = ConvertToDTO(obj);
-            Report found = ReadReport(obj.Id, false);
-            ReportsDTO foundReport = ConvertToDTO(found);
-            foundReport = newReport;
-
+            ReportsDTO foundReport = ctx.Reports.First(r => r.ReportID == obj.Id);
+            if (foundReport != null)
+            {
+                foundReport.Reason = newReport.Reason;
+                foundReport.ReportApproved = newReport.ReportApproved;
+                ctx.Reports.Update(foundReport);
+            }
+            
             ctx.SaveChanges();
         }
 

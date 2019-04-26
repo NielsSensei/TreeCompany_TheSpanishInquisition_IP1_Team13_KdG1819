@@ -184,8 +184,7 @@ CREATE TABLE Ideas(
 	/*Constraints*/
 	CONSTRAINT pk_Ideas PRIMARY KEY(IdeaID),
 	CONSTRAINT fk_Ideas_Ideationquestions FOREIGN KEY (IQuestionID) references IdeationQuestions(IQuestionID) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_Ideas_Users FOREIGN KEY (UserID) references Users(UserID),
-	CONSTRAINT fk_Ideas_Ideas FOREIGN KEY (ParentID) references Ideas(IdeaID)
+	CONSTRAINT fk_Ideas_Users FOREIGN KEY (UserID) references Users(UserID)
 )
 
 

@@ -60,12 +60,11 @@
                     <h2>Actions</h2>
                     if (r.Status == ReportStatus.STATUS_NOTVIEWED)
                     {                       
-                        <div class="container">
-                            <div class="row">
-                                <a id="ReportHandlerButton" asp-controller="Moderation" asp-action="ReviewByAdmin"
-                                   asp-route-idea="@Model.Id" asp-route-report="@r.Id" type="submit">Ask Review By Admin</a>                          
-                            </div>                           
-                        </div>                       
+                        <form asp-controller="Moderation" asp-action="ReviewByAdmin" asp-route-idea="@Model.Id" 
+                              asp-route-report="@r.Id" method="post">
+                            <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Ask Review By Admin" />                             
+                        </form>
+                                             
                     }
 
                     if (r.Status == ReportStatus.STATUS_NEEDADMIN || r.Status == ReportStatus.STATUS_NOTVIEWED)

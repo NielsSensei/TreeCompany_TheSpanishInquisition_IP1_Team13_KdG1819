@@ -191,10 +191,10 @@ INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title
 VALUES(3,1,1,0,0,1,'Theater','NIET GESELECTEERD',0,0,0,0,0,0)
 
 INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID)
-VALUES(4,1,1,0,0,1,'Cinema','NIET GESELECTEERD',0,0,0,0,0,0)
+VALUES(4,1,1,1,0,1,'Cinema','NIET GESELECTEERD',0,0,0,0,0,0)
 
 INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID)
-VALUES(5,1,1,0,0,1,'SPA','NIET GESELECTEERD',0,0,0,0,0,0)
+VALUES(5,1,1,1,0,1,'SPA','NIET GESELECTEERD',0,0,0,0,0,0)
 
 /* ideafields */
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
