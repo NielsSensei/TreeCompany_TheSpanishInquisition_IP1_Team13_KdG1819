@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BL;
 using Domain.UserInput;
 using Domain.Users;
@@ -34,7 +35,12 @@ namespace UIMVC.Controllers
             if (idea.Visible)
             {
                 idea.User  = _usrMgr.GetUser(idea.User.Id, false);
-                ViewData["Reports"] = _ideaMgr.GetAllReportsByIdea(id);
+                IEnumerable<Report> reportWithoutFlagger = _ideaMgr.GetAllReportsByIdea(id);
+                foreach (Report r in reportWithoutFlagger)
+                {
+                    r.Flagger = _usrMgr.GetUser(r.Flagger.Id, false);
+                }
+                ViewData["Reports"] = null;
             
                 return View(idea);  
             }

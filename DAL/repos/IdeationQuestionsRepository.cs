@@ -341,22 +341,30 @@ namespace DAL.repos
         {
             Idea idea = ReadIdea(id, true); 
             List<IdeaFieldsDTO> fields = ctx.IdeaFields.ToList().FindAll(i => i.IdeaID == id);
-
+           
             for (int i = 0; i < fields.Count; i++)
             {
-                if (fields[i].FieldText != null)
+                if (fields[i].FieldText != null && idea.Field == null)
                 {
-                    idea.Field = ConvertFieldToDomain(fields[i]);
-                } else if (fields[i].FieldStrings != null)
+                    idea.Field = ConvertFieldToDomain(fields[i]);                   
+                } 
+                
+                if (fields[i].FieldStrings != null)
                 {
                     idea.Cfield = ConvertClosedFieldToDomain(fields[i]);
-                } else if(fields[i].LocationX > 0)
+                } 
+                
+                if(fields[i].LocationX > 0)
                 {
                     idea.Mfield = ConvertMapFieldToDomain(fields[i]);
-                } else if(fields[i].UploadedImage != null)
+                } 
+                
+                if(fields[i].UploadedImage != null)
                 {
                     idea.Ifield = ConvertImageFieldToDomain(fields[i]);
-                } else if(fields[i].UploadedMedia != null)
+                } 
+                
+                if(fields[i].UploadedMedia != null)
                 {
                     idea.Vfield = ConvertVideoFieldToDomain(fields[i]);
                 }
