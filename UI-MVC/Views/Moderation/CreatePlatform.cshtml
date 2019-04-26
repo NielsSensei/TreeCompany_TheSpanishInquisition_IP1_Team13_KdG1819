@@ -31,9 +31,9 @@
                 @foreach (Platform platform in ViewBag.Platforms)
                 {
                     <tr>
-                        <td>@platform.Name</td>
+                        <td><a asp-action="Index" asp-controller="Platform" asp-route-id="@platform.Id">@platform.Name</a></td>
                         <td>Owner</td>
-                        <td><button class="btn btn-primary">Aanpassen</button></td>
+                        <td><a asp-action="EditPlatform" asp-controller="Platform" asp-route-id="@platform.Id">Aanpassen</a></td>
                     </tr>
                 }
             </table>
