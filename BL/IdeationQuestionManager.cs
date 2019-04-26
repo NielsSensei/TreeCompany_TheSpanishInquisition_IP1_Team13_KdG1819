@@ -129,6 +129,11 @@ namespace BL
         
         // Added by NVZ
         // Report
+        public void DeleteReport(int id)
+        {
+            IdeationQuestionRepo.DeleteReport(id);
+        }
+        
         public void EditReport(Report obj)
         {
             IdeationQuestionRepo.Update(obj);

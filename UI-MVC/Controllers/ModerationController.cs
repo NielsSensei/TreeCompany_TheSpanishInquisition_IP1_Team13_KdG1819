@@ -48,8 +48,9 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Errors", actionName: "HandleErrorCode", routeValues: id);
         }
 
-        [HttpPost]
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
+        [HttpPost]
+        [Authorize]
         public IActionResult ReviewByAdmin(int idea, int  report)
         {
             Idea foundIdea = _ideaMgr.GetIdea(idea);
@@ -64,5 +65,42 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
         }
 
+        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
+        [HttpPost]
+        [Authorize]
+        public IActionResult ApproveReport(int report, int idea)
+        {
+            Report foundReport = _ideaMgr.GetReport(report);
+
+            foundReport.Status = ReportStatus.STATUS_APPROVED;
+            
+            _ideaMgr.EditReport(foundReport);
+            
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+        }
+
+        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
+        [HttpPost]
+        [Authorize]
+        public IActionResult DenyReport(int report, int idea)
+        {
+            Report foundReport = _ideaMgr.GetReport(report);
+
+            foundReport.Status = ReportStatus.STATUS_DENIED;
+            
+            _ideaMgr.EditReport(foundReport);
+            
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+        }
+        
+        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeleteReport(int report, int idea)
+        {
+            _ideaMgr.DeleteReport(report);
+            
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+        }
     }
 }

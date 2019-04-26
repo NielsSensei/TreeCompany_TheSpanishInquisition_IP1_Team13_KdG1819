@@ -581,8 +581,8 @@ namespace DAL.repos
 
         public void DeleteReport(int id)
         {
-            Report toDelete = ReadReport(id, false);
-            ctx.Reports.Remove(ConvertToDTO(toDelete));
+            ReportsDTO toDelete = ctx.Reports.First(r => r.ReportID == id);
+            ctx.Reports.Remove(toDelete);
             ctx.SaveChanges();
         }
 

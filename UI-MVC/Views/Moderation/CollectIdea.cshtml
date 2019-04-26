@@ -71,26 +71,31 @@
                     {
                         <div class="container">
                             <div class="row">
-                                <button class="btn btn-primary" id="ReportHandlerButton" href="#">
-                                    Approve Report
-                                </button>
+                                <form asp-controller="Moderation" asp-action="ApproveReport" asp-route-report="@r.Id" method="post"
+                                      asp-route-idea="@Model.Id">
+                                    <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Approve Report"/>
+                                </form>
                             </div>
                             <div class="row">
-                                <button class="btn btn-primary" id="ReportHandlerButton" href="#">
-                                    Ignore Report
-                                </button>
-                            </div>
-                            <div class="row">
-                                <button class="btn btn-primary" id="ReportHandlerButton" href="#">
-                                    Delete Report
-                                </button>
+                                <form asp-controller="Moderation" asp-action="DenyReport" asp-route-report="@r.Id" method="post"
+                                      asp-route-idea="@Model.Id">
+                                    <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Ignore Report"/>
+                                </form>
                             </div>
                         </div>
                     }
 
-                    if (r.Status == ReportStatus.STATUS_APPROVED || r.Status == ReportStatus.STATUS_DENIED)
+                    if (r.Status == ReportStatus.STATUS_APPROVED)
                     {
                         <p>Report has been handled, no actions available</p>
+                    }
+
+                    if (r.Status == ReportStatus.STATUS_DENIED)
+                    {
+                        <form asp-controller="Moderation" asp-action="DeleteReport" asp-route-report="@r.Id" method="post"
+                              asp-route-idea="@Model.Id">
+                            <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Delete Report"/>
+                        </form>
                     }
                 }    
             }
