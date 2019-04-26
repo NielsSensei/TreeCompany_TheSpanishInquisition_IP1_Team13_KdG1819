@@ -2,7 +2,7 @@
 @model CreatePlatformModel
 @{
     ViewData["Title"] = "Platforms";
-    IEnumerable<Domain.Users.Platform> platforms = (IEnumerable < Domain.Users.Platform >)  ViewData["platforms"];
+    IEnumerable<Domain.Users.Platform> platforms = (IEnumerable<Domain.Users.Platform>) ViewData["platforms"];
 }
 
 @section Tags {
@@ -21,27 +21,36 @@
         </div>
     </div>
     <div>
-        <div>
+        @if (platforms == null || !platforms.Any())
+        {
+            <h4>Er zijn geen platforms :(</h4>
+        }
+        else
+        {
             <table class="table">
                 <tr>
                     <th>PlatformId</th>
                     <th>Eigenaar</th>
                     <th>Aanpassen</th>
                 </tr>
-                @foreach (Platform platform in ViewBag.Platforms)
+                @foreach (Platform platform in platforms)
                 {
                     <tr>
-                        <td><a asp-action="Index" asp-controller="Platform" asp-route-id="@platform.Id">@platform.Name</a></td>
+                        <td>
+                            <a asp-action="Index" asp-controller="Platform" asp-route-id="@platform.Id">@platform.Name</a>
+                        </td>
                         <td>Owner</td>
-                        <td><a asp-action="EditPlatform" asp-controller="Platform" asp-route-id="@platform.Id">Aanpassen</a></td>
+                        <td>
+                            <a asp-action="EditPlatform" asp-controller="Platform" asp-route-id="@platform.Id">Aanpassen</a>
+                        </td>
                     </tr>
                 }
             </table>
-        </div>
+        }
     </div>
 </div>
 
-<div  id="menu">
+<div id="menu">
     <div class="row">
         <div class="col-md-10">
             <h1>Een nieuw platform maken</h1>
@@ -55,11 +64,9 @@
                     <input asp-for="Url" class="form-control"/>
                 </div>
                 <div class="row">
-                    <input type="submit" class="btn btn-primary" value="Maak dit platform aan" /><button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
+                    <input type="submit" class="btn btn-primary" value="Maak dit platform aan"/><button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
                 </div>
             </form>
         </div>
     </div>
-         
-    
 </div>
