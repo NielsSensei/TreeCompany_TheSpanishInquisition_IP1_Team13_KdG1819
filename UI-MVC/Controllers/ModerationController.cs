@@ -1,4 +1,5 @@
 using BL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UIMVC.Controllers
@@ -19,6 +20,13 @@ namespace UIMVC.Controllers
         public IActionResult CollectAllIdeas()
         {
             return View(_ideaMgr.GetIdeas());
-        } 
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult CollectAllUsers()
+        {
+            return View(_userMgr.GetUsers());
+        }
     }
 }

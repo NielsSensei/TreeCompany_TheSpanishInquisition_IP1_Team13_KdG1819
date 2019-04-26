@@ -50,6 +50,11 @@ namespace BL
            return UserRepo.Read(userId, details);
        }
 
+       public List<User> GetUsers()
+       {
+           return UserRepo.ReadAll().ToList();
+       }
+       
        public List<User> GetUsers(int platformId, Role? roleLevel)
        {
            var userList = UserRepo.ReadAll(platformId).ToList();

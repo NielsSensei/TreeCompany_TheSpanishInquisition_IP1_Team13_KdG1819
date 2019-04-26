@@ -1,0 +1,56 @@
+@using Domain.Users
+@model IEnumerable<Domain.Users.User>
+
+@{
+    ViewData["Title"] = "Overzicht van Users";
+    Layout = "_Layout";
+}
+
+<body>
+<h2>Hier zie je een overzicht van alle users</h2>
+<hr/>
+@* <div class="form-group"> *@
+@*     <div class="container"> *@
+@*         <div class="row" id="combo"> *@
+@*             <div class="col-2"> *@
+@*                 <label>Selecteer een filter:</label> *@
+@*             </div> *@
+@*             <div class="col-10"> *@
+@*                 <select class="form-control"> *@
+@*                     <option>Alle users</option> *@
+@*                     <option></option> *@
+@*                 </select> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <th>Platform</th>
+        <th>Naam</th>
+        <th>Geslacht</th>
+        <th>Geboortedatum</th>
+        <th>Email</th>
+        <th>Zipcode</th>
+        <th>Rol</th>
+        <th>Banned</th>
+        <th>Actief</th>
+    </tr>
+    @foreach (User user in Model)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.Platform</td>
+            <td>@user.Name</td>
+            <td>@user.Gender</td>
+            <td>@user.Birthdate</td>
+            <td>@user.Email</td>
+            <td>@user.ZipCode</td>
+            <td>@user.Role</td>
+            <td>@user.Banned</td>
+            <td>@user.Active</td>
+        </tr>
+    }
+</table>
+</body>
