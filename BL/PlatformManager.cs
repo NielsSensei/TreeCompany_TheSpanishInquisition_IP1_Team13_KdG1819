@@ -28,9 +28,9 @@ namespace BL
             return PlatformRepo.Read(platformId, true);
         }
         
-        public void MakePlatform(Platform platform)
+        public Platform MakePlatform(Platform platform)
         {
-            PlatformRepo.Create(platform);
+            return PlatformRepo.Create(platform);
         }
 
         public void EditPlatform(Platform platform)

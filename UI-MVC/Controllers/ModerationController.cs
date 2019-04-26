@@ -40,16 +40,16 @@ namespace UIMVC.Controllers
             }
             Platform platform = new Platform()
             {
-                Id = _platformMgr.GetNextAvailableId(),
+                // Id = _platformMgr.GetNextAvailableId(),
                 Name = cpm.Name,
                 Url = cpm.Url,
                 Owners = new List<User>(),
                 Users = new List<User>()
             };
             
-            _platformMgr.MakePlatform(platform);
+            var newPlatform = _platformMgr.MakePlatform(platform);
             
-            return RedirectToAction("Index", "Platform", new {Id = platform.Id} );
+            return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
         }
     }
 }

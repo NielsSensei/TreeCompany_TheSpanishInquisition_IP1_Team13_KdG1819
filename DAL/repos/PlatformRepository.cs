@@ -67,7 +67,7 @@ namespace DAL
             ctx.Platforms.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
-            return obj;
+            return ConvertToDomain(ctx.Platforms.FirstOrDefault(dto => dto.Name == obj.Name));
         }
 
         public Platform Read(int id, bool details)
