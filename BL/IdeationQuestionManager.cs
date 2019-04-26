@@ -74,9 +74,9 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void EditIdea(string propName, int ideaId, int questionId)
+        public void EditIdea(Idea idea)
         {
-            throw new NotImplementedException("I might need this!");
+            IdeationQuestionRepo.Update(idea);
         }
 
         public Idea GetIdea(int ideaId)
@@ -129,11 +129,20 @@ namespace BL
         
         // Added by NVZ
         // Report
+        public void EditReport(Report obj)
+        {
+            IdeationQuestionRepo.Update(obj);
+        }
+        
         public IEnumerable<Report> GetAllReportsByIdea(int ideaID)
         {
             return IdeationQuestionRepo.ReadAllReportsByIdea(ideaID);
         }
-        
+
+        public Report GetReport(int reportID)
+        {
+            return IdeationQuestionRepo.ReadReport(reportID,false);
+        }
         // Added by NVZ
         // Other Methods
         #region

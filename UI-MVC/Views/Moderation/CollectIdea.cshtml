@@ -56,14 +56,43 @@
                     <p><span style="font-weight: bold">Flagger:</span> @r.Flagger.Name</p>
                     <p><span style="font-weight: bold">Reason:</span> @r.Reason</p>
                     <p><span style="font-weight: bold">Status:</span> @r.Status</p>
+                                                                               
+                    <h2>Actions</h2>
                     if (r.Status == ReportStatus.STATUS_NOTVIEWED)
+                    {                       
+                        <div class="container">
+                            <div class="row">
+                                <a id="ReportHandlerButton" asp-controller="Moderation" asp-action="ReviewByAdmin"
+                                   asp-route-idea="@Model.Id" asp-route-report="@r.Id" type="submit">Ask Review By Admin</a>                          
+                            </div>                           
+                        </div>                       
+                    }
+
+                    if (r.Status == ReportStatus.STATUS_NEEDADMIN || r.Status == ReportStatus.STATUS_NOTVIEWED)
                     {
-                        <h2>Actions</h2>
-                        <button class="btn btn-primary" href="#">Ask Review By Admin</button>
-                        <button class="btn btn-primary" href="#">Approve Report</button>
-                        <button class="btn btn-primary" href="#">Ignore Report</button>
-                        <button class="btn btn-primary" href="#">Delete Report</button>
-                    }                   
+                        <div class="container">
+                            <div class="row">
+                                <button class="btn btn-primary" id="ReportHandlerButton" href="#">
+                                    Approve Report
+                                </button>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-primary" id="ReportHandlerButton" href="#">
+                                    Ignore Report
+                                </button>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-primary" id="ReportHandlerButton" href="#">
+                                    Delete Report
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                    if (r.Status == ReportStatus.STATUS_APPROVED || r.Status == ReportStatus.STATUS_DENIED)
+                    {
+                        <p>Report has been handled, no actions available</p>
+                    }
                 }    
             }
             else

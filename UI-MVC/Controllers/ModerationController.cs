@@ -48,5 +48,19 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Errors", actionName: "HandleErrorCode", routeValues: id);
         }
 
+        [HttpPost]
+        [Authorize]
+        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
+        public IActionResult ReviewByAdmin(int idea, int  report)
+        {
+            Idea foundIdea = _ideaMgr.GetIdea(idea);
+            Report foundReport = _ideaMgr.GetReport(report);
+            
+            _ideaMgr.EditIdea(foundIdea);
+            _ideaMgr.EditReport(foundReport);
+            
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+        }
+
     }
 }
