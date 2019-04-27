@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using Domain.Users;
 
@@ -10,14 +11,12 @@ namespace BL
         // Added by NG
         // Modified by NVZ
         private PlatformRepository PlatformRepo { get; set; }
-        private UserManager UserMan { get; set; }
         
         // Added by NG
         // Modified by NVZ
         public PlatformManager()
         {
             PlatformRepo = new PlatformRepository();
-            UserMan = new UserManager();
         }
         
         // Added by NG
@@ -29,9 +28,9 @@ namespace BL
             return PlatformRepo.Read(platformId, true);
         }
         
-        public void MakePlatform(Platform platform)
+        public Platform MakePlatform(Platform platform)
         {
-            PlatformRepo.Create(platform);
+            return PlatformRepo.Create(platform);
         }
 
         public void EditPlatform(Platform platform)
@@ -43,30 +42,37 @@ namespace BL
         {
             PlatformRepo.Delete(platformId);
         }
+
+        // Added by XV
+        public IEnumerable<Platform> ReadAllPlatforms()
+        {
+            return PlatformRepo.ReadAll();
+        }
+        
         #endregion
         
         // Added by NG
         // Modified by NVZ
         //PlatformOwner
         #region
-        public void MakeOwner(int platformId, int userId)
+        public void MakeOwner(int platformId, User newOwner)
         {
-            var newOwner = UserMan.GetUser(userId, true);
-            PlatformRepo.Read(platformId,false).Owners.Add(newOwner);
+            var alteredPlatform = PlatformRepo.Read(platformId, false);
+            alteredPlatform.Owners.Add(newOwner);
+            PlatformRepo.Update(alteredPlatform);
         }
         
-        public User GetPlatformOwner(int platformId, int userId)
+        public User GetPlatformOwner(int platformId, User owner)
         {
             var platform = PlatformRepo.Read(platformId, true);
-            var user = UserMan.GetUser(userId, true);
-            return platform.Owners.Find(u => u.Equals(user));
+            return platform.Owners.Find(u => u.Equals(owner));
         }
         
-        public void RemovePlatformOwner(int platformId, int userId)
+        public void RemovePlatformOwner(int platformId, User removedOwner)
         {
-            var alteredPlatform = PlatformRepo.Read(platformId, true);
-            var removedOwner = UserMan.GetUser(userId, true);
+            var alteredPlatform = PlatformRepo.Read(platformId, false);
             alteredPlatform.Owners.Remove(removedOwner);
+            PlatformRepo.Update(alteredPlatform);
         }
 
         public List<User> GetAllPlatformOwners(int platformId)
@@ -105,6 +111,20 @@ namespace BL
         {
             throw new NotImplementedException();
         }
+        #endregion
+        
+        // Added by XV
+        // Methods used for creating new platforms
+        
+        #region PlatformCreation
+
+        public int GetNextAvailableId()
+        {
+            // Select the biggest current Id from the platforms and increment it by one
+            int newId = ReadAllPlatforms().Max(platform => platform.Id) + 1;
+            return newId;
+        }
+
         #endregion
     }
 }

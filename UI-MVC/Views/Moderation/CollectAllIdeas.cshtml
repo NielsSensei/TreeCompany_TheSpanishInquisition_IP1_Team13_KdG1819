@@ -4,13 +4,14 @@
 @{
     ViewData["Title"] = "Overzicht van Ideeën";
     Layout = "_Layout";
+    ViewData["Title"] = "All Ideas";
 }
 
 @section Tags {
     <script type="module" src="~/js/collectallideas.js" defer></script>
 }
 
-<h2>Hier zie je een overzicht van alle ideeën</h2>
+<h2>Here you can see an overview of Ideas.</h2>
 <hr/>
 <div class="form-group">
     <div class="container">
@@ -28,7 +29,20 @@
         </div>
     </div>    
 </div>
-<table class="table" id="ideasTable">
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <th>CentralQuestion</th>
+        <th>User</th>
+        <th>Has It Been Reported</th>
+        <th>Need Review By Admin</th>
+        <th>Title</th>
+        <th>Number Of Votes</th>
+        <th>Number Of Shares</th>
+        <th>Number Of Retweets</th>
+    </tr>
+    <!-- TODO: link naar Ideation Thread -->
+    <!-- TODO: link naar User profiel? -->
     @foreach (Idea idea in Model)
     {
         if (idea.Visible)
@@ -43,6 +57,7 @@
                 <td>@idea.VoteCount</td>
                 <td>@idea.ShareCount</td>
                 <td>@idea.RetweetCount</td>
+                <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">View Details For Idea</a></td>
             </tr>
         }
     }

@@ -12,7 +12,6 @@ namespace DAL.Data_Transfer_Objects
         public string FieldStrings { get; set; }
         public float LocationX { get; set; }
         public float LocationY { get; set; }
-        public bool Required { get; set; }
         public string Url { get; set; }
         public byte[] UploadedImage { get; set; }
         public byte[] UploadedMedia { get; set; }
