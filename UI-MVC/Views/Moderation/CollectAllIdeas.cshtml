@@ -29,23 +29,7 @@
         </div>
     </div>    
 </div>
-<table class="table">
-    <tr>
-        <th>Id</th>
-        <th>CentralQuestion</th>
-        <th>User</th>
-        <th>Has It Been Reported</th>
-        <th>Need Review By Admin</th>
-        <th>Title</th>
-        <th>Number Of Votes</th>
-        <th>Number Of Shares</th>
-        <th>Number Of Retweets</th>
-    </tr>
-    <!-- TODO: link naar Ideation Thread -->
-    <!-- TODO: link naar User profiel? -->
-    @foreach (Idea idea in Model)
-    {
-        if (idea.Visible)
+
 @if (Model.Any(i => i.Visible))
 {
     <table class="table">
