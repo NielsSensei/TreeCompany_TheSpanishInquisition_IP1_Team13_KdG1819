@@ -30,15 +30,19 @@ namespace UIMVC.Controllers
             return View(_ideaMgr.GetIdeas());
         } 
 
+        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
-        public IActionResult CreatePlatform()
+        [Authorize]
+        public IActionResult AddPlatform()
         {
             ViewData["platforms"] = _platformMgr.ReadAllPlatforms();
             return View();
         }
 
+        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        public IActionResult CreatePlatform(CreatePlatformModel cpm)
+        [Authorize]
+        public IActionResult AddPlatform(CreatePlatformModel cpm)
         {
             if (cpm == null)
             {
@@ -128,12 +132,19 @@ namespace UIMVC.Controllers
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize]
-        public IActionResult DeleteReport(int report, int idea)
+        public IActionResult DestroyReport(int report, int idea)
         {
-            _ideaMgr.DeleteReport(report);
+            _ideaMgr.RemoveReport(report);
             
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+        }
 
+        [HttpPost]
+        [Authorize]
+        public IActionResult DestroyIdea(int idea)
+        {
+            _ideaMgr.RemoveIdea(idea);
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
         }
     }
 }
