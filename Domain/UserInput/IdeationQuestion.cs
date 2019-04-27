@@ -10,7 +10,6 @@ namespace Domain.UserInput
         public string Description { get; set; }
         public string SiteURL { get; set; }
         public string QuestionTitle { get; set; }
-        public IOT_Device Device { get; set; }
         public Ideation Ideation { get; set; }
 
         public List<Idea> Ideas { get; set; }

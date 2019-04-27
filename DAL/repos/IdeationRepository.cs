@@ -119,17 +119,8 @@ namespace DAL
         public Ideation Read(int id, bool details)
         {
             IdeationsDTO ideationDTO = null;
-
-            if (details)
-            {
-                ideationDTO = ctx.Ideations.AsNoTracking().First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", ideationDTO.ModuleID);
-            }
-            else
-            {
-                ideationDTO = ctx.Ideations.First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", ideationDTO.ModuleID);
-            }
+            ideationDTO = details ? ctx.Ideations.AsNoTracking().First(m => m.ModuleID == id) : ctx.Ideations.First(m => m.ModuleID == id);
+            ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", id);
 
             return ConvertToDomain(ideationDTO);
         }
@@ -147,11 +138,13 @@ namespace DAL
         public void Update(Ideation obj)
         {
             IdeationsDTO newIdeation = ConvertToDTO(obj);
-            IdeationsDTO foundIdeation = ConvertToDTO(Read(obj.Id, false));
+            Ideation found = Read(obj.Id, false);
+            IdeationsDTO foundIdeation = ConvertToDTO(found);
             foundIdeation = newIdeation;
 
             ModulesDTO newModule = GrabModuleInformationDTO(obj);
-            ModulesDTO foundModule = GrabModuleInformationDTO(ReadWithModule(obj.Id));
+            Ideation foundWModule = ReadWithModule(obj.Id);
+            ModulesDTO foundModule = GrabModuleInformationDTO(foundWModule);
             foundModule = newModule;
 
             ctx.SaveChanges();
@@ -159,18 +152,21 @@ namespace DAL
 
         public void Delete(int id)
         {
-            ctx.Ideations.Remove(ConvertToDTO(Read(id, false)));
-            ctx.Modules.Remove(GrabModuleInformationDTO(Read(id, false)));
+            Ideation toDelete = Read(id, false);
+            ctx.Ideations.Remove(ConvertToDTO(toDelete));
+            Ideation toDeleteModule = Read(id, false);
+            ctx.Modules.Remove(GrabModuleInformationDTO(toDeleteModule));
             ctx.SaveChanges();
         }
         
         public IEnumerable<Ideation> ReadAll()
         {
-            IEnumerable<Ideation> myQuery = new List<Ideation>();
+            List<Ideation> myQuery = new List<Ideation>();
 
             foreach (IdeationsDTO DTO in ctx.Ideations)
             {
-                myQuery.Append(ReadWithModule(DTO.ModuleID));
+                Ideation toAdd = ReadWithModule(DTO.ModuleID);
+                myQuery.Add(toAdd);
             }
 
             return myQuery;
@@ -221,7 +217,8 @@ namespace DAL
         #region
         public string CreateTag(string obj, int moduleID)
         {
-            ModulesDTO module = GrabModuleInformationDTO(Read(moduleID, false));
+            Ideation ideationWTags = Read(moduleID, false);
+            ModulesDTO module = GrabModuleInformationDTO(ideationWTags);
             module.Tags += "," + obj;
             ctx.SaveChanges();
 
@@ -231,7 +228,8 @@ namespace DAL
         public void DeleteTag(int moduleID, int tagID)
         {
             List<String> keptTags = new List<string>();
-            ModulesDTO module = GrabModuleInformationDTO(Read(moduleID, false));
+            Ideation ideationWTags = Read(moduleID, false);
+            ModulesDTO module = GrabModuleInformationDTO(ideationWTags);
             keptTags = ExtensionMethods.StringToList(module.Tags);
             keptTags.RemoveAt(tagID - 1);
             module.Tags = ExtensionMethods.ListToString(keptTags);
