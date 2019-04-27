@@ -14,7 +14,7 @@ namespace DAL
     {
         // Added by DM
         // Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         // Modified by XV
@@ -87,18 +87,9 @@ namespace DAL
         public Questionnaire Read(int id, bool details)
         {
             ModulesDTO moduleDTO = null;
-
-            if (details)
-            {
-                moduleDTO = ctx.Modules.AsNoTracking().First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(moduleDTO, "Questionnaire", moduleDTO.ModuleID);
-            }
-            else
-            {
-                moduleDTO = ctx.Modules.First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(moduleDTO, "Questionnaire", moduleDTO.ModuleID);
-            }
-
+            moduleDTO = details ? ctx.Modules.AsNoTracking().First(m => m.ModuleID == id) : ctx.Modules.First(m => m.ModuleID == id);
+            ExtensionMethods.CheckForNotFound(moduleDTO, "Questionnaire", id);
+            
             return ConvertToDomain(moduleDTO);
         }
 

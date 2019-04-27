@@ -16,7 +16,7 @@ namespace DAL
     {
         // Added by DM
         // Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by DM
         // Modified by NVZ & XV
@@ -135,16 +135,8 @@ namespace DAL
         public Project Read(int id, bool details)
         {
             ProjectsDTO projectsDTO = null;
-
-            if (details)
-            {
-                projectsDTO = ctx.Projects.AsNoTracking().First(p => p.ProjectID == id);
-                ExtensionMethods.CheckForNotFound(projectsDTO, "Project", projectsDTO.ProjectID);                          
-            }else
-            {
-                projectsDTO = ctx.Projects.First(p => p.ProjectID == id);
-                ExtensionMethods.CheckForNotFound(projectsDTO, "Project", projectsDTO.ProjectID);
-            }
+            projectsDTO = details ? ctx.Projects.AsNoTracking().First(p => p.ProjectID == id) : ctx.Projects.First(p => p.ProjectID == id);
+            ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
             
             return ConvertToDomain(projectsDTO);
         }
@@ -205,17 +197,8 @@ namespace DAL
         public Phase ReadPhase(int projectID, int phaseID, bool details)
         {
             PhasesDTO phasesDTO = null;
-
-            if (details)
-            {
-                phasesDTO = ctx.Phases.AsNoTracking().First(p => p.PhaseID == phaseID);
-                ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phasesDTO.PhaseID);
-            }
-            else
-            {
-                phasesDTO = ctx.Phases.First(p => p.PhaseID == phaseID);
-                ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phasesDTO.PhaseID);
-            }
+            phasesDTO = details ? ctx.Phases.AsNoTracking().First(p => p.PhaseID == phaseID) : ctx.Phases.First(p => p.PhaseID == phaseID);
+            ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phaseID);
 
             return ConvertToDomain(phasesDTO);
         }

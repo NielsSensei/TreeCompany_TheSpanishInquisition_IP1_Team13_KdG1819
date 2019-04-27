@@ -96,17 +96,8 @@ namespace DAL
         public Vote Read(int id, bool details)
         {
             VotesDTO voteDTO = null;
-
-            if (details)
-            {
-                voteDTO = ctx.Votes.AsNoTracking().First(p => p.VoteID == id);
-                ExtensionMethods.CheckForNotFound(voteDTO, "Vote", voteDTO.VoteID);
-            }
-            else
-            {
-                voteDTO = ctx.Votes.First(p => p.VoteID == id);
-                ExtensionMethods.CheckForNotFound(voteDTO, "Vote", voteDTO.VoteID);
-            }
+            voteDTO = details ? ctx.Votes.AsNoTracking().First(p => p.VoteID == id) : ctx.Votes.First(p => p.VoteID == id);
+            ExtensionMethods.CheckForNotFound(voteDTO, "Vote", id);
 
             return ConvertToDomain(voteDTO);
         }
@@ -171,17 +162,8 @@ namespace DAL
         public IOT_Device ReadDevice(int deviceID, bool details)
         {
             DevicesDTO deviceDTO = null;
-
-            if (details)
-            {
-                deviceDTO = ctx.Devices.AsNoTracking().First(d => d.DeviceID == deviceID);
-                ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
-            }
-            else
-            {
-                deviceDTO = ctx.Devices.First(d => d.DeviceID == deviceID);
-                ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
-            }
+            deviceDTO = details ? ctx.Devices.AsNoTracking().First(d => d.DeviceID == deviceID) : ctx.Devices.First(d => d.DeviceID == deviceID);
+            ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
 
             return ConvertToDomain(deviceDTO);
         }
