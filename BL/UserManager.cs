@@ -46,7 +46,7 @@ namespace BL
         * 
         */
        public User GetUser(int userId, bool details)
-       {
+       {           
            return UserRepo.Read(userId, details);
        }
 

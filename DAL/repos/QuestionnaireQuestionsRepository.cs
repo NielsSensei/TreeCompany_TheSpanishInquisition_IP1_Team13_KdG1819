@@ -16,7 +16,7 @@ namespace DAL
     {
         // Added by DM
         // Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         public QuestionnaireQuestionsRepository()
@@ -151,17 +151,8 @@ namespace DAL
         public QuestionnaireQuestion Read(int id, bool details)
         {
             QuestionnaireQuestionsDTO questionnaireQuestionDTO = null;
-
-            if (details)
-            {
-                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QQuestionID == id);
-                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.QQuestionID);
-            }
-            else
-            {
-                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.First(q => q.QQuestionID == id);
-                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.QQuestionID);
-            }
+            questionnaireQuestionDTO = details ? ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QQuestionID == id) : ctx.QuestionnaireQuestions.First(q => q.QQuestionID == id);
+            ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", id);
 
             return ConvertToDomain(questionnaireQuestionDTO);
         }
@@ -234,17 +225,8 @@ namespace DAL
         public OpenAnswer ReadOpenAnswer(int answerID, bool details)
         {
             AnswersDTO answersDTO = null;
-
-            if (details)
-            {
-                answersDTO = ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID);
-                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
-            }
-            else
-            {
-                answersDTO = ctx.Answers.First(i => i.AnswerID == answerID);
-                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
-            }
+            answersDTO = details ? ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID) : ctx.Answers.First(i => i.AnswerID == answerID);
+            ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
 
             return ConvertToDomain(answersDTO);
         }
@@ -252,17 +234,8 @@ namespace DAL
         public MultipleAnswer ReadMultipleAnswer(int answerID, bool details)
         {
             AnswersDTO answersDTO = null;
-
-            if (details)
-            {
-                answersDTO = ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID);
-                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
-            }
-            else
-            {
-                answersDTO = ctx.Answers.First(i => i.AnswerID == answerID);
-                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
-            }
+            answersDTO = details ? ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID) : ctx.Answers.First(i => i.AnswerID == answerID);
+            ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
 
             List<ChoicesDTO> choicesDTO = ctx.Choices.ToList().FindAll(c => c.AnswerID == answerID);
             List<OptionsDTO> optionsDTO = ctx.Options.ToList().FindAll(o => o.QQuestionID == answersDTO.QQuestionID);

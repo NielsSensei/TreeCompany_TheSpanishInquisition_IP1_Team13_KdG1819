@@ -13,7 +13,7 @@ namespace DAL
     {
         //Added by DM 
         //Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         public UserRepository()
@@ -167,17 +167,8 @@ namespace DAL
         public User Read(int id, bool details)
         {
             UsersDTO usersDTO = null;
-
-            if (details)
-            {
-                usersDTO = ctx.Users.AsNoTracking().First(u => u.UserID == id);
-                ExtensionMethods.CheckForNotFound(usersDTO, "User", usersDTO.UserID);
-            }
-            else
-            {
-                usersDTO = ctx.Users.First(u => u.UserID == id);
-                ExtensionMethods.CheckForNotFound(usersDTO, "User", usersDTO.UserID);
-            }
+            usersDTO = details ? ctx.Users.AsNoTracking().First(u => u.UserID == id) : ctx.Users.First(u => u.UserID == id);         
+            ExtensionMethods.CheckForNotFound(usersDTO, "User", id);
 
             return ConvertToDomain(usersDTO);
         }
@@ -286,18 +277,9 @@ namespace DAL
         public Event ReadUserEvent(int id, bool details)
         {
             OrganisationEventsDTO orgEventDTO = null;
-
-            if (details)
-            {
-                orgEventDTO = ctx.OrganisationEvents.AsNoTracking().First(e => e.EventID == id);
-                ExtensionMethods.CheckForNotFound(orgEventDTO, "Event", orgEventDTO.EventID);
-            }
-            else
-            {
-                orgEventDTO = ctx.OrganisationEvents.First(e => e.EventID == id);
-                ExtensionMethods.CheckForNotFound(orgEventDTO, "Event", orgEventDTO.EventID);
-            }
-
+            orgEventDTO = details ? ctx.OrganisationEvents.AsNoTracking().First(e => e.EventID == id) : ctx.OrganisationEvents.First(e => e.EventID == id);            
+            ExtensionMethods.CheckForNotFound(orgEventDTO, "Event", id);
+            
             return ConvertToDomain(orgEventDTO);
         }
         
