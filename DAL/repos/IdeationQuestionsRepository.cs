@@ -7,7 +7,6 @@ using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
 using Domain.Users;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL.repos
 {
@@ -228,6 +227,24 @@ namespace DAL.repos
                 ReportApproved = (byte) obj.Status
             };
         }
+        
+        private int FindNextAvailableIQuestionId()
+        {               
+            int newId = ReadAll().Max(IQuestion => IQuestion.Id)+1;
+            return newId;
+        }
+
+        private int FindNextAvailableIdeaId()
+        {
+            int newId = ReadAllIdeas().Max(idea => idea.Id)+1;
+            return newId;
+        }
+                
+        private int FindNextAvailableReportId()
+        {
+            int newId = ReadAllReports().Max(report => report.Id)+1;
+            return newId;
+        }
         #endregion
 
         // Added by NVZ
@@ -246,7 +263,8 @@ namespace DAL.repos
                 }
             }
 
-            ctx.IdeationQuestions.Add(ConvertToDTO(obj));
+            obj.Id = FindNextAvailableIQuestionId();
+            ctx.IdeationQuestions.Add(ConvertToDTO(obj));           
             ctx.SaveChanges();
 
             return obj;
@@ -264,9 +282,14 @@ namespace DAL.repos
         public void Update(IdeationQuestion obj)
         {
             IdeationQuestionsDTO newIdeationQuestion = ConvertToDTO(obj);
-            IdeationQuestion found = Read(obj.Id, false);
-            IdeationQuestionsDTO foundIdeationQuestion = ConvertToDTO(found);
-            foundIdeationQuestion = newIdeationQuestion;
+            IdeationQuestionsDTO foundIdeationQuestion  = ctx.IdeationQuestions.First(i => i.IQuestionID == obj.Id);
+
+            if (foundIdeationQuestion != null)
+            {
+                foundIdeationQuestion.QuestionTitle = newIdeationQuestion.QuestionTitle;
+                foundIdeationQuestion.Description = newIdeationQuestion.Description;
+                foundIdeationQuestion.WebsiteLink = newIdeationQuestion.WebsiteLink;
+            }
 
             ctx.SaveChanges();
         }
@@ -317,7 +340,8 @@ namespace DAL.repos
             }
 
             idea.Visible = true;
-            
+            idea.Id = FindNextAvailableIdeaId();
+           
             ctx.Ideas.Add(ConvertToDTO(idea));
             ctx.IdeaFields.Add(ConvertToDTO(idea.Field));
             ctx.IdeaFields.Add(ConvertToDTO(idea.Cfield));
@@ -463,16 +487,36 @@ namespace DAL.repos
         {
             Idea i = ReadWithFields(ideaID);
             i.Title = "[deleted]";
-            i.Field.Text = "[deleted]";
             i.Visible = false;
-            i.Cfield.Options = null;
-            i.Ifield.UploadedImage = null;
-            i.Ifield.Url = null;
-            i.Mfield.LocationX = 0;
-            i.Mfield.LocationY = 0;
-            i.Vfield.Url = null;
-            i.Vfield.UploadedVideo = null;
-       
+            
+            if (i.Field != null)
+            {
+                i.Field.Text = "[deleted]"; 
+            }
+
+            if (i.Cfield != null)
+            {
+                i.Cfield.Options = null;   
+            }
+
+            if (i.Mfield != null)
+            {
+                i.Mfield.LocationX = 0;
+                i.Mfield.LocationY = 0;  
+            }
+
+            if (i.Ifield != null)
+            {
+                i.Ifield.UploadedImage = null;
+                i.Ifield.Url = null;  
+            }
+
+            if (i.Vfield != null)
+            {
+                i.Vfield.Url = null;
+                i.Vfield.UploadedVideo = null;  
+            }
+                 
             Update(i);
         }
 
@@ -552,6 +596,7 @@ namespace DAL.repos
                 }
             }
 
+            obj.Id = FindNextAvailableReportId();
             ctx.Reports.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 

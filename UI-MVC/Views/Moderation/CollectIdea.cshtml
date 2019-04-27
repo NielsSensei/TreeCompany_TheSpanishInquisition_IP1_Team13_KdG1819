@@ -38,6 +38,10 @@
                 }
             }
            
+            <form asp-controller="Moderation" asp-action="DestroyIdea" asp-route-idea="@Model.Id" method="post">
+                <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Delete Idea" />                             
+            </form>
+            
             <!-- TODO: (sprint2)
             public ImageField Ifield { get; set; }
             public VideoField Vfield { get; set; }
@@ -92,7 +96,7 @@
 
                     if (r.Status == ReportStatus.STATUS_DENIED)
                     {
-                        <form asp-controller="Moderation" asp-action="DeleteReport" asp-route-report="@r.Id" method="post"
+                        <form asp-controller="Moderation" asp-action="DestroyReport" asp-route-report="@r.Id" method="post"
                               asp-route-idea="@Model.Id">
                             <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Delete Report"/>
                         </form>

@@ -83,6 +83,11 @@ namespace BL
         {
             return IdeationQuestionRepo.ReadWithFields(ideaId);
         }
+
+        public void RemoveIdea(int ideaId)
+        {
+            IdeationQuestionRepo.DeleteIdea(ideaId);
+        }
                 
         /*
          * Getter for all Ideas on an Ideation. - NVZ
@@ -129,7 +134,7 @@ namespace BL
         
         // Added by NVZ
         // Report
-        public void DeleteReport(int id)
+        public void RemoveReport(int id)
         {
             IdeationQuestionRepo.DeleteReport(id);
         }

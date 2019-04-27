@@ -29,9 +29,9 @@ namespace UIMVC.Controllers
             return View(platform);
         }
 
-        #region Create
+        #region Add
 
-        public IActionResult EditPlatform(int id)
+        public IActionResult ChangePlatform(int id)
         {
             Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
             if (platform == null)
@@ -42,7 +42,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditPlatform(Domain.Users.Platform platform)
+        public IActionResult ChangePlatform(Domain.Users.Platform platform)
         {
             _platformMgr.EditPlatform(platform);
             // TODO: make the redirect work
