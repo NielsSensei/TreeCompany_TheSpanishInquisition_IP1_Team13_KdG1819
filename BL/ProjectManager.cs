@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DAL;
 using Domain;
 using Domain.Projects;
+using Domain.Users;
 
 namespace BL
 {
@@ -147,6 +148,18 @@ namespace BL
         public void HandleProjectAction(int projectId, string actionName)
         {
             throw new NotImplementedException("I need this!");
+        }
+
+        #endregion
+        
+        // Added by XV
+        // Methods for Platform
+
+        #region PlatformMethods
+
+        public IEnumerable<Project> GetPlatformProjects(Platform platform)
+        {
+            return ProjectRepo.ReadAll(platform.Id);
         }
 
         #endregion

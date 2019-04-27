@@ -19,5 +19,6 @@ namespace DAL.Data_Transfer_Objects
         public string Status { get; set; }
         public bool VerifiedUser { get; set; }
         public int ParentID { get; set; }
+        public int DeviceID { get; set; }
     }
 }

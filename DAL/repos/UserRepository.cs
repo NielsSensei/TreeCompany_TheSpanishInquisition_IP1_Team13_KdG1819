@@ -13,7 +13,7 @@ namespace DAL
     {
         //Added by DM 
         //Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         public UserRepository()
@@ -167,17 +167,8 @@ namespace DAL
         public User Read(int id, bool details)
         {
             UsersDTO usersDTO = null;
-
-            if (details)
-            {
-                usersDTO = ctx.Users.AsNoTracking().First(u => u.UserID == id);
-                ExtensionMethods.CheckForNotFound(usersDTO, "User", usersDTO.UserID);
-            }
-            else
-            {
-                usersDTO = ctx.Users.First(u => u.UserID == id);
-                ExtensionMethods.CheckForNotFound(usersDTO, "User", usersDTO.UserID);
-            }
+            usersDTO = details ? ctx.Users.AsNoTracking().First(u => u.UserID == id) : ctx.Users.First(u => u.UserID == id);         
+            ExtensionMethods.CheckForNotFound(usersDTO, "User", id);
 
             return ConvertToDomain(usersDTO);
         }
@@ -200,11 +191,13 @@ namespace DAL
         public void Update(User obj)
         {
             UsersDTO newUser = ConvertToDTO(obj);
-            UsersDTO foundUser = ConvertToDTO(Read(obj.Id, false));
+            User found = Read(obj.Id, false);
+            UsersDTO foundUser = ConvertToDTO(found);
             foundUser = newUser;
 
             UserDetailsDTO newDetails = RetrieveDetailsFromUser(obj);
-            UserDetailsDTO foundDetails = RetrieveDetailsFromUser(ReadWithDetails(obj.Id));
+            User foundWDetails = ReadWithDetails(obj.Id);
+            UserDetailsDTO foundDetails = RetrieveDetailsFromUser(foundWDetails);
             foundDetails = newDetails;
 
             ctx.SaveChanges();
@@ -212,18 +205,21 @@ namespace DAL
         
         public void Delete(int id)
         {
-            ctx.Users.Remove(ConvertToDTO(Read(id, false)));
-            ctx.UserDetails.Remove(RetrieveDetailsFromUser(Read(id, false)));
+            User toDelete = Read(id, false);
+            ctx.Users.Remove(ConvertToDTO(toDelete));
+            User toDeleteDetails = Read(id, false);
+            ctx.UserDetails.Remove(RetrieveDetailsFromUser(toDeleteDetails));
             ctx.SaveChanges();
         }
         
         public IEnumerable<User> ReadAll()
         {
-            IEnumerable<User> myQuery = new List<User>();
+            List<User> myQuery = new List<User>();
 
             foreach (UsersDTO DTO in ctx.Users)
-            {              
-                myQuery.Append(ReadWithDetails(DTO.UserID));
+            {
+                User toAdd = ReadWithDetails(DTO.UserID);
+                myQuery.Add(toAdd);
             }
 
             return myQuery;
@@ -231,13 +227,14 @@ namespace DAL
 
         public IEnumerable<Organisation> ReadAllOrganisations()
         {
-            IEnumerable<Organisation> myQuery = new List<Organisation>();
+            List<Organisation> myQuery = new List<Organisation>();
 
             foreach (UsersDTO DTO in ctx.Users)
             {
                 if(DTO.Role == 3)
                 {
-                    myQuery.Append(ReadWithDetails(DTO.UserID));
+                    Organisation user = (Organisation) ReadWithDetails(DTO.UserID);
+                    myQuery.Add(user);
                 } 
             }
 
@@ -280,18 +277,9 @@ namespace DAL
         public Event ReadUserEvent(int id, bool details)
         {
             OrganisationEventsDTO orgEventDTO = null;
-
-            if (details)
-            {
-                orgEventDTO = ctx.OrganisationEvents.AsNoTracking().First(e => e.EventID == id);
-                ExtensionMethods.CheckForNotFound(orgEventDTO, "Event", orgEventDTO.EventID);
-            }
-            else
-            {
-                orgEventDTO = ctx.OrganisationEvents.First(e => e.EventID == id);
-                ExtensionMethods.CheckForNotFound(orgEventDTO, "Event", orgEventDTO.EventID);
-            }
-
+            orgEventDTO = details ? ctx.OrganisationEvents.AsNoTracking().First(e => e.EventID == id) : ctx.OrganisationEvents.First(e => e.EventID == id);            
+            ExtensionMethods.CheckForNotFound(orgEventDTO, "Event", id);
+            
             return ConvertToDomain(orgEventDTO);
         }
         
