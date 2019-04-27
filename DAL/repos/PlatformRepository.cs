@@ -46,6 +46,14 @@ namespace DAL
                 // IconImage = p.Image 
             };
         }
+        
+        // Added by XV
+        // Select the biggest current Id from the platforms and increment it by on -XV
+        private int FindNextAvailablePlatformId()
+        {               
+            int newId = ReadAll().Max(platform => platform.Id)+1;
+            return newId;
+        }
         #endregion
         
         // Added by NVZ
@@ -64,10 +72,11 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailablePlatformId();
             ctx.Platforms.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
-
-            return ConvertToDomain(ctx.Platforms.FirstOrDefault(dto => dto.Name == obj.Name));
+           
+            return obj;
         }
 
         public Platform Read(int id, bool details)
@@ -80,39 +89,27 @@ namespace DAL
         }
 
         
-        // Modified by XV
+        // Modified by XV & NVZ
         public void Update(Platform obj)
         {
             PlatformsDTO newPlatform = ConvertToDTO(obj);
-            PlatformsDTO entity = ctx.Platforms.FirstOrDefault(dto => dto.PlatformID == newPlatform.PlatformID);
-            if (entity != null)
+            PlatformsDTO foundPlatform = ctx.Platforms.FirstOrDefault(dto => dto.PlatformID == newPlatform.PlatformID);
+            if (foundPlatform != null)
             {
-                entity.Name = newPlatform.Name;
-                entity.SiteUrl = newPlatform.SiteUrl;
-                entity.IconImage = newPlatform.IconImage;
-                ctx.Platforms.Update(entity);
+                foundPlatform.Name = newPlatform.Name;
+                foundPlatform.SiteUrl = newPlatform.SiteUrl;
+                foundPlatform.IconImage = newPlatform.IconImage;
+                ctx.Platforms.Update(foundPlatform);
             }
 
-            ctx.SaveChanges();
-
-            /*
-            PlatformsDTO newPlatform = ConvertToDTO(obj);
-            Platform found = Read(obj.Id, false);
-            PlatformsDTO foundPlatform = ConvertToDTO(found);
-            foundPlatform = newPlatform;
-            
-            ctx.Platforms.First(dto => dto.PlatformID == newPlatform.PlatformID) = newPlatform;
-            
-            
-            
             ctx.SaveChanges();
             */
         }
 
         public void Delete(int id)
         {
-            Platform toDelete = Read(id, false);
-            ctx.Platforms.Remove(ConvertToDTO(toDelete));
+            PlatformsDTO toDelete = ctx.Platforms.First(r => r.PlatformID == id);
+            ctx.Platforms.Remove(toDelete);
             ctx.SaveChanges();
         }
 

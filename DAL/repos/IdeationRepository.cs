@@ -46,10 +46,7 @@ namespace DAL
 
         private IdeationsDTO ConvertToDTO(Ideation obj)
         {
-            bool Org = false;
-
-            if (obj.User.Role == Role.LOGGEDINORG)
-                Org = true;
+            bool Org = obj.User.Role == Role.LOGGEDINORG;
 
             return new IdeationsDTO
             {
@@ -91,6 +88,12 @@ namespace DAL
             ideation.Tags = ExtensionMethods.StringToList(DTO.Tags);
             return ideation;
         }
+        
+        private int FindNextAvailableIdeationId()
+        {               
+            int newId = ReadAll().Max(ideation => ideation.Id)+1;
+            return newId;
+        }
         #endregion
 
         // Added by NVZ
@@ -109,6 +112,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableIdeationId();
             ctx.Modules.Add(GrabModuleInformationDTO(obj));
             ctx.Ideations.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
@@ -138,24 +142,36 @@ namespace DAL
         public void Update(Ideation obj)
         {
             IdeationsDTO newIdeation = ConvertToDTO(obj);
-            Ideation found = Read(obj.Id, false);
-            IdeationsDTO foundIdeation = ConvertToDTO(found);
-            foundIdeation = newIdeation;
-
+            IdeationsDTO foundIdeation = ctx.Ideations.FirstOrDefault(dto => dto.ModuleID == newIdeation.ModuleID);
+            if (foundIdeation != null)
+            {
+                foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
+                foundIdeation.MediaFile = newIdeation.MediaFile;
+                foundIdeation.RequiredFields = newIdeation.RequiredFields;
+            }
+            
             ModulesDTO newModule = GrabModuleInformationDTO(obj);
-            Ideation foundWModule = ReadWithModule(obj.Id);
-            ModulesDTO foundModule = GrabModuleInformationDTO(foundWModule);
-            foundModule = newModule;
+            ModulesDTO foundModule = ctx.Modules.FirstOrDefault(dto => dto.ModuleID == newModule.ModuleID);
+            if (foundModule != null)
+            {
+                foundModule.OnGoing = newModule.OnGoing;
+                foundModule.LikeCount = newModule.LikeCount;
+                foundModule.FbLikeCount = newModule.FbLikeCount;
+                foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
+                foundModule.ShareCount = newModule.ShareCount;
+                foundModule.RetweetCount = newModule.RetweetCount;
+                foundModule.Tags = newModule.Tags;
+            }
 
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
-        {
-            Ideation toDelete = Read(id, false);
-            ctx.Ideations.Remove(ConvertToDTO(toDelete));
-            Ideation toDeleteModule = Read(id, false);
-            ctx.Modules.Remove(GrabModuleInformationDTO(toDeleteModule));
+        {            
+            IdeationsDTO toDelete = ctx.Ideations.First(r => r.ModuleID == id);
+            ctx.Ideations.Remove(toDelete);
+            ModulesDTO toDeleteModule = ctx.Modules.First(r => r.ModuleID == id);
+            ctx.Modules.Remove(toDeleteModule);
             ctx.SaveChanges();
         }
         
