@@ -148,16 +148,16 @@ INSERT INTO Options(OptionID,OptionText,QQuestionID)
 VALUES(5,'Nee',3)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(6,'10m²',4)
+VALUES(6,'10mï¿½',4)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(7,'20m²',4)
+VALUES(7,'20mï¿½',4)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(8,'30m²',4)
+VALUES(8,'30mï¿½',4)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(9,'40m²',4)
+VALUES(9,'40mï¿½',4)
 
 /* Choices */
 INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
@@ -210,7 +210,7 @@ INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
 VALUES(4,3,'Een locatie zo nabij het oude centrum moet evenveel cultuur hebben als het centrum zelf. Dus stel ik voor om hier regelmatige theater voorstelling te houden, zodat we de jongeren echte cultuur kunnen aanleren.',0,0)
 
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
-VALUES(5,4,'Nope, dom idee. Wij wille gewoon goeie films kunne zien, buiten op de Groenplaats. Ff pintje op café, laatste nieve film om middernacht opt gras buite. Der woont tog niemand, dus ook geen lawaaid overlast.',0,0)
+VALUES(5,4,'Nope, dom idee. Wij wille gewoon goeie films kunne zien, buiten op de Groenplaats. Ff pintje op cafï¿½, laatste nieve film om middernacht opt gras buite. Der woont tog niemand, dus ook geen lawaaid overlast.',0,0)
 
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
 VALUES(6,5,'30 jaar geleden was de groenplaats nog groen toen dat SPA aan het roer hing in antwerpen. Sinds de NVA zich kwam moeien is er een echte vergrijzing in de stad!',0,0)
@@ -270,7 +270,7 @@ VALUES(12,6,1,1,2,1,2,1,'User heeft gestemd op een idee.')
 
 /*Reports*/
 INSERT INTO Reports(ReportID,IdeaID,FlaggerID,ReporteeID,Reason,ReportApproved)
-VALUES(1,4,5,1,'Dit idee is niet serieus en niet open op de andere ideeën omdat hij/zij/x de spot drijft met de andere ideeën.',0)
+VALUES(1,4,5,1,'Dit idee is niet serieus en niet open op de andere ideeï¿½n omdat hij/zij/x de spot drijft met de andere ideeï¿½n.',0)
 
 INSERT INTO Reports(ReportID,IdeaID,FlaggerID,ReporteeID,Reason,ReportApproved)
 VALUES(2,5,5,1,'Dit idee is te politiek getint en probeert NVA stemmers te provoceren door ware leugens te verkondigen.',0)
