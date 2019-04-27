@@ -119,17 +119,8 @@ namespace DAL
         public Ideation Read(int id, bool details)
         {
             IdeationsDTO ideationDTO = null;
-
-            if (details)
-            {
-                ideationDTO = ctx.Ideations.AsNoTracking().First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", ideationDTO.ModuleID);
-            }
-            else
-            {
-                ideationDTO = ctx.Ideations.First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", ideationDTO.ModuleID);
-            }
+            ideationDTO = details ? ctx.Ideations.AsNoTracking().First(m => m.ModuleID == id) : ctx.Ideations.First(m => m.ModuleID == id);
+            ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", id);
 
             return ConvertToDomain(ideationDTO);
         }
