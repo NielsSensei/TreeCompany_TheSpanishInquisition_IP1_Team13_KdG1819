@@ -1,3 +1,4 @@
+@using System.ComponentModel.Design
 @using Domain.UserInput
 @model IEnumerable<Domain.UserInput.Idea>
 
@@ -6,8 +7,27 @@
     ViewData["Title"] = "All Ideas";
 }
 
-<title>Overview Of Ideas</title>
 <h2>Here you can see an overview of Ideas.</h2>
+<hr/>
+<div class="form-group">
+    <div class="container">
+        <div class="row" id="comboFilter">
+            <div class="col-2">
+                <label>Select filter:</label>  
+            </div>
+            <div class="col-10">
+                @Html.DropDownList("Filter", new SelectListItem[] 
+                { 
+                    new SelectListItem() { Text = "All ideas", Value = "all" }, 
+                    new SelectListItem() { Text = "Reported ideas", Value = "report" },
+                    new SelectListItem() { Text = "Ideas where an admin is needed", Value = "admin" }
+                },
+                //TODO onchange naar aparte js?
+                new { @class = "form-control", @onchange= "document.location.href = '/Moderation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;" })       
+            </div>                      
+        </div>
+    </div>    
+</div>
 
 @if (Model.Any(i => i.Visible))
 {
@@ -43,7 +63,6 @@
                 </tr>
             }
         } 
-    } 
     </table>
 }else
 {
