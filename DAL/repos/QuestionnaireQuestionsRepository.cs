@@ -124,6 +124,18 @@ namespace DAL
 
             return ma;
         }
+        
+        private int FindNextAvailableQQuestionId()
+        {               
+            int newId = ReadAll().Max(qq => qq.Id)+1;
+            return newId;
+        }
+        
+        private int FindNextAvailableAnswerId()
+        {               
+            int newId = ReadAll().Max(answer => answer.Id)+1;
+            return newId;
+        }
         #endregion
 
         // Added by NVZ
@@ -142,6 +154,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableQQuestionId();
             ctx.QuestionnaireQuestions.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -160,17 +173,21 @@ namespace DAL
         public void Update(QuestionnaireQuestion obj)
         {
             QuestionnaireQuestionsDTO newQuestionnaireQuestion = ConvertToDTO(obj);
-            QuestionnaireQuestion found = Read(obj.Id, false);
-            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = ConvertToDTO(found);
-            foundQuestionnaireQuestion = newQuestionnaireQuestion;
+            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = ctx.QuestionnaireQuestions.First(qq => qq.QQuestionID == obj.Id);
+            if (foundQuestionnaireQuestion != null)
+            {
+                foundQuestionnaireQuestion.QuestionText = newQuestionnaireQuestion.QuestionText;
+                foundQuestionnaireQuestion.QType = newQuestionnaireQuestion.QType;
+                foundQuestionnaireQuestion.Required = newQuestionnaireQuestion.Required;
+            }
 
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            QuestionnaireQuestion toDelete = Read(id, false);
-            ctx.QuestionnaireQuestions.Remove(ConvertToDTO(toDelete));
+            QuestionnaireQuestionsDTO toDelete = ctx.QuestionnaireQuestions.First(qq => qq.QQuestionID == id);
+            ctx.QuestionnaireQuestions.Remove(toDelete);
             ctx.SaveChanges();
         }
         
@@ -202,6 +219,7 @@ namespace DAL
         public Answer Create(Answer obj)
         {
             QuestionnaireQuestion qq = Read(obj.Question.Id, false);
+            obj.Id = FindNextAvailableAnswerId();
             
             if(qq.QuestionType == QuestionType.OPEN || qq.QuestionType == QuestionType.MAIL)
             {
@@ -216,6 +234,7 @@ namespace DAL
                     ctx.Choices.Add(ConvertToDTO(id,ma.Id,ctx.Choices.Count()+1));
                 }
             }
+           
             ctx.SaveChanges();
 
             return obj;
@@ -283,7 +302,6 @@ namespace DAL
         }
         #endregion
 
-
         // Added by NVZ
         // Options CRUD
         #region
@@ -325,10 +343,10 @@ namespace DAL
             throw new DuplicateNameException("Option " + optionText + " niet gevonden voor de QuestionnaireQuestion(ID=" + questionID + ").");
         }
 
-        public void DeleteOption(int optionID, int questionID)
+        public void DeleteOption(int optionID)
         {
-            string toDelete = ReadOption(optionID, questionID);
-            ctx.Options.Remove(ConvertToDTO(optionID, toDelete, questionID));
+            OptionsDTO toDelete = ctx.Options.First(o => o.OptionID == optionID);
+            ctx.Options.Remove(toDelete);
             ctx.SaveChanges();
         }
         

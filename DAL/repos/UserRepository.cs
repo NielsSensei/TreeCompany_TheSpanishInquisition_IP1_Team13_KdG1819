@@ -118,6 +118,17 @@ namespace DAL
             };
         }
 
+        private int FindNextAvailableUserId()
+        {               
+            int newId = ReadAll().Max(user => user.Id)+1;
+            return newId;
+        }
+        
+        private int FindNextAvailableEventId()
+        {               
+            int newId = ReadAllEvents().Max(e => e.Id)+1;
+            return newId;
+        }
         #endregion
 
         //Added by DM
@@ -137,6 +148,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableUserId();
             ctx.Users.Add(ConvertToDTO(obj));
             ctx.UserDetails.Add(RetrieveDetailsFromUser(obj));
             ctx.SaveChanges();
@@ -157,6 +169,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableUserId();
             ctx.Users.Add(ConvertToDTO(obj));
             ctx.UserDetails.Add(RetrieveDetailsFromUser(obj));
             ctx.SaveChanges();
@@ -191,24 +204,37 @@ namespace DAL
         public void Update(User obj)
         {
             UsersDTO newUser = ConvertToDTO(obj);
-            User found = Read(obj.Id, false);
-            UsersDTO foundUser = ConvertToDTO(found);
-            foundUser = newUser;
+            UsersDTO foundUser = ctx.Users.First(user => user.UserID == obj.Id);
+            if (foundUser != null)
+            {
+                foundUser.Name = newUser.Name;
+                foundUser.Email = newUser.Email;
+                foundUser.Password = newUser.Password;
+                foundUser.Role = newUser.Role;
+            }
 
             UserDetailsDTO newDetails = RetrieveDetailsFromUser(obj);
-            User foundWDetails = ReadWithDetails(obj.Id);
-            UserDetailsDTO foundDetails = RetrieveDetailsFromUser(foundWDetails);
-            foundDetails = newDetails;
+            UserDetailsDTO foundDetails = ctx.UserDetails.First(details => details.UserID == obj.Id);
+            if (foundDetails != null)
+            {
+                foundDetails.Zipcode = newDetails.Zipcode;
+                foundDetails.Banned = newDetails.Banned;
+                foundDetails.Gender = newDetails.Gender;
+                foundDetails.Active = newDetails.Active;
+                foundDetails.BirthDate = newDetails.BirthDate;
+                foundDetails.OrgName = newDetails.OrgName;
+                foundDetails.Description = newDetails.Description;
+            }
 
             ctx.SaveChanges();
         }
         
         public void Delete(int id)
         {
-            User toDelete = Read(id, false);
-            ctx.Users.Remove(ConvertToDTO(toDelete));
-            User toDeleteDetails = Read(id, false);
-            ctx.UserDetails.Remove(RetrieveDetailsFromUser(toDeleteDetails));
+            UsersDTO toDelete = ctx.Users.First(u => u.UserID == id);
+            ctx.Users.Remove(toDelete);
+            UserDetailsDTO toDeleteDetails = ctx.UserDetails.First(u => u.UserID == id);
+            ctx.UserDetails.Remove(toDeleteDetails);
             ctx.SaveChanges();
         }
         
@@ -268,6 +294,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableEventId();
             ctx.OrganisationEvents.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -286,14 +313,22 @@ namespace DAL
         public void Update(Event obj)
         {
             OrganisationEventsDTO newEvent = ConvertToDTO(obj);
-            OrganisationEventsDTO foundEvent = ConvertToDTO(ReadUserEvent(obj.Id, false));
-            foundEvent = newEvent;
+            OrganisationEventsDTO foundEvent = ctx.OrganisationEvents.First(e => e.EventID == obj.Id);
+            if (foundEvent != null)
+            {
+                foundEvent.Name = newEvent.Name;
+                foundEvent.Description = newEvent.Description;
+                foundEvent.StartDate = newEvent.StartDate;
+                foundEvent.EndDate = newEvent.EndDate;
+            }
+            
             ctx.SaveChanges();
         }
         
-        public void DeleteUserEvent(int userID, int eventID)
+        public void DeleteUserEvent(int eventID)
         {
-            ctx.OrganisationEvents.Remove(ConvertToDTO(ReadUserEvent(eventID, false)));
+            OrganisationEventsDTO toDelete = ctx.OrganisationEvents.First(e => e.EventID == eventID);
+            ctx.OrganisationEvents.Remove(toDelete);
             ctx.SaveChanges();
         }
         
