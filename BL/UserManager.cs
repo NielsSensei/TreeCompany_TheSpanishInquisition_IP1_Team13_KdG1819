@@ -118,7 +118,7 @@ namespace BL
            var removedEvent = UserRepo.ReadUserEvent(eventId, false);
            alteredOrganisation.organisationEvents.Remove(removedEvent);
            UserRepo.Update(alteredOrganisation);
-           UserRepo.DeleteUserEvent(userId, eventId);
+           UserRepo.DeleteUserEvent(eventId);
        }
        #endregion
        

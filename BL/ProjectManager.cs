@@ -100,7 +100,7 @@ namespace BL
 
         public void RemovePhase(int projectId, int phaseId)
         {
-            var removedPhase = ProjectRepo.ReadPhase(projectId, phaseId, false);
+            var removedPhase = ProjectRepo.ReadPhase(phaseId, false);
             var alteredProject = ProjectRepo.Read(projectId, false);
             alteredProject.Phases.Remove(removedPhase);
             if (removedPhase.Module != null)
@@ -110,7 +110,7 @@ namespace BL
                 alteredModule.Phases.Remove(removedPhase);
                 ModuleMan.EditModule(alteredModule);
             }
-            ProjectRepo.Delete(projectId, phaseId);
+            ProjectRepo.Delete(phaseId);
         }
 
         #endregion

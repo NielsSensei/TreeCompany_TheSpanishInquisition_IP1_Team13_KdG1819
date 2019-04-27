@@ -31,6 +31,26 @@
 
     img {
         width: 100%
+    }   
+}
+
+/* CreatePlatform */
+.createPlatform {
+    margin: 20px;
+
+    * button {
+        height: inherit;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+
+        div {
+            flex: 1;
+        }
     }
 
     
@@ -136,6 +156,14 @@
 @media screen and (max-width: 767px) {
 
     
+}
+
+/* Is used for to align a label with it's combobox (select) */
+/* Used in CollectAllIdeas.cshtml */
+#comboFilter{
+    font-weight: bold;
+    display: flex;
+    align-items: flex-end;
 }
 
 /*CollectIdea.cshtml*/
