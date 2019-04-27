@@ -18,15 +18,15 @@ namespace UIMVC.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                services.AddDbContext<UIMVCContext>(options =>
+                services.AddDbContext<DAL.Contexts.CityOfIdeasDbContext>(options =>
                     options.UseSqlite(
                         context.Configuration.GetConnectionString("UIMVCContextConnection")));
 
                 //TODO: Implement roles
-                services.AddDefaultIdentity<UIMVCUser>(
+                services.AddDefaultIdentity<DAL.Identity.Data.UIMVCUser>(
                     config => { config.SignIn.RequireConfirmedEmail = true; })
                     .AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<UIMVCContext>()
+                    .AddEntityFrameworkStores<DAL.Contexts.CityOfIdeasDbContext>()
                     .AddDefaultTokenProviders()
                     .AddDefaultUI();
 

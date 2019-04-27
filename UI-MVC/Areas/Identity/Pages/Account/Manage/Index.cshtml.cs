@@ -14,13 +14,13 @@ namespace UIMVC.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<UIMVCUser> _userManager;
-        private readonly SignInManager<UIMVCUser> _signInManager;
+        private readonly UserManager<DAL.Identity.Data.UIMVCUser> _userManager;
+        private readonly SignInManager<DAL.Identity.Data.UIMVCUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public IndexModel(
-            UserManager<UIMVCUser> userManager,
-            SignInManager<UIMVCUser> signInManager,
+            UserManager<DAL.Identity.Data.UIMVCUser> userManager,
+            SignInManager<DAL.Identity.Data.UIMVCUser> signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;

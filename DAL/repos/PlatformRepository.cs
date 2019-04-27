@@ -5,6 +5,7 @@ using Domain.Users;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL
 {
@@ -48,11 +49,13 @@ namespace DAL
         }
         
         // Added by XV
-        // Select the biggest current Id from the platforms and increment it by on -XV
+        // Select the biggest current Id from the platforms and increment it by one -XV
         private int FindNextAvailablePlatformId()
-        {               
-            int newId = ReadAll().Max(platform => platform.Id)+1;
+        {
+            if (!ctx.Platforms.Any()) return 1;
+            int newId = ReadAll().Max(platform => platform.Id) + 1;
             return newId;
+
         }
         #endregion
         

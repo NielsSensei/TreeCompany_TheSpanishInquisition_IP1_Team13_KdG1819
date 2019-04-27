@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Data_Transfer_Objects
 {
-    class IdeationsDTO
+    public class IdeationsDTO
     {
         public int ModuleID { get; set; }
         public int UserID { get; set; }

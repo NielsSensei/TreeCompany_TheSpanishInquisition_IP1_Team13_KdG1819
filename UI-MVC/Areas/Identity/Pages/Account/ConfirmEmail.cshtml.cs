@@ -13,9 +13,9 @@ namespace UIMVC.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly UserManager<DAL.Identity.Data.UIMVCUser> _userManager;
 
-        public ConfirmEmailModel(UserManager<UIMVCUser> userManager)
+        public ConfirmEmailModel(UserManager<DAL.Identity.Data.UIMVCUser> userManager)
         {
             _userManager = userManager;
         }

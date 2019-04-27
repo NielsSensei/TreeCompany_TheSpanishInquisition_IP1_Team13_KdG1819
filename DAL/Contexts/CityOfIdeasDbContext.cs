@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DAL.Data_Transfer_Objects;
+using DAL.Identity.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DAL.Contexts
 {
-    class CityOfIdeasDbContext : DbContext
+    public class CityOfIdeasDbContext : IdentityDbContext<UIMVCUser>
+//DbContext
     {
         /*
          * Naar deployment toe is dit wel nuttig. Options wordt wel vaak gebruikt voor de connectionstring mee te geven als deze in een aparte
@@ -24,7 +27,7 @@ namespace DAL.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite("Data Source=IP1_TSI_DB.db");
+                optionsBuilder.UseSqlite("Data Source=TheSpanishDatabase.db");
             }
             
         }
@@ -51,6 +54,7 @@ namespace DAL.Contexts
             modelBuilder.Entity<UsersDTO>().HasKey(u => u.UserID);
             modelBuilder.Entity<VotesDTO>().HasKey(v => v.VoteID);
             modelBuilder.Entity<ReportsDTO>().HasKey(r => r.ReportID);
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<AnswersDTO> Answers { get; set; }

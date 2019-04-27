@@ -1,4 +1,4 @@
-﻿@inject SignInManager<UIMVCUser> SignInManager
+﻿@inject SignInManager<DAL.Identity.Data.UIMVCUser> SignInManager
 
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any(); 
