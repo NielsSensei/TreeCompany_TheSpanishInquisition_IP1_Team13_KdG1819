@@ -12,7 +12,7 @@ window.onload = async function () {
         await sleep(1000);
     }
     window.location.href = "/Identity/Account/Login";
-};
+}
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
