@@ -9,36 +9,43 @@
 <title>Overview Of Ideas</title>
 <h2>Here you can see an overview of Ideas.</h2>
 
-<table class="table">
-    <tr>
-        <th>Id</th>
-        <th>CentralQuestion</th>
-        <th>User</th>
-        <th>Has It Been Reported</th>
-        <th>Need Review By Admin</th>
-        <th>Title</th>
-        <th>Number Of Votes</th>
-        <th>Number Of Shares</th>
-        <th>Number Of Retweets</th>
-    </tr>
-    <!-- TODO: link naar Ideation Thread -->
-    <!-- TODO: link naar User profiel? -->
-    @foreach (Idea idea in Model)
-    {
-        if (idea.Visible)
+@if (Model.Any(i => i.Visible))
+{
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <th>CentralQuestion</th>
+            <th>User</th>
+            <th>Has It Been Reported</th>
+            <th>Need Review By Admin</th>
+            <th>Title</th>
+            <th>Number Of Votes</th>
+            <th>Number Of Shares</th>
+            <th>Number Of Retweets</th>
+        </tr>
+        <!-- TODO: link naar Ideation Thread -->
+        <!-- TODO: link naar User profiel? -->
+        @foreach (Idea idea in Model)
         {
-            <tr>
-                <td>@idea.Id</td>
-                <td>@idea.IdeaQuestion.Id</td>
-                <td>@idea.User.Id</td>
-                <td>@idea.Reported</td>
-                <td>@idea.ReviewByAdmin</td>
-                <td>@idea.Title</td>
-                <td>@idea.VoteCount</td>
-                <td>@idea.ShareCount</td>
-                <td>@idea.RetweetCount</td>
-                <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">View Details For Idea</a></td>
-            </tr>
-        }
-    }
-</table>
+            if (idea.Visible)
+            {
+                <tr>
+                    <td>@idea.Id</td>
+                    <td>@idea.IdeaQuestion.Id</td>
+                    <td>@idea.User.Id</td>
+                    <td>@idea.Reported</td>
+                    <td>@idea.ReviewByAdmin</td>
+                    <td>@idea.Title</td>
+                    <td>@idea.VoteCount</td>
+                    <td>@idea.ShareCount</td>
+                    <td>@idea.RetweetCount</td>
+                    <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">View Details For Idea</a></td>
+                </tr>
+            }
+        } 
+    } 
+    </table>
+}else
+{
+    <p>No ideas yet on the platform.</p>
+}

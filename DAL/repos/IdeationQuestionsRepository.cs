@@ -461,16 +461,36 @@ namespace DAL.repos
         {
             Idea i = ReadWithFields(ideaID);
             i.Title = "[deleted]";
-            i.Field.Text = "[deleted]";
             i.Visible = false;
-            i.Cfield.Options = null;
-            i.Ifield.UploadedImage = null;
-            i.Ifield.Url = null;
-            i.Mfield.LocationX = 0;
-            i.Mfield.LocationY = 0;
-            i.Vfield.Url = null;
-            i.Vfield.UploadedVideo = null;
-       
+            
+            if (i.Field != null)
+            {
+                i.Field.Text = "[deleted]"; 
+            }
+
+            if (i.Cfield != null)
+            {
+                i.Cfield.Options = null;   
+            }
+
+            if (i.Mfield != null)
+            {
+                i.Mfield.LocationX = 0;
+                i.Mfield.LocationY = 0;  
+            }
+
+            if (i.Ifield != null)
+            {
+                i.Ifield.UploadedImage = null;
+                i.Ifield.Url = null;  
+            }
+
+            if (i.Vfield != null)
+            {
+                i.Vfield.Url = null;
+                i.Vfield.UploadedVideo = null;  
+            }
+                 
             Update(i);
         }
 

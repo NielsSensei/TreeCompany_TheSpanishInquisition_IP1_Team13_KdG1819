@@ -203,7 +203,7 @@ VALUES(1,1,'We maken een grote haag van bomen en struiken rond de Groenplaats om
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
 VALUES(2,2,'Maken een aantal graspleintjes en bloembakken aan met stenen wandelpaden en een pleintje in het midden rond het standbeeld :)',0,0)
 
-INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
+INSERT INTO IdeaFields(FieldID,IdeaID,fieldStrings,LocationX,LocationY)
 VALUES(3,2,'I see a gray square and I want to paint it green - Rolling Stoned',0,0)
 
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
