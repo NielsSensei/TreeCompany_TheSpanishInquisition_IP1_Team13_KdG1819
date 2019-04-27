@@ -26,12 +26,7 @@ namespace UIMVC.Controllers
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize]
-        public IActionResult CollectAllIdeas()
-        {
-            return View(_ideaMgr.GetIdeas());
-        }
-
-        public JsonResult CollectIdeas(string filter)
+        public IActionResult CollectAllIdeas(string filter = "all")
         {
             List<Idea> ideas = new List<Idea>();
             
@@ -42,9 +37,9 @@ namespace UIMVC.Controllers
                 case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
             }
 
-            return Json(ideas);
-        } 
-
+            return View(ideas);
+        }
+        
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize]
@@ -112,13 +107,13 @@ namespace UIMVC.Controllers
             _ideaMgr.EditIdea(foundIdea);
             _ideaMgr.EditReport(foundReport);
             
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "admin");
         }
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize]
-        public IActionResult ApproveReport(int report, int idea)
+        public IActionResult ApproveReport(int report)
         {
             Report foundReport = _ideaMgr.GetReport(report);
 
@@ -126,7 +121,7 @@ namespace UIMVC.Controllers
             
             _ideaMgr.EditReport(foundReport);
             
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "report");
         }
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
@@ -135,12 +130,12 @@ namespace UIMVC.Controllers
         public IActionResult DenyReport(int report, int idea)
         {
             Report foundReport = _ideaMgr.GetReport(report);
-
             foundReport.Status = ReportStatus.STATUS_DENIED;
-            
             _ideaMgr.EditReport(foundReport);
+
+            HandleRemainingReports(idea);
             
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "report");
         }
         
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
@@ -150,7 +145,9 @@ namespace UIMVC.Controllers
         {
             _ideaMgr.RemoveReport(report);
             
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+            HandleRemainingReports(idea);
+            
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas" , routeValues: "report");
         }
 
         [HttpPost]
@@ -159,6 +156,20 @@ namespace UIMVC.Controllers
         {
             _ideaMgr.RemoveIdea(idea);
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+        }
+
+        
+        private void HandleRemainingReports(int idea)
+        {
+            IEnumerable<Report> remainingReports = _ideaMgr.GetAllReportsByIdea(idea);
+            if (!remainingReports.Any())
+            {
+                Idea foundIdea = _ideaMgr.GetIdea(idea);
+                foundIdea.ReviewByAdmin = false;
+                foundIdea.Reported = false;
+                
+                _ideaMgr.EditIdea(foundIdea);
+            }
         }
     }
 }

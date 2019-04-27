@@ -2,13 +2,8 @@
 @model IEnumerable<Domain.UserInput.Idea>
 
 @{
-    ViewData["Title"] = "Overzicht van Ideeën";
     Layout = "_Layout";
     ViewData["Title"] = "All Ideas";
-}
-
-@section Tags {
-    <script type="module" src="~/js/collectallideas.js" defer></script>
 }
 
 <h2>Here you can see an overview of Ideas.</h2>
@@ -17,15 +12,25 @@
     <div class="container">
         <div class="row" id="comboFilter">
             <div class="col-2">
-                <label>Selecteer een filter:</label>
+                <label>Select filter:</label>  
             </div>
             <div class="col-10">
-                <select class="form-control">
-                    <option value="all">Alle ideeën</option>
-                    <option value="admin">Gerapporteerde ideeën</option>
-                    <option value="report">Ideeën die een admin moet verwerken</option>
-                </select> 
+                <div class="container">
+                    <form asp-controller="Moderation" asp-action="CollectAllIdeas" id="filterForm" method="get">
+                        <div class="col-10">    
+                            <select class="form-control" form="filterForm" id="filterCombo">
+                                <option value="all">All ideas</option>
+                                <option value="report">Reported ideas</option>
+                                <option value="admin">Ideas where an admin is needed</option>
+                            </select>   
+                        </div>
+                        <div class="col-2">
+                            <input type="submit" class="btn btn-primary" value="Filter"/> 
+                        </div>
+                    </form>
+                </div>
             </div>
+                      
         </div>
     </div>    
 </div>
@@ -64,7 +69,6 @@
                 </tr>
             }
         } 
-    } 
     </table>
 }else
 {
