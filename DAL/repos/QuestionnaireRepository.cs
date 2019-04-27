@@ -60,6 +60,12 @@ namespace DAL
                 Tags = ExtensionMethods.StringToList(module.Tags),
             };
         }
+        
+        private int FindNextAvailableQuestionnaireId()
+        {               
+            int newId = ReadAll().Max(q => q.Id)+1;
+            return newId;
+        }
         #endregion
 
         // Added by NVZ
@@ -78,6 +84,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableQuestionnaireId();
             ctx.Modules.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -96,17 +103,25 @@ namespace DAL
         public void Update(Questionnaire obj)
         {
             ModulesDTO newModule = ConvertToDTO(obj);
-            Questionnaire found = Read(obj.Id, false);
-            ModulesDTO foundModule = ConvertToDTO(found);
-            foundModule = newModule;
+            ModulesDTO foundModule = ctx.Modules.First(q => q.ModuleID == obj.Id);
+            if (foundModule != null)
+            {
+                foundModule.OnGoing = newModule.OnGoing;
+                foundModule.LikeCount = newModule.LikeCount;
+                foundModule.FbLikeCount = newModule.FbLikeCount;
+                foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
+                foundModule.ShareCount = newModule.ShareCount;
+                foundModule.RetweetCount = newModule.RetweetCount;
+                foundModule.Tags = newModule.Tags;
+            }
 
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            Questionnaire toDelete = Read(id, false);
-            ctx.Modules.Remove(ConvertToDTO(toDelete));
+            ModulesDTO toDelete = ctx.Modules.First(q => q.ModuleID == id);
+            ctx.Modules.Remove(toDelete);
             ctx.SaveChanges();
         }
         
