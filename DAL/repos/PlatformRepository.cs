@@ -67,7 +67,7 @@ namespace DAL
             ctx.Platforms.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
-            return obj;
+            return ConvertToDomain(ctx.Platforms.FirstOrDefault(dto => dto.Name == obj.Name));
         }
 
         public Platform Read(int id, bool details)
@@ -79,13 +79,34 @@ namespace DAL
             return ConvertToDomain(platformDTO);
         }
 
+        
+        // Modified by XV
         public void Update(Platform obj)
         {
+            PlatformsDTO newPlatform = ConvertToDTO(obj);
+            PlatformsDTO entity = ctx.Platforms.FirstOrDefault(dto => dto.PlatformID == newPlatform.PlatformID);
+            if (entity != null)
+            {
+                entity.Name = newPlatform.Name;
+                entity.SiteUrl = newPlatform.SiteUrl;
+                entity.IconImage = newPlatform.IconImage;
+                ctx.Platforms.Update(entity);
+            }
+
+            ctx.SaveChanges();
+
+            /*
             PlatformsDTO newPlatform = ConvertToDTO(obj);
             Platform found = Read(obj.Id, false);
             PlatformsDTO foundPlatform = ConvertToDTO(found);
             foundPlatform = newPlatform;
+            
+            ctx.Platforms.First(dto => dto.PlatformID == newPlatform.PlatformID) = newPlatform;
+            
+            
+            
             ctx.SaveChanges();
+            */
         }
 
         public void Delete(int id)

@@ -7,6 +7,20 @@
     font-weight: bold;
 }
 
+#menu {
+    display: none;
+    position: fixed;
+    justify-content: center;
+    align-content: center;
+    background-color: white;
+    opacity: .9;
+    width: 70%;
+    height: 95%;
+    top: 2.5%;
+    left: 15%;
+    border: dashed;
+}
+
 /* ErrorPage */
 .errorPage {
     margin: 20px;
@@ -17,6 +31,27 @@
 
     img {
         width: 100%
+    }
+
+    
+}
+/* CreatePlatform */
+.createPlatform {
+    margin: 20px;
+
+    * button {
+        height: inherit;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+
+        div {
+            flex: 1;
+        }
     }
 }
 
