@@ -1,19 +1,52 @@
 @model LikeViewModel
 
 <section>
-    <table>
-        <tr>
-            <td><img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/></td>
-            <td>&nbsp;</td>
-            <td>@Model.likeCount</td>
-            <td>&nbsp;</td>
-            <td><img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/></td>
-            <td>&nbsp;</td>
-            <td>@Model.fbLikeCount</td>
-            <td>&nbsp;</td>
-            <td><img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/></td>
-            <td>&nbsp;</td>
-            <td>@Model.twitterLikeCount</td> 
-        </tr>
-    </table>
+    
+    @if (Model.iconStyle == 1)
+    {
+        <table>
+            <tr>
+                <td><img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.likeCount</td>
+                <td>&nbsp;</td>
+                <td><img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.fbLikeCount</td>
+                <td>&nbsp;</td>
+                <td><img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.twitterLikeCount</td>
+            </tr>
+        </table>
+    }
+    
+    @if (Model.iconStyle == 2)
+    {
+        <table>
+            <tr>
+                <td><img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="25" width="25"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.likeCount</td>
+            </tr>
+        </table>
+    }
+
+    @*if (!Model.onlyLikes && Model.shareCount > -1)
+        {
+            <tr>
+                <td><img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.likeCount</td>
+                <td>&nbsp;</td>
+                <td><img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.fbLikeCount</td>
+                <td>&nbsp;</td>
+                <td><img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.twitterLikeCount</td>
+            </tr>
+        }*@
+
 </section>

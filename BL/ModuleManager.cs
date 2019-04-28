@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DAL;
 using Domain;
 using Domain.Projects;
@@ -28,6 +29,15 @@ namespace BL
         // Modified by NVZ
         //Module
         #region
+
+        public IEnumerable<Ideation> GetIdeations(int projectId)
+        {
+            List<Ideation> modules = new List<Ideation>();
+            
+            modules.AddRange(IdeationRepo.ReadAll(projectId));
+
+            return modules;
+        }
         /*
          * Getter for our module object, this is probably useful. - NVZ
          * 
@@ -44,6 +54,15 @@ namespace BL
             
         }
 
+        // Added by NVZ       
+        public IEnumerable<Questionnaire> GetQuestionnaires(int projectId)
+        {
+            List<Questionnaire> modules = new List<Questionnaire>();
+
+            modules.AddRange(QuestionnaireRepo.ReadAll(projectId));            
+            
+            return modules;
+        }
         /*
          * Initialisation of our modules might be useful. - NVZ
          * 
@@ -76,9 +95,7 @@ namespace BL
             else
             {
                 IdeationRepo.Update((Ideation)module);
-            }  
-            
-            
+            }             
         }
 
         public void RemoveModule(int moduleId, int projectId, bool questionnaire)

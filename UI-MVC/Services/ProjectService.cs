@@ -13,11 +13,22 @@ namespace UIMVC.Services
         public ProjectService()
         {
             _projectManager = new ProjectManager();
+            _moduleManager = new ModuleManager();
         }
 
         public IEnumerable<Project> GetPlatformProjects(Platform platform)
         {
             return _projectManager.GetPlatformProjects(platform);
+        }
+
+        public IEnumerable<Questionnaire> GetProjectQuestionnaires(Project project)
+        {
+            return _moduleManager.GetQuestionnaires(project.Id);
+        }
+
+        public IEnumerable<Ideation> GetProjectIdeations(Project project)
+        {
+            return _moduleManager.GetIdeations(project.Id);
         }
     }
 }
