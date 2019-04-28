@@ -83,6 +83,11 @@ namespace BL
          * Might need this for initialisation - NVZ
          * 
          */
+        public IEnumerable<Phase> GetAllPhases(int projectId)
+        {
+            return ProjectRepo.ReadAllPhases(projectId);
+        }
+        
         public void MakePhase(Phase newPhase, int projectId)
         {
             ProjectRepo.Create(newPhase);

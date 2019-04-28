@@ -34,13 +34,14 @@ namespace DAL
                 ProjectID = obj.Project.Id,
                 PhaseID = obj.ParentPhase.Id,
                 OnGoing = obj.OnGoing,
+                Title = obj.Title,
                 LikeCount = obj.LikeCount,
                 FbLikeCount = obj.FbLikeCount,
                 TwitterLikeCount = obj.TwitterLikeCount,
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
                 Tags = ExtensionMethods.ListToString(obj.Tags),
-                IsQuestionnaire = true
+                IsQuestionnaire = obj.type == ModuleType.Questionnaire
             };
         }
 
@@ -51,6 +52,7 @@ namespace DAL
                 Id = module.ModuleID,
                 Project = new Project { Id = module.ProjectID },
                 ParentPhase = new Phase { Id = module.PhaseID },
+                Title = module.Title,
                 OnGoing = module.OnGoing,
                 LikeCount = module.LikeCount,
                 FbLikeCount = module.FbLikeCount,
@@ -108,6 +110,7 @@ namespace DAL
             {
                 foundModule.OnGoing = newModule.OnGoing;
                 foundModule.LikeCount = newModule.LikeCount;
+                foundModule.Title = newModule.Title;
                 foundModule.FbLikeCount = newModule.FbLikeCount;
                 foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
                 foundModule.ShareCount = newModule.ShareCount;
@@ -131,7 +134,11 @@ namespace DAL
 
             foreach (ModulesDTO DTO in ctx.Modules)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                if (DTO.IsQuestionnaire)
+                {
+                    Questionnaire toAdd = ConvertToDomain(DTO);
+                    myQuery.Add(toAdd);  
+                }             
             }
 
             return myQuery;
