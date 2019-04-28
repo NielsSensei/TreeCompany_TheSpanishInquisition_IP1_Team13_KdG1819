@@ -8,6 +8,7 @@ namespace UIMVC.Services
     public class ProjectService
     {
         private readonly ProjectManager _projectManager;
+        private readonly ModuleManager _moduleManager;
 
         public ProjectService()
         {

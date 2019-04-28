@@ -22,6 +22,7 @@
              {
                  <div class="col-md-3">
                      @Html.DisplayFor(m => project)
+                     <a asp-controller="Platform" asp-action="CollectProject" asp-route-id="@project.Id">Ga naar Project</a>                
                  </div>
              }
         }

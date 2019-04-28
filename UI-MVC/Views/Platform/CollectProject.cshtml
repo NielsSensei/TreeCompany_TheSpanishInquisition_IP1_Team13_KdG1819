@@ -1,0 +1,34 @@
+@using Domain.Projects
+@using UIMVC.Services
+@model Domain.Projects.Project
+@inject ProjectService ProjectService
+
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "_Layout";
+}
+
+@* Hoe gaan we de mobile layout doen? *@
+<div class="container" id="projectView">
+    <div class="col-4">
+        <h2>Alle fases</h2>
+        <h3>Huidige fase:</h3>
+        @Html.DisplayFor(m => Model.CurrentPhase)
+        <h3>Andere fases:</h3>
+        @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
+        {
+            @Html.DisplayFor(m => p)
+        }
+    </div>
+    <div class="col-4">
+        <h2>@Model.Title</h2>
+        @Html.Partial("_ReactionNumbersPartial", new LikeViewModel(){likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount, 
+            twitterLikeCount = Model.TwitterLikeCount })
+        <p>@Model.Goal</p>
+    </div>
+    <div class="col-4">
+        @* TODO vervang images door projectImages *@
+        <img alt="projectImage" src="https://via.placeholder.com/350"/>
+    </div>
+</div>
+<hr/>
