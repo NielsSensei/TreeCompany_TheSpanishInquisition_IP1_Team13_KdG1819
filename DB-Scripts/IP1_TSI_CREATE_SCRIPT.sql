@@ -120,6 +120,7 @@ CREATE TABLE Modules(
 	ProjectID INT NOT NULL,
 	PhaseID INT NOT NULL,
 	OnGoing BIT NOT NULL,
+	Title NVARCHAR(100),
 	LikeCount INT,
 	FbLikeCount INT, 
 	TwitterLikeCount INT,

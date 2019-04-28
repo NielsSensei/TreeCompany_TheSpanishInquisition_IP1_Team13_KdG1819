@@ -1,4 +1,3 @@
-@using System.ComponentModel.Design
 @using Domain.UserInput
 @model IEnumerable<Domain.UserInput.Idea>
 
@@ -7,13 +6,13 @@
     ViewData["Title"] = "All Ideas";
 }
 
-<h2>Here you can see an overview of Ideas.</h2>
+<h2>Hier zie je een overzicht van alle ideeën.</h2>
 <hr/>
 <div class="form-group">
     <div class="container">
         <div class="row" id="comboFilter">
             <div class="col-2">
-                <label>Select filter:</label>  
+                <label>Selecteer filter:</label>  
             </div>
             <div class="col-10">
                 @Html.DropDownList("Filter", new SelectListItem[] 
@@ -34,14 +33,14 @@
     <table class="table">
         <tr>
             <th>Id</th>
-            <th>CentralQuestion</th>
-            <th>User</th>
-            <th>Has It Been Reported</th>
-            <th>Need Review By Admin</th>
-            <th>Title</th>
-            <th>Number Of Votes</th>
-            <th>Number Of Shares</th>
-            <th>Number Of Retweets</th>
+            <th>Centrale Vraag</th>
+            <th>Gebruiker</th>
+            <th>Is het geraporteerd?</th>
+            <th>Review nodig door admin?</th>
+            <th>Titel</th>
+            <th>Aantal stemmen</th>
+            <th>Aantal Shares</th>
+            <th>Aantal Retweets</th>
         </tr>
         <!-- TODO: link naar Ideation Thread -->
         <!-- TODO: link naar User profiel? -->
@@ -59,12 +58,12 @@
                     <td>@idea.VoteCount</td>
                     <td>@idea.ShareCount</td>
                     <td>@idea.RetweetCount</td>
-                    <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">View Details For Idea</a></td>
+                    <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">Bekijk Idee</a></td>
                 </tr>
             }
         } 
     </table>
 }else
 {
-    <p>No ideas yet on the platform.</p>
+    <p>Geen ideeën gevonden op dit platform.</p>
 }

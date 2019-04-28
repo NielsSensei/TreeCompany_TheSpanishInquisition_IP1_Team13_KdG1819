@@ -10,6 +10,7 @@ namespace DAL.Data_Transfer_Objects
         public int ProjectID { get; set; }
         public int PhaseID { get; set; }
         public bool OnGoing { get; set; }
+        public string Title { get; set; }
         public int LikeCount { get; set; }
         public int FbLikeCount { get; set; }
         public int TwitterLikeCount { get; set; }

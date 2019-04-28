@@ -1,0 +1,19 @@
+@model Domain.Projects.Ideation
+
+<div class="col-4" id="modulePart">
+    <table>
+        <tr>    
+            <td style="font-weight: bold">@Model.Title</td>
+        </tr>
+        <tr>
+            <td>@Html.Partial("_ReactionNumbersPartial", new LikeViewModel() { likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
+                    twitterLikeCount = Model.TwitterLikeCount ,iconStyle = 1 })</td>
+        </tr>
+        <tr>
+            @* Doe hier de linking*@
+            <td><input type="submit" class="btn btn-primary" value="Ga naar ideation!"/></td>
+            <td>&nbsp;</td>
+            <td><img alt="iIcon" src="https://image.flaticon.com/icons/svg/66/66298.svg" height="25" width="25"/></td>
+        </tr>
+    </table>
+</div>

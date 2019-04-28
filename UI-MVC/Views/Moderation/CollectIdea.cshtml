@@ -9,7 +9,7 @@
 
 @section Tags
 {
-    <title>Overview Of Idea @Model.Id</title>    
+    <title>Overzicht van Idee: @Model.Id</title>    
 }
 
 <div class="container">
@@ -17,11 +17,11 @@
         <div class="col-6">
             <h2>Idea</h2>
             <p><span style="font-weight: bold">Id:</span> @Model.Id</p>
-            <p><span style="font-weight: bold">User:</span> @Model.User.Name</p>
-            <p><span style="font-weight: bold">Number Of Votes:</span> @Model.VoteCount</p>
-            <p><span style="font-weight: bold">Number Of Shares:</span> @Model.ShareCount</p>
-            <p><span style="font-weight: bold">Number Of Retweets:</span> @Model.RetweetCount</p>
-            <p><span style="font-weight: bold">Title:</span> @Model.Title</p>
+            <p><span style="font-weight: bold">Gebruiker die idee gepost heeft:</span> @Model.User.Name</p>
+            <p><span style="font-weight: bold">Aantal stemmen:</span> @Model.VoteCount</p>
+            <p><span style="font-weight: bold">Aantal Shares:</span> @Model.ShareCount</p>
+            <p><span style="font-weight: bold">Aantal Retweets:</span> @Model.RetweetCount</p>
+            <p><span style="font-weight: bold">Titel:</span> @Model.Title</p>
             <p><span style="font-weight: bold">Content:</span> </p>
             @if (Model.Field.Text != null && !Model.Field.Text.Equals("<null>"))
             {    
@@ -31,7 +31,7 @@
             @if (Model.Cfield != null)
             {
                 <p><span style="font-weight: bold">Closed Field:</span></p>
-                <p><span style="font-weight: bold">Is it multiplechoice?</span> @Model.Cfield.MultipleChoice</p>
+                <p><span style="font-weight: bold">Is het multiplechoice?</span> @Model.Cfield.MultipleChoice</p>
                 foreach (string opt in Model.Cfield.Options)
                 {
                     <p>Option: @opt</p>
@@ -49,7 +49,7 @@
             -->            
         </div>
         <div class="col-6">
-            <h2>Reports</h2>
+            <h2>Rapporteringen</h2>
             @if (badIdea.Count() > 0)
             {
                 badIdea.OrderByDescending(x => (byte) (x.Status)).ToList();
@@ -57,8 +57,8 @@
                 foreach (Report r in badIdea)
                 {
                     <p><span style="font-weight: bold">Id:</span> @r.Id</p>
-                    <p><span style="font-weight: bold">Flagger:</span> @r.Flagger.Name</p>
-                    <p><span style="font-weight: bold">Reason:</span> @r.Reason</p>
+                    <p><span style="font-weight: bold">Gebruiker die Rapport heeft verstuurd:</span> @r.Flagger.Name</p>
+                    <p><span style="font-weight: bold">Reden:</span> @r.Reason</p>
                     <p><span style="font-weight: bold">Status:</span> @r.Status</p>
                                                                                
                     <h2>Actions</h2>
@@ -66,7 +66,7 @@
                     {                       
                         <form asp-controller="Moderation" asp-action="ReviewByAdmin" asp-route-idea="@Model.Id" 
                               asp-route-report="@r.Id" method="post">
-                            <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Ask Review By Admin" />                             
+                            <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Vraag Review door Admin" />                             
                         </form>
                                              
                     }
@@ -77,13 +77,13 @@
                             <div class="row">
                                 <form asp-controller="Moderation" asp-action="ApproveReport" asp-route-report="@r.Id" method="post"
                                       asp-route-idea="@Model.Id">
-                                    <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Approve Report"/>
+                                    <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Rapport Goedkeuren"/>
                                 </form>
                             </div>
                             <div class="row">
                                 <form asp-controller="Moderation" asp-action="DenyReport" asp-route-report="@r.Id" method="post"
                                       asp-route-idea="@Model.Id">
-                                    <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Ignore Report"/>
+                                    <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Negeer Rapport"/>
                                 </form>
                             </div>
                         </div>
@@ -91,23 +91,22 @@
 
                     if (r.Status == ReportStatus.STATUS_APPROVED)
                     {
-                        <p>Report has been handled, no actions available</p>
+                        <p>Rapportering is opgelost, geen acties beschikbaar.</p>
                     }
 
                     if (r.Status == ReportStatus.STATUS_DENIED)
                     {
                         <form asp-controller="Moderation" asp-action="DestroyReport" asp-route-report="@r.Id" method="post"
                               asp-route-idea="@Model.Id">
-                            <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Delete Report"/>
+                            <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Verwijder Rapport"/>
                         </form>
                     }
                 }    
             }
             else
             {
-                <p>This idea has no reports. </p>
+                <p>Dit idee is niet geraporteerd.</p>
             }                   
         </div>
     </div>     
-        <!-- TODO: IPT13-60 Button voor dit idee te verwijderen -->
 </div>

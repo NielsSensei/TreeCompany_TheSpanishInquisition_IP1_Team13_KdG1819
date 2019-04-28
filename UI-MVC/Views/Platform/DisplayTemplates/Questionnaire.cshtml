@@ -1,0 +1,19 @@
+@model Domain.Projects.Questionnaire
+
+<div class="col-4" id="modulePart">
+    <table>
+        <tr>
+            <td style="font-weight: bold">@Model.Title</td>            
+        </tr>
+        <tr>   
+            <td>@Html.Partial("_ReactionNumbersPartial", new LikeViewModel() { likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
+                    twitterLikeCount = Model.TwitterLikeCount ,iconStyle = 1 })</td>
+        </tr>
+        <tr>
+            @* TODO Doe hier de linking Sachaboy *@
+            <td><input type="submit" class="btn btn-primary" value="Vul vragenlijst in!"/></td>
+            <td>&nbsp;</td>
+            <td><img alt="qIcon" src="https://image.flaticon.com/icons/svg/3/3711.svg" height="25" width="25"/></td>
+        </tr>
+    </table>
+</div>
