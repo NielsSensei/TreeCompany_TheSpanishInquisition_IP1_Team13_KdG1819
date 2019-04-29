@@ -40,6 +40,14 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [DataType(DataType.Text)]
+            [Display(Name = "Naam")]
+            public string Name { get; set; }
+
+            [DataType(DataType.Date)]
+            [Display(Name = "Geboortedatum")]
+            public DateTime DateOfBirth { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -64,10 +72,15 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = Url.Content("~/ConfirmAccount");
             if (ModelState.IsValid)
             {
-                var user = new UIMVCUser { UserName = Input.Email, Email = Input.Email };
+                var user = new UIMVCUser {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    Name = Input.Name,
+                    DateOfBirth = Input.DateOfBirth
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

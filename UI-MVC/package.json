@@ -1,25 +1,29 @@
 {
-    "name": "iptsicityofideas",
-    "description": "ASP.NET Core MVC project with npm and webpack front-end configuration.",
-    "repository": "https://github.com/NielsSensei/TreeCompany_TheSpanishInquisition_IP1_Team13_KdG1819",
-    "license": "MIT",
-    "version": "0.1.0",
-    "dependencies": {
-        "jquery": "^3.3.1",
-        "jquery-validation": "^1.19.0",
-        "jquery-validation-unobtrusive": "^3.2.11",
-        "bootstrap": "^4.3.1",
-        "popper.js": "^1.14.7"
-    },
-    "devDependencies": {
-        "webpack": "^4.29.6",
-        "webpack-cli": "^3.2.3",
-        "css-loader": "^2.1.0",
-        "style-loader": "^0.23.1",
-        "file-loader": "^3.0.1",
-        "url-loader": "^1.1.2"
-    },
-    "scripts": {
-        "build": "webpack"
-    }
+  "name": "iptsicityofideas",
+  "description": "ASP.NET Core MVC project with npm and webpack front-end configuration.",
+  "repository": "https://github.com/NielsSensei/TreeCompany_TheSpanishInquisition_IP1_Team13_KdG1819",
+  "license": "MIT",
+  "version": "0.1.0",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.0",
+    "jquery-validation": "^1.19.0",
+    "jquery-validation-unobtrusive": "^3.2.11",
+    "popper.js": "^1.14.7",
+    "style-loader": "^0.23.1"
+  },
+  "devDependencies": {
+    "mini-css-extract-plugin": "^0.5.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "css-loader": "^2.1.0",
+    "file-loader": "^3.0.1",
+    "url-loader": "^1.1.2",
+    "sass-loader": "^7.1.0",
+    "node-sass": "^4.11.0"
+  },
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  }
 }

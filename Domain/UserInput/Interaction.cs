@@ -1,9 +1,11 @@
+using Domain.Users;
+
 namespace Domain.UserInput
 {
     public class Interaction
     {
         // Added by NG
-        public int UserId { get; set; }
-        public int DeviceId { get; set; }
+        public User User { get; set; }
+        public IOT_Device DeviceId { get; set; }
     }
 }

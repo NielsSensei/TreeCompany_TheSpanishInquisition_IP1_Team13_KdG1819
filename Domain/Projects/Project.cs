@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Domain.Common;
@@ -8,34 +9,31 @@ namespace Domain.Projects
     public class Project
     {
         // Added by NG
-        // Modified by XV & NVZ
+        // Modified by XV & NVZ & EKT & DM
         public int Id { get; set; }
 
-        public Platform Platform { get; set; }
-
-        public List<User> Users { get; set; }
-
-        public List<Phase> Phases { get; set; }
-
-        public List<Image> PreviewImages { get; set; }
-
         public string Title { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+        public List<Phase> Phases { get; set; }
+   
+        public Platform Platform { get; set; }
+        public User User { get; set; }
+
         public string Goal { get; set; }
-
         public string Status { get; set; }
-
         public bool Visible { get; set; }
-
         public int ReactionCount { get; set; }
         public int LikeCount { get; set; }
         public int FbLikeCount { get; set; }
         public int TwitterLikeCount { get; set; }
         public int LikeVisibility { get; set; }
-
-        public List<Module> Modules { get; set; }
-
         public Phase CurrentPhase { get; set; }
-        public int MyPlatformOwner { get; set; }
+
+        public List<Image> PreviewImages { get; set; }
+        public List<Module> Modules { get; set; }
 
         // Added by EKT
         // Modified by NVZ
@@ -56,7 +54,7 @@ namespace Domain.Projects
 
         public void CloseProject()
         {
-            Status = "Afgesloten";
+            Status = "AFGESLOTEN";
         }
 
         public void AddModule(Module module)
@@ -70,9 +68,8 @@ namespace Domain.Projects
         }
 
         public void AddImage(Image image)
-        { 
-                PreviewImages.Add(image);
-            
+        {
+            PreviewImages.Add(image);
         }
 
         public void SetCurrentPhase(int phaseID)

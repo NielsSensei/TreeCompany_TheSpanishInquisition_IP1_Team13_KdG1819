@@ -134,13 +134,21 @@ namespace UIMVC.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<bool>("Active");
+
+                    b.Property<bool>("Banned");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<DateTime>("DateOfBirth");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("Gender");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -166,6 +174,8 @@ namespace UIMVC.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
+
+                    b.Property<string>("Zipcode");
 
                     b.HasKey("Id");
 

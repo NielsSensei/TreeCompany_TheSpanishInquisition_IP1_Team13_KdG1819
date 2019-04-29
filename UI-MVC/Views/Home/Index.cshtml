@@ -1,7 +1,27 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<head>
-    <h1>Welcome to the website!</h1>
-</head>
+@section Scripts
+    {
+    <script type="module" src="~/dist/index.entry.js" defer></script>
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
+<div>
+    <partial name="HomeTemplates/PlatformList.cshtml" />
+</div>
+
+@*
+        <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+    </div>
+*@
+

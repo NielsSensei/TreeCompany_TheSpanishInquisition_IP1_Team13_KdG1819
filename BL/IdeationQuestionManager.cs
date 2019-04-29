@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using DAL;
+using DAL.repos;
+using Domain.Projects;
 using Domain.UserInput;
 
 namespace BL
@@ -10,149 +12,158 @@ namespace BL
     public class IdeationQuestionManager : IQuestionManager<IdeationQuestion>
     {
         // Added by NVZ
-        private IdeationQuestionsRepository ideationQuestionRepo { get; set; }
-        private VoteManager voteMan { get; set; }
+        private IdeationQuestionsRepository IdeationQuestionRepo { get; set; }
+        private VoteManager VoteMan { get; set; }
+        private ModuleManager ModuleMan { get; set; }
 
         // Added by NVZ
         public IdeationQuestionManager()
         {
-            ideationQuestionRepo = new IdeationQuestionsRepository();
-            voteMan = new VoteManager();
+            IdeationQuestionRepo = new IdeationQuestionsRepository();
+            VoteMan = new VoteManager();
+            ModuleMan = new ModuleManager();
         }
 
         // Added by NVZ
         // IdeationQuestion
-
         #region
 
-        public void editQuestion(string propName, int questionID)
+        public void EditQuestion(IdeationQuestion question)
         {
-            throw new System.NotImplementedException("Out of Scope!");
+            IdeationQuestionRepo.Update(question);
         }
 
         /*
          * Getter for question, probably can use this. - NVZ
          */
         // Modified by EKT
-        public IdeationQuestion getQuestion(int questionID, bool details)
+        public IdeationQuestion GetQuestion(int questionId, bool details)
         {
-            var ideationQuestion = ideationQuestionRepo.Read(questionID);
-            if (details)
-                return ideationQuestion.GetIdeationQuestionInfo();
-            return ideationQuestion;
+            return IdeationQuestionRepo.Read(questionId, details);
         }
 
         /*
          * Initialisation might be useful. - NVZ
          */
-        public void makeQuestion(IdeationQuestion question, int moduleID)
+        public void MakeQuestion(IdeationQuestion question, int moduleId)
         {
-            throw new NotImplementedException();
+            IdeationQuestionRepo.Create(question);
+            var alteredIdeation = (Ideation)ModuleMan.GetModule(moduleId, false, false);
+            alteredIdeation.CentralQuestions.Add(question);
+            ModuleMan.EditModule(alteredIdeation);
         }
 
-        public void removeQuestion(int id)
+        public void RemoveQuestion(int questionId)
         {
-            throw new System.NotImplementedException("Out of Scope!");
+            IdeationQuestionRepo.Delete(questionId);
         }
 
-        public IEnumerable<IdeationQuestion> GetAll()
+        public List<IdeationQuestion> GetAll()
         {
-            throw new NotImplementedException();
+            return IdeationQuestionRepo.ReadAll().ToList();
         }
 
         #endregion
 
         // Added by NVZ
         // Idea
-
         #region
-
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void editFeedback(string propName, int feedbackID, int questionID)
+        public void EditIdea(Idea idea)
         {
-            throw new System.NotImplementedException("I might need this!");
+            IdeationQuestionRepo.Update(idea);
         }
 
+        public Idea GetIdea(int ideaId)
+        {
+            return IdeationQuestionRepo.ReadWithFields(ideaId);
+        }
+
+        public void RemoveIdea(int ideaId)
+        {
+            IdeationQuestionRepo.DeleteIdea(ideaId);
+        }
+                
         /*
          * Getter for all Ideas on an Ideation. - NVZ
          */
-        public List<Idea> getFeedback(int questionID, bool details)
+        public List<Idea> GetIdeas(int questionId)
         {
-            var ideationQuestion = getQuestion(questionID, false);
-            var feedbacksList = ideationQuestion.Ideas;
-            var feedbackDetailsList = new List<Idea>();
-            
-            if (details)
-            {
-                foreach (var feedback in feedbacksList)
-                {
-                    feedbackDetailsList.Add(feedback.GetIdeaInfo());
-                }
-
-                return feedbackDetailsList;
-            }
-
-            return feedbacksList;
+            return IdeationQuestionRepo.ReadAllIdeasByQuestion(questionId).ToList();
         }
 
+        public List<Idea> GetIdeas()
+        {
+            return IdeationQuestionRepo.ReadAllIdeas().ToList();
+        }
         /*
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ
          */
         // Modified by EKT
-        public void MakeFeedback(int feedbackId, int questionId, int? parentIdeaId)
+        public void MakeIdea(int questionId, Idea idea)
         {
-//            var ideationQuestion = (IdeationQuestion) getQuestion(questionId, false);
-//            var acceptedAnswerTypes = ideationQuestion.AcceptedAnswerTypes;
+            throw new NotImplementedException();
             
-            Idea idea = new Idea();
-            idea.Id = feedbackId;
-            
-            Field field = new Field();
-            field.Id = 64;
-            field.TextLength = 2000;
-            field.Text = "Filler text for field";
-//            acceptedAnswerTypes.Contains(typeof(ClosedField));
-            
-            idea.AddField(field);
-            
-            idea.Visible = true;
-            idea.QuestionId = questionId;
-            idea.ParentId = parentIdeaId;
-            ideationQuestionRepo.Create(idea);
         }
 
         #endregion
 
         // Added by NG
         // Vote
-        public void CreateVote(int feedbackID, int userID, int? deviceID, double? x, double? y)
+        public void MakeVote(int feedbackId, int userId, int? deviceId, double? x, double? y)
         {
-            Idea feedback = ideationQuestionRepo.ReadIdea(feedbackID);
-            if (voteMan.handleVotingOnFeedback(feedbackID, userID, deviceID, x, y))
+            Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
+            if (VoteMan.HandleVotingOnFeedback(feedbackId, userId, deviceId, x, y))
             {
                 feedback.VoteCount++;
             }
         }
 
         // Added by NVZ
+        // Field
+        public IEnumerable<Field> GetAllFields(int ideaID)
+        {
+            return IdeationQuestionRepo.ReadAllFields(ideaID);
+        }
+        
+        // Added by NVZ
+        // Report
+        public void RemoveReport(int id)
+        {
+            IdeationQuestionRepo.DeleteReport(id);
+        }
+        
+        public void EditReport(Report obj)
+        {
+            IdeationQuestionRepo.Update(obj);
+        }
+        
+        public IEnumerable<Report> GetAllReportsByIdea(int ideaID)
+        {
+            return IdeationQuestionRepo.ReadAllReportsByIdea(ideaID);
+        }
+
+        public Report GetReport(int reportID)
+        {
+            return IdeationQuestionRepo.ReadReport(reportID,false);
+        }
+        // Added by NVZ
         // Other Methods
-
         #region
-
         /*
          * Unlike QuestionnaireQuestion this has noting to do with the enum.
          * This is rather a system where we we work with FieldTypes. - NVZ
          * 
          */
-        public void defineQuestionType()
+        public void DefineQuestionType()
         {
-            throw new System.NotImplementedException("I might need this!");
+            throw new NotImplementedException("I might need this!");
         }
 
         /*
@@ -161,9 +172,9 @@ namespace BL
          * uses for this boolean method be free to do so. - NVZ
          
          */
-        public bool verifyQuestion(int questionID)
+        public bool VerifyQuestion(int questionId)
         {
-            throw new System.NotImplementedException("Out of Scope!");
+            throw new NotImplementedException("Out of Scope!");
         }
 
         /*
@@ -178,16 +189,15 @@ namespace BL
          * if we have the time I'll explain why. - NVZ
          * 
          */
-        public void handleQuestionAction(int questionID, string actionName)
+        public void HandleQuestionAction(int questionId, string actionName)
         {
-            throw new System.NotImplementedException("I might need this!");
+            throw new NotImplementedException("I might need this!");
         }
 
-        public IEnumerable<IdeationQuestion> getAllByQuestionnaireId(int id)
+        public List<IdeationQuestion> GetAllByModuleId(int id)
         {
             throw new NotImplementedException();
         }
-
         #endregion
     }
 }

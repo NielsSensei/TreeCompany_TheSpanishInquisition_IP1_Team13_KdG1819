@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using DAL;
 using Domain;
 using Domain.Projects;
+using Domain.Users;
 
 namespace BL
 {
@@ -10,90 +12,128 @@ namespace BL
     {
         // Added by NG
         // Modified by NVZ
-        private ProjectRepository projectRepo { get; set; }
-        private ModuleManager moduleMan { get; set; }
+        private ProjectRepository ProjectRepo { get; set; }
+        private ModuleManager ModuleMan { get; set; }
 
         // Added by NG
         // Modified by NVZ
         public ProjectManager()
         {
-            projectRepo = new ProjectRepository();
-            moduleMan = new ModuleManager();
+            ProjectRepo = new ProjectRepository();
+            ModuleMan = new ModuleManager();
         }
-        
+
         // Added by NG
         // Modified by NVZ & XV
         //Project 
+
         #region
+
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void editProject(string propName, int projectID)
+        public void EditProject(Project project)
         {
-            throw new NotImplementedException("I might need this!");
+            ProjectRepo.Update(project);
         }
-        
+
         /*
          * Simple getter to get information about our Project. - NVZ
          */
-        public Project getProject(int id, bool details)
+        public Project GetProject(int projectId, bool details)
         {
-            return projectRepo.Read(1);
-            
-            // throw new NotImplementedException("I might need this!");
+            return ProjectRepo.Read(projectId, details);
+        }
+
+        public IEnumerable<Project> GetProjects()
+        {
+            return ProjectRepo.ReadAll();
         }
 
         /*
          * Might need this for initialisation. - NVZ
          */
-        public void CreateProject()
+        public Project MakeProject(Project project)
         {
-            throw new NotImplementedException("I might need this!");
+            return ProjectRepo.Create(project);
         }
 
-        public void DeleteProject(int id)
+        public void RemoveProject(int projectId)
         {
-            throw new NotImplementedException("Out of Scope!");
-        }       
+            ProjectRepo.Delete(projectId);
+        }
+
         #endregion
-        
+
         // Added by NG
         // Modified by NVZ
         //Phase 
+
         #region
+
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void editPhase(string propName, int projectID, int phaseID)
+        public void EditPhase(Phase phase)
         {
-            throw new NotImplementedException("I might need this!");
+            ProjectRepo.Update(phase);
         }
-        
+
         /*
          * Might need this for initialisation - NVZ
          * 
          */
-        public void makePhase(Phase newPhase, int projectID)
+        public IEnumerable<Phase> GetAllPhases(int projectId)
         {
-            throw new NotImplementedException("I might need this!");
+            return ProjectRepo.ReadAllPhases(projectId);
         }
 
-        public void removePhase(int id, int projectID)
+        public void MakePhase(Phase newPhase, int projectId)
         {
-            throw new NotImplementedException("Out of Scope!");
-        }      
+            ProjectRepo.Create(newPhase);
+            var alteredProject = ProjectRepo.Read(projectId, false);
+            alteredProject.Phases.Add(newPhase);
+            ProjectRepo.Update(alteredProject);
+            if (newPhase.Module != null)
+            {
+                var moduleType = newPhase.Module.GetType() == typeof(Questionnaire);
+                var alteredModule = ModuleMan.GetModule(newPhase.Module.Id, false, moduleType);
+                alteredModule.Phases.Add(newPhase);
+                ModuleMan.EditModule(alteredModule);
+            }
+        }
+
+        public void RemovePhase(int projectId, int phaseId)
+        {
+            var removedPhase = ProjectRepo.ReadPhase(phaseId, false);
+            var alteredProject = ProjectRepo.Read(projectId, false);
+            alteredProject.Phases.Remove(removedPhase);
+            if (removedPhase.Module != null)
+            {
+                var moduleType = removedPhase.Module.GetType() == typeof(Questionnaire);
+                var alteredModule = ModuleMan.GetModule(removedPhase.Module.Id, false, moduleType);
+                alteredModule.Phases.Remove(removedPhase);
+                ModuleMan.EditModule(alteredModule);
+            }
+
+            ProjectRepo.Delete(projectId, phaseId);
+            ProjectRepo.Delete(phaseId);
+        }
+
         #endregion
-        
+
         // Added by NVZ
         // Other Methods
+
         #region
-        private bool verifyProjectEditable(int projectID)
+
+        private bool VerifyProjectEditable(int projectId)
         {
             throw new NotImplementedException("Out of scope!");
         }
@@ -101,11 +141,11 @@ namespace BL
         /*
          *  In case we want to show the projectpage for the POC. -NVZ
          */
-        public List<Module> getModules(int projectID, bool details)
+        public List<Module> GetModules(int projectId, bool details)
         {
             throw new NotImplementedException("I might need this!");
         }
-        
+
         /*
          * We have two options with this method:
          * 
@@ -118,10 +158,23 @@ namespace BL
          * if we have the time I'll explain why. - NVZ
          * 
          */
-        public void handleProjectAction(int projectID, string actionName)
+        public void HandleProjectAction(int projectId, string actionName)
         {
             throw new NotImplementedException("I need this!");
         }
+
+        #endregion
+
+        // Added by XV
+        // Methods for Platform
+
+        #region PlatformMethods
+
+        public IEnumerable<Project> GetPlatformProjects(Platform platform)
+        {
+            return ProjectRepo.ReadAll(platform.Id);
+        }
+
         #endregion
     }
 }

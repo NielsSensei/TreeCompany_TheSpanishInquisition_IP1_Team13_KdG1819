@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Domain.Users;
 using DAL;
 
@@ -9,17 +10,17 @@ namespace BL
     {
         // Added by NG
         // Modified by NVZ
-        private UserRepository userRepo { get; set; }
-        private PlatformManager platformMan { get; set; }
-        private ProjectManager projectMan { get; set; }       
+        private UserRepository UserRepo { get; set; }
+        private PlatformManager PlatformMan { get; set; }
+        private ProjectManager ProjectMan { get; set; }       
 
         // Added by NG
         // Modified by NVZ
         public UserManager()
         {
-            userRepo = new UserRepository();
-            platformMan = new PlatformManager();
-            projectMan = new ProjectManager();
+            UserRepo = new UserRepository();
+            PlatformMan = new PlatformManager();
+            ProjectMan = new ProjectManager();
         }
         
         // Added by NG
@@ -33,9 +34,9 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
-       public void editUser(string propName, int userID)
+       public void EditUser(User user)
        {
-            throw new NotImplementedException("I might need this");
+            UserRepo.Update(user);
        }
        
        /*
@@ -44,17 +45,25 @@ namespace BL
         * it is Out of Scope. - NVZ
         * 
         */
-       public User getUser(int platformID, int userID, bool details)
-       {
-           throw new NotImplementedException("I might need this");
+       public User GetUser(int userId, bool details)
+       {           
+           return UserRepo.Read(userId, details);
        }
 
-       public List<User> getUsers(int platformID, Role? roleLevel, bool details)
+       public List<User> GetUsers(int platformId, Role? roleLevel)
        {
-           throw new NotImplementedException("Out of Scope!");
+           var userList = UserRepo.ReadAll(platformId).ToList();
+           if (roleLevel == null) return userList;
+           var filteredUserList = new List<User>();
+           foreach (var user in userList)
+           {
+               if(user.Role.Equals(roleLevel))
+                   filteredUserList.Add(user);
+           }
+           return filteredUserList;
        }
 
-       public void makeAnonymousUser(User user)
+       public void MakeAnonymousUser(User user)
        {
            throw new NotImplementedException("Out of Scope!");
        } 
@@ -62,14 +71,22 @@ namespace BL
        /*
         * We might use this for initialisation - NVZ
         */
-       public void makeUser()
+       public void MakeUser(User user)
        {
-           throw new NotImplementedException("I might need this");
+           UserRepo.Create(user);
+           PlatformMan.MakeUserToPlatform(user.Platform.Id, user);
        }
 
-       public void removeUser(int id)
+       public void RemoveUser(int userId)
        {
-           throw new NotImplementedException("Out of Scope!");
+           var removedUser = UserRepo.Read(userId, false);
+           var platformOwners = PlatformMan.GetAllPlatformOwners(removedUser.Platform.Id);
+           var alteredPlatform = PlatformMan.GetPlatform(removedUser.Platform.Id);
+           if (platformOwners.Contains(removedUser))
+               alteredPlatform.Owners.Remove(removedUser);
+           alteredPlatform.Users.Remove(removedUser);
+           PlatformMan.EditPlatform(alteredPlatform);
+           UserRepo.Delete(userId);
        }
 
        #endregion
@@ -78,24 +95,30 @@ namespace BL
         // Modified by NVZ
         //Event 
        #region
-       public void editOrgEvent(int userID, int eventID)
+       public void EditOrgEvent(Event orgEvent)
        {
-           throw new NotImplementedException("Out of Scope!");
+           UserRepo.Update(orgEvent);
        }
         
-       public Event getEvent(int eventID)
+       public Event GetEvent(int eventId)
        {
-           throw new NotImplementedException("Out of Scope!");
+           return UserRepo.ReadUserEvent(eventId, true);
        }
 
-       public void makeEvent(int userID, Event orgEvent)
+       public void MakeEvent(int userId, Event orgEvent)
        {
-           throw new NotImplementedException("Out of Scope!");
+           UserRepo.Create(orgEvent);
+           var alteredOrganisation = UserRepo.ReadOrganisation(userId);
+           alteredOrganisation.organisationEvents.Add(orgEvent);
        }
 
-       public void removeOrgEvent(int id, int userID)
+       public void RemoveOrgEvent(int userId, int eventId)
        {
-           throw new NotImplementedException("Out of Scope!");
+           var alteredOrganisation = UserRepo.ReadOrganisation(userId);
+           var removedEvent = UserRepo.ReadUserEvent(eventId, false);
+           alteredOrganisation.organisationEvents.Remove(removedEvent);
+           UserRepo.Update(alteredOrganisation);
+           UserRepo.DeleteUserEvent(eventId);
        }
        #endregion
        
@@ -103,16 +126,22 @@ namespace BL
         // Modified by NVZ
         //Organisation 
        #region
-       public void makeOrganisation(int userID)
+       public void MakeOrganisation(Organisation organisation)
        {
-           throw new NotImplementedException("Out of Scope!");
-       }       
+           UserRepo.Create(organisation);
+           PlatformMan.MakeUserToPlatform(organisation.Platform.Id,organisation);
+       }
+
+       public User GetOrganisation(int userId)
+       {
+           return UserRepo.ReadOrganisation(userId);
+       }
        #endregion
         
         // Added by NVZ
         // Other Methods
         #region 
-        private void enactPromotion(User toPromote, User enactor, Role newRole)
+        private void EnactPromotion(User toPromote, User enactor, Role newRole)
         {
             throw new NotImplementedException("Out of scope!");
         }
@@ -128,7 +157,7 @@ namespace BL
          * - NVZ
          * 
          */
-        private Role verifyAction(String actionName)
+        private Role VerifyAction(String actionName)
         {
            throw new NotImplementedException("I might need this!"); 
         }
@@ -142,7 +171,7 @@ namespace BL
          * - NVZ
          * 
          */
-        private bool verifyPermission(User user, Role roleLevel)
+        private bool VerifyPermission(User user, Role roleLevel)
         {
             throw new NotImplementedException("I might need this!"); 
         }
@@ -159,7 +188,7 @@ namespace BL
          * if we have the time I'll explain why. - NVZ
          * 
          */
-        public void handleUserAction(int userID, string actionName)
+        public void HandleUserAction(int userId, string actionName)
         {
             throw new NotImplementedException("I need this!");
         }

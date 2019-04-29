@@ -1,28 +1,28 @@
 using System.Collections.Generic;
 using Domain.Users;
 
-namespace Domain
+namespace Domain.Projects
 {
     public class Module
     {
         // Added by NG
-        // Modified by EKT & NVZ
+        // Modified by EKT & NVZ & DM
         public int Id { get; set; }
-        public ICollection<Phase> Phases { get; set; }
-        public Phase CreatedPhase { get; set; }
+        public Project Project{ get; set; }       
+        public Phase ParentPhase { get; set; }
+        public string Title { get; set; }
         public bool OnGoing { get; set; }
-
-        public int NumberOfVotes { get; set; }
-
-        public int NumberOfLikes { get; set; }
-        public int NumberOfTwitterLikes { get; set; }
-
-        public int NumberOfShares { get; set; }
-        public int NumberOfRetweets { get; set; }
-        public ICollection<string> Tags { get; set; }
+        public int LikeCount { get; set; }
+        public int FbLikeCount{ get; set; }
+        public int TwitterLikeCount { get; set; }
+        public int ShareCount { get; set; }
+        public int RetweetCount { get; set; }      
         public Role VoteLevel { get; set; }
+        public ModuleType type { get; set; }
 
- 
+        public List<Phase> Phases { get; set; }
+        public List<string> Tags { get; set; }
+
         // Added by EKT
         // Modified by NVZ
         // Methods
@@ -33,17 +33,17 @@ namespace Domain
         // persisted as an simple integer that increments whenever someone performs the action. - NVZ
         public void ShareModule()
         {
-            NumberOfShares++;
+            ShareCount++;
         }
 
         public void RetweetModule()
         {
-            NumberOfRetweets++;
+            RetweetCount++;
         }
 
         public void VoteOnModule()
         {
-            NumberOfVotes++;
+            LikeCount++;
         }
 
         public void ChangeStatus(bool status)

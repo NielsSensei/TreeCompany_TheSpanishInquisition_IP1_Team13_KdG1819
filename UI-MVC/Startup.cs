@@ -6,11 +6,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using UIMVC.Areas.Identity.Data;
+using UIMVC.Models;
+using UIMVC.Services;
 
-namespace UI_MVC
+namespace UIMVC
 {
     public class Startup
     {
@@ -31,8 +36,26 @@ namespace UI_MVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // Whilst it's more secure, it's actually quite annoying
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+            });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+             services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            }); 
+
+            // Configuring SendGrid email sender
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
+            // Adding services for injecting into views
+            services.AddTransient<ProjectService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,13 +67,18 @@ namespace UI_MVC
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                // app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            // See UIMVC/Areas/Identity/IdentityHostingStartup for configuration
+            app.UseAuthentication();
             app.UseCookiePolicy();
+            
+            
 
             app.UseMvc(routes =>
             {

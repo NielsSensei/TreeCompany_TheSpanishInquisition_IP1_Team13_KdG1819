@@ -5,22 +5,17 @@ namespace Domain.UserInput
     public class Vote
     {
         // Added by NG
-        // Modified by EKT, XV and NVZ
+        // Modified by EKT, XV and NVZ & DM
         public int Id { get; set; }
-        private string UserMail { get; set; }
-        internal float? LocationX { get; set; }
-        internal float? LocationY { get; set; }
+        public string UserMail { get; set; }
+        public float? LocationX { get; set; }
+        public float? LocationY { get; set; }
         public bool Positive { get; set; }
-        
-        // Note about these properties: This is going to be the only link between Vote and Idea because
-        // I think this might be useful somewhere, somehow. It all depends on how we work the interaction
-        // between Idea, Vote and IoT_Device will work out. Please read my comment in Vote.cs and
-        // IOT_Device.cs to read more about it. - NVZ
-        // public IOT_Device IotDevice { get; set; }
-        // public Idea Idea { get; set; }
-        public int IdeaID { get; set; }
-        public int deviceID { get; set; }
-        
+        public Idea Idea { get; set; }
+        public IOT_Device Device{ get; set; }
+
+        public List<string> Choices { get; set; }
+
         // Added by EKT
         // Modified by NVZ
         // Methods

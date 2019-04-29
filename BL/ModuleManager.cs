@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DAL;
 using Domain;
 using Domain.Projects;
@@ -10,95 +11,114 @@ namespace BL
     {
         // Added by NG
         // Modified by NVZ
-        private IdeationRepository ideationRepo { get; set; }
-        private QuestionnaireRepository questionnaireRepo { get; set; }
-        private ProjectRepository projectRepo { get; set; }        //for linking a module to its project
-        private IQuestionManager<QuestionnaireQuestion> questionaireQuestionMan { get; set; }
-        private IQuestionManager<IdeationQuestion> ideationQuestionMan { get; set; }
+        private IdeationRepository IdeationRepo { get; set; }
+        private QuestionnaireRepository QuestionnaireRepo { get; set; }
+        private ProjectManager ProjectMan { get; set; }        //for linking a module to its project
+        private IQuestionManager<QuestionnaireQuestion> QuestionaireQuestionMan { get; set; }
+        private IQuestionManager<IdeationQuestion> IdeationQuestionMan { get; set; }
 
         // Added by NG
         // Modified by NVZ
         public ModuleManager()
         {
-            ideationRepo = new IdeationRepository();
-            questionnaireRepo = new QuestionnaireRepository();
+            IdeationRepo = new IdeationRepository();
+            QuestionnaireRepo = new QuestionnaireRepository();
         }
 
         // Added by NG
         // Modified by NVZ
         //Module
         #region
-        /*
-        * Setter method, we might need this for certain properties but
-        * certainly not all of them. Please make a difference between
-        * properties you need and the ones you do not. - NVZ
-        * 
-        */
-        public void editModule(string propName, int projectID, int moduleID)
-        {
-            throw new NotImplementedException("I might need this!");
-        }
 
+        public IEnumerable<Ideation> GetIdeations(int projectId)
+        {
+            List<Ideation> modules = new List<Ideation>();
+            
+            modules.AddRange(IdeationRepo.ReadAll(projectId));
+
+            return modules;
+        }
         /*
          * Getter for our module object, this is probably useful. - NVZ
          * 
          */
         //Modified by NG
-        public Module getModule(int moduleID, bool details, bool questionnaire)
+        public Module GetModule(int moduleId, bool details, bool questionnaire)
         {
             if (questionnaire)
             {
-                return questionnaireRepo.Read(moduleID);
+                return QuestionnaireRepo.Read(moduleId, details);
             } 
 
-            return ideationRepo.Read(moduleID);
+            return IdeationRepo.Read(moduleId, details);
             
         }
 
+        // Added by NVZ       
+        public IEnumerable<Questionnaire> GetQuestionnaires(int projectId)
+        {
+            List<Questionnaire> modules = new List<Questionnaire>();
+
+            modules.AddRange(QuestionnaireRepo.ReadAll(projectId));            
+            
+            return modules;
+        }
         /*
          * Initialisation of our modules might be useful. - NVZ
          * 
          */
         //Modified by NG
-        public void makeModule(Module module, int projectID, bool questionnaire)
+        public void MakeModule(Module module, int projectId)
         {
-            if (questionnaire)
+            var alteredProject = ProjectMan.GetProject(projectId, false);
+            if (module.GetType() == typeof(Questionnaire))
             {
                 Questionnaire newQuestionnaire = (Questionnaire) module;
-                projectRepo.Read(module.Id).Modules.Add(newQuestionnaire);
+                alteredProject.Modules.Add(newQuestionnaire);
+                ProjectMan.EditProject(alteredProject);
             }
             else
             {
-                Ideation i = (Ideation) module;
-                projectRepo.Read(module.Id).Modules.Add(i);
+                Ideation newIdeation = (Ideation) module;
+                alteredProject.Modules.Add(newIdeation);
+                ProjectMan.EditProject(alteredProject);
             }
         }
         
         //Added by NG
-        public void updateModule(Module module, bool questionnaire)
+        public void EditModule(Module module)
         {
-            if (questionnaire)
+            if (module.GetType() == typeof(Questionnaire))
             {
-                Questionnaire q = questionnaireRepo.Read(module.Id);
-                q = (Questionnaire) module;
+                QuestionnaireRepo.Update((Questionnaire)module);
             }
             else
             {
-                Ideation i = ideationRepo.Read(module.Id);
-                i = (Ideation) module;
-            }  
+                IdeationRepo.Update((Ideation)module);
+            }             
         }
 
-        public void removeModule(int id, int projectID)
+        public void RemoveModule(int moduleId, int projectId, bool questionnaire)
         {
-            throw new NotImplementedException("Out of Scope!");
+            if (questionnaire)
+            {
+                var removedQuestionnaire = QuestionnaireRepo.Read(moduleId, true);
+                ProjectMan.GetProject(projectId, false).Modules.Remove(removedQuestionnaire);
+                QuestionnaireRepo.Delete(moduleId);    
+            }
+            else
+            {
+                var removedIdeation = IdeationRepo.Read(moduleId, true);
+                ProjectMan.GetProject(projectId, false).Modules.Remove(removedIdeation);
+                IdeationRepo.Delete(moduleId);
+            }
         }
         #endregion
         
         // Added by NVZ
         // Other Methods
         #region
-        private bool verifyIfModuleEditable(int moduleID)
+        private bool VerifyIfModuleEditable(int moduleId)
         {
             throw new NotImplementedException("Out of Scope!");
         }
@@ -107,7 +127,7 @@ namespace BL
          *  This simple method is necessary for most of the CRUD
          *  operations. -NVZ
          */
-        private bool verifyIfQuestionnaire(int moduleID)
+        private bool VerifyIfQuestionnaire(int moduleId)
         {
             throw new NotImplementedException("I might need this!");
         }
@@ -125,7 +145,7 @@ namespace BL
          * if we have the time I'll explain why. - NVZ
          * 
          */
-        public void handleModuleAction(int moduleID, string actionName)
+        public void HandleModuleAction(int moduleId, string actionName)
         {
             throw new NotImplementedException("I need this!");
         }

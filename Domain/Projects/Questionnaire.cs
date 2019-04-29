@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Domain.UserInput;
 
-namespace Domain
+namespace Domain.Projects
 {
     public class Questionnaire : Module
     {
@@ -19,9 +19,9 @@ namespace Domain
             {
                 UserCount = this.UserCount,
                 OnGoing = this.OnGoing,
-                NumberOfVotes = this.NumberOfVotes,
-                NumberOfShares = this.NumberOfShares,
-                NumberOfRetweets = this.NumberOfRetweets
+                LikeCount = this.LikeCount,
+                ShareCount = this.ShareCount,
+                RetweetCount = this.RetweetCount
             };
             return info;
         }
