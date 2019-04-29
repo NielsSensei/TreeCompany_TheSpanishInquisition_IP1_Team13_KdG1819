@@ -1,0 +1,65 @@
+@using Domain.Projects
+@using UIMVC.Services
+@model Domain.Projects.Project
+@inject ProjectService ProjectService
+
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "_Layout";
+    ViewData["Questionnaires"] = ProjectService.CollectProjectQuestionnaires(Model);
+    ViewData["Ideations"] = ProjectService.CollectProjectIdeations(Model);
+}
+
+@* Hoe gaan we de mobile layout doen? *@
+<div class="container" id="projectView">
+    <div class="col-4">
+        <h2>Alle fases</h2>
+        <h3>Huidige fase:</h3>
+        @Html.DisplayFor(m => Model.CurrentPhase)
+        <h3>Andere fases:</h3>
+        @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
+        {
+            @Html.DisplayFor(m => p)
+        }
+    </div>
+    <div class="col-4">
+        <h2>@Model.Title</h2>
+        @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+        {
+            likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
+            twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
+        })
+        <p>@Model.Goal</p>
+    </div>
+    <div class="col-4">
+        @* TODO vervang images door projectImages *@
+        <img alt="projectImage" src="https://via.placeholder.com/350"/>
+    </div>
+</div>
+<hr/>
+@if (ViewData["Questionnaires"] != null || ViewData["Ideations"] != null)
+{
+    <div class="container">
+        <div class="row">
+            @if (ViewData["Questionnaires"] != null)
+            {
+                foreach (Questionnaire questionnaire in (IEnumerable<Questionnaire>) ViewData["Questionnaires"])
+                {
+                    @Html.DisplayFor(m => questionnaire)
+                }
+            }
+
+            @if (ViewData["Ideations"] != null)
+            {
+                foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
+                {
+                    @Html.DisplayFor(m => ideation)
+                }
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>Geen modules voor dit project.</p>
+}

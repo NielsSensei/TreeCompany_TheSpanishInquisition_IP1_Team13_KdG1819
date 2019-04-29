@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DAL;
-using Domain;
 using Domain.Projects;
 using Domain.Users;
 
@@ -12,7 +11,7 @@ namespace BL
         // Added by NG
         // Modified by NVZ
         private ProjectRepository ProjectRepo { get; set; }
-        private ModuleManager ModuleMan { get; set; }
+        public ModuleManager ModuleMan { get; }
 
         // Added by NG
         // Modified by NVZ
@@ -83,6 +82,11 @@ namespace BL
          * Might need this for initialisation - NVZ
          * 
          */
+        public IEnumerable<Phase> GetAllPhases(int projectId)
+        {
+            return ProjectRepo.ReadAllPhases(projectId);
+        }
+        
         public void MakePhase(Phase newPhase, int projectId)
         {
             ProjectRepo.Create(newPhase);
@@ -120,18 +124,19 @@ namespace BL
 
         #region
 
+        /*
         private bool VerifyProjectEditable(int projectId)
         {
             throw new NotImplementedException("Out of scope!");
-        }
+        } */
 
         /*
          *  In case we want to show the projectpage for the POC. -NVZ
-         */
+         
         public List<Module> GetModules(int projectId, bool details)
         {
             throw new NotImplementedException("I might need this!");
-        }
+        } */
 
         /*
          * We have two options with this method:
@@ -144,11 +149,10 @@ namespace BL
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
          * 
-         */
         public void HandleProjectAction(int projectId, string actionName)
         {
             throw new NotImplementedException("I need this!");
-        }
+        } */
 
         #endregion
         
