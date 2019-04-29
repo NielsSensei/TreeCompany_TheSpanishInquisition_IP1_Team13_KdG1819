@@ -13,13 +13,13 @@ namespace UIMVC.Controllers
     {
         private readonly PlatformManager _platformMgr;
         private readonly IdeationQuestionManager _ideaMgr;
-        private readonly UserManager _usrMgr;
+        private readonly UserManager _userMgr;
 
         public ModerationController()
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
-            _usrMgr = new UserManager();
+            _userMgr = new UserManager();
 
         }
         
@@ -79,11 +79,11 @@ namespace UIMVC.Controllers
             Idea idea = _ideaMgr.GetIdea(id);
             if (idea.Visible)
             {
-                idea.User  = _usrMgr.GetUser(idea.User.Id, false);
+                idea.User  = _userMgr.GetUser(idea.User.Id, false);
                 IEnumerable<Report> reportWithoutFlagger = _ideaMgr.GetAllReportsByIdea(id);
                 foreach (Report r in reportWithoutFlagger)
                 {
-                    r.Flagger = _usrMgr.GetUser(r.Flagger.Id, false);
+                    r.Flagger = _userMgr.GetUser(r.Flagger.Id, false);
                 }
                 ViewData["Reports"] = reportWithoutFlagger;
             
@@ -174,9 +174,38 @@ namespace UIMVC.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult CollectAllUsers()
+        public IActionResult CollectAllUsers(string sortOrder, string searchString)
         {
-            return View(_userMgr.GetUsers());
+
+            ViewData["CurrentFilter"] = searchString
+            var users = (IEnumerable<User>)_userMgr.GetUsers();
+
+            switch (sortOrder)
+            {
+                case "platform":
+                    users = users.OrderBy(u => u.Platform); break;
+                case "name":
+                    users = users.OrderBy(u => u.Name); break;
+                default:
+                    users = users.OrderBy(u => u.Id); break;
+            }
+            return View(users);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult ToggleBanUser(User user)
+        {
+            _userMgr.ToggleBanUser(user);
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult VerifyUser(User user)
+        {
+            _userMgr.VerifyUser(user);
+            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
     }
 }

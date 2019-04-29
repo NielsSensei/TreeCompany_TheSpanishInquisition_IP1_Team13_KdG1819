@@ -9,14 +9,21 @@
 <body>
 <h2>Hier zie je een overzicht van alle users</h2>
 <hr/>
+<div class="container">
+    <form>
+        <div>
+            Zoeken op naam: <input type="text" name="SearchString" value="@ViewData["currentFilter"]"/>
+            <button type="submit">Zoeken</button> |
+            <a asp-action="CollectAllUsers">Filter legen</a>
+        </div>
+    </form>
+</div>
 <table class="table">
     <tr>
         <th>Id</th>
         <th>Platform</th>
         <th>Naam</th>
-        <th>Geslacht</th>
         <th>Geboortedatum</th>
-        <th>Zipcode</th>
         <th>Rol</th>
         <th>Banned</th>
         <th>Actief</th>
@@ -27,12 +34,17 @@
             <td>@user.Id</td>
             <td>@user.Platform</td>
             <td>@user.Name</td>
-            <td>@user.Gender</td>
-            <td>@user.Birthdate</td>
-            <td>@user.ZipCode</td>
+            <td>@user.Birthdate.ToString("dd-MM-yyyy")</td>
             <td>@user.Role</td>
             <td>@user.Banned</td>
             <td>@user.Active</td>
+            <td>
+                <a asp-action="ToggleBanUser">(Ont)bannen</a>
+                @if (@user.Role == Role.LOGGEDIN)
+                {
+                    <text> | <a asp-action="VerifyUser">Verifiëren</a></text>
+                }
+            </td>
         </tr>
     }
 </table>

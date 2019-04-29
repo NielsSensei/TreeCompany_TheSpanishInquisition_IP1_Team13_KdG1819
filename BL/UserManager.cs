@@ -151,17 +151,31 @@ namespace BL
             throw new NotImplementedException("Out of scope!");
         }
 
-        private void VerifyUser(User toVerify, User enactor)
+        public void VerifyUser(User toVerify)
         {
-            if (enactor.Role == Role.MODERATOR || enactor.Role == Role.ADMIN || enactor.Role == Role.SUPERADMIN)
+            var alteredUser = GetUser(toVerify.Id, false);
+            if (alteredUser.Role == Role.LOGGEDIN)
             {
-                var alteredUser = GetUser(toVerify.Id, false);
-                if (alteredUser.Role == Role.LOGGEDIN)
-                {
-                    alteredUser.Role = Role.LOGGEDINVERIFIED;
-                    UserRepo.Update(alteredUser);
-                }
+                alteredUser.Role = Role.LOGGEDINVERIFIED;
+                UserRepo.Update(alteredUser);
             }
+        }
+
+        public void ToggleBanUser(User user)
+        {
+            var alteredUser = GetUser(user.Id, false);
+            if (alteredUser.Banned)
+            {
+                alteredUser.Banned = false;
+                alteredUser.Active = true;
+            }
+            else
+            {
+                alteredUser.Banned = true;
+                alteredUser.Active = false;
+            }
+
+            UserRepo.Update(alteredUser);
         }
 
         /*
