@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using Domain;
 using Domain.Projects;
@@ -45,12 +46,23 @@ namespace BL
          */
         public Project GetProject(int projectId, bool details)
         {
-            return ProjectRepo.Read(projectId, details);
+            Project project = ProjectRepo.Read(projectId, details);
+
+            List<Phase> phases = new List<Phase>();
+            phases = ProjectRepo.ReadAllPhases(projectId).ToList();
+
+            project.Phases = phases;
+
+            return project;
         }
 
-        public IEnumerable<Project> GetProjects()
+        public IEnumerable<Project> GetProjects(int projectId)
         {
-            return ProjectRepo.ReadAll();
+            List<Project> projects = new List<Project>();
+
+            projects.AddRange(ProjectRepo.ReadAll(projectId));
+
+            return projects;
         }
 
         /*
@@ -122,7 +134,7 @@ namespace BL
                 ModuleMan.EditModule(alteredModule);
             }
 
-            ProjectRepo.Delete(projectId, phaseId);
+            //  ProjectRepo.Delete(projectId, phaseId);
             ProjectRepo.Delete(phaseId);
         }
 

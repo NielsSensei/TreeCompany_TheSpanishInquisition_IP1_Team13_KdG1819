@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.Net.Compilers" Version="2.10.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
     <PackageReference Include="Sendgrid" Version="9.10.0" />
+    <PackageReference Include="SendGridClient" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,3 +1,4 @@
+@using Domain.Projects
 @model Domain.Projects.Project
 
 
@@ -7,4 +8,19 @@
 
 <h2>Project</h2>
 
-<partial name="ProjectDetailPartial" for="@Model"/>
+<dl class="dl-horizontal">
+    
+    <dt>Name</dt><dd>@Model.Title</dd>
+    <dt>Start Date</dt><dd>@Model.StartDate</dd>
+    <dt>End Date</dt><dd>@Model.EndDate</dd>
+    <dt>Current Phase</dt><dd>@Model.CurrentPhase.Id</dd>
+    
+  
+</dl>
+
+@foreach (var phase in Model.Phases)
+{
+    <partial name="PartialView/ProjectPhaseDetailPartial" for="@phase"/>
+
+    
+}

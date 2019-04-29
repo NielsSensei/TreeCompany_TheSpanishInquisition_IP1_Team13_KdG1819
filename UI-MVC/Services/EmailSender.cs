@@ -25,7 +25,8 @@ namespace UIMVC.Services
 
         public Task Execute(string apiKey, string subject, string message, string email)
         {
-            var client = new SendGridClient(apiKey);
+     
+         //   var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress("xander.veldeman@student.kdg.be", "City of Ideas"),
@@ -39,7 +40,7 @@ namespace UIMVC.Services
             // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
             msg.SetClickTracking(false, false);
 
-            return client.SendEmailAsync(msg);
+            return null; //client.SendEmailAsync(msg); DIT TERUG VRIJMAKEN
         }
     }
 }

@@ -150,6 +150,9 @@ namespace DAL
             ProjectsDTO projectsDTO = null;
             projectsDTO = details ? ctx.Projects.AsNoTracking().First(p => p.ProjectID == id) : ctx.Projects.First(p => p.ProjectID == id);
             ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
+
+            PhasesDTO phasesDto = null;
+            phasesDto = ctx.Phases.First(p => p.ProjectID == id);
             
             return ConvertToDomain(projectsDTO);
         }

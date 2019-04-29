@@ -17,13 +17,29 @@ namespace Domain.Projects
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
-        public List<Phase> Phases { get; set; }
-   
+
+
+        private List<Phase> _phases;
+
+        public List<Phase> Phases
+        {
+            get
+            {
+                if (_phases == null)
+                {
+                    _phases = new List<Phase>();
+                }
+
+                return _phases;
+            }
+            set => _phases = value;
+        }
+
         public Platform Platform { get; set; }
         public User User { get; set; }
 
         public string Goal { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } //TODO bool? 
         public bool Visible { get; set; }
         public int ReactionCount { get; set; }
         public int LikeCount { get; set; }

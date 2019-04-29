@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using BL;
 using Domain.Projects;
@@ -14,6 +15,11 @@ namespace UIMVC.Services
         {
             _projectManager = new ProjectManager();
             _moduleManager = new ModuleManager();
+        }
+
+        public IEnumerable<Project> GetProjects(Project project)
+        {
+            return _projectManager.GetProjects(project.Id);
         }
 
         public IEnumerable<Project> GetPlatformProjects(Platform platform)

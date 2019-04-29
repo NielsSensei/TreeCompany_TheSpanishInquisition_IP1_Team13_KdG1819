@@ -1,31 +1,31 @@
-@model IEnumerable<Domain.Projects.Project>
+@using Domain.Projects
+@using UIMVC.Services
+@model Domain.Projects.Project
+@inject ProjectService ProjectService
+
 
 @{
-    ViewBag.Title = "Projects";
+    ViewBag.Title = @Model.Title;
 }
 
-<h2>Projects</h2>
+<section>
 
-<p>
-    <a asp-action="Create">New Project</a>
-</p>
+    <h1>@Model.Title</h1>
 
+    <div>
+        @if (ProjectService == null)
+        {
+            <h4>Er zijn geen projecten!</h4>
+        }
+        else
+        {
+            foreach (Project project in ProjectService.GetProjects(Model) )
+            {
+                
 
-<table class="table">
-    <tr>
-        <th>Nummer</th>
-        <th>StartDatum</th>
-        <th>EindDatum</th>
-    </tr>
-
-    @foreach (Domain.Projects.Project project in Model)
-    {
-        <tr>
-            <td>@project.Id</td>
-            <td>@project.StartDate</td>
-            <td>@project.EndDate</td>
-        </tr>
-    }
+            }
+        }
+    </div>
 
 
-</table>
+</section>
