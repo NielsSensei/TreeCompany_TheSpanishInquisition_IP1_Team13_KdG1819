@@ -12,13 +12,13 @@
     <p>This is where I'd put an image if I (knew how I) could convert from BLOB</p>
     <hr/>
     <div class="row">
-        @if (ProjectService == null || !ProjectService.GetPlatformProjects(Model).Any())
+        @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())
         {
             <h4>Er zijn geen projecten voor dit platform</h4>
         }
         else
         {
-            foreach (Project project in ProjectService.GetPlatformProjects(Model))
+            foreach (Project project in ProjectService.CollectPlatformProjects(Model))
              {
                  <div class="col-md-3">
                      @Html.DisplayFor(m => project)

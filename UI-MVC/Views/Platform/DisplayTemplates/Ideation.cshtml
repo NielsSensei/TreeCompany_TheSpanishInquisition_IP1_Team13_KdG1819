@@ -1,7 +1,6 @@
 @model Domain.Projects.Ideation
 
-<div class="col-4" id="modulePart">
-    
+<div class="col-4" id="modulePart">  
         <div>    
             <p class="font-weight-bold">@Model.Title</p>
         </div>
@@ -10,10 +9,7 @@
                     twitterLikeCount = Model.TwitterLikeCount ,iconStyle = 1 })
         </div>
         <div>
-            @* Doe hier de linking*@
-            <input type="submit" class="btn btn-primary" value="Ga naar ideation!"/>
-            
+            <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectIdeation" asp-route-id="@Model.Id">Ga naar ideation!</a>
             <img alt="iIcon" src="https://image.flaticon.com/icons/svg/66/66298.svg" height="25" width="25"/>
-        </div>
-    
+        </div>   
 </div>

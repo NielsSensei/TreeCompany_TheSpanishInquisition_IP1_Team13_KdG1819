@@ -79,13 +79,7 @@ namespace UIMVC.Controllers
             Idea idea = _ideaMgr.GetIdea(id);
             if (idea.Visible)
             {
-                idea.User  = _usrMgr.GetUser(idea.User.Id, false);
-                IEnumerable<Report> reportWithoutFlagger = _ideaMgr.GetAllReportsByIdea(id);
-                foreach (Report r in reportWithoutFlagger)
-                {
-                    r.Flagger = _usrMgr.GetUser(r.Flagger.Id, false);
-                }
-                ViewData["Reports"] = reportWithoutFlagger;
+                ViewData["Reports"] = _ideaMgr.GetAllReportsByIdea(id);
             
                 return View(idea);  
             }

@@ -1,5 +1,7 @@
 @using Domain.UserInput
+@using UIMVC.Services
 @model Domain.UserInput.Idea
+@inject UserService Userservice
 
 @{
     Layout = "_Layout";
@@ -17,7 +19,7 @@
         <div class="col-6">
             <h2>Idea</h2>
             <p><span style="font-weight: bold">Id:</span> @Model.Id</p>
-            <p><span style="font-weight: bold">Gebruiker die idee gepost heeft:</span> @Model.User.Name</p>
+            <p><span style="font-weight: bold">Gebruiker die idee gepost heeft:</span> @Userservice.CollectUserName(Model.User.Id)</p>
             <p><span style="font-weight: bold">Aantal stemmen:</span> @Model.VoteCount</p>
             <p><span style="font-weight: bold">Aantal Shares:</span> @Model.ShareCount</p>
             <p><span style="font-weight: bold">Aantal Retweets:</span> @Model.RetweetCount</p>
@@ -57,7 +59,8 @@
                 foreach (Report r in badIdea)
                 {
                     <p><span style="font-weight: bold">Id:</span> @r.Id</p>
-                    <p><span style="font-weight: bold">Gebruiker die Rapport heeft verstuurd:</span> @r.Flagger.Name</p>
+                    <p><span style="font-weight: bold">Gebruiker die Rapport heeft verstuurd:</span> 
+                        @Userservice.CollectUserName(r.Flagger.Id)</p>
                     <p><span style="font-weight: bold">Reden:</span> @r.Reason</p>
                     <p><span style="font-weight: bold">Status:</span> @r.Status</p>
                                                                                

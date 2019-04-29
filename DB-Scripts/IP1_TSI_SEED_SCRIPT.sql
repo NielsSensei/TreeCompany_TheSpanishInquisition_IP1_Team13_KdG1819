@@ -173,8 +173,8 @@ INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
 VALUES(4,4,9)
 
 /* Ideations */
-INSERT INTO Ideations(ModuleID,UserID,Organisation,UserIdea,RequiredFields,EventID)
-VALUES(2,7,0,1,41,0)
+INSERT INTO Ideations(ModuleID,UserID,Organisation,UserIdea,RequiredFields,EventID,extraInfo)
+VALUES(2,7,0,1,41,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
 
 /* Ideationquestions */
 INSERT INTO IdeationQuestions(IQuestionID,ModuleID,QuestionTitle,Description,WebsiteLink)
