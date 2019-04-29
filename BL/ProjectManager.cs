@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DAL;
 using Domain;
 using Domain.Projects;
+using Domain.Users;
 
 namespace BL
 {
@@ -88,6 +89,11 @@ namespace BL
          * Might need this for initialisation - NVZ
          * 
          */
+        public IEnumerable<Phase> GetAllPhases(int projectId)
+        {
+            return ProjectRepo.ReadAllPhases(projectId);
+        }
+
         public void MakePhase(Phase newPhase, int projectId)
         {
             ProjectRepo.Create(newPhase);
@@ -105,7 +111,7 @@ namespace BL
 
         public void RemovePhase(int projectId, int phaseId)
         {
-            var removedPhase = ProjectRepo.ReadPhase(projectId, phaseId, false);
+            var removedPhase = ProjectRepo.ReadPhase(phaseId, false);
             var alteredProject = ProjectRepo.Read(projectId, false);
             alteredProject.Phases.Remove(removedPhase);
             if (removedPhase.Module != null)
@@ -117,6 +123,7 @@ namespace BL
             }
 
             ProjectRepo.Delete(projectId, phaseId);
+            ProjectRepo.Delete(phaseId);
         }
 
         #endregion
@@ -154,6 +161,18 @@ namespace BL
         public void HandleProjectAction(int projectId, string actionName)
         {
             throw new NotImplementedException("I need this!");
+        }
+
+        #endregion
+
+        // Added by XV
+        // Methods for Platform
+
+        #region PlatformMethods
+
+        public IEnumerable<Project> GetPlatformProjects(Platform platform)
+        {
+            return ProjectRepo.ReadAll(platform.Id);
         }
 
         #endregion

@@ -50,6 +50,7 @@ namespace DAL.Contexts
             modelBuilder.Entity<UserDetailsDTO>().HasKey(u => u.UserID);
             modelBuilder.Entity<UsersDTO>().HasKey(u => u.UserID);
             modelBuilder.Entity<VotesDTO>().HasKey(v => v.VoteID);
+            modelBuilder.Entity<ReportsDTO>().HasKey(r => r.ReportID);
         }
 
         public DbSet<AnswersDTO> Answers { get; set; }
@@ -71,5 +72,6 @@ namespace DAL.Contexts
         public DbSet<UserDetailsDTO> UserDetails { get; set; }
         public DbSet<UsersDTO> Users { get; set; }
         public DbSet<VotesDTO> Votes { get; set; }
+        public DbSet<ReportsDTO> Reports { get; set; }
     }
 }

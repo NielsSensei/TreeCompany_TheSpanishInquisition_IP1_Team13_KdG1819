@@ -13,7 +13,7 @@ namespace DAL.Data_Transfer_Objects
         public bool Organisation { get; set; }
         public int EventID { get; set; }
         public bool UserIdea { get; set; }
-        public Media MediaFile { get; set; }
+        public byte[] MediaFile { get; set; }
         public byte RequiredFields { get; set; }
     }
 }

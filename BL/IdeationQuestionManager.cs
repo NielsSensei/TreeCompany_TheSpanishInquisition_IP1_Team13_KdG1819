@@ -26,7 +26,6 @@ namespace BL
 
         // Added by NVZ
         // IdeationQuestion
-
         #region
 
         public void EditQuestion(IdeationQuestion question)
@@ -68,20 +67,28 @@ namespace BL
 
         // Added by NVZ
         // Idea
-
         #region
-
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void EditIdea(string propName, int ideaId, int questionId)
+        public void EditIdea(Idea idea)
         {
-            throw new NotImplementedException("I might need this!");
+            IdeationQuestionRepo.Update(idea);
         }
 
+        public Idea GetIdea(int ideaId)
+        {
+            return IdeationQuestionRepo.ReadWithFields(ideaId);
+        }
+
+        public void RemoveIdea(int ideaId)
+        {
+            IdeationQuestionRepo.DeleteIdea(ideaId);
+        }
+                
         /*
          * Getter for all Ideas on an Ideation. - NVZ
          */
@@ -119,10 +126,36 @@ namespace BL
         }
 
         // Added by NVZ
+        // Field
+        public IEnumerable<Field> GetAllFields(int ideaID)
+        {
+            return IdeationQuestionRepo.ReadAllFields(ideaID);
+        }
+        
+        // Added by NVZ
+        // Report
+        public void RemoveReport(int id)
+        {
+            IdeationQuestionRepo.DeleteReport(id);
+        }
+        
+        public void EditReport(Report obj)
+        {
+            IdeationQuestionRepo.Update(obj);
+        }
+        
+        public IEnumerable<Report> GetAllReportsByIdea(int ideaID)
+        {
+            return IdeationQuestionRepo.ReadAllReportsByIdea(ideaID);
+        }
+
+        public Report GetReport(int reportID)
+        {
+            return IdeationQuestionRepo.ReadReport(reportID,false);
+        }
+        // Added by NVZ
         // Other Methods
-
         #region
-
         /*
          * Unlike QuestionnaireQuestion this has noting to do with the enum.
          * This is rather a system where we we work with FieldTypes. - NVZ
@@ -165,7 +198,6 @@ namespace BL
         {
             throw new NotImplementedException();
         }
-
         #endregion
     }
 }
