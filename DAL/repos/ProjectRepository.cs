@@ -16,7 +16,7 @@ namespace DAL
     {
         // Added by DM
         // Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by DM
         // Modified by NVZ & XV
@@ -91,6 +91,18 @@ namespace DAL
                 EndDate = phase.EndDate
             };
         }
+        
+        private int FindNextAvailableProjectId()
+        {               
+            int newId = ReadAll().Max(platform => platform.Id)+1;
+            return newId;
+        }
+        
+        private int FindNextAvailablePhaseId()
+        {               
+            int newId = ReadAllPhases().Max(platform => platform.Id)+1;
+            return newId;
+        }
         #endregion
 
         // Added by NVZ
@@ -117,6 +129,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableProjectId();
             ctx.Projects.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -135,16 +148,8 @@ namespace DAL
         public Project Read(int id, bool details)
         {
             ProjectsDTO projectsDTO = null;
-
-            if (details)
-            {
-                projectsDTO = ctx.Projects.AsNoTracking().First(p => p.ProjectID == id);
-                ExtensionMethods.CheckForNotFound(projectsDTO, "Project", projectsDTO.ProjectID);                          
-            }else
-            {
-                projectsDTO = ctx.Projects.First(p => p.ProjectID == id);
-                ExtensionMethods.CheckForNotFound(projectsDTO, "Project", projectsDTO.ProjectID);
-            }
+            projectsDTO = details ? ctx.Projects.AsNoTracking().First(p => p.ProjectID == id) : ctx.Projects.First(p => p.ProjectID == id);
+            ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
             
             return ConvertToDomain(projectsDTO);
         }
@@ -152,16 +157,27 @@ namespace DAL
         public void Update(Project obj)
         {
             ProjectsDTO newProj = ConvertToDTO(obj);
-            Project found = Read(newProj.ProjectID, false);
-            ProjectsDTO foundProj = ConvertToDTO(found);
-            foundProj = newProj;
+            ProjectsDTO foundProj = ctx.Projects.First(p => p.ProjectID == obj.Id);
+            if (foundProj != null)
+            {
+                foundProj.Title = newProj.Title;
+                foundProj.Goal = newProj.Goal;
+                foundProj.Status = newProj.Status;
+                foundProj.Visible = newProj.Visible;
+                foundProj.ReactionCount = newProj.ReactionCount;
+                foundProj.LikeCount = newProj.LikeCount;
+                foundProj.FbLikeCount = newProj.FbLikeCount;
+                foundProj.TwitterLikeCount = newProj.TwitterLikeCount;
+                foundProj.LikeVisibility = newProj.LikeVisibility;
+            }
+
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            Project toDelete = Read(id, false);
-            ctx.Projects.Remove(ConvertToDTO(toDelete));
+            ProjectsDTO toDelete = ctx.Projects.First(p => p.ProjectID == id);
+            ctx.Projects.Remove(toDelete);
             ctx.SaveChanges();
         }
         
@@ -199,23 +215,18 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailablePhaseId();
+            ctx.Phases.Add(ConvertToDTO(obj));
+            ctx.SaveChanges();
+            
             return obj;
         }
 
-        public Phase ReadPhase(int projectID, int phaseID, bool details)
+        public Phase ReadPhase(int phaseID, bool details)
         {
             PhasesDTO phasesDTO = null;
-
-            if (details)
-            {
-                phasesDTO = ctx.Phases.AsNoTracking().First(p => p.PhaseID == phaseID);
-                ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phasesDTO.PhaseID);
-            }
-            else
-            {
-                phasesDTO = ctx.Phases.First(p => p.PhaseID == phaseID);
-                ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phasesDTO.PhaseID);
-            }
+            phasesDTO = details ? ctx.Phases.AsNoTracking().First(p => p.PhaseID == phaseID) : ctx.Phases.First(p => p.PhaseID == phaseID);
+            ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phaseID);
 
             return ConvertToDomain(phasesDTO);
         }
@@ -223,20 +234,25 @@ namespace DAL
         public void Update(Phase obj)
         {
             PhasesDTO newPhase = ConvertToDTO(obj);
-            Phase found = ReadPhase(obj.Project.Id, obj.Id, false);
-            PhasesDTO foundPhase = ConvertToDTO(found);
-            foundPhase = newPhase;
+            PhasesDTO foundPhase = ctx.Phases.First(p => p.PhaseID == obj.Id);
+            if (foundPhase != null)
+            {
+                foundPhase.Description = newPhase.Description;
+                foundPhase.StartDate = newPhase.StartDate;
+                foundPhase.EndDate = newPhase.EndDate;
+            }
+
             ctx.SaveChanges();
         }
 
-        public void Delete(int projectID, int phaseID)
+        public void DeletePhase(int phaseID)
         {
-            Phase toDelete = ReadPhase(projectID, phaseID, false);
-            ctx.Phases.Remove(ConvertToDTO(toDelete));
+            PhasesDTO toDelete = ctx.Phases.First(p => p.PhaseID == phaseID);
+            ctx.Phases.Remove(toDelete);
             ctx.SaveChanges();
         }
 
-        public IEnumerable<Phase> ReadAllPhases(int projectID)
+        public IEnumerable<Phase> ReadAllPhases()
         {
             List<Phase> myQuery = new List<Phase>();
 
@@ -246,6 +262,11 @@ namespace DAL
             }
 
             return myQuery;
+        }
+        
+        public IEnumerable<Phase> ReadAllPhases(int projectID)
+        {
+            return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectID);
         }
         #endregion
         

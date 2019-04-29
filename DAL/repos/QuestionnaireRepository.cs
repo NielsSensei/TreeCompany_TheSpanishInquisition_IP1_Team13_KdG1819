@@ -14,7 +14,7 @@ namespace DAL
     {
         // Added by DM
         // Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         // Modified by XV
@@ -34,13 +34,14 @@ namespace DAL
                 ProjectID = obj.Project.Id,
                 PhaseID = obj.ParentPhase.Id,
                 OnGoing = obj.OnGoing,
+                Title = obj.Title,
                 LikeCount = obj.LikeCount,
                 FbLikeCount = obj.FbLikeCount,
                 TwitterLikeCount = obj.TwitterLikeCount,
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
                 Tags = ExtensionMethods.ListToString(obj.Tags),
-                IsQuestionnaire = true
+                IsQuestionnaire = obj.type == ModuleType.Questionnaire
             };
         }
 
@@ -51,6 +52,7 @@ namespace DAL
                 Id = module.ModuleID,
                 Project = new Project { Id = module.ProjectID },
                 ParentPhase = new Phase { Id = module.PhaseID },
+                Title = module.Title,
                 OnGoing = module.OnGoing,
                 LikeCount = module.LikeCount,
                 FbLikeCount = module.FbLikeCount,
@@ -59,6 +61,12 @@ namespace DAL
                 RetweetCount = module.RetweetCount,
                 Tags = ExtensionMethods.StringToList(module.Tags),
             };
+        }
+        
+        private int FindNextAvailableQuestionnaireId()
+        {               
+            int newId = ReadAll().Max(q => q.Id)+1;
+            return newId;
         }
         #endregion
 
@@ -78,6 +86,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableQuestionnaireId();
             ctx.Modules.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -87,35 +96,35 @@ namespace DAL
         public Questionnaire Read(int id, bool details)
         {
             ModulesDTO moduleDTO = null;
-
-            if (details)
-            {
-                moduleDTO = ctx.Modules.AsNoTracking().First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(moduleDTO, "Questionnaire", moduleDTO.ModuleID);
-            }
-            else
-            {
-                moduleDTO = ctx.Modules.First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(moduleDTO, "Questionnaire", moduleDTO.ModuleID);
-            }
-
+            moduleDTO = details ? ctx.Modules.AsNoTracking().First(m => m.ModuleID == id) : ctx.Modules.First(m => m.ModuleID == id);
+            ExtensionMethods.CheckForNotFound(moduleDTO, "Questionnaire", id);
+            
             return ConvertToDomain(moduleDTO);
         }
 
         public void Update(Questionnaire obj)
         {
             ModulesDTO newModule = ConvertToDTO(obj);
-            Questionnaire found = Read(obj.Id, false);
-            ModulesDTO foundModule = ConvertToDTO(found);
-            foundModule = newModule;
+            ModulesDTO foundModule = ctx.Modules.First(q => q.ModuleID == obj.Id);
+            if (foundModule != null)
+            {
+                foundModule.OnGoing = newModule.OnGoing;
+                foundModule.LikeCount = newModule.LikeCount;
+                foundModule.Title = newModule.Title;
+                foundModule.FbLikeCount = newModule.FbLikeCount;
+                foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
+                foundModule.ShareCount = newModule.ShareCount;
+                foundModule.RetweetCount = newModule.RetweetCount;
+                foundModule.Tags = newModule.Tags;
+            }
 
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            Questionnaire toDelete = Read(id, false);
-            ctx.Modules.Remove(ConvertToDTO(toDelete));
+            ModulesDTO toDelete = ctx.Modules.First(q => q.ModuleID == id);
+            ctx.Modules.Remove(toDelete);
             ctx.SaveChanges();
         }
         
@@ -125,7 +134,11 @@ namespace DAL
 
             foreach (ModulesDTO DTO in ctx.Modules)
             {
-                myQuery.Append(ConvertToDomain(DTO));
+                if (DTO.IsQuestionnaire)
+                {
+                    Questionnaire toAdd = ConvertToDomain(DTO);
+                    myQuery.Add(toAdd);  
+                }             
             }
 
             return myQuery;

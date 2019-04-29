@@ -10,6 +10,7 @@ namespace Domain.Projects
         public int Id { get; set; }
         public Project Project{ get; set; }       
         public Phase ParentPhase { get; set; }
+        public string Title { get; set; }
         public bool OnGoing { get; set; }
         public int LikeCount { get; set; }
         public int FbLikeCount{ get; set; }
@@ -17,6 +18,7 @@ namespace Domain.Projects
         public int ShareCount { get; set; }
         public int RetweetCount { get; set; }      
         public Role VoteLevel { get; set; }
+        public ModuleType type { get; set; }
 
         public List<Phase> Phases { get; set; }
         public List<string> Tags { get; set; }
