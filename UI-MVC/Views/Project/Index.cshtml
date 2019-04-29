@@ -1,0 +1,31 @@
+@model IEnumerable<Domain.Projects.Project>
+
+@{
+    ViewBag.Title = "Projects";
+}
+
+<h2>Projects</h2>
+
+<p>
+    <a asp-action="Create">New Project</a>
+</p>
+
+
+<table class="table">
+    <tr>
+        <th>Nummer</th>
+        <th>StartDatum</th>
+        <th>EindDatum</th>
+    </tr>
+
+    @foreach (Domain.Projects.Project project in Model)
+    {
+        <tr>
+            <td>@project.Id</td>
+            <td>@project.StartDate</td>
+            <td>@project.EndDate</td>
+        </tr>
+    }
+
+
+</table>

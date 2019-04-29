@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Domain.Common;
@@ -10,9 +11,17 @@ namespace Domain.Projects
         // Added by NG
         // Modified by XV & NVZ & EKT & DM
         public int Id { get; set; }
+
+        public string Title { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+        public List<Phase> Phases { get; set; }
+   
         public Platform Platform { get; set; }
         public User User { get; set; }
-        public string Title { get; set; }
+
         public string Goal { get; set; }
         public string Status { get; set; }
         public bool Visible { get; set; }
@@ -23,7 +32,6 @@ namespace Domain.Projects
         public int LikeVisibility { get; set; }
         public Phase CurrentPhase { get; set; }
 
-        public List<Phase> Phases { get; set; }
         public List<Image> PreviewImages { get; set; }
         public List<Module> Modules { get; set; }
 
@@ -60,9 +68,8 @@ namespace Domain.Projects
         }
 
         public void AddImage(Image image)
-        { 
-                PreviewImages.Add(image);
-            
+        {
+            PreviewImages.Add(image);
         }
 
         public void SetCurrentPhase(int phaseID)

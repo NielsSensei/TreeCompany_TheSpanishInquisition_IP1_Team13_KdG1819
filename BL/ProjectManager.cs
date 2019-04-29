@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using DAL;
 using Domain;
@@ -46,12 +47,17 @@ namespace BL
             return ProjectRepo.Read(projectId, details);
         }
 
+        public IEnumerable<Project> GetProjects()
+        {
+            return ProjectRepo.ReadAll();
+        }
+
         /*
          * Might need this for initialisation. - NVZ
          */
-        public void MakeProject(Project project)
+        public Project MakeProject(Project project)
         {
-            ProjectRepo.Create(project);
+            return ProjectRepo.Create(project);
         }
 
         public void RemoveProject(int projectId)
@@ -109,6 +115,7 @@ namespace BL
                 alteredModule.Phases.Remove(removedPhase);
                 ModuleMan.EditModule(alteredModule);
             }
+
             ProjectRepo.Delete(projectId, phaseId);
         }
 
