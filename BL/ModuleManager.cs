@@ -50,7 +50,7 @@ namespace BL
                 return QuestionnaireRepo.Read(moduleId, details);
             } 
 
-            return IdeationRepo.Read(moduleId, details);
+            return IdeationRepo.ReadWithModule(moduleId);
             
         }
 
@@ -118,6 +118,7 @@ namespace BL
         // Added by NVZ
         // Other Methods
         #region
+        /*
         private bool VerifyIfModuleEditable(int moduleId)
         {
             throw new NotImplementedException("Out of Scope!");
@@ -126,11 +127,11 @@ namespace BL
         /*
          *  This simple method is necessary for most of the CRUD
          *  operations. -NVZ
-         */
+         
         private bool VerifyIfQuestionnaire(int moduleId)
         {
             throw new NotImplementedException("I might need this!");
-        }
+        } */
 
         /*
          * We have two options with this method:
@@ -144,11 +145,11 @@ namespace BL
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
          * 
-         */
+         
         public void HandleModuleAction(int moduleId, string actionName)
         {
             throw new NotImplementedException("I need this!");
-        }
+        } */
         #endregion
     }
 }

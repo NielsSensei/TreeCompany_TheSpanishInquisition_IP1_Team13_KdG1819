@@ -80,5 +80,14 @@ namespace UIMVC.Controllers
             return RedirectToAction("HandleErrorCode", "Errors", 404);
         }
         #endregion
+        
+        #region Ideation
+        public IActionResult CollectIdeation(int id)
+        {
+            Ideation ideation = (Ideation) _projectMgr.ModuleMan.GetModule(id, false, false);
+            
+            return View(ideation);            
+        }
+        #endregion
     }
 }

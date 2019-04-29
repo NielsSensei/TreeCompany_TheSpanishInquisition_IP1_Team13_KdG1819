@@ -6,8 +6,8 @@
 @{
     ViewData["Title"] = Model.Title;
     Layout = "_Layout";
-    ViewData["Questionnaires"] = ProjectService.GetProjectQuestionnaires(Model);
-    ViewData["Ideations"] = ProjectService.GetProjectIdeations(Model);
+    ViewData["Questionnaires"] = ProjectService.CollectProjectQuestionnaires(Model);
+    ViewData["Ideations"] = ProjectService.CollectProjectIdeations(Model);
 }
 
 @* Hoe gaan we de mobile layout doen? *@

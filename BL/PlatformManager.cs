@@ -87,15 +87,16 @@ namespace BL
         #region
         /*
          * We might use this for initialisation. - NVZ
-         */
+        */
         public void MakeUserToPlatform(int platformId, User user)
         {
-            throw new NotImplementedException("I might need this!");
+            //throw new NotImplementedException("I might need this!");
 //            var alteredPlatform = PlatformRepo.Read(platformId, true);
 //            alteredPlatform.AddUser(user);
 //            PlatformRepo.Update(alteredPlatform);
         }
 
+        /*
         public void EditUserFromPlatform(int newPlatformId, User user)
         {
             throw new NotImplementedException("Out of scope!");
@@ -110,7 +111,7 @@ namespace BL
         public void RemoveUserFromPlatform(int platformId, int userId)
         {
             throw new NotImplementedException();
-        }
+        } */
         #endregion
     }
 }
