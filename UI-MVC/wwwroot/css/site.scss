@@ -1,164 +1,171 @@
 ﻿.test {
-    color: red;
+  color: red;
 }
 
 .layoutTitle {
-    font-size: 20px;
-    font-weight: bold;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 #menu {
-    display: none;
-    position: fixed;
-    justify-content: center;
-    align-content: center;
-    background-color: white;
-    opacity: .9;
-    width: 70%;
-    height: 95%;
-    top: 2.5%;
-    left: 15%;
-    border: dashed;
+  display: none;
+  position: fixed;
+  justify-content: center;
+  align-content: center;
+  background-color: white;
+  opacity: .9;
+  width: 70%;
+  height: 95%;
+  top: 2.5%;
+  left: 15%;
+  border: dashed;
 }
 
 /* ErrorPage */
 .errorPage {
-    margin: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 
-    img {
-        width: 100%
-    }   
+  img {
+    width: 100%
+  }
 }
 
 /* CreatePlatform */
 .createPlatform {
-    margin: 20px;
+  margin: 20px;
 
-    * button {
-        height: inherit;
+  * button {
+    height: inherit;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+    div {
+      flex: 1;
     }
-
-    .row {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-
-        div {
-            flex: 1;
-        }
-    }
+  }
 }
 
 /* SVG icons */
 .btn-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 
 .svg-icon {
-    height: 1em;
-    width: 1em;
-    top: .125em;
-    position: relative;
+  height: 1em;
+  width: 1em;
+  top: .125em;
+  position: relative;
 }
 
 /* Home/Index.cs/PlatformList layout*/
 .home-flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-    form {
-        width: 75%;
-        * {
-            margin: 5px;
-        }
+  form {
+    width: 75%;
+    * {
+      margin: 5px;
     }
+  }
 }
 
 /* Login page*/
 .accountFormPage {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-    div {
-        width: 300px;
-    }
+  div {
+    width: 300px;
+  }
 
-    h4 {
-        text-align: center;
-    }
+  h4 {
+    text-align: center;
+  }
 
-    button {
-        width: 100%;
-    }
+  button {
+    width: 100%;
+  }
 
-    p {
-        text-align: center;
-    }
+  p {
+    text-align: center;
+  }
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 /* Carousel */
 .carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
+  font-size: 20px;
+  line-height: 1.4;
 }
 
 /* Make .svg files in the carousel display properly in older browsers */
 .carousel-inner .item img[src$=".svg"] {
-    width: 100%;
+  width: 100%;
 }
 
 /* QR code generator */
 #qrCode {
-    margin: 15px;
+  margin: 15px;
 }
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
 
-    
 }
 
 /* Is used for to align a label with it's combobox (select) */
 /* Used in CollectAllIdeas.cshtml */
-#comboFilter{
-    font-weight: bold;
-    display: flex;
-    align-items: flex-end;
+#comboFilter {
+  font-weight: bold;
+  display: flex;
+  align-items: flex-end;
 }
 
 /*CollectIdea.cshtml*/
 #ReportHandlerButton {
-    margin: 1rem;
+  margin: 1rem;
 }
 
 /* CollectProject */
 #projectView {
-    display: flex;
-    margin: 1rem;
+  display: flex;
+  margin: 1rem;
 }
 
 /* Module.cshtml */
 #modulePart {
-    display: flex;
-    border: #1b1e21 solid;
-    margin: 1rem;
+  display: flex;
+  border: #1b1e21 solid;
+  margin: 1rem;
+  flex-direction: column;
+  align-items: center;
+  padding: .2em;
+  
+  p {
+    text-align: center;
+    vertical-align: middle;
+  }
 }

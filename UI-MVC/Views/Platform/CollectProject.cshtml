@@ -24,10 +24,13 @@
     </div>
     <div class="col-4">
         <h2>@Model.Title</h2>
-        @Html.Partial("_ReactionNumbersPartial", new LikeViewModel(){ likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount, 
-            twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1})
+        @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+        {
+            likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
+            twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
+        })
         <p>@Model.Goal</p>
-    </div> 
+    </div>
     <div class="col-4">
         @* TODO vervang images door projectImages *@
         <img alt="projectImage" src="https://via.placeholder.com/350"/>
@@ -37,24 +40,26 @@
 @if (ViewData["Questionnaires"] != null || ViewData["Ideations"] != null)
 {
     <div class="container">
-        @if (ViewData["Questionnaires"] != null)
-        {
-            foreach (Questionnaire questionnaire in (IEnumerable<Questionnaire>) ViewData["Questionnaires"])
+        <div class="row">
+            @if (ViewData["Questionnaires"] != null)
             {
-                 @Html.DisplayFor(m => questionnaire)
+                foreach (Questionnaire questionnaire in (IEnumerable<Questionnaire>) ViewData["Questionnaires"])
+                {
+                    @Html.DisplayFor(m => questionnaire)
+                }
             }
-        }
-          
-        @if (ViewData["Ideations"] != null)
-        {
-            foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
+
+            @if (ViewData["Ideations"] != null)
             {
-                @Html.DisplayFor(m => ideation)
+                foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
+                {
+                    @Html.DisplayFor(m => ideation)
+                }
             }
-        }       
+        </div>
     </div>
 }
 else
 {
     <p>Geen modules voor dit project.</p>
-} 
+}
