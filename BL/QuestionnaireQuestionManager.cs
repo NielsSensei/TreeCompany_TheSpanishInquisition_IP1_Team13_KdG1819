@@ -70,28 +70,28 @@ namespace BL
         * 
         * UPDATE 20/4 see @QQRepo voor editen van antwoorden.
         * 
-        */
+        
         public void EditAnswer(string propName, int answerId, int questionId)
         {
             throw new NotImplementedException("I might need this!");
-        }
+        } */
         
         /*
          * This getter is good to show the result. - NVZ
-         */
+         
         public List<Answer> GetAnswers(int questionId, bool details)
         {
             throw new NotImplementedException("I might need this!");
-        }
+        }  */
         
         /*
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ
-         */
+         
         public void MakeAnswer(Answer answer, int moduleId, int questionId)
         {
             throw new NotImplementedException("I need this!");
-        }
+        } */
         #endregion
            
         // Added by NVZ
@@ -102,8 +102,8 @@ namespace BL
          */
         public void DefineQuestionType()
         {
-            throw new NotImplementedException("I might need this!");
-        }
+            //throw new NotImplementedException("I might need this!");
+        }  
         
         /*
          * This might be to fill in the question and to verify if it has been
@@ -112,8 +112,9 @@ namespace BL
          */
         public bool VerifyQuestion(int questionId)
         {
-            throw new NotImplementedException("I might need this!");
-        }
+            //throw new NotImplementedException("I might need this!");
+            return false;
+        } 
         
         /*
          * We have two options with this method:
@@ -126,11 +127,11 @@ namespace BL
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
          * 
-         */
+        */ 
         public void HandleQuestionAction(int questionId, string actionName)
         {
-            throw new NotImplementedException("I might need this!");
-        }
+            //throw new NotImplementedException("I might need this!");
+        } 
 
         public List<QuestionnaireQuestion> GetAllByModuleId(int questionnaireId)
         {
