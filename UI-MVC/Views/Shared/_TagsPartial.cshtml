@@ -1,0 +1,11 @@
+@model IEnumerable<string>
+
+<table>
+    <tr>
+        @foreach (string s in Model)
+        {
+            <td class="btn btn-light">@s</td>
+            <td>&nbsp;</td>
+        }
+    </tr>
+</table>

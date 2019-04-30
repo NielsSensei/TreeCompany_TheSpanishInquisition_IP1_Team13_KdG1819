@@ -1,0 +1,8 @@
+@model Domain.Projects.Phase
+
+<section>
+    <p><span style="font-weight: bold">Start </span>@Model.StartDate.ToShortDateString() | <span style="font-weight: bold">End </span>
+        @Model.EndDate.ToShortDateString()</p>
+    <p>@Model.Description</p>
+    <br/>
+</section>

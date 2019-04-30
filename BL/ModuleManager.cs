@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DAL;
 using Domain;
 using Domain.Projects;
@@ -28,6 +29,15 @@ namespace BL
         // Modified by NVZ
         //Module
         #region
+
+        public IEnumerable<Ideation> GetIdeations(int projectId)
+        {
+            List<Ideation> modules = new List<Ideation>();
+            
+            modules.AddRange(IdeationRepo.ReadAll(projectId));
+
+            return modules;
+        }
         /*
          * Getter for our module object, this is probably useful. - NVZ
          * 
@@ -40,10 +50,19 @@ namespace BL
                 return QuestionnaireRepo.Read(moduleId, details);
             } 
 
-            return IdeationRepo.Read(moduleId, details);
+            return IdeationRepo.ReadWithModule(moduleId);
             
         }
 
+        // Added by NVZ       
+        public IEnumerable<Questionnaire> GetQuestionnaires(int projectId)
+        {
+            List<Questionnaire> modules = new List<Questionnaire>();
+
+            modules.AddRange(QuestionnaireRepo.ReadAll(projectId));            
+            
+            return modules;
+        }
         /*
          * Initialisation of our modules might be useful. - NVZ
          * 
@@ -76,9 +95,7 @@ namespace BL
             else
             {
                 IdeationRepo.Update((Ideation)module);
-            }  
-            
-            
+            }             
         }
 
         public void RemoveModule(int moduleId, int projectId, bool questionnaire)
@@ -101,6 +118,7 @@ namespace BL
         // Added by NVZ
         // Other Methods
         #region
+        /*
         private bool VerifyIfModuleEditable(int moduleId)
         {
             throw new NotImplementedException("Out of Scope!");
@@ -109,11 +127,11 @@ namespace BL
         /*
          *  This simple method is necessary for most of the CRUD
          *  operations. -NVZ
-         */
+         
         private bool VerifyIfQuestionnaire(int moduleId)
         {
             throw new NotImplementedException("I might need this!");
-        }
+        } */
 
         /*
          * We have two options with this method:
@@ -127,11 +145,11 @@ namespace BL
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
          * 
-         */
+         
         public void HandleModuleAction(int moduleId, string actionName)
         {
             throw new NotImplementedException("I need this!");
-        }
+        } */
         #endregion
     }
 }

@@ -1,0 +1,65 @@
+@using Domain.UserInput
+@using UIMVC.Services
+@model Domain.Projects.Ideation
+@inject UserService Userservice
+@inject QuestionService Questionservice
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h2>@Model.Title</h2>
+            <p>door @Userservice.CollectUserName(Model.User.Id)</p>
+            @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+            {
+                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount, twitterLikeCount = Model.TwitterLikeCount, 
+                shareCount = Model.ShareCount, retweetCount = Model.RetweetCount,iconStyle = 3
+            })
+            <br/>
+            <p>@Model.ExtraInfo</p>
+            @if (Model.Event.Id != 0)
+            {
+                @* TODO Zorgt voor een eventPagina *@
+                <p>Deze ideation is georganiseerd dankzij dit evenement</p> 
+            }
+            <p>Tags: @Html.Partial("_TagsPartial", Model.Tags)</p>
+            @* TODO vervang images door Media *@
+            <img alt="IdeationMedia" src="https://via.placeholder.com/250"/>
+        </div>
+        <div class="col-6">
+            <br/>
+            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
+            {
+                <p>Geen centrale vragen gesteld, wat jammer.</p>
+            }
+            
+            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
+            {
+                <p>1 centrale vraag</p>
+            }
+            
+            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
+            {
+                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</p>  
+            }           
+            <hr/>
+            @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))
+            {
+                <p class="font-weight-bold">@iq.QuestionTitle</p>
+                <p>@iq.Description</p>
+                if (iq.SiteURL != null)
+                {
+                    <p>Lees meer: <a href="">@iq.SiteURL</a></p>
+                }
+                <a>TODO: link hier naar IQ thread</a>
+                <hr/>
+            }
+        </div>
+    </div>
+</div>
+<hr/>
+
