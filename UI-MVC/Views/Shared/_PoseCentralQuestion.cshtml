@@ -1,8 +1,4 @@
-@model Domain.UserInput.IdeationQuestion
-
-@{
-    Model.Ideation.Id = (int) ViewData["Ideation"];
-}
+@model UIMVC.Models.CreateIdeationQuestionModel
 
 @section Tags
 {
@@ -25,7 +21,7 @@
                 <div class="form-group">
                     <label asp-for="SiteURL">Eventueel een link</label>
                     <input asp-for="SiteURL" class="form-control"/>
-        <       </div>
+                    <       </div>
                 <div class="row">
                     <input type="submit" class="btn btn-primary" value="Stel deze vraag"/><button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
                 </div>
