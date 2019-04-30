@@ -1,0 +1,45 @@
+﻿@model Domain.Projects.Questionnaire
+@{ 
+    IEnumerable<Domain.Projects.Project> projects = (IEnumerable<Domain.Projects.Project>)ViewData["projects"];
+}
+
+@{
+    Layout = "_Layout";
+}
+
+<h1>Een nieuwe vragenlijst maken</h1>
+
+    @if (Model != null)
+    {
+        <div class="form-group">
+            <label for="sel1">Selecteer een project:</label>
+            <select class="form-control" id="sel1">
+                @foreach (var p in ViewBag.projects)
+                {
+                    <option>@p</option>
+                }
+            </select>
+            <label for="sel2">Selecteer een fase:</label>
+            <select class="form-control" id="sel2">
+               <option>phaseholder</option>
+            </select>
+
+        </div>
+
+
+    } else
+    {
+        <h4>Nog geen projecten beschikbaar!</h4>
+
+    }
+
+
+
+
+
+</div>
+
+
+
+
+

@@ -107,7 +107,7 @@ namespace DAL
          */
             public Project Create(Project obj)
             {
-            IEnumerable<Project> projects = ReadAll(obj.Platform.Id);
+            IEnumerable<Project> projects = ReadAllForPlatform(obj.Platform.Id);
 
             foreach(Project p in projects){
                 if(ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
@@ -177,7 +177,7 @@ namespace DAL
             return myQuery;
         }
 
-        public IEnumerable<Project> ReadAll(int platformID)
+        public IEnumerable<Project> ReadAllForPlatform(int platformID)
         {
             return ReadAll().ToList().FindAll(p => p.Platform.Id == platformID);
         }

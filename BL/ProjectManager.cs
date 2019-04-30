@@ -41,6 +41,8 @@ namespace BL
         /*
          * Simple getter to get information about our Project. - NVZ
          */
+           
+
         public Project GetProject(int projectId, bool details)
         {
             return ProjectRepo.Read(projectId, details);
@@ -57,6 +59,11 @@ namespace BL
         public void RemoveProject(int projectId)
         {
             ProjectRepo.Delete(projectId);
+        }
+
+        public IEnumerable<Project> GetAllProjectsForPlatform(int platformId)
+        {
+            return ProjectRepo.ReadAllForPlatform(platformId);
         }
 
         #endregion
