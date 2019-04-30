@@ -8,7 +8,7 @@ namespace DAL.Data_Transfer_Objects
     {
         public int ProjectID { get; set; }
         public int CurrentPhaseID { get; set; }
-        public int UserID { get; set; }
+        public string UserID { get; set; }
         public int PlatformID { get; set; }
         public string Title { get; set; }
         public string Goal { get; set; }

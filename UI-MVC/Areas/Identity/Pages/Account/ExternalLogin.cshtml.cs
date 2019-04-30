@@ -10,20 +10,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using UIMVC.Areas.Identity.Data;
-using UIMVCUser = DAL.Identity.Data.UIMVCUser;
+using UIMVCUser = Domain.Identity.UIMVCUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<DAL.Identity.Data.UIMVCUser> _signInManager;
-        private readonly UserManager<DAL.Identity.Data.UIMVCUser> _userManager;
+        private readonly SignInManager<UIMVCUser> _signInManager;
+        private readonly UserManager<UIMVCUser> _userManager;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<DAL.Identity.Data.UIMVCUser> signInManager,
-            UserManager<DAL.Identity.Data.UIMVCUser> userManager,
+            SignInManager<UIMVCUser> signInManager,
+            UserManager<UIMVCUser> userManager,
             ILogger<ExternalLoginModel> logger)
         {
             _signInManager = signInManager;

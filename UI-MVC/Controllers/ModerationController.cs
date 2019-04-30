@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using BL;
+using Domain.Identity;
 using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
 
@@ -12,14 +16,13 @@ namespace UIMVC.Controllers
     {
         private readonly PlatformManager _platformMgr;
         private readonly IdeationQuestionManager _ideaMgr;
-        private readonly UserManager _usrMgr;
+        private readonly UserManager<UIMVCUser> _userManager;
 
-        public ModerationController()
+        public ModerationController(UserManager<UIMVCUser> userManager)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
-            _usrMgr = new UserManager();
-
+            _userManager = userManager;
         }
         
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
@@ -27,7 +30,12 @@ namespace UIMVC.Controllers
         [Authorize]
         public IActionResult CollectAllIdeas()
         {
-            return View(_ideaMgr.GetIdeas());
+            List<Idea> ideas = _ideaMgr.GetIdeas();
+            foreach (Idea idea in ideas)
+            {
+                idea.User = _userManager.Users.FirstOrDefault(user => user.Id == idea.User.Id);
+            }
+            return View(ideas);
         } 
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
@@ -53,8 +61,8 @@ namespace UIMVC.Controllers
                 // Id = _platformMgr.GetNextAvailableId(),
                 Name = cpm.Name,
                 Url = cpm.Url,
-                Owners = new List<User>(),
-                Users = new List<User>()
+                Owners = new List<UIMVCUser>(),
+                Users = new List<UIMVCUser>()
             };
             
             var newPlatform = _platformMgr.MakePlatform(platform);
@@ -68,13 +76,13 @@ namespace UIMVC.Controllers
         public IActionResult CollectIdea(int id)
         {
             Idea idea = _ideaMgr.GetIdea(id);
+            idea.User = _userManager.Users.FirstOrDefault(user => user.Id == idea.User.Id);
             if (idea.Visible)
             {
-                idea.User  = _usrMgr.GetUser(idea.User.Id, false);
                 IEnumerable<Report> reportWithoutFlagger = _ideaMgr.GetAllReportsByIdea(id);
                 foreach (Report r in reportWithoutFlagger)
                 {
-                    r.Flagger = _usrMgr.GetUser(r.Flagger.Id, false);
+                    r.Flagger = _userManager.Users.FirstOrDefault(user => user.Id == r.Flagger.Id);
                 }
                 ViewData["Reports"] = reportWithoutFlagger;
             

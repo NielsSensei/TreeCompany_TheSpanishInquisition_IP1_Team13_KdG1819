@@ -10,21 +10,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using UIMVC.Areas.Identity.Data;
-using UIMVCUser = DAL.Identity.Data.UIMVCUser;
+using UIMVCUser = Domain.Identity.UIMVCUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<DAL.Identity.Data.UIMVCUser> _signInManager;
-        private readonly UserManager<DAL.Identity.Data.UIMVCUser> _userManager;
+        private readonly SignInManager<UIMVCUser> _signInManager;
+        private readonly UserManager<UIMVCUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<DAL.Identity.Data.UIMVCUser> userManager,
-            SignInManager<DAL.Identity.Data.UIMVCUser> signInManager,
+            UserManager<UIMVCUser> userManager,
+            SignInManager<UIMVCUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {

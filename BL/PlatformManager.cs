@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DAL;
+using Domain.Identity;
 using Domain.Users;
 
 namespace BL
@@ -55,27 +56,27 @@ namespace BL
         // Modified by NVZ
         //PlatformOwner
         #region
-        public void MakeOwner(int platformId, User newOwner)
+        public void MakeOwner(int platformId, UIMVCUser newOwner)
         {
             var alteredPlatform = PlatformRepo.Read(platformId, false);
             alteredPlatform.Owners.Add(newOwner);
             PlatformRepo.Update(alteredPlatform);
         }
         
-        public User GetPlatformOwner(int platformId, User owner)
+        public UIMVCUser GetPlatformOwner(int platformId, UIMVCUser owner)
         {
             var platform = PlatformRepo.Read(platformId, true);
             return platform.Owners.Find(u => u.Equals(owner));
         }
         
-        public void RemovePlatformOwner(int platformId, User removedOwner)
+        public void RemovePlatformOwner(int platformId, UIMVCUser removedOwner)
         {
             var alteredPlatform = PlatformRepo.Read(platformId, false);
             alteredPlatform.Owners.Remove(removedOwner);
             PlatformRepo.Update(alteredPlatform);
         }
 
-        public List<User> GetAllPlatformOwners(int platformId)
+        public List<UIMVCUser> GetAllPlatformOwners(int platformId)
         {
             return PlatformRepo.Read(platformId, false).Owners;
         }
@@ -88,7 +89,7 @@ namespace BL
         /*
          * We might use this for initialisation. - NVZ
          */
-        public void MakeUserToPlatform(int platformId, User user)
+        public void MakeUserToPlatform(int platformId, UIMVCUser user)
         {
             throw new NotImplementedException("I might need this!");
 //            var alteredPlatform = PlatformRepo.Read(platformId, true);
@@ -96,7 +97,7 @@ namespace BL
 //            PlatformRepo.Update(alteredPlatform);
         }
 
-        public void EditUserFromPlatform(int newPlatformId, User user)
+        public void EditUserFromPlatform(int newPlatformId, UIMVCUser user)
         {
             throw new NotImplementedException("Out of scope!");
 //            var currentPlatform = PlatformRepo.Read(user.Platform.Id, false);

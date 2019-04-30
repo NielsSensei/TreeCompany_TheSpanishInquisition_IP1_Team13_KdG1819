@@ -7,15 +7,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using UIMVC.Areas.Identity.Data;
+using UIMVCUser = Domain.Identity.UIMVCUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<DAL.Identity.Data.UIMVCUser> _userManager;
+        private readonly UserManager<UIMVCUser> _userManager;
 
-        public ConfirmEmailModel(UserManager<DAL.Identity.Data.UIMVCUser> userManager)
+        public ConfirmEmailModel(UserManager<UIMVCUser> userManager)
         {
             _userManager = userManager;
         }

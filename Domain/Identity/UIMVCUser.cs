@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace DAL.Identity.Data
+namespace Domain.Identity
 {
     public class UIMVCUser : IdentityUser
     {
@@ -17,6 +17,15 @@ namespace DAL.Identity.Data
 
         [PersonalData]
         public DateTime DateOfBirth { get; set; }
+        
+        [PersonalData]
+        public int PlatformDetails { get; set; }
+        
+        [PersonalData]
+        public string OrgName { get; set; }
+        
+        [PersonalData]
+        public string Description { get; set; }
 
         public bool Banned { get; set; }
 

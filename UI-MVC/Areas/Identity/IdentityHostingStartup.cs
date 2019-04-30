@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using UIMVC.Areas.Identity.Data;
 using UIMVC.Models;
 using UIMVC.Services;
+using UIMVCUser = Domain.Identity.UIMVCUser;
 
 [assembly: HostingStartup(typeof(UIMVC.Areas.Identity.IdentityHostingStartup))]
 namespace UIMVC.Areas.Identity
@@ -23,7 +24,7 @@ namespace UIMVC.Areas.Identity
                         context.Configuration.GetConnectionString("UIMVCContextConnection")));
 
                 //TODO: Implement roles
-                services.AddDefaultIdentity<DAL.Identity.Data.UIMVCUser>(
+                services.AddDefaultIdentity<UIMVCUser>(
                     config => { config.SignIn.RequireConfirmedEmail = true; })
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<DAL.Contexts.CityOfIdeasDbContext>()

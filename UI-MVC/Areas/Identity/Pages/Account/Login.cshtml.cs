@@ -10,16 +10,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using UIMVC.Areas.Identity.Data;
+using UIMVCUser = Domain.Identity.UIMVCUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<DAL.Identity.Data.UIMVCUser> _signInManager;
+        private readonly SignInManager<UIMVCUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<DAL.Identity.Data.UIMVCUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<UIMVCUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;

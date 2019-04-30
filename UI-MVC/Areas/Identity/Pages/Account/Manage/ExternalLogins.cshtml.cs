@@ -7,17 +7,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using UIMVC.Areas.Identity.Data;
+using UIMVCUser = Domain.Identity.UIMVCUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account.Manage
 {
     public class ExternalLoginsModel : PageModel
     {
-        private readonly UserManager<DAL.Identity.Data.UIMVCUser> _userManager;
-        private readonly SignInManager<DAL.Identity.Data.UIMVCUser> _signInManager;
+        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly SignInManager<UIMVCUser> _signInManager;
 
         public ExternalLoginsModel(
-            UserManager<DAL.Identity.Data.UIMVCUser> userManager,
-            SignInManager<DAL.Identity.Data.UIMVCUser> signInManager)
+            UserManager<UIMVCUser> userManager,
+            SignInManager<UIMVCUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
