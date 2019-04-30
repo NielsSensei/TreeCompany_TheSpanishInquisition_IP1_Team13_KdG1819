@@ -41,19 +41,23 @@
             @* TODO zet hier ne rolecheck op *@
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
             {
-                <p>Geen centrale vragen gesteld, wat jammer. 
-                <input class="btn btn-primary" type="submit" id="activateMenu" value="Stel een nieuwe centrale vraag."></p>
+                <p>Geen centrale vragen gesteld, wat jammer.</p>
+                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
+                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
             }
             
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
             {
-                <p>1 centrale vraag <input type="submit" class="btn btn-primary" value="Stel een nieuwe centrale vraag." id="activateMenu"></p>
+                <p>1 centrale vraag</p>
+                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
+                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
             }
             
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
             {
-                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen <input type="submit" class="btn btn-primary" 
-                                                                                  id="activateMenu" value="Stel een nieuwe centrale vraag."></p>  
+                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</p>
+                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
+                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
             }           
             <hr/>
             @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))

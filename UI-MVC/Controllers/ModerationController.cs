@@ -14,14 +14,11 @@ namespace UIMVC.Controllers
     {
         private readonly PlatformManager _platformMgr;
         private readonly IdeationQuestionManager _ideaMgr;
-        private readonly UserManager _usrMgr;
 
         public ModerationController()
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
-            _usrMgr = new UserManager();
-
         }
         
         #region Platform
@@ -57,23 +54,37 @@ namespace UIMVC.Controllers
         }
         #endregion
         
-        #region Ideation              
+        #region Ideation 
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpGet]
+        public IActionResult AddCentralQuestion(int ideation)
+        {
+            ViewData["Ideation"] = ideation;
+            return View();
+        }
+        
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
-        public IActionResult AddCentralQuestion(CreateIdeationQuestionModel qm)
+        public IActionResult AddCentralQuestion(CreateIdeationQuestionModel ciqm, int ideation)
         {
+            if (ciqm == null)
+            {
+                return BadRequest("IdeationQuestion can't be null");
+            }
+            
             IdeationQuestion iq = new IdeationQuestion()
             {
-                Description = qm.Description,
-                Ideation = new Ideation(){Id = qm.IdeationId},
-                QuestionTitle = qm.QuestionTitle,
-                SiteURL = qm.SiteURL
+               Description = ciqm.Description,
+               SiteURL = ciqm.SiteURL,
+               QuestionTitle = ciqm.QuestionTitle,
+               Ideation = new Ideation(){ Id = ideation }
             };
+                       
+            _ideaMgr.MakeQuestion(iq, ideation);
             
-            _ideaMgr.MakeQuestion(iq, qm.IdeationId);
-            
-            return RedirectToAction("CollectIdeation", "Platform", new {Id = qm.IdeationId});
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
         
         #region Ideas
