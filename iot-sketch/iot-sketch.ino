@@ -29,7 +29,7 @@
 // END LoRa includes
 
 // START pin-mapping
-#define GreenButton 0
+#define GreenButton 5
 #define GreenLED 1
 #define RedButton 3
 #define RedLED 4
@@ -48,12 +48,18 @@ unsigned long lastGreenDebounceTime = 0;  // the last time the output pin was to
 unsigned long lastRedDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 
-void sendPositive(){
-  
+void sendPositive() {
+  Serial.println("Green");
+  digitalWrite(GreenLED, HIGH);
+  delay(200);
+  digitalWrite(GreenLED, LOW);
 }
 
-void sendNegative(){
-  
+void sendNegative() {
+  Serial.println("Red");
+  digitalWrite(RedLED, HIGH);
+  delay(200);
+  digitalWrite(RedLED, LOW);
 }
 
 void setup() {
@@ -62,6 +68,17 @@ void setup() {
   pinMode(GreenLED, OUTPUT);
   pinMode(RedButton, INPUT);
   pinMode(RedLED, OUTPUT);
+
+  digitalWrite(GreenLED, LOW);
+  digitalWrite(RedLED, LOW);
+  delay(20);
+  digitalWrite(GreenLED, HIGH);
+  digitalWrite(RedLED, HIGH);
+  delay(20);
+  digitalWrite(GreenLED, LOW);
+  digitalWrite(RedLED, LOW);
+
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -74,39 +91,39 @@ void loop() {
   int readingRed = digitalRead(RedButton);
 
   // if button state changes
-  if (readingGreen != lastGreenButtonState){
+  if (readingGreen != lastGreenButtonState) {
     // reset the debouncing timer
     lastGreenDebounceTime = millis();
   }
   // if button state changes
-  if (readingRed != lastRedButtonState){
+  if (readingRed != lastRedButtonState) {
     // reset the debouncing timer
     lastRedDebounceTime = millis();
   }
 
-  if ((millis() - lastGreenDebounceTime) > debounceDelay){
+  if ((millis() - lastGreenDebounceTime) > debounceDelay) {
     // the reading has been there longer than the debounce delay, so assume it as the actual current state
 
     // if button state has changed
-    if (readingGreen != greenButtonState){
+    if (readingGreen != greenButtonState) {
       greenButtonState = readingGreen;
 
       //only sendPositive if button state is HIGH
-      if (greenButtonState == HIGH){
+      if (greenButtonState == HIGH) {
         positive = HIGH;
       }
     }
   }
 
-  if ((millis() - lastRedDebounceTime) > debounceDelay){
+  if ((millis() - lastRedDebounceTime) > debounceDelay) {
     // the reading has been there longer than the debounce delay, so assume it as the actual current state
 
     // if button state has changed
-    if (readingRed != redButtonState){
+    if (readingRed != redButtonState) {
       redButtonState = readingRed;
 
       //only sendNegative if button state is HIHG
-      if (redButtonState == HIGH){
+      if (redButtonState == HIGH) {
         negative = HIGH;
       }
     }
@@ -119,12 +136,12 @@ void loop() {
   // END INPUT & DEBOUNCING
 
   // only use LoRa communication at the end of the loop to prevent delays and problems with input reading and input debouncing
-  if(positive){
-    sendPositive()
+  if (positive) {
+    sendPositive();
     positive = LOW;
   }
-  if(){
-    sendNegative()
+  if (negative) {
+    sendNegative();
     negative = LOW;
   }
 }
