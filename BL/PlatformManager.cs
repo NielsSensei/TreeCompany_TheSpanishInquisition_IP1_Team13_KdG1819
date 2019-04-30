@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using Domain.Users;
 
@@ -27,9 +28,9 @@ namespace BL
             return PlatformRepo.Read(platformId, true);
         }
         
-        public void MakePlatform(Platform platform)
+        public Platform MakePlatform(Platform platform)
         {
-            PlatformRepo.Create(platform);
+            return PlatformRepo.Create(platform);
         }
 
         public void EditPlatform(Platform platform)
@@ -41,6 +42,13 @@ namespace BL
         {
             PlatformRepo.Delete(platformId);
         }
+
+        // Added by XV
+        public IEnumerable<Platform> ReadAllPlatforms()
+        {
+            return PlatformRepo.ReadAll();
+        }
+        
         #endregion
         
         // Added by NG
@@ -79,15 +87,16 @@ namespace BL
         #region
         /*
          * We might use this for initialisation. - NVZ
-         */
+        */
         public void MakeUserToPlatform(int platformId, User user)
         {
-            throw new NotImplementedException("I might need this!");
+            //throw new NotImplementedException("I might need this!");
 //            var alteredPlatform = PlatformRepo.Read(platformId, true);
 //            alteredPlatform.AddUser(user);
 //            PlatformRepo.Update(alteredPlatform);
         }
 
+        /*
         public void EditUserFromPlatform(int newPlatformId, User user)
         {
             throw new NotImplementedException("Out of scope!");
@@ -102,7 +111,21 @@ namespace BL
         public void RemoveUserFromPlatform(int platformId, int userId)
         {
             throw new NotImplementedException();
+        } */
+        #endregion
+        
+        // Added by XV
+        // Methods used for creating new platforms
+        
+        #region PlatformCreation
+
+        public int GetNextAvailableId()
+        {
+            // Select the biggest current Id from the platforms and increment it by one
+            int newId = ReadAllPlatforms().Max(platform => platform.Id) + 1;
+            return newId;
         }
+
         #endregion
     }
 }

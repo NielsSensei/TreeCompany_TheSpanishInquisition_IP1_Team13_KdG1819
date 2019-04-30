@@ -46,7 +46,7 @@ namespace BL
         * 
         */
        public User GetUser(int userId, bool details)
-       {
+       {           
            return UserRepo.Read(userId, details);
        }
 
@@ -63,10 +63,11 @@ namespace BL
            return filteredUserList;
        }
 
+        /*
        public void MakeAnonymousUser(User user)
        {
            throw new NotImplementedException("Out of Scope!");
-       } 
+       } */
        
        /*
         * We might use this for initialisation - NVZ
@@ -118,7 +119,7 @@ namespace BL
            var removedEvent = UserRepo.ReadUserEvent(eventId, false);
            alteredOrganisation.organisationEvents.Remove(removedEvent);
            UserRepo.Update(alteredOrganisation);
-           UserRepo.DeleteUserEvent(userId, eventId);
+           UserRepo.DeleteUserEvent(eventId);
        }
        #endregion
        
@@ -141,6 +142,7 @@ namespace BL
         // Added by NVZ
         // Other Methods
         #region 
+        /*
         private void EnactPromotion(User toPromote, User enactor, Role newRole)
         {
             throw new NotImplementedException("Out of scope!");
@@ -156,11 +158,11 @@ namespace BL
          * If you have questions or better suggestions please let me know.
          * - NVZ
          * 
-         */
+         
         private Role VerifyAction(String actionName)
         {
            throw new NotImplementedException("I might need this!"); 
-        }
+        } */
 
         /*
          * This method will compare our User parameter and verify if
@@ -170,11 +172,11 @@ namespace BL
          * If you have questions or better suggestions please let me know.
          * - NVZ
          * 
-         */
+         
         private bool VerifyPermission(User user, Role roleLevel)
         {
             throw new NotImplementedException("I might need this!"); 
-        }
+        } */
 
         /*
          * We have two options with this method:
@@ -187,11 +189,11 @@ namespace BL
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
          * 
-         */
+         
         public void HandleUserAction(int userId, string actionName)
         {
             throw new NotImplementedException("I need this!");
-        }
+        } */
         
         #endregion
     }

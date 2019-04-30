@@ -26,7 +26,6 @@ namespace BL
 
         // Added by NVZ
         // IdeationQuestion
-
         #region
 
         public void EditQuestion(IdeationQuestion question)
@@ -64,24 +63,36 @@ namespace BL
             return IdeationQuestionRepo.ReadAll().ToList();
         }
 
+        public List<IdeationQuestion> GetAllByModuleId(int id)
+        {
+            return IdeationQuestionRepo.ReadAll(id).ToList();
+        }
         #endregion
 
         // Added by NVZ
         // Idea
-
         #region
-
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between
         * properties you need and the ones you do not. - NVZ
         * 
         */
-        public void EditIdea(string propName, int ideaId, int questionId)
+        public void EditIdea(Idea idea)
         {
-            throw new NotImplementedException("I might need this!");
+            IdeationQuestionRepo.Update(idea);
         }
 
+        public Idea GetIdea(int ideaId)
+        {
+            return IdeationQuestionRepo.ReadWithFields(ideaId);
+        }
+
+        public void RemoveIdea(int ideaId)
+        {
+            IdeationQuestionRepo.DeleteIdea(ideaId);
+        }
+                
         /*
          * Getter for all Ideas on an Ideation. - NVZ
          */
@@ -97,14 +108,13 @@ namespace BL
         /*
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ
-         */
+         
         // Modified by EKT
         public void MakeIdea(int questionId, Idea idea)
         {
             throw new NotImplementedException();
             
-        }
-
+        }*/
         #endregion
 
         // Added by NG
@@ -119,30 +129,56 @@ namespace BL
         }
 
         // Added by NVZ
+        // Field
+        public IEnumerable<Field> GetAllFields(int ideaID)
+        {
+            return IdeationQuestionRepo.ReadAllFields(ideaID);
+        }
+        
+        // Added by NVZ
+        // Report
+        public void RemoveReport(int id)
+        {
+            IdeationQuestionRepo.DeleteReport(id);
+        }
+        
+        public void EditReport(Report obj)
+        {
+            IdeationQuestionRepo.Update(obj);
+        }
+        
+        public IEnumerable<Report> GetAllReportsByIdea(int ideaID)
+        {
+            return IdeationQuestionRepo.ReadAllReportsByIdea(ideaID);
+        }
+
+        public Report GetReport(int reportID)
+        {
+            return IdeationQuestionRepo.ReadReport(reportID,false);
+        }
+        // Added by NVZ
         // Other Methods
-
         #region
-
         /*
          * Unlike QuestionnaireQuestion this has noting to do with the enum.
          * This is rather a system where we we work with FieldTypes. - NVZ
-         * 
-         */
+         */  
         public void DefineQuestionType()
         {
-            throw new NotImplementedException("I might need this!");
-        }
+            //throw new NotImplementedException("I might need this!");
+        } 
 
         /*
          * This might be a method that can be used for seeing if the question
          * is part of a module of a closed Project. If you can find other
          * uses for this boolean method be free to do so. - NVZ
+        */ 
          
-         */
         public bool VerifyQuestion(int questionId)
         {
-            throw new NotImplementedException("Out of Scope!");
-        }
+            //throw new NotImplementedException("Out of Scope!");
+            return false;
+        } 
 
         /*
          * We have two options with this method:
@@ -154,18 +190,12 @@ namespace BL
          *
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
-         * 
          */
+         
         public void HandleQuestionAction(int questionId, string actionName)
         {
-            throw new NotImplementedException("I might need this!");
-        }
-
-        public List<IdeationQuestion> GetAllByModuleId(int id)
-        {
-            throw new NotImplementedException();
-        }
-
+            //throw new NotImplementedException("I might need this!");
+        } 
         #endregion
     }
 }
