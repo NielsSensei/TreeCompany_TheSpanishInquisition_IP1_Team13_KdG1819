@@ -14,7 +14,6 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.3" />
-    <PackageReference Include="Microsoft.Net.Compilers" Version="2.10.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
     <PackageReference Include="Sendgrid" Version="9.10.0" />
   </ItemGroup>
@@ -24,6 +23,7 @@
     <Content Include="$(WWWRoot)**" Exclude="$(WWWRoot)js\**; $(WWWRoot)css\**; $(WWWRoot)ts\**; $(WWWRoot)scss\**; $(WWWRoot)sass\**" />
     <None Remove="$(WWWRoot)**" />
     <None Include="$(WWWRoot)**" Exclude="$(WWWRoot)dist\**" />
+    <None Include="app.yaml" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <Target Name="NpmInstall" BeforeTargets="Build" Condition=" !Exists('node_modules') ">
