@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Domain.Projects;
+using Domain.Users;
 
 namespace UIMVC.Models
 {
@@ -6,5 +8,9 @@ namespace UIMVC.Models
     {
         public Project Project { get; set; }
         public Phase Phase { get; set; }
+
+        public List<Phase> Phases { get; set; }
+
+        public Platform Platform { get; set; }
     }
 }

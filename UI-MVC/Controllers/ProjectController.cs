@@ -31,18 +31,21 @@ namespace UIMVC.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult Index(Project emp, List<Phase> dept)
+        {
+            emp.Phases = dept;
+            return View(emp);
+        }
+
+
         public IActionResult Create()
         {
             return View();
         }
 
-        public IActionResult Test(ProjectViewModel viewmodel)
-        {
-            return View();
-        }
-
         [HttpPost]
-        public IActionResult Create(ProjectViewModel projectViewModel)
+        public IActionResult Create(ProjectViewModel projectViewModel /*Project project*/)
         {
             Project project = projectViewModel.Project;
 
@@ -51,25 +54,28 @@ namespace UIMVC.Controllers
             project.CurrentPhase = new Phase() {Id = 1};
 
             project.Status = project.Status.ToUpper();
-            project.Visible = true;
             project.LikeVisibility = 1;
 
             Project newProject = _mgr.MakeProject(project);
 
-            Phase newPhase = projectViewModel.Phase;
             
             
-            newPhase.Project = newProject;
-            _mgr.MakePhase(newPhase, project.Id);
 
-           
-
+            for (int i = 0; i < 4; i++)
+            {
+                Phase newPhase = projectViewModel.Phases[i];
+                newProject.Phases.Add(newPhase);
+                newPhase.Project = newProject;
+                _mgr.MakePhase(newPhase, project.Id);
+            }
             return RedirectToAction("Details", new {id = newProject.Id});
         }
 
 
-        public IActionResult CreatePhase()
+        public IActionResult CreatePhase(int projectId, Phase phase)
         {
+            _mgr.MakePhase(phase, projectId);
+
             return PartialView();
         }
 

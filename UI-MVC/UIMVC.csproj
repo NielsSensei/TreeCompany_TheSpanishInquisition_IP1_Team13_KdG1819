@@ -61,4 +61,9 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Project\PartialView\_NewPhasePartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Project\PartialView\_ProjectPhaseDetailPartial.cshtml" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,6 @@
-@model UIMVC.Models.ProjectViewModel 
-
+@using System.Collections
+@using Domain.Projects
+@model UIMVC.Models.ProjectViewModel
 @{
     ViewBag.Title = "Create";
     Layout = "_Layout";
@@ -7,41 +8,69 @@
 
 <h2>Create Project</h2>
 
+
 <form asp-controller="Project" asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Project.Title">Naam</label>
-        <input asp-for="Project.Title" class="form-control" value="Test"/>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label asp-for="Project.Title">Naam</label>
+            <input asp-for="Project.Title" class="form-control" value="Test"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Project.StartDate">StartDate</label>
+            <input type="date" asp-for="Project.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Project.EndDate">EndDate</label>
+            <input type="date" asp-for="Project.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Project.Goal">Hoofdvraag</label>
+            <input asp-for="Project.Goal" class="form-control" value="Test"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Project.Status">Status</label>
+            <input asp-for="Project.Status" class="form-control" value="Open"/>
+        </div>
     </div>
     <div class="form-group">
-        <label asp-for="Project.StartDate">StartDate</label>
-        <input type="date" asp-for="Project.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+        <input type="checkbox" asp-for="Project.Visible"/>
+        <label asp-for="Project.Visible">Visible</label>
     </div>
     <div class="form-group">
-        <label asp-for="Project.EndDate">EndDate</label>
-        <input type="date" asp-for="Project.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Project.Goal">Hoofdvraag</label>
-        <input asp-for="Project.Goal" class="form-control" value="Test"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Project.Status">Status</label>
-        <input asp-for="Project.Status" class="form-control" value="Open"/>
+        <label asp-for="Project.Phases.Capacity">How many Phases</label> @*DIT BEPAALD HOEVEEL PHASES ER KOMEN*@
+        <input asp-for="Project.Phases.Capacity" class="form-control"/>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Phase.Description">Description</label>
-        <input asp-for="Phase.Description" class="form-control" value="Desciption"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Phase.StartDate">StartDate</label>
-        <input type="date" asp-for="Phase.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Phase.EndDate">EndDate</label>
-        <input type="date" asp-for="Phase.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
-    </div>
+
+    @{
+        for (int i = 0; i < 2 /*@Model.Phases.Count*/; i++)
+        {
+            <h5>Phase @(i+1)</h5>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label asp-for="Phases[i].Description">Description</label>
+                    <input asp-for="Phases[i].Description" class="form-control" value="Desciption"/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Phases[i].StartDate">StartDate</label>
+                    <input type="date" asp-for="Phases[i].StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Phases[i].EndDate">EndDate</label>
+                    <input type="date" asp-for="Phases[i].EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+                </div>
+                
+                
+                
+            </div>
+        }
+    }
 
     <input type="submit" value="Opslaan" class="btn"/>
-
 </form>
+<script >
+
+
+</script>

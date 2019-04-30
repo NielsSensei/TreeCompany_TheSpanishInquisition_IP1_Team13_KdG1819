@@ -1,10 +1,19 @@
-@model Domain.Projects.Phase
-
+@*@model Domain.Projects.
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
-}
-
-<h2>title</h2>
-
-<h1> DIT IS DE PARTIAL VIEEW </h1>
+    for (int i = 0; i < @Model.Count; i++)
+    {
+        <h4>Phase @i</h4>
+        <div class="form-group col-md-12">
+            <label asp-for="@Model[i].Description">Description</label>
+            <input asp-for="@Model[i].Description" class="form-control" value="Desciption"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="@Model[i].StartDate">StartDate</label>
+            <input type="date" asp-for="@Model[i].StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="@Model[i].EndDate">EndDate</label>
+            <input type="date" asp-for="@Model[i].EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+        </div>
+    }
+}*@
