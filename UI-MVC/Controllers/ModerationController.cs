@@ -32,16 +32,17 @@ namespace UIMVC.Controllers
         {
             List<Idea> ideas = new List<Idea>();
 
-            foreach (Idea idea in ideas)
-            {
-                idea.User = _userManager.Users.FirstOrDefault(user => user.Id == idea.User.Id);
-            }
 
             switch (filter)
             {
                 case "all": ideas = _ideaMgr.GetIdeas(); break;
                 case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
                 case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
+            }
+            
+            foreach (Idea idea in ideas)
+            {
+                idea.User = _userManager.Users.FirstOrDefault(user => user.Id == idea.User.Id);
             }
 
             return View(ideas);
@@ -87,10 +88,6 @@ namespace UIMVC.Controllers
             idea.User = _userManager.Users.FirstOrDefault(user => user.Id == idea.User.Id);
             if (idea.Visible)
             {
-                foreach (Report r in reportWithoutFlagger)
-                {
-                    r.Flagger = _userManager.Users.FirstOrDefault(user => user.Id == r.Flagger.Id);
-                }
                 ViewData["Reports"] = _ideaMgr.GetAllReportsByIdea(id);
 
                 return View(idea);
