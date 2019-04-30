@@ -106,7 +106,7 @@ namespace DAL
             }
 
             ctx.SaveChanges();
-            */
+            
         }
 
         public void Delete(int id)

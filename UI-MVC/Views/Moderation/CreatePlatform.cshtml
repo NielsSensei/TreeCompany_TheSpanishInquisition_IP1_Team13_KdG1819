@@ -41,7 +41,7 @@
                         </td>
                         <td>Owner</td>
                         <td>
-                            <a asp-action="EditPlatform" asp-controller="Platform" asp-route-id="@platform.Id">Aanpassen</a>
+                            <a asp-action="Platform" asp-controller="Platform" asp-route-id="@platform.Id">Aanpassen</a>
                         </td>
                     </tr>
                 }
@@ -54,7 +54,7 @@
     <div class="row">
         <div class="col-md-10">
             <h1>Een nieuw platform maken</h1>
-            <form asp-controller="Moderation" asp-action="CreatePlatform" method="post">
+            <form asp-controller="Moderation" asp-action="AddPlatform" method="post">
                 <div class="form-group">
                     <label asp-for="Name">Naam van het platform</label>
                     <input asp-for="Name" class="form-control"/>
