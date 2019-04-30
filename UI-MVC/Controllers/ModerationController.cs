@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BL;
+using Domain.Projects;
 using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -56,16 +57,23 @@ namespace UIMVC.Controllers
         }
         #endregion
         
-        #region Ideation
-                
+        #region Ideation              
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
-        public IActionResult AddCentralQuestion(IdeationQuestion iq)
+        public IActionResult AddCentralQuestion(CreateIdeationQuestionModel qm)
         {
-            _ideaMgr.MakeQuestion(iq, iq.Ideation.Id);
+            IdeationQuestion iq = new IdeationQuestion()
+            {
+                Description = qm.Description,
+                Ideation = new Ideation(){Id = qm.IdeationId},
+                QuestionTitle = qm.QuestionTitle,
+                SiteURL = qm.SiteURL
+            };
             
-            return RedirectToAction("CollectIdeation", "Platform", new {Id = iq.Ideation.Id});
+            _ideaMgr.MakeQuestion(iq, qm.IdeationId);
+            
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = qm.IdeationId});
         }
         
         #region Ideas
