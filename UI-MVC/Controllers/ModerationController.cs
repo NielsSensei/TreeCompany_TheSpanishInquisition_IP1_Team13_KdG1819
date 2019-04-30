@@ -23,23 +23,7 @@ namespace UIMVC.Controllers
 
         }
         
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
-        [HttpGet]
-        [Authorize]
-        public IActionResult CollectAllIdeas(string filter = "all")
-        {
-            List<Idea> ideas = new List<Idea>();
-            
-            switch (filter)
-            {
-                case "all": ideas = _ideaMgr.GetIdeas(); break; 
-                case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
-                case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
-            }
-
-            return View(ideas);
-        }
-        
+        #region Platform
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize]
@@ -48,7 +32,7 @@ namespace UIMVC.Controllers
             ViewData["platforms"] = _platformMgr.ReadAllPlatforms();
             return View();
         }
-
+        
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize]
@@ -70,7 +54,38 @@ namespace UIMVC.Controllers
             
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
         }
+        #endregion
+        
+        #region Ideation
+                
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddCentralQuestion(IdeationQuestion iq)
+        {
+            _ideaMgr.MakeQuestion(iq, iq.Ideation.Id);
+            
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = iq.Ideation.Id});
+        }
+        
+        #region Ideas
+        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
+        [HttpGet]
+        [Authorize]
+        public IActionResult CollectAllIdeas(string filter = "all")
+        {
+            List<Idea> ideas = new List<Idea>();
+            
+            switch (filter)
+            {
+                case "all": ideas = _ideaMgr.GetIdeas(); break; 
+                case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
+                case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
+            }
 
+            return View(ideas);
+        }
+        
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize]
@@ -86,7 +101,7 @@ namespace UIMVC.Controllers
 
             return RedirectToAction(controllerName: "Errors", actionName: "HandleErrorCode", routeValues: id);
         }
-
+        
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize]
@@ -165,5 +180,17 @@ namespace UIMVC.Controllers
                 _ideaMgr.EditIdea(foundIdea);
             }
         }
+        #endregion
+        #endregion
+        
+        
+        
+        
+
+        
+
+        
+
+        
     }
 }

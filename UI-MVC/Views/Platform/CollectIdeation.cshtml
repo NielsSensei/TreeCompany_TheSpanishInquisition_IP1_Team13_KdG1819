@@ -32,19 +32,22 @@
         </div>
         <div class="col-6">
             <br/>
+            @* TODO zet hier ne rolecheck op *@
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
             {
-                <p>Geen centrale vragen gesteld, wat jammer.</p>
+                <p>Geen centrale vragen gesteld, wat jammer. <input class="btn btn-primary" type="submit" 
+                                                                    value="Stel een nieuwe centrale vraag."></p>
             }
             
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
             {
-                <p>1 centrale vraag</p>
+                <p>1 centrale vraag <input type="submit" class="btn btn-primary" value="Stel een nieuwe centrale vraag."></p>
             }
             
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
             {
-                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</p>  
+                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen <input type="submit" class="btn btn-primary" 
+                                                                                                    value="Stel een nieuwe centrale vraag."></p>  
             }           
             <hr/>
             @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))
@@ -62,4 +65,3 @@
     </div>
 </div>
 <hr/>
-

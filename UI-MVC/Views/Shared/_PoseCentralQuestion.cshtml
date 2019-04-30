@@ -1,0 +1,35 @@
+@model Domain.UserInput.IdeationQuestion
+
+@{
+    Model.Ideation.Id = (int) ViewData["Ideation"];
+}
+
+@section Tags
+{
+    <script type="module" src="./js/showmenu.js" defer></script>
+}
+
+<div id="menu">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Een nieuwe centrale vraag stellen.</h1>
+            <form asp-controller="Moderation" asp-action="AddCentralQuestion" method="post">
+                <div class="form-group">
+                    <label asp-for="QuestionTitle">De Vraag</label>
+                    <input asp-for="QuestionTitle" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description">Een nuttige beschrijving</label>
+                    <input asp-for="Description" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SiteURL">Eventueel een link</label>
+                    <input asp-for="SiteURL" class="form-control"/>
+        <       </div>
+                <div class="row">
+                    <input type="submit" class="btn btn-primary" value="Stel deze vraag"/><button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
