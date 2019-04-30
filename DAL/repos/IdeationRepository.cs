@@ -35,13 +35,14 @@ namespace DAL
                 ProjectID = obj.Project.Id,
                 PhaseID = obj.ParentPhase.Id,
                 OnGoing = obj.OnGoing,
+                Title = obj.Title,
                 LikeCount = obj.LikeCount,
                 FbLikeCount = obj.FbLikeCount,
                 TwitterLikeCount = obj.TwitterLikeCount,
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
                 Tags = ExtensionMethods.ListToString(obj.Tags),
-                IsQuestionnaire = false
+                IsQuestionnaire = obj.type == ModuleType.Questionnaire
             };
         }
 
@@ -58,7 +59,7 @@ namespace DAL
                     //Organisation = Org,
                     EventID = obj.Event.Id,
                     UserIdea = obj.UserIdea,
-                    MediaFile = obj.Media,
+                    //MediaFile = obj.Media,
                     RequiredFields = (byte) obj.RequiredFields
             };
         }
@@ -71,7 +72,7 @@ namespace DAL
                 User = new UIMVCUser { Id = DTO.UserID },
                 UserIdea = DTO.UserIdea,
                 Event = new Event { Id = DTO.EventID },
-                Media = DTO.MediaFile,
+                //Media = DTO.MediaFile,
                 ExtraInfo = DTO.ExtraInfo,
                 RequiredFields = DTO.RequiredFields
             };
@@ -81,6 +82,7 @@ namespace DAL
         {
             ideation.Project = new Project { Id = DTO.ProjectID };
             ideation.ParentPhase = new Phase { Id = DTO.PhaseID };
+            ideation.Title = DTO.Title;
             ideation.OnGoing = DTO.OnGoing;
             ideation.LikeCount = DTO.LikeCount;
             ideation.FbLikeCount = DTO.FbLikeCount;
@@ -157,6 +159,7 @@ namespace DAL
             if (foundModule != null)
             {
                 foundModule.OnGoing = newModule.OnGoing;
+                foundModule.Title = newModule.Title;
                 foundModule.LikeCount = newModule.LikeCount;
                 foundModule.FbLikeCount = newModule.FbLikeCount;
                 foundModule.TwitterLikeCount = newModule.TwitterLikeCount;

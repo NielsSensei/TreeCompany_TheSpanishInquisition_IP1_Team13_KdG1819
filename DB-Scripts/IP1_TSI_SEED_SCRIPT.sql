@@ -87,11 +87,11 @@ INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
 VALUES(2,1,'Gebruik van nieuwe groene ruimte','2019-04-01','2019-04-30')
 
 /* Modules */
-INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount)
-VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1,0,0,0,0,0)
+INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
+VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1,0,0,0,0,0,'Hoe pakken we de Groenplaats aan, onze gedachten')
 
-INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount)
-VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0,0,0,0,0,0)
+INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
+VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0,0,0,0,0,0,'Geef uw alternatief!')
 
 /* QuestionnaireQuestions 
 0 = open                                                                                                                                                       
@@ -173,8 +173,8 @@ INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
 VALUES(4,4,9)
 
 /* Ideations */
-INSERT INTO Ideations(ModuleID,UserID,Organisation,UserIdea,RequiredFields,EventID)
-VALUES(2,7,0,1,41,0)
+INSERT INTO Ideations(ModuleID,UserID,Organisation,UserIdea,RequiredFields,EventID,extraInfo)
+VALUES(2,7,0,1,41,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
 
 /* Ideationquestions */
 INSERT INTO IdeationQuestions(IQuestionID,ModuleID,QuestionTitle,Description,WebsiteLink)
