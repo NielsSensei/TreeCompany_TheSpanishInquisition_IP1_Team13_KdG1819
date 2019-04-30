@@ -162,8 +162,7 @@ CREATE TABLE IdeationQuestions(
 	WebsiteLink NVARCHAR(50) NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT pk_IdeationQuestions PRIMARY KEY(IQuestionID),
-	CONSTRAINT fk_IdeationQuestions_Modules FOREIGN KEY (moduleID) references modules(moduleID) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT pk_IdeationQuestions PRIMARY KEY(IQuestionID)
 )
 
 CREATE TABLE Ideas(
