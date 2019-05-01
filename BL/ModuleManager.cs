@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using Domain;
 using Domain.Projects;
@@ -50,8 +51,25 @@ namespace BL
                 return QuestionnaireRepo.Read(moduleId, details);
             } 
 
-            return IdeationRepo.ReadWithModule(moduleId);
+            return IdeationRepo.ReadWithModule(moduleId);            
+        }
+
+        public Module GetModule(int phaseId, int projectID)
+        {
+            Questionnaire q = QuestionnaireRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);
+            Ideation i = IdeationRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);
             
+            if (q != null && i == null)
+            {
+                return q;
+            }
+
+            if (i != null && q == null)
+            {
+                return i;
+            }
+            
+            return null;
         }
 
         // Added by NVZ       
