@@ -32,7 +32,7 @@ namespace DAL
                 Name = p.Name,
                 SiteUrl = p.Url
                 // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image 
+                // IconImage = p.Image
             };
         }
 
@@ -44,10 +44,10 @@ namespace DAL
                 Name = DTO.Name,
                 Url = DTO.SiteUrl
                 // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image 
+                // IconImage = p.Image
             };
         }
-        
+
         // Added by XV
         // Select the biggest current Id from the platforms and increment it by one -XV
         private int FindNextAvailablePlatformId()
@@ -58,7 +58,7 @@ namespace DAL
 
         }
         #endregion
-        
+
         // Added by NVZ
         // Platform CRUD
         #region
@@ -78,7 +78,7 @@ namespace DAL
             obj.Id = FindNextAvailablePlatformId();
             ctx.Platforms.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
-           
+
             return obj;
         }
 
@@ -91,7 +91,7 @@ namespace DAL
             return ConvertToDomain(platformDTO);
         }
 
-        
+
         // Modified by XV & NVZ
         public void Update(Platform obj)
         {
@@ -106,7 +106,6 @@ namespace DAL
             }
 
             ctx.SaveChanges();
-            
         }
 
         public void Delete(int id)
@@ -127,6 +126,6 @@ namespace DAL
 
             return myQuery;
         }
-        #endregion  
+        #endregion
     }
 }

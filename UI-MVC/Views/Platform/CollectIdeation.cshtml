@@ -1,3 +1,4 @@
+@using Domain.Projects
 @using Domain.UserInput
 @using UIMVC.Services
 @model Domain.Projects.Ideation
@@ -7,6 +8,11 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = Model.Title;
+}
+
+@section Tags
+{
+    <script type="module" src="./js/showmenu.js" defer></script>
 }
 
 <div class="container">
@@ -32,19 +38,26 @@
         </div>
         <div class="col-6">
             <br/>
+            @* TODO zet hier ne rolecheck op *@
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
             {
                 <p>Geen centrale vragen gesteld, wat jammer.</p>
+                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
+                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
             }
             
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
             {
                 <p>1 centrale vraag</p>
+                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
+                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
             }
             
             @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
             {
-                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</p>  
+                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</p>
+                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
+                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
             }           
             <hr/>
             @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))

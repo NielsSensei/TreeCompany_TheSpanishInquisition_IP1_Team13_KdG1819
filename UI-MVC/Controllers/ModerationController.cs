@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BL;
+using Domain.Projects;
 using Domain.Identity;
 using Domain.UserInput;
 using Domain.Users;
@@ -39,7 +40,7 @@ namespace UIMVC.Controllers
                 case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
                 case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
             }
-            
+
             foreach (Idea idea in ideas)
             {
                 idea.User = _userManager.Users.FirstOrDefault(user => user.Id == idea.User.Id);
@@ -77,6 +78,58 @@ namespace UIMVC.Controllers
             var newPlatform = _platformMgr.MakePlatform(platform);
 
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
+        }
+        #endregion
+
+        #region Ideation
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpGet]
+        public IActionResult AddCentralQuestion(int ideation)
+        {
+            ViewData["Ideation"] = ideation;
+            return View();
+        }
+
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddCentralQuestion(CreateIdeationQuestionModel ciqm, int ideation)
+        {
+            if (ciqm == null)
+            {
+                return BadRequest("IdeationQuestion can't be null");
+            }
+
+            IdeationQuestion iq = new IdeationQuestion()
+            {
+               Description = ciqm.Description,
+               SiteURL = ciqm.SiteURL,
+               QuestionTitle = ciqm.QuestionTitle,
+               Ideation = new Ideation(){ Id = ideation }
+            };
+
+            _ideaMgr.MakeQuestion(iq, ideation);
+
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
+        }
+
+        #region Ideas
+        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
+        [HttpGet]
+        [Authorize]
+        public IActionResult CollectAllIdeas(string filter = "all")
+        {
+            List<Idea> ideas = new List<Idea>();
+
+            switch (filter)
+            {
+                case "all": ideas = _ideaMgr.GetIdeas(); break;
+                case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
+                case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
+            }
+
+            return View(ideas);
         }
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
@@ -174,5 +227,17 @@ namespace UIMVC.Controllers
                 _ideaMgr.EditIdea(foundIdea);
             }
         }
+        #endregion
+        #endregion
+
+
+
+
+
+
+
+
+
+
     }
 }
