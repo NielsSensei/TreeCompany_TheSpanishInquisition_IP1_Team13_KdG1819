@@ -86,6 +86,15 @@ VALUES(1,1,'Vergroenen van de Groenplaats','2019-03-10','2019-03-30')
 INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
 VALUES(2,1,'Gebruik van nieuwe groene ruimte','2019-04-01','2019-04-30')
 
+INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
+VALUES(3,1,'Uitzoeken welke plaatsen uit de stadskern nog Groener kunnen','2019-05-01','2019-05-31')
+
+INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
+VALUES(4,1,'Begin van de vergroening van district Merksem','2019-06-01','2019-06-30')
+
+INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
+VALUES(5,1,'Begin van de vergroening van district Deurne','2019-07-01','2019-07-31')
+
 /* Modules */
 INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
 VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1,0,0,0,0,0,'Hoe pakken we de Groenplaats aan, onze gedachten')

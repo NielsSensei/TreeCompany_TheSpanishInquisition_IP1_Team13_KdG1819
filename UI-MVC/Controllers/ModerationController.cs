@@ -83,7 +83,7 @@ namespace UIMVC.Controllers
 
             ViewData["Phases"] = availablePhases;
             ViewData["Project"] = project;
-            
+           
             return View();
         }
         

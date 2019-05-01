@@ -54,22 +54,30 @@ namespace BL
             return IdeationRepo.ReadWithModule(moduleId);            
         }
 
+        /*
+         * Voor het aanmaken van een nieuwe module moeten we eerst zien of er een of meerdere fases beschikbaar zijn.
+         * Hiervoor halen we modules op op basis van de fase, hier weten we niet of het een ideation is of niet. Hij kijkt
+         * eerst tussen de questionnaires of het bestaat, als hierop een exception komt probeert hij het tussen de ideations.
+         * Indien hij daar ook een exception geeft weten we dat de fase 'vrij' is. -NVZ
+         * 
+         */
         public Module GetModule(int phaseId, int projectID)
         {
-            Questionnaire q = QuestionnaireRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);
-            Ideation i = IdeationRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);
-            
-            if (q != null && i == null)
-            {
-                return q;
+            try
+            {      
+                return QuestionnaireRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);;
             }
-
-            if (i != null && q == null)
+            catch (InvalidOperationException exceptionnbr1)
             {
-                return i;
-            }
-            
-            return null;
+                try
+                {
+                    return IdeationRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);
+                }
+                catch (InvalidOperationException exceptionnbr2)
+                {
+                    return null;
+                }
+            }           
         }
 
         // Added by NVZ       
