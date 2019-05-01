@@ -16,7 +16,12 @@ namespace UIMVC.Services
 
         public string CollectUserName(string id)
         {
-            return _usrMgr.Users.FirstOrDefault(user => user.Id == id.ToString())?.Name;
+            var foundUser = _usrMgr.Users.FirstOrDefault(user => user.Id == id);
+            if (foundUser == null)
+            {
+                return "NOTFOUND";
+            }
+            return foundUser.Name;
         }
     }
 }
