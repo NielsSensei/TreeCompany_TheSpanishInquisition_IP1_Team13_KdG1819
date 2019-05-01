@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BL;
@@ -177,8 +178,13 @@ namespace UIMVC.Controllers
         public IActionResult CollectAllUsers(string sortOrder, string searchString)
         {
 
-            ViewData["CurrentFilter"] = searchString
+            ViewData["CurrentFilter"] = searchString;
             var users = (IEnumerable<User>)_userMgr.GetUsers();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(u => u.Name.ToUpper().Contains(searchString.ToUpper()));
+            }
 
             switch (sortOrder)
             {
@@ -186,6 +192,10 @@ namespace UIMVC.Controllers
                     users = users.OrderBy(u => u.Platform); break;
                 case "name":
                     users = users.OrderBy(u => u.Name); break;
+                case "birthday":
+                    users = users.OrderBy(u => u.Birthdate); break;
+                case "role":
+                    users = users.OrderBy(u => u.Role); break;
                 default:
                     users = users.OrderBy(u => u.Id); break;
             }
@@ -194,17 +204,17 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult ToggleBanUser(User user)
+        public IActionResult ToggleBanUser(int userId)
         {
-            _userMgr.ToggleBanUser(user);
+            _userMgr.ToggleBanUser(userId);
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
 
         [HttpPost]
         [Authorize]
-        public IActionResult VerifyUser(User user)
+        public IActionResult VerifyUser(int userId)
         {
-            _userMgr.VerifyUser(user);
+            _userMgr.VerifyUser(userId);
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
     }

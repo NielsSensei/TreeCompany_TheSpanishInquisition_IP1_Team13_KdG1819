@@ -151,19 +151,19 @@ namespace BL
             throw new NotImplementedException("Out of scope!");
         }
 
-        public void VerifyUser(User toVerify)
+        public void VerifyUser(int userToVerify)
         {
-            var alteredUser = GetUser(toVerify.Id, false);
-            if (alteredUser.Role == Role.LOGGEDIN)
+            var alteredUser = GetUser(userToVerify, false);
+            if (alteredUser.Role == Role.LOGGEDIN && alteredUser.Active)
             {
                 alteredUser.Role = Role.LOGGEDINVERIFIED;
                 UserRepo.Update(alteredUser);
             }
         }
 
-        public void ToggleBanUser(User user)
+        public void ToggleBanUser(int userId)
         {
-            var alteredUser = GetUser(user.Id, false);
+            var alteredUser = GetUser(userId, false);
             if (alteredUser.Banned)
             {
                 alteredUser.Banned = false;
