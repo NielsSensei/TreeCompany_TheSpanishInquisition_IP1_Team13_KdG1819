@@ -26,29 +26,8 @@ namespace UIMVC.Controllers
             _userManager = userManager;
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
-        [HttpGet]
-        [Authorize]
-        public IActionResult CollectAllIdeas(string filter = "all")
-        {
-            List<Idea> ideas = new List<Idea>();
-
-
-            switch (filter)
-            {
-                case "all": ideas = _ideaMgr.GetIdeas(); break;
-                case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
-                case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
-            }
-
-            foreach (Idea idea in ideas)
-            {
-                idea.User = _userManager.Users.FirstOrDefault(user => user.Id == idea.User.Id);
-            }
-
-            return View(ideas);
-        }
-
+        #region AddPlatform
+        
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize]

@@ -1,6 +1,7 @@
 @using Domain.UserInput
+@using UIMVC.Services
 @model IEnumerable<Domain.UserInput.Idea>
-
+@inject UserService UserService
 @{
     Layout = "_Layout";
     ViewData["Title"] = "All Ideas";
@@ -51,7 +52,7 @@
                 <tr>
                     <td>@idea.Id</td>
                     <td>@idea.IdeaQuestion.Id</td>
-                    <td>@idea.User.Name</td>
+                    <td>@UserService.CollectUserName(idea.User.Id)</td>
                     <td>@idea.Reported</td>
                     <td>@idea.ReviewByAdmin</td>
                     <td>@idea.Title</td>
