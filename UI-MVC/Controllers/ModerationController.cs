@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BL;
@@ -99,11 +100,8 @@ namespace UIMVC.Controllers
             }
 
             Ideation i = new Ideation();
-
-            string id = Request.Form["Parent"].ToString();
-
             i.Project = new Project() {Id = project};
-            i.ParentPhase = cim.Parent;
+            i.ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())};
             i.type = ModuleType.Ideation;
             i.Title = cim.Title;
 
