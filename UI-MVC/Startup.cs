@@ -40,6 +40,7 @@ namespace UIMVC
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
+                options.User.RequireUniqueEmail = false;
             });
 
              services.AddAuthentication().AddGoogle(googleOptions =>

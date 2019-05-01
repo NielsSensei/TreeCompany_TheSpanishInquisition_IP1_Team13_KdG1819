@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using UIMVC.Areas.Identity.Data;
+using UIMVCUser = Domain.Identity.UIMVCUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
