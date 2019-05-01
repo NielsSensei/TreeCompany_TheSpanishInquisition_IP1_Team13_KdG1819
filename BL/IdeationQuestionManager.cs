@@ -48,9 +48,6 @@ namespace BL
         public void MakeQuestion(IdeationQuestion question, int moduleId)
         {
             IdeationQuestionRepo.Create(question);
-            var alteredIdeation = (Ideation)ModuleMan.GetModule(moduleId, false, false);
-            alteredIdeation.CentralQuestions.Add(question);
-            ModuleMan.EditModule(alteredIdeation);
         }
 
         public void RemoveQuestion(int questionId)

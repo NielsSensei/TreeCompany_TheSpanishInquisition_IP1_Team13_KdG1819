@@ -14,4 +14,9 @@
         <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Identity.Stores, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      </Reference>
+    </ItemGroup>
+
 </Project>
