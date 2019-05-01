@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Identity
 {
-    public class UIMVCUser : IdentityUser
+    public class UIMVCUser
     {
 
+        [PersonalData]
+        public string Id { get; set; }
+        
         [PersonalData]
         public string Name { get; set; }
 

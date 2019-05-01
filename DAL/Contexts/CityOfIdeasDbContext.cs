@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DAL.Contexts
 {
-    public class CityOfIdeasDbContext : IdentityDbContext<UIMVCUser>
+    public class CityOfIdeasDbContext : IdentityDbContext
 //DbContext
     {
         /*
@@ -71,8 +71,6 @@ namespace DAL.Contexts
         public DbSet<ProjectsDTO> Projects { get; set; }
         public DbSet<QuestionnaireQuestionsDTO> QuestionnaireQuestions { get; set; }
         public DbSet<UserActivitiesDTO> UserActivities { get; set; }
-//        public DbSet<UserDetailsDTO> UserDetails { get; set; }
-//        public DbSet<UsersDTO> Users { get; set; }
         public DbSet<VotesDTO> Votes { get; set; }
         public DbSet<ReportsDTO> Reports { get; set; }
     }

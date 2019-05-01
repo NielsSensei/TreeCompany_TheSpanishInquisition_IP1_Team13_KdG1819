@@ -77,8 +77,6 @@ namespace UIMVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new UIMVCUser {
-                    UserName = Input.Email,
-                    Email = Input.Email,
                     Name = Input.Name,
                     DateOfBirth = Input.DateOfBirth
                 };
