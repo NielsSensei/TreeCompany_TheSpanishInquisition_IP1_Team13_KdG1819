@@ -100,6 +100,8 @@ namespace UIMVC.Controllers
 
             Ideation i = new Ideation();
 
+            string id = Request.Form["Parent"].ToString();
+
             i.Project = new Project() {Id = project};
             i.ParentPhase = cim.Parent;
             i.type = ModuleType.Ideation;
