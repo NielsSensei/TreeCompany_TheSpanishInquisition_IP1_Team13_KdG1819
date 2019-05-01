@@ -1,19 +1,27 @@
+using System.Linq;
 using BL;
+using Domain.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace UIMVC.Services
 {
     public class UserService
     {
-        private readonly UserManager _usrMgr;
+        private readonly UserManager<UIMVCUser> _usrMgr;
 
-        public UserService()
+        public UserService(UserManager<UIMVCUser> userManager)
         {
-            _usrMgr = new UserManager();
+            _usrMgr = userManager;
         }
 
-        public string CollectUserName(int id)
+        public string CollectUserName(string id)
         {
-            return _usrMgr.GetUser(id, false).Name;
+            var foundUser = _usrMgr.Users.FirstOrDefault(user => user.Id == id);
+            if (foundUser == null)
+            {
+                return "NOTFOUND";
+            }
+            return foundUser.Name;
         }
     }
 }
