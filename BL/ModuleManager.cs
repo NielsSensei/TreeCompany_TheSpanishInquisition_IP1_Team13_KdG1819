@@ -94,20 +94,17 @@ namespace BL
          * 
          */
         //Modified by NG
-        public void MakeModule(Module module, int projectId)
+        public void MakeModule(Module module)
         {
-            var alteredProject = ProjectMan.GetProject(projectId, false);
-            if (module.GetType() == typeof(Questionnaire))
+            if (module.type == ModuleType.Questionnaire)
             {
                 Questionnaire newQuestionnaire = (Questionnaire) module;
-                alteredProject.Modules.Add(newQuestionnaire);
-                ProjectMan.EditProject(alteredProject);
+                QuestionnaireRepo.Create(newQuestionnaire);
             }
             else
             {
                 Ideation newIdeation = (Ideation) module;
-                alteredProject.Modules.Add(newIdeation);
-                ProjectMan.EditProject(alteredProject);
+                IdeationRepo.Create(newIdeation);
             }
         }
         

@@ -6,6 +6,7 @@ using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using UIMVC.Models;
 
 namespace UIMVC.Controllers
@@ -96,7 +97,28 @@ namespace UIMVC.Controllers
             {
                 return BadRequest("Ideation can't be null");
             }
-                                               
+
+            Ideation i = new Ideation();
+
+            i.Project = new Project() {Id = project};
+            i.ParentPhase = cim.Parent;
+            i.type = ModuleType.Ideation;
+            i.Title = cim.Title;
+
+            if (cim.ExtraInfo != null)
+            {
+                i.ExtraInfo = cim.ExtraInfo;  
+            }
+            
+            if (cim.Tags != null)
+            {
+                i.Tags = new List<string>();
+                //TODO TIJDELIJK
+                i.Tags = cim.Tags.Split(",").ToList();
+            }
+            
+            _moduleMgr.MakeModule(i);
+            
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
         
