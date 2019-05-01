@@ -4,6 +4,7 @@ using System.Linq;
 using Domain.UserInput;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
+using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
 using Domain.Users;
@@ -51,7 +52,6 @@ namespace DAL.repos
                 VoteCount = obj.VoteCount,
                 RetweetCount = obj.RetweetCount,
                 ShareCount = obj.ShareCount,
-                Title = obj.Title,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
                 ParentID = obj.ParentIdea.Id,
@@ -134,14 +134,13 @@ namespace DAL.repos
             {
                 Id = DTO.IdeaID,
                 IdeaQuestion = new IdeationQuestion { Id = DTO.IQuestionID },
-                User = new User { Id = DTO.UserID },
+                User = new UIMVCUser() { Id = DTO.UserID },
                 Reported = DTO.Reported,
                 ReviewByAdmin = DTO.ReviewByAdmin,
                 Title = DTO.Title,
                 Visible = DTO.Visible,
                 VoteCount = DTO.VoteCount,
                 RetweetCount = DTO.RetweetCount,
-                Title = DTO.Title,
                 ShareCount= DTO.ShareCount,
                 Status = DTO.Status,
                 VerifiedUser = DTO.VerifiedUser,
@@ -156,8 +155,8 @@ namespace DAL.repos
             {
                 Id = DTO.ReportID,
                 Idea = new Idea { Id = DTO.IdeaID },
-                Flagger = new User() { Id = DTO.FlaggerID },
-                Reportee = new User() { Id = DTO.ReporteeID },
+                Flagger = new UIMVCUser() { Id = DTO.FlaggerID },
+                Reportee = new UIMVCUser() { Id = DTO.ReporteeID },
                 Reason = DTO.Reason,
                 Status = (ReportStatus) DTO.ReportApproved
             };
@@ -650,7 +649,7 @@ namespace DAL.repos
             return ReadAllReports().ToList().FindAll(r => r.Idea.Id == IdeaID);
         }
 
-        public IEnumerable<Report> ReadAllReportsByUser(int UserID)
+        public IEnumerable<Report> ReadAllReportsByUser(string UserID)
         {
             return ReadAllReports().ToList().FindAll(r => r.Reportee.Id == UserID);;
         }

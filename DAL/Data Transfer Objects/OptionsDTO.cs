@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Data_Transfer_Objects
 {
-    class OptionsDTO
+    public class OptionsDTO
     {
         public int OptionID { get; set; }
         public string OptionText { get; set; }
