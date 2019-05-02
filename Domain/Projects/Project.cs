@@ -22,7 +22,7 @@ namespace Domain.Projects
    
         public Platform Platform { get; set; }
         public UIMVCUser User { get; set; }
-        public string Title { get; set; }
+       
         public string Goal { get; set; }
         public string Status { get; set; }
         public bool Visible { get; set; }

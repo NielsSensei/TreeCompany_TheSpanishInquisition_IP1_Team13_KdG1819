@@ -121,8 +121,9 @@ namespace BL
                 ModuleMan.EditModule(alteredModule);
             }
 
-            ProjectRepo.Delete(projectId, phaseId);
-            ProjectRepo.Delete(phaseId);
+            //TODO: Enkel de phase moet verwijdert worden project niet? 
+            ProjectRepo.Delete(projectId);
+            
         }
 
         #endregion
