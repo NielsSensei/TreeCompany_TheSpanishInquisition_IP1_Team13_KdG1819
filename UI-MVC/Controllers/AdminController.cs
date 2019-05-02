@@ -16,6 +16,13 @@ namespace UIMVC.Controllers
         private ModuleManager modMgr { get; set; }
         private ProjectManager projMgr { get; set; }
         private QuestionnaireQuestionManager qqMgr { get; set; }
+
+        public AdminController()
+        {
+            modMgr = new ModuleManager();
+            projMgr = new ProjectManager();
+            qqMgr = new QuestionnaireQuestionManager();
+        }
         
 
          
@@ -24,18 +31,8 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult CreateQuestionnaire(int projectId)
         {
-            ViewData["project"] = projMgr.GetProject(projectId, true);
+            ViewData["project"] = projMgr.GetProject(projectId,false);
             ViewData["questionnaire"] = new Questionnaire();
-
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult CreateQuestionnaire(int projectId, int questionnaireId)
-        {
-            ViewData["project"] = projMgr.GetProject(projectId, true);
-            ViewData["questionnaire"] = modMgr.GetModule(questionnaireId, true, true);
 
 
             return View();
@@ -93,6 +90,20 @@ namespace UIMVC.Controllers
             
 
             
+        }
+
+        [HttpGet]
+        public IActionResult PublishQuestionnaire(int questionnaireid)
+        {
+
+            return View(modMgr.GetModule(questionnaireid, false, true));
+        }
+
+        [HttpPost]
+        public IActionResult UpdateQuestionnaire(Questionnaire q)
+        {
+            modMgr.EditModule(q);
+            return RedirectToAction("Index");
         }
 
 

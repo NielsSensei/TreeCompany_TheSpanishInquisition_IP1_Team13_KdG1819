@@ -4,6 +4,7 @@
 @model Domain.Projects.Project
 @{ 
     IEnumerable<Domain.Projects.Project> projects = (IEnumerable<Domain.Projects.Project>)ViewData["projects"];
+    Questionnaire newQ = (Questionnaire)ViewData["questionnaire"];
 }
 
 @{
@@ -11,9 +12,7 @@
 }
 
 <h1>Een nieuwe vragenlijst maken voor project @Model.Title</h1>
-
-    @if (Model != null)
-    {
+  
         <div class="form-group">
             
             <label for="sel2">Selecteer een fase:</label>
@@ -24,14 +23,15 @@
                }
             </select>
 
+            <form asp-controller="Admin" asp-action="CreateQuestionnaire" method="post">
+                <label>Title</label>
+                <input type="text" name="name" value="@ViewBag.Questionnaire.Title" />
+            </form>
+
         </div>
 
+    
 
-    } else
-    {
-        <h4>Nog geen projecten beschikbaar!</h4>
-
-    }
 
 
 

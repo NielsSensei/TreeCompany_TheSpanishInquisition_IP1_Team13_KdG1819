@@ -65,4 +65,4 @@ else
     
 }
 
-<a type="button" class="btn btn-primary" asp-controller="Admin" asp-action="CreateQuestionnaire" asp-route="@Model.Id">Nieuwe vragenlijst maken</a>
+<a class="btn btn-primary" asp-controller="Admin" asp-action="CreateQuestionnaire" asp-route-projectid="@Model.Id" method="get">Nieuwe vragenlijst maken</a>
