@@ -32,6 +32,17 @@ namespace UIMVC.Controllers
             return View(platform);
         }
 
+        #region Platform
+
+        public IActionResult Search(string search)
+        {
+            ViewData["search"] = search;
+            var platforms = _platformMgr.SearchPlatforms(search);
+            return View(platforms);
+        }
+
+        #endregion
+
         #region Change
         [Authorize]
         public IActionResult ChangePlatform(int id)

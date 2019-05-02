@@ -1,14 +1,11 @@
 ﻿
-
 <div class="home-flex">
-    <h1 class="test">Zoek een platform in je buurt</h1>
-    <form class="form-group">
-        <div>
-            <label for="searchPlatform">Naam</label>
-            <input type="text" class="form-control" id="searchForPlatform" aria-describedby="searchPlatform" placeholder="naam">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+    <form class="form-group formIndexPlatform" asp-controller="Platform" asp-action="Search" method="post">
+        
+            <label for="searchPlatform">
+                <h1>Vindt een platform in je buurt</h1>
+            </label>
+            <input type="text" class="form-control" placeholder="platform" name="search">
+        <input type="submit" class="btn btn-primary" value="ZOEKEN"/>
     </form>
-    @* TODO zorg ervoor dat je direct op Projects terecht komt via de index *@
 </div>
-
