@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Data_Transfer_Objects
 {
-    public class OrganisationEventsDTO
+    class OrganisationEventsDTO
     {
         public int EventID { get; set; }
         public int UserID { get; set; }

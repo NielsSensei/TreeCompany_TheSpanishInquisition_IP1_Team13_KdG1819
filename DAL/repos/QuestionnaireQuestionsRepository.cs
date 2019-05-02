@@ -6,7 +6,6 @@ using System.Linq;
 using Domain.UserInput;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
-using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
 using Domain.Users;
@@ -103,7 +102,7 @@ namespace DAL
             return new OpenAnswer
             {
                 Id = DTO.AnswerID,
-                User = new UIMVCUser { Id = DTO.UserID },
+                User = new User { Id = DTO.UserID },
                 Question = new QuestionnaireQuestion { Id = DTO.QQuestionID },
                 IsUserEmail = DTO.AnswerText.Contains("@"),
                 AnswerText = DTO.AnswerText
@@ -114,7 +113,7 @@ namespace DAL
         {
             MultipleAnswer ma = null;
             ma.Id = answersDTO.AnswerID;
-            ma.User = new UIMVCUser { Id = answersDTO.UserID };
+            ma.User = new User { Id = answersDTO.UserID };
             ma.Question = new QuestionnaireQuestion { Id = answersDTO.QQuestionID };
             ma.DropdownList = chosenOptionsDTO.Count == 1;
 

@@ -1,12 +1,12 @@
 @using Domain.UserInput
-@using Microsoft.EntityFrameworkCore.Internal
 @using UIMVC.Services
 @model Domain.UserInput.Idea
 @inject UserService Userservice
 
 @{
     Layout = "_Layout";
-    IEnumerable<Report> badIdea = ViewData["Reports"] as IEnumerable<Report>;
+    IEnumerable<Report> badIdea = new List<Report>();
+    badIdea = ViewData["Reports"] as IEnumerable<Report>;
 }
 
 @section Tags
@@ -52,7 +52,7 @@
         </div>
         <div class="col-6">
             <h2>Rapporteringen</h2>
-            @if (badIdea.Any())
+            @if (badIdea.Count() > 0)
             {
                 badIdea.OrderByDescending(x => (byte) (x.Status)).ToList();
                 

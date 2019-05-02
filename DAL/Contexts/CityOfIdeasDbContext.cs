@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DAL.Data_Transfer_Objects;
-using Domain.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DAL.Contexts
 {
-    public class CityOfIdeasDbContext : IdentityDbContext<UIMVCUser>
-//DbContext
+    class CityOfIdeasDbContext : DbContext
     {
         /*
          * Naar deployment toe is dit wel nuttig. Options wordt wel vaak gebruikt voor de connectionstring mee te geven als deze in een aparte
@@ -27,7 +24,7 @@ namespace DAL.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite("Data Source=TheSpanishDatabase.db");
+                optionsBuilder.UseSqlite("Data Source=IP1_TSI_DB.db");
             }
             
         }
@@ -50,9 +47,10 @@ namespace DAL.Contexts
             modelBuilder.Entity<ProjectsDTO>().HasKey(p => p.ProjectID);
             modelBuilder.Entity<QuestionnaireQuestionsDTO>().HasKey(q => q.QQuestionID);
             modelBuilder.Entity<UserActivitiesDTO>().HasKey(u => u.ActivityID);
+            modelBuilder.Entity<UserDetailsDTO>().HasKey(u => u.UserID);
+            modelBuilder.Entity<UsersDTO>().HasKey(u => u.UserID);
             modelBuilder.Entity<VotesDTO>().HasKey(v => v.VoteID);
             modelBuilder.Entity<ReportsDTO>().HasKey(r => r.ReportID);
-            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<AnswersDTO> Answers { get; set; }
@@ -71,6 +69,8 @@ namespace DAL.Contexts
         public DbSet<ProjectsDTO> Projects { get; set; }
         public DbSet<QuestionnaireQuestionsDTO> QuestionnaireQuestions { get; set; }
         public DbSet<UserActivitiesDTO> UserActivities { get; set; }
+        public DbSet<UserDetailsDTO> UserDetails { get; set; }
+        public DbSet<UsersDTO> Users { get; set; }
         public DbSet<VotesDTO> Votes { get; set; }
         public DbSet<ReportsDTO> Reports { get; set; }
     }

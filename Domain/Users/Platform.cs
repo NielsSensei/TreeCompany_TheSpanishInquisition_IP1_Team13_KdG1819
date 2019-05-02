@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Domain.Common;
-using Domain.Identity;
 
 namespace Domain.Users
 {
@@ -13,8 +12,8 @@ namespace Domain.Users
         public string Url { get; set; }
         public Image Image { get; set; }
 
-        public List<UIMVCUser> Owners { get; set; }
-        public List<UIMVCUser> Users { get; set; }
+        public List<User> Owners { get; set; }
+        public List<User> Users { get; set; }
 
         // Added by EKT
         // Modified by NVZ
@@ -22,12 +21,12 @@ namespace Domain.Users
 
         #region
 
-        public void AddOwner(UIMVCUser owner)
+        public void AddOwner(User owner)
         {
             Owners.Add(owner);
         }
 
-        public void AddUser(UIMVCUser user)
+        public void AddUser(User user)
         {
             Users.Add(user);
         }

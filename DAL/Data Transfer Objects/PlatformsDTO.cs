@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Data_Transfer_Objects
 {
-    public class PlatformsDTO
+    class PlatformsDTO
     {
         public int PlatformID { get; set; }
         public string Name { get; set; }

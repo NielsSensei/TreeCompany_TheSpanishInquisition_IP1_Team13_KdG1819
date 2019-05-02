@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Data_Transfer_Objects
 {
-    public class ChoicesDTO
+    class ChoicesDTO
     {
         public int? ChoiceID { get; set; }
         public int AnswerID { get; set; }

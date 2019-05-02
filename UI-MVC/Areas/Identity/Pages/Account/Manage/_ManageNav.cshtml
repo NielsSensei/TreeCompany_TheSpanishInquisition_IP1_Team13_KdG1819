@@ -1,5 +1,4 @@
-﻿@using UIMVCUser = Domain.Identity.UIMVCUser
-@inject SignInManager<UIMVCUser> SignInManager
+﻿@inject SignInManager<UIMVCUser> SignInManager
 
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any(); 

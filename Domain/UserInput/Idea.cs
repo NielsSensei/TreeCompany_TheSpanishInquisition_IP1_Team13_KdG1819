@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks.Dataflow;
-using Domain.Identity;
 using Domain.Users;
 
 namespace Domain.UserInput
@@ -11,7 +9,7 @@ namespace Domain.UserInput
         // Modified by XV, EKT & NVZ
         public int Id { get; set; }
         public IdeationQuestion IdeaQuestion { get; set; }
-        public UIMVCUser User { get; set; }
+        public User User { get; set; }
         public bool Reported { get; set; }
         public bool ReviewByAdmin { get; set; }
         public string Title { get; set; }
@@ -50,18 +48,16 @@ namespace Domain.UserInput
         // Methods
 
         #region
-        /**
-         * Gebruik Identity
-         */
-//        public bool IsVeriefiedUser()
-//        {
-//            if (User.Role == Role.LOGGEDINVERIFIED)
-//            {
-//                return true;
-//            }
-//
-//            return false;
-//        }
+
+        public bool IsVeriefiedUser()
+        {
+            if (User.Role == Role.LOGGEDINVERIFIED)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         public Idea GetIdeaInfo()
         {

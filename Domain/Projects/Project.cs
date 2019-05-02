@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Domain.Common;
-using Domain.Identity;
 using Domain.Users;
 
 namespace Domain.Projects
@@ -12,7 +11,7 @@ namespace Domain.Projects
         // Modified by XV & NVZ & EKT & DM
         public int Id { get; set; }
         public Platform Platform { get; set; }
-        public UIMVCUser User { get; set; }
+        public User User { get; set; }
         public string Title { get; set; }
         public string Goal { get; set; }
         public string Status { get; set; }

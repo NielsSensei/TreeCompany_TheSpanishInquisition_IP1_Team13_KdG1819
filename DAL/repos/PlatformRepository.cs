@@ -5,7 +5,6 @@ using Domain.Users;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL
 {
@@ -32,7 +31,7 @@ namespace DAL
                 Name = p.Name,
                 SiteUrl = p.Url
                 // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image
+                // IconImage = p.Image 
             };
         }
 
@@ -44,21 +43,19 @@ namespace DAL
                 Name = DTO.Name,
                 Url = DTO.SiteUrl
                 // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image
+                // IconImage = p.Image 
             };
         }
-
+        
         // Added by XV
-        // Select the biggest current Id from the platforms and increment it by one -XV
+        // Select the biggest current Id from the platforms and increment it by on -XV
         private int FindNextAvailablePlatformId()
-        {
-            if (!ctx.Platforms.Any()) return 1;
-            int newId = ReadAll().Max(platform => platform.Id) + 1;
+        {               
+            int newId = ReadAll().Max(platform => platform.Id)+1;
             return newId;
-
         }
         #endregion
-
+        
         // Added by NVZ
         // Platform CRUD
         #region
@@ -78,7 +75,7 @@ namespace DAL
             obj.Id = FindNextAvailablePlatformId();
             ctx.Platforms.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
-
+           
             return obj;
         }
 
@@ -91,7 +88,7 @@ namespace DAL
             return ConvertToDomain(platformDTO);
         }
 
-
+        
         // Modified by XV & NVZ
         public void Update(Platform obj)
         {
@@ -126,6 +123,6 @@ namespace DAL
 
             return myQuery;
         }
-        #endregion
+        #endregion  
     }
 }

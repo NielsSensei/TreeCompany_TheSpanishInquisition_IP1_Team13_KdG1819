@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Domain.Common;
-using Domain.Identity;
 using Domain.UserInput;
 using Domain.Users;
 
@@ -10,7 +9,7 @@ namespace Domain.Projects
     {
         // Added by NG
         // Modified by NVZ & EKT & DM
-        public UIMVCUser User { get; set; } 
+        public User User { get; set; } 
         public bool UserIdea { get; set; }  
         public Event Event{ get; set; }
         public Media Media { get; set; }

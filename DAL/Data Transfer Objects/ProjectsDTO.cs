@@ -4,11 +4,11 @@ using System.Text;
 
 namespace DAL.Data_Transfer_Objects
 {
-    public class ProjectsDTO
+    class ProjectsDTO
     {
         public int ProjectID { get; set; }
         public int CurrentPhaseID { get; set; }
-        public string UserID { get; set; }
+        public int UserID { get; set; }
         public int PlatformID { get; set; }
         public string Title { get; set; }
         public string Goal { get; set; }

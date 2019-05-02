@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Data_Transfer_Objects
 {
-    public class QuestionnaireQuestionsDTO
+    class QuestionnaireQuestionsDTO
     {
         public int QQuestionID { get; set; }
         public int ModuleID { get; set; }

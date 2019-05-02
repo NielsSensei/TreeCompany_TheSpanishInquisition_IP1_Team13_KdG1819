@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using Domain.Identity;
 using Domain.Projects;
 
 namespace Domain.Users
 {
-    public class Organisation : UIMVCUser
+    public class Organisation : User
     {
         // Added by NG
         // Modified by XV & NVZ & DM & EKT
