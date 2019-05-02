@@ -6,6 +6,7 @@ using Domain.Common;
 using Domain.Projects;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
+using Domain.Identity;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,22 +46,22 @@ namespace DAL
             };
         }
 
+        // XV: TODO Create a check for organisation accounts
         private IdeationsDTO ConvertToDTO(Ideation obj)
         {
             //bool Org = obj.User.Role == Role.LOGGEDINORG;
-            IdeationsDTO DTO = new IdeationsDTO()
-            {
-                ModuleID = obj.Id,
-                UserID = obj.User.Id,
-                ExtraInfo = obj.ExtraInfo,
-                EventID = obj.Event.Id,
-                UserIdea = obj.UserIdea,
-                RequiredFields = (byte) obj.RequiredFields
-            };
 
-            return DTO;
-            //Organisation = Org,
-            //MediaFile = obj.Media,
+            return new IdeationsDTO
+            {
+                    ModuleID = obj.Id,
+                    UserID = obj.User.Id,
+                    ExtraInfo = obj.ExtraInfo,
+                    //Organisation = Org,
+                    EventID = obj.Event.Id,
+                    UserIdea = obj.UserIdea,
+                    //MediaFile = obj.Media,
+                    RequiredFields = (byte) obj.RequiredFields
+            };
         }
 
         private Ideation ConvertToDomain(IdeationsDTO DTO)
@@ -68,7 +69,7 @@ namespace DAL
             return new Ideation
             {
                 Id = DTO.ModuleID,
-                User = new User { Id = DTO.UserID },
+                User = new UIMVCUser { Id = DTO.UserID },
                 UserIdea = DTO.UserIdea,
                 Event = new Event { Id = DTO.EventID },
                 //Media = DTO.MediaFile,

@@ -1,6 +1,7 @@
 @using Domain.UserInput
+@using UIMVC.Services
 @model IEnumerable<Domain.UserInput.Idea>
-
+@inject UserService UserService
 @{
     Layout = "_Layout";
     ViewData["Title"] = "All Ideas";
@@ -12,20 +13,20 @@
     <div class="container">
         <div class="row" id="comboFilter">
             <div class="col-2">
-                <label>Selecteer filter:</label>  
+                <label>Selecteer filter:</label>
             </div>
             <div class="col-10">
-                @Html.DropDownList("Filter", new SelectListItem[] 
-                { 
-                    new SelectListItem() { Text = "All ideas", Value = "all" }, 
+                @Html.DropDownList("Filter", new SelectListItem[]
+                {
+                    new SelectListItem() { Text = "All ideas", Value = "all" },
                     new SelectListItem() { Text = "Reported ideas", Value = "report" },
                     new SelectListItem() { Text = "Ideas where an admin is needed", Value = "admin" }
                 },
                 //TODO onchange naar aparte js?
-                new { @class = "form-control", @onchange= "document.location.href = '/Moderation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;" })       
-            </div>                      
+                new { @class = "form-control", @onchange= "document.location.href = '/Moderation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;" })
+            </div>
         </div>
-    </div>    
+    </div>
 </div>
 
 @if (Model.Any(i => i.Visible))
@@ -51,7 +52,7 @@
                 <tr>
                     <td>@idea.Id</td>
                     <td>@idea.IdeaQuestion.Id</td>
-                    <td>@idea.User.Id</td>
+                    <td>@UserService.CollectUserName(idea.User.Id)</td>
                     <td>@idea.Reported</td>
                     <td>@idea.ReviewByAdmin</td>
                     <td>@idea.Title</td>
@@ -61,7 +62,7 @@
                     <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">Bekijk Idee</a></td>
                 </tr>
             }
-        } 
+        }
     </table>
 }else
 {
