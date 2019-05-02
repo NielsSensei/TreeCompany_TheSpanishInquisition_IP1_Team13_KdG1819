@@ -6,8 +6,8 @@
 @{
     ViewData["Title"] = Model.Title;
     Layout = "_Layout";
-    ViewData["Questionnaires"] = ProjectService.GetProjectQuestionnaires(Model);
-    ViewData["Ideations"] = ProjectService.GetProjectIdeations(Model);
+    ViewData["Questionnaires"] = ProjectService.CollectProjectQuestionnaires(Model);
+    ViewData["Ideations"] = ProjectService.CollectProjectIdeations(Model);
 }
 
 @* Hoe gaan we de mobile layout doen? *@
@@ -63,3 +63,8 @@ else
 {
     <p>Geen modules voor dit project.</p>
 }
+<hr/>
+@* TODO ROLE CHECK *@
+<a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">
+    Maak een nieuwe ideation
+</a>

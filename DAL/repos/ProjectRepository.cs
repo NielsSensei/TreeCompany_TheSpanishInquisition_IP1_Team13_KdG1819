@@ -7,6 +7,7 @@ using Domain.Common;
 using Domain.Projects;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
+using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Users;
 
@@ -34,7 +35,7 @@ namespace DAL
             {
                 Id = DTO.ProjectID,
                 CurrentPhase = new Phase() { Id = DTO.CurrentPhaseID },
-                User = new User() { Id = DTO.UserID },
+                User = new UIMVCUser() { Id = DTO.UserID },
                 Platform = new Platform() { Id = DTO.PlatformID },
                 Title = DTO.Title,
                 Goal = DTO.Goal,
