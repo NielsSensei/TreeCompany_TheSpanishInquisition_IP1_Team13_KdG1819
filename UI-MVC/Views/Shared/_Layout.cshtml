@@ -1,8 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
 
     @RenderSection("Tags", required: false)
@@ -11,23 +11,25 @@
     <link rel="stylesheet" href="~/dist/site.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <div class="container">
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item layouttitle"><a class="nav-link test" asp-area="" asp-controller="Home" asp-action="Index">City of Ideas</a></li>
-                </ul>
-                <partial name="_LoginPartial" />
-            </div>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item layouttitle">
+                    <a class="nav-link test" asp-area="" asp-controller="Home" asp-action="Index">City of Ideas</a>
+                </li>
+            </ul>
+            <partial name="_LoginPartial"/>
         </div>
-    </nav>
-    
-
-    <partial name="_CookieConsentPartial" />
-
-    <div class="container body-content">
-        @RenderBody()
     </div>
+</nav>
+
+
+<partial name="_CookieConsentPartial"/>
+
+<div class="container body-content">
+    @RenderBody()
+</div>
 
 <footer class="footer row">
     <div class="col-md-6">
@@ -36,8 +38,12 @@
     </div>
     <ul class="col-md-3">
         <li class="font-weight-bold">City of Ideas</li>
-        <li><a asp-controller="Home" asp-action="About">Over ons</a></li>
-        <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+        <li>
+            <a asp-controller="Home" asp-action="About">Over ons</a>
+        </li>
+        <li>
+            <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </li>
     </ul>
     <ul class="col-md-3">
         <li class="font-weight-bold">Contact</li>
@@ -46,6 +52,6 @@
     </ul>
 </footer>
 
-    @RenderSection("Scripts", required: false)
+@RenderSection("Scripts", required: false)
 </body>
 </html>
