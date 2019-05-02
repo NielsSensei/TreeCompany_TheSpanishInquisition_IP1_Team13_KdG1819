@@ -8,7 +8,7 @@ namespace Domain.Projects
         // Added by NG
         // Modified by EKT & NVZ & DM
         public int Id { get; set; }
-        public Project Project{ get; set; }       
+        public Project Project { get; set; }       
         public Phase ParentPhase { get; set; }
         public string Title { get; set; }
         public bool OnGoing { get; set; }
