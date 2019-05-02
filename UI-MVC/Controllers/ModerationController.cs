@@ -103,7 +103,8 @@ namespace UIMVC.Controllers
                 Project = new Project() {Id = project},
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
                 type = ModuleType.Ideation,
-                Title = cim.Title
+                Title = cim.Title,
+                OnGoing = true
             };
             
             if (cim.ExtraInfo != null)
@@ -111,14 +112,7 @@ namespace UIMVC.Controllers
                 i.ExtraInfo = cim.ExtraInfo;  
             }
             
-            if (cim.Tags != null)
-            {
-                i.Tags = new List<string>();
-                //TODO TIJDELIJK
-                i.Tags = cim.Tags.Split(",").ToList();
-            }
-            
-            _moduleMgr.MakeModule(i);
+            _moduleMgr.MakeIdeation(i);
             
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }

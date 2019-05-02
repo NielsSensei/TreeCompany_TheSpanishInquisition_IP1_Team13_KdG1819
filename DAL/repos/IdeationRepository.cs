@@ -48,8 +48,7 @@ namespace DAL
         private IdeationsDTO ConvertToDTO(Ideation obj)
         {
             //bool Org = obj.User.Role == Role.LOGGEDINORG;
-            
-            return new IdeationsDTO()
+            IdeationsDTO DTO = new IdeationsDTO()
             {
                 ModuleID = obj.Id,
                 UserID = obj.User.Id,
@@ -58,7 +57,8 @@ namespace DAL
                 UserIdea = obj.UserIdea,
                 RequiredFields = (byte) obj.RequiredFields
             };
-                
+
+            return DTO;
             //Organisation = Org,
             //MediaFile = obj.Media,
         }
@@ -116,8 +116,11 @@ namespace DAL
             }
 
             obj.Id = FindNextAvailableIdeationId();
-            ctx.Modules.Add(GrabModuleInformationDTO(obj));
-            ctx.Ideations.Add(ConvertToDTO(obj));
+            ModulesDTO newModule = GrabModuleInformationDTO(obj);
+            IdeationsDTO newIdeation = ConvertToDTO(obj);
+            
+            ctx.Modules.Add(newModule);
+            ctx.Ideations.Add(newIdeation);
             ctx.SaveChanges();
 
             return obj;

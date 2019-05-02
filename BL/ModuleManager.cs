@@ -93,19 +93,16 @@ namespace BL
          * Initialisation of our modules might be useful. - NVZ
          * 
          */
-        //Modified by NG
-        public void MakeModule(Module module)
+        //Added by NVZ
+        public void MakeQuestionnaire(Questionnaire questionnaire)
         {
-            if (module.type == ModuleType.Questionnaire)
-            {
-                Questionnaire newQuestionnaire = (Questionnaire) module;
-                QuestionnaireRepo.Create(newQuestionnaire);
-            }
-            else
-            {
-                Ideation newIdeation = (Ideation) module;
-                IdeationRepo.Create(newIdeation);
-            }
+            QuestionnaireRepo.Create(questionnaire);
+        }
+        
+        //Modified by NVZ
+        public void MakeIdeation(Ideation ideation)
+        {
+            IdeationRepo.Create(ideation);
         }
         
         //Added by NG

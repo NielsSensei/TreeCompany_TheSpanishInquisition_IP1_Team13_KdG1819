@@ -8,6 +8,5 @@ namespace UIMVC.Models
         public string Title { get; set; }
         public string ModuleType { get; set; }
         public string ExtraInfo { get; set; }
-        public string Tags { get; set; }
     }
 }
