@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using Domain;
 using Domain.Projects;
@@ -50,8 +51,33 @@ namespace BL
                 return QuestionnaireRepo.Read(moduleId, details);
             } 
 
-            return IdeationRepo.ReadWithModule(moduleId);
-            
+            return IdeationRepo.ReadWithModule(moduleId);            
+        }
+
+        /*
+         * Voor het aanmaken van een nieuwe module moeten we eerst zien of er een of meerdere fases beschikbaar zijn.
+         * Hiervoor halen we modules op op basis van de fase, hier weten we niet of het een ideation is of niet. Hij kijkt
+         * eerst tussen de questionnaires of het bestaat, als hierop een exception komt probeert hij het tussen de ideations.
+         * Indien hij daar ook een exception geeft weten we dat de fase 'vrij' is. -NVZ
+         * 
+         */
+        public Module GetModule(int phaseId, int projectID)
+        {
+            try
+            {      
+                return QuestionnaireRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);;
+            }
+            catch (InvalidOperationException exceptionnbr1)
+            {
+                try
+                {
+                    return IdeationRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);
+                }
+                catch (InvalidOperationException exceptionnbr2)
+                {
+                    return null;
+                }
+            }           
         }
 
         // Added by NVZ       
@@ -67,21 +93,29 @@ namespace BL
          * Initialisation of our modules might be useful. - NVZ
          * 
          */
-        //Modified by NG
-        public void MakeModule(Module module, int projectId)
+        //Added by NVZ
+        public void MakeQuestionnaire(Questionnaire questionnaire)
         {
-            var alteredProject = ProjectMan.GetProject(projectId, false);
-            if (module.GetType() == typeof(Questionnaire))
+            QuestionnaireRepo.Create(questionnaire);
+        }
+        
+        //Modified by NVZ
+        public void MakeIdeation(Ideation ideation)
+        {
+            IdeationRepo.Create(ideation);
+        }
+        
+        //Added by NVZ 
+        public void MakeTag(string Tag, int moduleID, bool questionnaire)
+        {
+            if (questionnaire)
             {
-                Questionnaire newQuestionnaire = (Questionnaire) module;
-                alteredProject.Modules.Add(newQuestionnaire);
-                ProjectMan.EditProject(alteredProject);
+                QuestionnaireRepo.CreateTag(Tag, moduleID);
             }
-            else
+
+            if (!questionnaire)
             {
-                Ideation newIdeation = (Ideation) module;
-                alteredProject.Modules.Add(newIdeation);
-                ProjectMan.EditProject(alteredProject);
+                IdeationRepo.CreateTag(Tag, moduleID);
             }
         }
         
