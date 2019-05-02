@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS Ideations
 DROP TABLE IF EXISTS Answers
 DROP TABLE IF EXISTS Ideationquestions
 DROP TABLE IF EXISTS Ideas
-DROP TABLE IF EXISTS UserDetails
+/*DROP TABLE IF EXISTS UserDetails*/
 DROP TABLE IF EXISTS Projectimages
 DROP TABLE IF EXISTS Modules
 DROP TABLE IF EXISTS Questionnairequestions
@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS Reports
 DROP TABLE IF EXISTS Phases
 DROP TABLE IF EXISTS Projects
 
-DROP TABLE IF EXISTS Users
+/*DROP TABLE IF EXISTS Users*/
 DROP TABLE IF EXISTS Platforms
 
 /*TABELLEN AANMAKEN*/
@@ -35,7 +35,7 @@ CREATE TABLE Platforms(
 	CONSTRAINT pk_Plaftorms PRIMARY KEY(PlatformID)
 )
 
-CREATE TABLE Users(
+/*CREATE TABLE Users(
 	UserID INT IDENTITY,
 	Name NVARCHAR(100),
 	Email NVARCHAR(100),
@@ -61,11 +61,11 @@ CREATE TABLE UserDetails(
 	/*Constraints*/
 	CONSTRAINT pk_UserDetails PRIMARY KEY(UserID),
 	CONSTRAINT fk_UserDetails_Users FOREIGN KEY (UserID) references Users(UserID) ON DELETE CASCADE ON UPDATE CASCADE	
-)
+)*/
 
 CREATE TABLE OrganisationEvents(
 	EventID INT IDENTITY,
-	UserID INT NOT NULL,
+	UserID NVARCHAR(255) NOT NULL,
 	Name NVARCHAR(100) NOT NULL,
 	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
@@ -73,7 +73,6 @@ CREATE TABLE OrganisationEvents(
 
 	/*Constraints*/
 	CONSTRAINT pk_OrganisationEvents PRIMARY KEY(EventID),
-	CONSTRAINT fk_OrganisationEvents_Users FOREIGN KEY (UserID) references Users(UserID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT chk_OrganisationEvents_StartDate CHECK (StartDate <= Enddate),
 	CONSTRAINT chk_OrganisationEvents_EndDate CHECK (EndDate >= StartDate)
 )
@@ -81,7 +80,7 @@ CREATE TABLE OrganisationEvents(
 CREATE TABLE Projects(
 	ProjectID INT IDENTITY,
 	CurrentPhaseID INT NOT NULL,
-	UserID INT NOT NULL,
+	UserID NVARCHAR(255) NOT NULL,
 	PlatformID INT NOT NULL,
 	Title NVARCHAR(50) NOT NULL,
 	Goal NVARCHAR(255) NOT NULL,
@@ -96,7 +95,6 @@ CREATE TABLE Projects(
 	/*Constraints*/
 	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID),
 	CONSTRAINT fk_Projects_Platforms FOREIGN KEY (PlatformID) references Platforms(PlatformID) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_Projects_Users FOREIGN KEY (UserID) references Users(UserID) ON DELETE NO ACTION ON UPDATE NO ACTION,
 	CONSTRAINT ck_Projects_Status CHECK (Status = UPPER(Status))
 
 )
@@ -168,7 +166,7 @@ CREATE TABLE IdeationQuestions(
 CREATE TABLE Ideas(
 	IdeaID INT IDENTITY,
 	IQuestionID INT NOT NULL,
-	UserID INT NOT NULL,
+	UserID NVARCHAR(255) NOT NULL,
 	Reported BIT NOT NULL,
 	ReviewByAdmin BIT NOT NULL,
 	Visible BIT NOT NULL,
@@ -183,14 +181,13 @@ CREATE TABLE Ideas(
 
 	/*Constraints*/
 	CONSTRAINT pk_Ideas PRIMARY KEY(IdeaID),
-	CONSTRAINT fk_Ideas_Ideationquestions FOREIGN KEY (IQuestionID) references IdeationQuestions(IQuestionID) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_Ideas_Users FOREIGN KEY (UserID) references Users(UserID)
+	CONSTRAINT fk_Ideas_Ideationquestions FOREIGN KEY (IQuestionID) references IdeationQuestions(IQuestionID) ON DELETE CASCADE ON UPDATE CASCADE
 )
 
 
 CREATE TABLE Ideations (
-	ModuleID INT,
-	UserID INT NOT NULL,
+	ModuleID INT NOT NULL,
+	UserID NVARCHAR(255) NOT NULL,
 	Organisation BIT NOT NULL,
 	EventID INT,
 	UserIdea BIT NOT NULL,
@@ -199,10 +196,7 @@ CREATE TABLE Ideations (
 	ExtraInfo NVARCHAR(100),
 
 	/*Constraints*/
-	CONSTRAINT pk_Ideations PRIMARY KEY(ModuleID),
-	CONSTRAINT fk_Ideations_Module FOREIGN KEY (ModuleID) references Modules(ModuleID) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_Ideations_Users FOREIGN KEY (UserID) references Users(UserID),
-	CONSTRAINT fk_Ideations_OrganisationEvents FOREIGN KEY (EventID) references OrganisationEvents(EventID)
+	CONSTRAINT pk_Ideations PRIMARY KEY(ModuleID)
 )
 
 CREATE TABLE QuestionnaireQuestions(
@@ -220,13 +214,12 @@ CREATE TABLE QuestionnaireQuestions(
 CREATE TABLE Answers(
 	AnswerID INT IDENTITY,
 	QQuestionID INT NOT NULL,
-	UserID INT,
+	UserID NVARCHAR(255),
 	AnswerText NVARCHAR(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_Answers PRIMARY KEY(AnswerID),
-	CONSTRAINT fk_Answers_QuestionnaireQuestions FOREIGN KEY (QQuestionID) references QuestionnaireQuestions(QQuestionID) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_Answers_Users FOREIGN KEY (UserID) references Users(UserID)
+	CONSTRAINT fk_Answers_QuestionnaireQuestions FOREIGN KEY (QQuestionID) references QuestionnaireQuestions(QQuestionID) ON DELETE CASCADE ON UPDATE CASCADE
 )
 
 CREATE TABLE Options(
@@ -272,7 +265,7 @@ CREATE TABLE Votes(
 	VoteID INT IDENTITY,
 	DeviceID INT,
 	InputID INT NOT NULL,
-	UserID INT NOT NULL,
+	UserID NVARCHAR(255) NOT NULL,
 	InputType TINYINT NOT NULL,
 	UserMail NVARCHAR(100),
 	LocationX FLOAT,
@@ -281,13 +274,12 @@ CREATE TABLE Votes(
 
 	/*Constraints*/
 	CONSTRAINT pk_Votes PRIMARY KEY(VoteID),
-	CONSTRAINT fk_Votes_Devices FOREIGN KEY (DeviceID) references Devices(DeviceID),
-	CONSTRAINT fk_Votes_User FOREIGN KEY (UserID) references Users(UserID)
+	CONSTRAINT fk_Votes_Devices FOREIGN KEY (DeviceID) references Devices(DeviceID)
 )
 
 CREATE TABLE UserActivities(
 	ActivityID INT IDENTITY,
-	UserID INT NOT NULL,
+	UserID NVARCHAR(255) NOT NULL,
 	PlatformID INT NOT NULL,
 	EventID INT,
 	ProjectID INT,
@@ -299,7 +291,6 @@ CREATE TABLE UserActivities(
 
 	/*Constraints*/
 	CONSTRAINT pk_UserAcivities PRIMARY KEY(ActivityID),
-	CONSTRAINT fk_UserActivities_Users FOREIGN KEY (UserID) references Users(UserID),
 	CONSTRAINT fk_UserActivities_Platforms FOREIGN KEY (PlatformID) references Platforms(PlatformID),
 	CONSTRAINT fk_UserActivities_Projects FOREIGN KEY (ProjectID) references Projects(ProjectID),
 	CONSTRAINT fk_UserActivities_Modules FOREIGN KEY (ModuleID) references Modules(ModuleID),
@@ -312,14 +303,12 @@ CREATE TABLE UserActivities(
 CREATE TABLE Reports(
 	ReportID       INT IDENTITY,
 	IdeaID         INT NOT NULL,
-	FlaggerID      INT NOT NULL,
-	ReporteeID     INT NOT NULL,
+	FlaggerID      NVARCHAR(255) NOT NULL,
+	ReporteeID     NVARCHAR(255) NOT NULL,
 	Reason         NVARCHAR(255),
 	ReportApproved TINYINT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Reports PRIMARY KEY(ReportID),
-	CONSTRAINT fk_Reports_Ideas FOREIGN KEY (IdeaID) references Ideas(IdeaID),
-	CONSTRAINT fk_Reports_FlaggingUsers FOREIGN KEY (FlaggerID) references Users(UserID),
-	CONSTRAINT fk_Reports_ReportedUsers FOREIGN KEY (ReporteeID) references Users(UserID)
+	CONSTRAINT fk_Reports_Ideas FOREIGN KEY (IdeaID) references Ideas(IdeaID)
 )

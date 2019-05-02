@@ -1,4 +1,4 @@
-/* Platform */
+﻿/* Platform */
 INSERT INTO Platforms(PlatformID,Name,SiteUrl) 
 VALUES(1,'Stad Antwerpen','www.cityofideas.be')
 /* Users 
@@ -9,7 +9,7 @@ VALUES(1,'Stad Antwerpen','www.cityofideas.be')
 4 = moderator
 5 = admin
 6 = superadmin
-*/
+
 INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
 VALUES(1,'TSI_LoggedIn','niels.vanzandbergen@student.kdg.be',1,1)
 
@@ -33,10 +33,11 @@ VALUES(7,'TSI_Admin','niels.vanzandbergen@student.kdg.be',5,1)
 
 INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
 VALUES(8,'TSI_SuperAdmin','niels.vanzandbergen@student.kdg.be',6,1)
+*/
 
 /* UserDetails 
 BIT 0 = true | 1 = false 
-*/
+
 INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
 VALUES(1,'9120',0,1,1,'1997-09-08')
 
@@ -60,6 +61,7 @@ VALUES(7,'9120',0,1,1,'1997-09-08')
 
 INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
 VALUES(8,'9120',0,1,1,'1997-09-08')
+*/
 
 /* Organisationevents */
 INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate)
@@ -85,6 +87,15 @@ VALUES(1,1,'Vergroenen van de Groenplaats','2019-03-10','2019-03-30')
 
 INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
 VALUES(2,1,'Gebruik van nieuwe groene ruimte','2019-04-01','2019-04-30')
+
+INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
+VALUES(3,1,'Uitzoeken welke plaatsen uit de stadskern nog Groener kunnen','2019-05-01','2019-05-31')
+
+INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
+VALUES(4,1,'Begin van de vergroening van district Merksem','2019-06-01','2019-06-30')
+
+INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
+VALUES(5,1,'Begin van de vergroening van district Deurne','2019-07-01','2019-07-31')
 
 /* Modules */
 INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
@@ -178,7 +189,7 @@ VALUES(2,7,0,1,41,0,'We hebben input nodig van de lokale Antwerpenaars over de G
 
 /* Ideationquestions */
 INSERT INTO IdeationQuestions(IQuestionID,ModuleID,QuestionTitle,Description,WebsiteLink)
-VALUES(1,1,'Hoe maken we de Groenplaats groener?','Sinds 1990 is de Groenplaats niet meer groen zoals je kan zien via de link, dit is zeer jammer.','voorbeeldlink.be')
+VALUES(1,2,'Hoe maken we de Groenplaats groener?','Sinds 1990 is de Groenplaats niet meer groen zoals je kan zien via de link, dit is zeer jammer.','voorbeeldlink.be')
 
 /* ideas */
 INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID)
