@@ -169,3 +169,18 @@
     vertical-align: middle;
   }
 }
+
+/* footer */
+.footer {
+  width: 110%;
+  position: fixed;
+  bottom: 0;
+  padding: 1em 1em 0 1em;
+  margin: 0;
+  border-top: gainsboro solid thin ;
+  ul {
+    list-style-type: none;
+  }
+  
+  
+}
