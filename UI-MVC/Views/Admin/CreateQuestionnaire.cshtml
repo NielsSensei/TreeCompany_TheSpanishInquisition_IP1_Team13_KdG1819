@@ -1,7 +1,7 @@
 ﻿@using Domain.UserInput
 @using Domain.Projects
 
-@model Domain.Projects.Questionnaire
+@model Domain.Projects.Project
 @{ 
     IEnumerable<Domain.Projects.Project> projects = (IEnumerable<Domain.Projects.Project>)ViewData["projects"];
 }
@@ -10,21 +10,15 @@
     Layout = "_Layout";
 }
 
-<h1>Een nieuwe vragenlijst maken</h1>
+<h1>Een nieuwe vragenlijst maken voor project @Model.Title</h1>
 
     @if (Model != null)
     {
         <div class="form-group">
-            <label for="sel1">Selecteer een project:</label>
-            <select class="form-control" id="sel1">
-                @foreach (var p in ViewBag.projects)
-                {
-                    <option>@p</option>
-                }
-            </select>
+            
             <label for="sel2">Selecteer een fase:</label>
             <select class="form-control" id="sel2">
-               @foreach (Phase phase in ViewBag.Projects)
+               @foreach (Phase phase in ViewBag.Project)
                {
                    <option>@phase.Description</option>
                }

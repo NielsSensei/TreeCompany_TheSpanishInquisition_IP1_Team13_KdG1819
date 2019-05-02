@@ -16,16 +16,26 @@ namespace UIMVC.Controllers
         private ModuleManager modMgr { get; set; }
         private ProjectManager projMgr { get; set; }
         private QuestionnaireQuestionManager qqMgr { get; set; }
-        private UserManager uMgr { get; set; }
+        
 
          
 
         //Listing some basic methods that map to the functionalities described in YouTrack
         [HttpGet]
-        public IActionResult CreateQuestionnaire()
+        public IActionResult CreateQuestionnaire(int projectId)
         {
-            ViewData["projects"] = projMgr.GetAllProjectsForPlatform(1).AsEnumerable();
+            ViewData["project"] = projMgr.GetProject(projectId, true);
             ViewData["questionnaire"] = new Questionnaire();
+
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult CreateQuestionnaire(int projectId, int questionnaireId)
+        {
+            ViewData["project"] = projMgr.GetProject(projectId, true);
+            ViewData["questionnaire"] = modMgr.GetModule(questionnaireId, true, true);
 
 
             return View();
@@ -49,7 +59,7 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid)
         {
-            
+            ViewData["Questionnaire"] = modMgr.GetModule(questionnaireid, false, true);
             return View(new QuestionnaireQuestion());
         }
 

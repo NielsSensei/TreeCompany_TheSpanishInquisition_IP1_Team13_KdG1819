@@ -170,7 +170,7 @@ namespace BL
 
         public IEnumerable<Project> GetPlatformProjects(Platform platform)
         {
-            return ProjectRepo.ReadAll(platform.Id);
+            return ProjectRepo.ReadAllForPlatform(platform.Id);
         }
 
         #endregion
