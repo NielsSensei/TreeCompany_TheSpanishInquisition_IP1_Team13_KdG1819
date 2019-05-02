@@ -14,7 +14,7 @@ namespace BL
         // Added by NG
         // Modified by NVZ
         private ProjectRepository ProjectRepo { get; set; }
-        private ModuleManager ModuleMan { get; set; }
+        public ModuleManager ModuleMan { get; }
 
         // Added by NG
         // Modified by NVZ
@@ -134,8 +134,9 @@ namespace BL
                 ModuleMan.EditModule(alteredModule);
             }
 
-            //  ProjectRepo.Delete(projectId, phaseId);
-            ProjectRepo.Delete(phaseId);
+            //TODO: Enkel de phase moet verwijdert worden project niet? 
+            ProjectRepo.Delete(projectId);
+            
         }
 
         #endregion
@@ -145,18 +146,19 @@ namespace BL
 
         #region
 
+        /*
         private bool VerifyProjectEditable(int projectId)
         {
             throw new NotImplementedException("Out of scope!");
-        }
+        } */
 
         /*
          *  In case we want to show the projectpage for the POC. -NVZ
-         */
+         
         public List<Module> GetModules(int projectId, bool details)
         {
             throw new NotImplementedException("I might need this!");
-        }
+        } */
 
         /*
          * We have two options with this method:
@@ -168,12 +170,11 @@ namespace BL
          *
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
-         * 
-         */
+         *
         public void HandleProjectAction(int projectId, string actionName)
         {
             throw new NotImplementedException("I need this!");
-        }
+        } */
 
         #endregion
 

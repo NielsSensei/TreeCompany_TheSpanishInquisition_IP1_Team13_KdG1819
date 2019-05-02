@@ -22,17 +22,17 @@ namespace UIMVC.Services
             return _projectManager.GetProjects(project.Id);
         }
 
-        public IEnumerable<Project> GetPlatformProjects(Platform platform)
+        public IEnumerable<Project> CollectPlatformProjects(Platform platform)
         {
             return _projectManager.GetPlatformProjects(platform);
         }
 
-        public IEnumerable<Questionnaire> GetProjectQuestionnaires(Project project)
+        public IEnumerable<Questionnaire> CollectProjectQuestionnaires(Project project)
         {
             return _moduleManager.GetQuestionnaires(project.Id);
         }
 
-        public IEnumerable<Ideation> GetProjectIdeations(Project project)
+        public IEnumerable<Ideation> CollectProjectIdeations(Project project)
         {
             return _moduleManager.GetIdeations(project.Id);
         }

@@ -42,9 +42,11 @@ namespace BL
 //
 //            voteRepo.Create(obj);
 //            return true;
-            throw new NotImplementedException("Sorry, not implemented yet!");
-        }
+            //throw new NotImplementedException("Sorry, not implemented yet!");
+            return false;
+        } 
 
+        /*
         public bool LocationCheck(int deviceId, double? x, double? y)
         {
 //            IOT_Device device = voteRepo.ReadDevice(deviceId);
@@ -58,7 +60,7 @@ namespace BL
 //            if (deltaX < 10 && deltaY < 10) { return true; }
 //            return false;
             throw new NotImplementedException("Sorry, not implemented yet!");
-        }
+        } */
         #endregion
     }
 }

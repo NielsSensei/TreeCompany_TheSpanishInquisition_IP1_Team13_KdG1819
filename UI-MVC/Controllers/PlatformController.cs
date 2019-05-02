@@ -5,6 +5,7 @@ using Domain.Projects;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
@@ -78,6 +79,15 @@ namespace UIMVC.Controllers
             }
             
             return RedirectToAction("HandleErrorCode", "Errors", 404);
+        }
+        #endregion
+        
+        #region Ideation
+        public IActionResult CollectIdeation(int id)
+        {
+            Ideation ideation = (Ideation) _projectMgr.ModuleMan.GetModule(id, false, false);
+            
+            return View(ideation);            
         }
         #endregion
     }

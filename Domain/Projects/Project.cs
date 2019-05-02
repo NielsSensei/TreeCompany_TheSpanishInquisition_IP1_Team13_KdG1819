@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Domain.Common;
+using Domain.Identity;
 using Domain.Users;
 
 namespace Domain.Projects
@@ -36,8 +37,8 @@ namespace Domain.Projects
         }
 
         public Platform Platform { get; set; }
-        public User User { get; set; }
-
+        public UIMVCUser User { get; set; }
+       
         public string Goal { get; set; }
         public string Status { get; set; } //TODO bool? 
         public bool Visible { get; set; }
@@ -84,8 +85,9 @@ namespace Domain.Projects
         }
 
         public void AddImage(Image image)
-        {
-            PreviewImages.Add(image);
+        { 
+                PreviewImages.Add(image);
+            
         }
 
         public void SetCurrentPhase(int phaseID)
