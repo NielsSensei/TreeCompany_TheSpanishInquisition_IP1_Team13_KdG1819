@@ -7,7 +7,6 @@ using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using UIMVC.Models;
 
 namespace UIMVC.Controllers
@@ -99,12 +98,14 @@ namespace UIMVC.Controllers
                 return BadRequest("Ideation can't be null");
             }
 
-            Ideation i = new Ideation();
-            i.Project = new Project() {Id = project};
-            i.ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())};
-            i.type = ModuleType.Ideation;
-            i.Title = cim.Title;
-
+            Ideation i = new Ideation() 
+            {
+                Project = new Project() {Id = project},
+                ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
+                type = ModuleType.Ideation,
+                Title = cim.Title
+            };
+            
             if (cim.ExtraInfo != null)
             {
                 i.ExtraInfo = cim.ExtraInfo;  

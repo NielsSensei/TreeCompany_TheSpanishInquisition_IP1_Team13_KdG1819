@@ -34,12 +34,15 @@ namespace DAL
         {
             String myString = "";
 
-            for(int i = 0; i < myStrings.Count; i++)
+            if (myStrings != null)
             {
-                myString += myStrings[i];
-                if (i != myStrings.Count - 1) myString += ",";
+                for(int i = 0; i < myStrings.Count; i++)
+                {
+                    myString += myStrings[i];
+                    if (i != myStrings.Count - 1) myString += ",";
+                }
             }
-
+            
             return myString;
         }
 

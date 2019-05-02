@@ -47,19 +47,20 @@ namespace DAL
 
         private IdeationsDTO ConvertToDTO(Ideation obj)
         {
-            bool Org = obj.User.Role == Role.LOGGEDINORG;
-
-            return new IdeationsDTO
+            //bool Org = obj.User.Role == Role.LOGGEDINORG;
+            
+            return new IdeationsDTO()
             {
-                    ModuleID = obj.Id,
-                    UserID = obj.User.Id,
-                    ExtraInfo = obj.ExtraInfo,
-                    Organisation = Org,
-                    EventID = obj.Event.Id,
-                    UserIdea = obj.UserIdea,
-                    //MediaFile = obj.Media,
-                    RequiredFields = (byte) obj.RequiredFields
+                ModuleID = obj.Id,
+                UserID = obj.User.Id,
+                ExtraInfo = obj.ExtraInfo,
+                EventID = obj.Event.Id,
+                UserIdea = obj.UserIdea,
+                RequiredFields = (byte) obj.RequiredFields
             };
+                
+            //Organisation = Org,
+            //MediaFile = obj.Media,
         }
 
         private Ideation ConvertToDomain(IdeationsDTO DTO)
