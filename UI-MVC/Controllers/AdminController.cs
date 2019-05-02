@@ -13,8 +13,8 @@ namespace UIMVC.Controllers
     public class AdminController : Controller
     {
         //Managers (possibly) needed
-        private ModuleManager mMgr { get; set; }
-        private ProjectManager pMgr { get; set; }
+        private ModuleManager modMgr { get; set; }
+        private ProjectManager projMgr { get; set; }
         private QuestionnaireQuestionManager qqMgr { get; set; }
         private UserManager uMgr { get; set; }
 
@@ -24,16 +24,68 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult CreateQuestionnaire()
         {
-            ViewData["projects"] = pMgr.GetAllProjectsForPlatform(1).AsEnumerable();
+            ViewData["projects"] = projMgr.GetAllProjectsForPlatform(1).AsEnumerable();
+            ViewData["questionnaire"] = new Questionnaire();
+
 
             return View();
         }
 
+
         [HttpPost]
-        public IActionResult CreateQuestionnaire(Module questionnaire, Project project, List<QuestionnaireQuestion> qQuestions)
+        public IActionResult CreateQuestionnaire(Module questionnaire, int projectId, int phaseId)
         {
-            return RedirectToAction("");
+
+            Questionnaire newQuestionnaire = new Questionnaire
+            {
+                Project = projMgr.GetProject(projectId, false),
+                
+                UserCount = 0,
+                Questions = new List<QuestionnaireQuestion>()
+            };
+            return RedirectToAction("AddQuestionnaireQuestion",newQuestionnaire.Id);
         }
+
+        [HttpGet]
+        public IActionResult AddQuestionnaireQuestion(int questionnaireid)
+        {
+            
+            return View(new QuestionnaireQuestion());
+        }
+
+
+
+
+        [HttpPost]
+        public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
+        {
+            Questionnaire toAdd = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
+            QuestionnaireQuestion newQuestion = new QuestionnaireQuestion
+            {
+
+                QuestionText = qQ.QuestionText,
+                QuestionType = qQ.QuestionType,
+                Module = toAdd,
+                Questionnaire = toAdd,
+                Optional = qQ.Optional,
+                Answers = new List<Answer>()
+
+
+
+            };
+
+            toAdd.Questions.Add(qQ);
+            qqMgr.MakeQuestion(newQuestion, toAdd.Id);
+            modMgr.EditModule(toAdd);
+
+            return RedirectToAction("CreateQuestionnaire", toAdd.Id);
+
+            
+
+            
+        }
+
+
 
 
 

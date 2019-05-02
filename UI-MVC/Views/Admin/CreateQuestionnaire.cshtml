@@ -1,4 +1,7 @@
-﻿@model Domain.Projects.Questionnaire
+﻿@using Domain.UserInput
+@using Domain.Projects
+
+@model Domain.Projects.Questionnaire
 @{ 
     IEnumerable<Domain.Projects.Project> projects = (IEnumerable<Domain.Projects.Project>)ViewData["projects"];
 }
@@ -21,7 +24,10 @@
             </select>
             <label for="sel2">Selecteer een fase:</label>
             <select class="form-control" id="sel2">
-               <option>phaseholder</option>
+               @foreach (Phase phase in ViewBag.Projects)
+               {
+                   <option>@phase.Description</option>
+               }
             </select>
 
         </div>
