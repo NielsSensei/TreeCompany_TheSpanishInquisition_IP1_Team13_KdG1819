@@ -1,4 +1,5 @@
 @using System.Collections
+@using DAL.Data_Transfer_Objects
 @using Domain.Projects
 @model UIMVC.Models.ProjectViewModel
 @{
@@ -43,10 +44,12 @@
     </div>
 
 
+    @Html.Partial("CreatePhase", Model.Project.Phases.Capacity)
+
     @{
         for (int i = 0; i < 2 /*@Model.Phases.Count*/; i++)
         {
-            <h5>Phase @(i+1)</h5>
+            <h5>Phase @(i + 1)</h5>
 
             <div class="form-row">
                 <div class="form-group col-md-12">
@@ -61,16 +64,19 @@
                     <label asp-for="Phases[i].EndDate">EndDate</label>
                     <input type="date" asp-for="Phases[i].EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
                 </div>
-                
-                 
-                
+                <div class="form-group col-md-6">
+                    @Html.RadioButtonFor(m => m.Phases[i].IsCurrentPhase, true)
+                    <label asp-for="Phases[i].IsCurrentPhase">Set as Current Phase</label>
+                </div>
             </div>
         }
     }
 
+   
+
     <input type="submit" value="Opslaan" class="btn"/>
 </form>
 <script >
-
+    
 
 </script>

@@ -12804,7 +12804,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-console.log('JQuery validation bundle has been loaded')
+console.log('JQuery validation bundle has been loaded');
 
 /***/ })
 

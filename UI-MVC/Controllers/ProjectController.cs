@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using BL;
+using DAL.Data_Transfer_Objects;
+using Domain.Identity;
 using Domain.Projects;
 using Domain.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -47,23 +49,31 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult Create(ProjectViewModel projectViewModel /*Project project*/)
         {
+            if (projectViewModel == null)
+            {
+                return BadRequest("Project cannot be null");
+            }
+            
             Project project = projectViewModel.Project;
 
             project.Platform = new Platform {Id = 1};
-            project.User = new User() {Id = 1};
-            project.CurrentPhase = new Phase() {Id = 1};
+            project.User = new UIMVCUser{Id = "1"};
 
+            var currentPhase = projectViewModel.Phases.Find(e=>e.IsCurrentPhase);
+
+            if (currentPhase == null)
+            {
+                return BadRequest("Phase cannot be null");
+            }
+            project.CurrentPhase = projectViewModel.Phases.Find(e=>e.IsCurrentPhase);
             project.Status = project.Status.ToUpper();
             project.LikeVisibility = 1;
+            
 
             Project newProject = _mgr.MakeProject(project);
 
-            
-            
-
-            for (int i = 0; i < 4; i++)
+            foreach (var newPhase in projectViewModel.Phases)
             {
-                Phase newPhase = projectViewModel.Phases[i];
                 newProject.Phases.Add(newPhase);
                 newPhase.Project = newProject;
                 _mgr.MakePhase(newPhase, project.Id);
@@ -72,11 +82,9 @@ namespace UIMVC.Controllers
         }
 
 
-        public IActionResult CreatePhase(int projectId, Phase phase)
+        public PartialViewResult Load()
         {
-            _mgr.MakePhase(phase, projectId);
-
-            return PartialView();
+            return PartialView("CreatePhase");
         }
 
         //GET: /Project/Detail/<project_id>
