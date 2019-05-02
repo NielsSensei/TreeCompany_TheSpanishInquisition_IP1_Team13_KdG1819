@@ -5,6 +5,7 @@ using Domain.Projects;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {

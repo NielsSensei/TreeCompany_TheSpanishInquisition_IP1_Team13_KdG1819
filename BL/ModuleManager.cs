@@ -105,6 +105,20 @@ namespace BL
             IdeationRepo.Create(ideation);
         }
         
+        //Added by NVZ 
+        public void MakeTag(string Tag, int moduleID, bool questionnaire)
+        {
+            if (questionnaire)
+            {
+                QuestionnaireRepo.CreateTag(Tag, moduleID);
+            }
+
+            if (!questionnaire)
+            {
+                IdeationRepo.CreateTag(Tag, moduleID);
+            }
+        }
+        
         //Added by NG
         public void EditModule(Module module)
         {
