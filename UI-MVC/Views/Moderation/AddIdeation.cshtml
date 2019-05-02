@@ -1,13 +1,16 @@
 @* TODO dat je ideation op basis van event kan maken *@
 
+@using Domain.Identity
+@using Microsoft.AspNetCore.Identity
 @model UIMVC.Models.CreateIdeationModel
+@inject UserManager<UIMVCUser> UserManager
 
 <div class="container">
     <div class="row">
         <div class="col-md-10">
             <h1>Een Ideation aanmaken.</h1>
             <form asp-controller="Moderation" asp-action="AddIdeation" method="post" asp-route-cim="@Model" 
-                  asp-route-project="@ViewData["Project"]">
+                  asp-route-project="@ViewData["Project"]" asp-route-user="@UserManager.GetUserId(User)">
                 <div class="form-group">
                     <label>ProjectID</label>
                     <input disabled value="@ViewData["Project"]" class="form-control"/>

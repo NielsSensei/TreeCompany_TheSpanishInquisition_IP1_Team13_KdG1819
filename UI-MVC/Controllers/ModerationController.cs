@@ -96,7 +96,7 @@ namespace UIMVC.Controllers
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
-        public IActionResult AddIdeation(CreateIdeationModel cim, int project)
+        public IActionResult AddIdeation(CreateIdeationModel cim, int project, string user)
         {
             if (cim == null)
             {
@@ -107,6 +107,7 @@ namespace UIMVC.Controllers
             {
                 Project = new Project() {Id = project},
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
+                User = new UIMVCUser(){Id = user},
                 type = ModuleType.Ideation,
                 Title = cim.Title,
                 OnGoing = true
