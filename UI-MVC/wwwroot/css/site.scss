@@ -163,9 +163,35 @@
   flex-direction: column;
   align-items: center;
   padding: .2em;
-  
+
   p {
     text-align: center;
     vertical-align: middle;
   }
+}
+
+/* footer */
+.footer {
+  width: 100%;
+  position: absolute;
+  padding: 1em 1em 0 1em;
+  bottom: 0;
+  margin: 0;
+  border-top: gainsboro solid thin ;
+  background-color: ghostwhite;
+  ul {
+    list-style-type: none;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 10em;
+}
+
+/* about page */
+.textScript {
+  background-color: ghostwhite;
+  border: gainsboro solid thin ;
 }
