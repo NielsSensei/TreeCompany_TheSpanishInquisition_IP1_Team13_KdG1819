@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BL;
 using Domain.Projects;
+using Domain.UserInput;
 using Domain.Users;
 
 namespace UIMVC.Services
@@ -10,11 +11,13 @@ namespace UIMVC.Services
     {
         private readonly ProjectManager _projectManager;
         private readonly ModuleManager _moduleManager;
+        private readonly IdeationQuestionManager _ideationQuestionManager;
 
         public ProjectService()
         {
             _projectManager = new ProjectManager();
             _moduleManager = new ModuleManager();
+            _ideationQuestionManager = new IdeationQuestionManager();
         }
 
         public IEnumerable<Project> GetProjects(Project project)
@@ -36,5 +39,11 @@ namespace UIMVC.Services
         {
             return _moduleManager.GetIdeations(project.Id);
         }
+
+        public IEnumerable<Idea> CollectThreadIdeas(IdeationQuestion ideationQuestion)
+        {
+            return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
+        }
+        
     }
 }
