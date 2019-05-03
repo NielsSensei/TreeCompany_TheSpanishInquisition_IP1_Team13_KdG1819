@@ -179,7 +179,7 @@ namespace UIMVC.Controllers
         {
 
             ViewData["CurrentFilter"] = searchString;
-            var users = (IEnumerable<User>)_userMgr.GetUsers();
+            var users = (IEnumerable<UIMVCUser>)_userManager.Users;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -206,7 +206,7 @@ namespace UIMVC.Controllers
         [Authorize]
         public IActionResult ToggleBanUser(int userId)
         {
-            _userMgr.ToggleBanUser(userId);
+            _userManager.ToggleBanUser(userId);
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
 
@@ -214,7 +214,7 @@ namespace UIMVC.Controllers
         [Authorize]
         public IActionResult VerifyUser(int userId)
         {
-            _userMgr.VerifyUser(userId);
+            _userManager.VerifyUser(userId);
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
     }
