@@ -2,9 +2,11 @@
 using System.Linq;
 using BL;
 using Domain.Projects;
+using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
@@ -13,11 +15,13 @@ namespace UIMVC.Controllers
     {
         private readonly PlatformManager _platformMgr;
         private readonly ProjectManager _projectMgr;
+        private readonly IdeationQuestionManager _iqMgr;
 
         public PlatformController()
         {
             _platformMgr = new PlatformManager();
             _projectMgr = new ProjectManager();
+            _iqMgr = new IdeationQuestionManager();
         }
 
         [Route("Platform/{id}")]
@@ -30,6 +34,17 @@ namespace UIMVC.Controllers
             }
             return View(platform);
         }
+
+        #region Platform
+
+        public IActionResult Search(string search)
+        {
+            ViewData["search"] = search;
+            var platforms = _platformMgr.SearchPlatforms(search);
+            return View(platforms);
+        }
+
+        #endregion
 
         #region Change
         [Authorize]
@@ -78,6 +93,22 @@ namespace UIMVC.Controllers
             }
             
             return RedirectToAction("HandleErrorCode", "Errors", 404);
+        }
+        #endregion
+        
+        #region Ideation
+        public IActionResult CollectIdeation(int id)
+        {
+            Ideation ideation = (Ideation) _projectMgr.ModuleMan.GetModule(id, false, false);
+            
+            return View(ideation);            
+        }
+
+        public IActionResult CollectIdeationThread(int id)
+        {
+            IdeationQuestion iq = _iqMgr.GetQuestion(id, false);
+            
+            return View(iq);
         }
         #endregion
     }

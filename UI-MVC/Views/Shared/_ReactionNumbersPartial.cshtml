@@ -1,7 +1,6 @@
 @model LikeViewModel
 
-<section>
-    
+<section>  
     @if (Model.iconStyle == 1)
     {
         <table>
@@ -32,8 +31,9 @@
         </table>
     }
 
-    @*if (!Model.onlyLikes && Model.shareCount > -1)
-        {
+    @if (Model.iconStyle == 3)
+    {
+        <table>
             <tr>
                 <td><img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/></td>
                 <td>&nbsp;</td>
@@ -46,7 +46,49 @@
                 <td><img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/></td>
                 <td>&nbsp;</td>
                 <td>@Model.twitterLikeCount</td>
+                <td>&nbsp;</td>
+                <td><img alt="shareCount" src="https://image.flaticon.com/icons/svg/1051/1051309.svg" height="50" width="50"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.shareCount</td>
+                <td>&nbsp;</td>
+                <td><img alt="retweetCount" src="https://image.flaticon.com/icons/svg/9/9148.svg" height="50" width="50"/></td>
+                <td>&nbsp;</td>
+                <td>@Model.retweetCount</td>
+            </tr>   
+        </table>           
+    }
+    
+    @if (Model.iconStyle == 4)
+    {
+        <table>
+            <tr>
+                <td>Gepost door: @Model.Username</td>
+                <td>&nbsp;</td>
+                <td><img alt="user" src="https://image.flaticon.com/icons/svg/74/74472.svg" height="25" width="25"/></td>
+                <td>&nbsp;</td>
+                <td>Aantal stemmen: @Model.likeCount |</td>
+                <td>&nbsp;</td>
+                <td>Aantal shares: @Model.shareCount |</td>
+                <td>&nbsp;</td>
+                <td>Aantal retweets: @Model.retweetCount</td>
             </tr>
-        }*@
-
+        </table>
+    }
+    
+    @if (Model.iconStyle == 5)
+        {
+            <table>
+                <tr>
+                    <td>Gepost door: @Model.Username</td>
+                    <td>&nbsp;</td>
+                    <td><img alt="verified" src="https://image.flaticon.com/icons/svg/148/148839.svg" height="25" width="25"/></td>
+                    <td>&nbsp;</td>
+                    <td>Aantal stemmen: @Model.likeCount |</td>
+                    <td>&nbsp;</td>
+                    <td>Aantal shares: @Model.shareCount |</td>
+                    <td>&nbsp;</td>
+                    <td>Aantal retweets: @Model.retweetCount</td>
+                </tr>
+            </table>
+        }
 </section>

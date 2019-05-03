@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BL;
 using Domain.Projects;
+using Domain.UserInput;
 using Domain.Users;
 
 namespace UIMVC.Services
@@ -9,26 +10,34 @@ namespace UIMVC.Services
     {
         private readonly ProjectManager _projectManager;
         private readonly ModuleManager _moduleManager;
+        private readonly IdeationQuestionManager _ideationQuestionManager;
 
         public ProjectService()
         {
             _projectManager = new ProjectManager();
             _moduleManager = new ModuleManager();
+            _ideationQuestionManager = new IdeationQuestionManager();
         }
 
-        public IEnumerable<Project> GetPlatformProjects(Platform platform)
+        public IEnumerable<Project> CollectPlatformProjects(Platform platform)
         {
             return _projectManager.GetPlatformProjects(platform);
         }
 
-        public IEnumerable<Questionnaire> GetProjectQuestionnaires(Project project)
+        public IEnumerable<Questionnaire> CollectProjectQuestionnaires(Project project)
         {
             return _moduleManager.GetQuestionnaires(project.Id);
         }
 
-        public IEnumerable<Ideation> GetProjectIdeations(Project project)
+        public IEnumerable<Ideation> CollectProjectIdeations(Project project)
         {
             return _moduleManager.GetIdeations(project.Id);
         }
+
+        public IEnumerable<Idea> CollectThreadIdeas(IdeationQuestion ideationQuestion)
+        {
+            return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
+        }
+        
     }
 }

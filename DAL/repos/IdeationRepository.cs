@@ -6,6 +6,7 @@ using Domain.Common;
 using Domain.Projects;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
+using Domain.Identity;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,11 +29,9 @@ namespace DAL
         #region
         private ModulesDTO GrabModuleInformationDTO(Ideation obj)
         {
-            return new ModulesDTO
+            ModulesDTO DTO = new ModulesDTO
             {
                 ModuleID = obj.Id,
-                ProjectID = obj.Project.Id,
-                PhaseID = obj.ParentPhase.Id,
                 OnGoing = obj.OnGoing,
                 Title = obj.Title,
                 LikeCount = obj.LikeCount,
@@ -43,23 +42,41 @@ namespace DAL
                 Tags = ExtensionMethods.ListToString(obj.Tags),
                 IsQuestionnaire = obj.type == ModuleType.Questionnaire
             };
+
+            if (obj.Project != null)
+            {
+                DTO.ProjectID = obj.Project.Id;
+            }
+
+            if (obj.ParentPhase != null)
+            {
+                DTO.PhaseID = obj.ParentPhase.Id;
+            }
+            
+            return DTO;
         }
 
+        // XV: TODO Create a check for organisation accounts
         private IdeationsDTO ConvertToDTO(Ideation obj)
         {
-            bool Org = obj.User.Role == Role.LOGGEDINORG;
-
-            return new IdeationsDTO
+            //bool Org = obj.User.Role == Role.LOGGEDINORG;
+            IdeationsDTO DTO = new IdeationsDTO()
             {
                     ModuleID = obj.Id,
                     UserID = obj.User.Id,
                     ExtraInfo = obj.ExtraInfo,
-                    Organisation = Org,
-                    EventID = obj.Event.Id,
-                    UserIdea = obj.UserIdea,
                     //MediaFile = obj.Media,
                     RequiredFields = (byte) obj.RequiredFields
             };
+
+            if (obj.Event != null)
+            {
+                DTO.EventID = obj.Event.Id;
+                DTO.UserIdea = obj.UserIdea;
+                //DTO.Organisation = Org;
+            }
+
+            return DTO;
         }
 
         private Ideation ConvertToDomain(IdeationsDTO DTO)
@@ -67,7 +84,7 @@ namespace DAL
             return new Ideation
             {
                 Id = DTO.ModuleID,
-                User = new User { Id = DTO.UserID },
+                User = new UIMVCUser { Id = DTO.UserID },
                 UserIdea = DTO.UserIdea,
                 Event = new Event { Id = DTO.EventID },
                 //Media = DTO.MediaFile,
@@ -115,8 +132,11 @@ namespace DAL
             }
 
             obj.Id = FindNextAvailableIdeationId();
-            ctx.Modules.Add(GrabModuleInformationDTO(obj));
-            ctx.Ideations.Add(ConvertToDTO(obj));
+            ModulesDTO newModule = GrabModuleInformationDTO(obj);
+            IdeationsDTO newIdeation = ConvertToDTO(obj);
+            
+            ctx.Modules.Add(newModule);
+            ctx.Ideations.Add(newIdeation);
             ctx.SaveChanges();
 
             return obj;
@@ -236,11 +256,13 @@ namespace DAL
         #region
         public string CreateTag(string obj, int moduleID)
         {
-            Ideation ideationWTags = Read(moduleID, false);
-            ModulesDTO module = GrabModuleInformationDTO(ideationWTags);
-            module.Tags += "," + obj;
-            ctx.SaveChanges();
+            Ideation ideationWTags = ReadWithModule(moduleID);
+            string oldTags = ExtensionMethods.ListToString(ideationWTags.Tags);
+            oldTags += "," + obj;
 
+            ideationWTags.Tags = ExtensionMethods.StringToList(oldTags);
+            Update(ideationWTags);
+            
             return obj;
         }
 

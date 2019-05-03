@@ -40,6 +40,7 @@ namespace UIMVC
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
+                options.User.RequireUniqueEmail = false;
             });
 
              services.AddAuthentication().AddGoogle(googleOptions =>
@@ -56,6 +57,8 @@ namespace UIMVC
             
             // Adding services for injecting into views
             services.AddTransient<ProjectService>();
+            services.AddTransient<QuestionService>();
+            services.AddTransient<UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

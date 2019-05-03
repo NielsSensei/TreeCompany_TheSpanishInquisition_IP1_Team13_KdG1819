@@ -48,9 +48,6 @@ namespace BL
         public void MakeQuestion(IdeationQuestion question, int moduleId)
         {
             IdeationQuestionRepo.Create(question);
-            var alteredIdeation = (Ideation)ModuleMan.GetModule(moduleId, false, false);
-            alteredIdeation.CentralQuestions.Add(question);
-            ModuleMan.EditModule(alteredIdeation);
         }
 
         public void RemoveQuestion(int questionId)
@@ -63,6 +60,10 @@ namespace BL
             return IdeationQuestionRepo.ReadAll().ToList();
         }
 
+        public List<IdeationQuestion> GetAllByModuleId(int id)
+        {
+            return IdeationQuestionRepo.ReadAll(id).ToList();
+        }
         #endregion
 
         // Added by NVZ
@@ -104,14 +105,13 @@ namespace BL
         /*
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ
-         */
+         
         // Modified by EKT
         public void MakeIdea(int questionId, Idea idea)
         {
             throw new NotImplementedException();
             
-        }
-
+        }*/
         #endregion
 
         // Added by NG
@@ -159,23 +159,23 @@ namespace BL
         /*
          * Unlike QuestionnaireQuestion this has noting to do with the enum.
          * This is rather a system where we we work with FieldTypes. - NVZ
-         * 
-         */
+         */  
         public void DefineQuestionType()
         {
-            throw new NotImplementedException("I might need this!");
-        }
+            //throw new NotImplementedException("I might need this!");
+        } 
 
         /*
          * This might be a method that can be used for seeing if the question
          * is part of a module of a closed Project. If you can find other
          * uses for this boolean method be free to do so. - NVZ
+        */ 
          
-         */
         public bool VerifyQuestion(int questionId)
         {
-            throw new NotImplementedException("Out of Scope!");
-        }
+            //throw new NotImplementedException("Out of Scope!");
+            return false;
+        } 
 
         /*
          * We have two options with this method:
@@ -187,17 +187,12 @@ namespace BL
          *
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
-         * 
          */
+         
         public void HandleQuestionAction(int questionId, string actionName)
         {
-            throw new NotImplementedException("I might need this!");
-        }
-
-        public List<IdeationQuestion> GetAllByModuleId(int id)
-        {
-            throw new NotImplementedException();
-        }
+            //throw new NotImplementedException("I might need this!");
+        } 
         #endregion
     }
 }
