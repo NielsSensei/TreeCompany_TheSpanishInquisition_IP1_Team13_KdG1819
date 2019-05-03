@@ -1,39 +1,70 @@
 @using Domain.UserInput
+@using UIMVC.Services
 @model IEnumerable<Domain.UserInput.Idea>
-
+@inject UserService UserService
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "All Ideas";
 }
 
-<title>Overzicht van Ideeën</title>
-<h2>Hier zie je een overzicht van alle ideeën</h2>
+<h2>Hier zie je een overzicht van alle ideeën.</h2>
+<hr/>
+<div class="form-group">
+    <div class="container">
+        <div class="row" id="comboFilter">
+            <div class="col-2">
+                <label>Selecteer filter:</label>
+            </div>
+            <div class="col-10">
+                @Html.DropDownList("Filter", new SelectListItem[]
+                {
+                    new SelectListItem() { Text = "Alle ideeen", Value = "all" },
+                    new SelectListItem() { Text = "Geraporteerde ideeen", Value = "report" },
+                    new SelectListItem() { Text = "Ideeen waar een admin nodig is", Value = "admin" }
+                },
+                //TODO onchange naar aparte js?
+                new { @class = "form-control", @onchange= "document.location.href = '/Moderation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;" })
+            </div>
+        </div>
+    </div>
+</div>
 
-<table class="table">
-    <tr>
-        <th>Id</th>
-        <th>CentraleVraag</th>
-        <th>User</th>
-        <th>Review door Moderator nodig?</th>
-        <th>Review door Admin nodig?</th>
-        <th>Titel</th>
-        <th>Aantal Stemmen</th>
-        <th>Aantal Shares</th>
-        <th>Aantal Retweets</th>
-    </tr>
-    <!-- TODO: link naar Ideation Thread -->
-    <!-- TODO: link naar User profiel? -->
-    @foreach (Idea idea in Model)
-    {
+@if (Model.Any(i => i.Visible))
+{
+    <table class="table">
         <tr>
-            <td>@idea.Id</td>
-            <td>@idea.IdeaQuestion.Id</td>
-            <td>@idea.User.Id</td>
-            <td>@idea.Reported</td>
-            <td>@idea.ReviewByAdmin</td>
-            <td>@idea.Title</td>
-            <td>@idea.VoteCount</td>
-            <td>@idea.ShareCount</td>
-            <td>@idea.RetweetCount</td>
+            <th>Id</th>
+            <th>Centrale Vraag</th>
+            <th>Gebruiker</th>
+            <th>Is het geraporteerd?</th>
+            <th>Review nodig door admin?</th>
+            <th>Titel</th>
+            <th>Aantal stemmen</th>
+            <th>Aantal Shares</th>
+            <th>Aantal Retweets</th>
         </tr>
-    }
-</table>
+        <!-- TODO: link naar User profiel? -->
+        @foreach (Idea idea in Model)
+        {
+            if (idea.Visible)
+            {
+                <tr>
+                    <td>@idea.Id</td>
+                    <td><a asp-controller="Platform" asp-action="CollectIdeationThread" 
+                           asp-route-id="@idea.IdeaQuestion.Id">@idea.IdeaQuestion.Id</a></td>
+                    <td>@UserService.CollectUserName(idea.User.Id)</td>
+                    <td>@idea.Reported</td>
+                    <td>@idea.ReviewByAdmin</td>
+                    <td>@idea.Title</td>
+                    <td>@idea.VoteCount</td>
+                    <td>@idea.ShareCount</td>
+                    <td>@idea.RetweetCount</td>
+                    <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">Bekijk Idee</a></td>
+                </tr>
+            }
+        }
+    </table>
+}else
+{
+    <p>Geen ideeën gevonden op dit platform.</p>
+}

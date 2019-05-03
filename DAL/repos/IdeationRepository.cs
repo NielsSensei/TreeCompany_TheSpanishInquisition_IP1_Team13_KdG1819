@@ -6,6 +6,7 @@ using Domain.Common;
 using Domain.Projects;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
+using Domain.Identity;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,40 +29,54 @@ namespace DAL
         #region
         private ModulesDTO GrabModuleInformationDTO(Ideation obj)
         {
-            return new ModulesDTO
+            ModulesDTO DTO = new ModulesDTO
             {
                 ModuleID = obj.Id,
-                ProjectID = obj.Project.Id,
-                PhaseID = obj.ParentPhase.Id,
                 OnGoing = obj.OnGoing,
+                Title = obj.Title,
                 LikeCount = obj.LikeCount,
                 FbLikeCount = obj.FbLikeCount,
                 TwitterLikeCount = obj.TwitterLikeCount,
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
                 Tags = ExtensionMethods.ListToString(obj.Tags),
-                IsQuestionnaire = false
+                IsQuestionnaire = obj.type == ModuleType.Questionnaire
             };
+
+            if (obj.Project != null)
+            {
+                DTO.ProjectID = obj.Project.Id;
+            }
+
+            if (obj.ParentPhase != null)
+            {
+                DTO.PhaseID = obj.ParentPhase.Id;
+            }
+            
+            return DTO;
         }
 
+        // XV: TODO Create a check for organisation accounts
         private IdeationsDTO ConvertToDTO(Ideation obj)
         {
-            bool Org = false;
-
-            if (obj.User.Role == Role.LOGGEDINORG)
-                Org = true;
-
-            return new IdeationsDTO
+            //bool Org = obj.User.Role == Role.LOGGEDINORG;
+            IdeationsDTO DTO = new IdeationsDTO()
             {
                     ModuleID = obj.Id,
                     UserID = obj.User.Id,
                     ExtraInfo = obj.ExtraInfo,
-                    Organisation = Org,
-                    EventID = obj.Event.Id,
-                    UserIdea = obj.UserIdea,
-                    MediaFile = obj.Media,
+                    //MediaFile = obj.Media,
                     RequiredFields = (byte) obj.RequiredFields
             };
+
+            if (obj.Event != null)
+            {
+                DTO.EventID = obj.Event.Id;
+                DTO.UserIdea = obj.UserIdea;
+                //DTO.Organisation = Org;
+            }
+
+            return DTO;
         }
 
         private Ideation ConvertToDomain(IdeationsDTO DTO)
@@ -69,10 +84,10 @@ namespace DAL
             return new Ideation
             {
                 Id = DTO.ModuleID,
-                User = new User { Id = DTO.UserID },
+                User = new UIMVCUser { Id = DTO.UserID },
                 UserIdea = DTO.UserIdea,
                 Event = new Event { Id = DTO.EventID },
-                Media = DTO.MediaFile,
+                //Media = DTO.MediaFile,
                 ExtraInfo = DTO.ExtraInfo,
                 RequiredFields = DTO.RequiredFields
             };
@@ -82,6 +97,7 @@ namespace DAL
         {
             ideation.Project = new Project { Id = DTO.ProjectID };
             ideation.ParentPhase = new Phase { Id = DTO.PhaseID };
+            ideation.Title = DTO.Title;
             ideation.OnGoing = DTO.OnGoing;
             ideation.LikeCount = DTO.LikeCount;
             ideation.FbLikeCount = DTO.FbLikeCount;
@@ -90,6 +106,12 @@ namespace DAL
             ideation.RetweetCount = DTO.RetweetCount;
             ideation.Tags = ExtensionMethods.StringToList(DTO.Tags);
             return ideation;
+        }
+        
+        private int FindNextAvailableIdeationId()
+        {               
+            int newId = ReadAll().Max(ideation => ideation.Id)+1;
+            return newId;
         }
         #endregion
 
@@ -109,8 +131,12 @@ namespace DAL
                 }
             }
 
-            ctx.Modules.Add(GrabModuleInformationDTO(obj));
-            ctx.Ideations.Add(ConvertToDTO(obj));
+            obj.Id = FindNextAvailableIdeationId();
+            ModulesDTO newModule = GrabModuleInformationDTO(obj);
+            IdeationsDTO newIdeation = ConvertToDTO(obj);
+            
+            ctx.Modules.Add(newModule);
+            ctx.Ideations.Add(newIdeation);
             ctx.SaveChanges();
 
             return obj;
@@ -119,17 +145,8 @@ namespace DAL
         public Ideation Read(int id, bool details)
         {
             IdeationsDTO ideationDTO = null;
-
-            if (details)
-            {
-                ideationDTO = ctx.Ideations.AsNoTracking().First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", ideationDTO.ModuleID);
-            }
-            else
-            {
-                ideationDTO = ctx.Ideations.First(m => m.ModuleID == id);
-                ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", ideationDTO.ModuleID);
-            }
+            ideationDTO = details ? ctx.Ideations.AsNoTracking().First(m => m.ModuleID == id) : ctx.Ideations.First(m => m.ModuleID == id);
+            ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", id);
 
             return ConvertToDomain(ideationDTO);
         }
@@ -147,24 +164,37 @@ namespace DAL
         public void Update(Ideation obj)
         {
             IdeationsDTO newIdeation = ConvertToDTO(obj);
-            Ideation found = Read(obj.Id, false);
-            IdeationsDTO foundIdeation = ConvertToDTO(found);
-            foundIdeation = newIdeation;
-
+            IdeationsDTO foundIdeation = ctx.Ideations.FirstOrDefault(dto => dto.ModuleID == newIdeation.ModuleID);
+            if (foundIdeation != null)
+            {
+                foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
+                foundIdeation.MediaFile = newIdeation.MediaFile;
+                foundIdeation.RequiredFields = newIdeation.RequiredFields;
+            }
+            
             ModulesDTO newModule = GrabModuleInformationDTO(obj);
-            Ideation foundWModule = ReadWithModule(obj.Id);
-            ModulesDTO foundModule = GrabModuleInformationDTO(foundWModule);
-            foundModule = newModule;
+            ModulesDTO foundModule = ctx.Modules.FirstOrDefault(dto => dto.ModuleID == newModule.ModuleID);
+            if (foundModule != null)
+            {
+                foundModule.OnGoing = newModule.OnGoing;
+                foundModule.Title = newModule.Title;
+                foundModule.LikeCount = newModule.LikeCount;
+                foundModule.FbLikeCount = newModule.FbLikeCount;
+                foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
+                foundModule.ShareCount = newModule.ShareCount;
+                foundModule.RetweetCount = newModule.RetweetCount;
+                foundModule.Tags = newModule.Tags;
+            }
 
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
-        {
-            Ideation toDelete = Read(id, false);
-            ctx.Ideations.Remove(ConvertToDTO(toDelete));
-            Ideation toDeleteModule = Read(id, false);
-            ctx.Modules.Remove(GrabModuleInformationDTO(toDeleteModule));
+        {            
+            IdeationsDTO toDelete = ctx.Ideations.First(r => r.ModuleID == id);
+            ctx.Ideations.Remove(toDelete);
+            ModulesDTO toDeleteModule = ctx.Modules.First(r => r.ModuleID == id);
+            ctx.Modules.Remove(toDeleteModule);
             ctx.SaveChanges();
         }
         
@@ -226,11 +256,13 @@ namespace DAL
         #region
         public string CreateTag(string obj, int moduleID)
         {
-            Ideation ideationWTags = Read(moduleID, false);
-            ModulesDTO module = GrabModuleInformationDTO(ideationWTags);
-            module.Tags += "," + obj;
-            ctx.SaveChanges();
+            Ideation ideationWTags = ReadWithModule(moduleID);
+            string oldTags = ExtensionMethods.ListToString(ideationWTags.Tags);
+            oldTags += "," + obj;
 
+            ideationWTags.Tags = ExtensionMethods.StringToList(oldTags);
+            Update(ideationWTags);
+            
             return obj;
         }
 

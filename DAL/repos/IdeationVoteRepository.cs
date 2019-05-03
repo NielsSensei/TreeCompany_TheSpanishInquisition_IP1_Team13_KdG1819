@@ -69,6 +69,18 @@ namespace DAL
                 LocationY = DTO.LocationY
             };
         }
+        
+        private int FindNextAvailableVoteId()
+        {               
+            int newId = ReadAll().Max(vote => vote.Id)+1;
+            return newId;
+        }
+        
+        private int FindNextAvailableDeviceId()
+        {               
+            int newId = ReadAllDevices().Max(device => device.Id)+1;
+            return newId;
+        }
         #endregion
 
         // Added by NVZ
@@ -87,6 +99,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableVoteId();
             ctx.Votes.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -96,17 +109,8 @@ namespace DAL
         public Vote Read(int id, bool details)
         {
             VotesDTO voteDTO = null;
-
-            if (details)
-            {
-                voteDTO = ctx.Votes.AsNoTracking().First(p => p.VoteID == id);
-                ExtensionMethods.CheckForNotFound(voteDTO, "Vote", voteDTO.VoteID);
-            }
-            else
-            {
-                voteDTO = ctx.Votes.First(p => p.VoteID == id);
-                ExtensionMethods.CheckForNotFound(voteDTO, "Vote", voteDTO.VoteID);
-            }
+            voteDTO = details ? ctx.Votes.AsNoTracking().First(p => p.VoteID == id) : ctx.Votes.First(p => p.VoteID == id);
+            ExtensionMethods.CheckForNotFound(voteDTO, "Vote", id);
 
             return ConvertToDomain(voteDTO);
         }
@@ -114,16 +118,21 @@ namespace DAL
         public void Update(Vote obj)
         {
             VotesDTO newVote = ConvertToDTO(obj);
-            Vote found = Read(obj.Id, false);
-            VotesDTO foundVote = ConvertToDTO(found);
-            foundVote = newVote;
+            VotesDTO foundVote = ctx.Votes.First(vote => vote.VoteID == obj.Id);
+            if (foundVote != null)
+            {
+                foundVote.UserMail = newVote.UserMail;
+                foundVote.LocationX = newVote.LocationX;
+                foundVote.LocationY = newVote.LocationY;
+            }
+
             ctx.SaveChanges();
         }
         
         public void Delete(int id)
         {
-            Vote toDelete = Read(id, false);
-            ctx.Votes.Remove(ConvertToDTO(toDelete));
+            VotesDTO toDelete = ctx.Votes.First(v => v.VoteID == id);
+            ctx.Votes.Remove(toDelete);
             ctx.SaveChanges();
         }
         
@@ -162,6 +171,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableDeviceId();
             ctx.Devices.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -171,17 +181,8 @@ namespace DAL
         public IOT_Device ReadDevice(int deviceID, bool details)
         {
             DevicesDTO deviceDTO = null;
-
-            if (details)
-            {
-                deviceDTO = ctx.Devices.AsNoTracking().First(d => d.DeviceID == deviceID);
-                ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
-            }
-            else
-            {
-                deviceDTO = ctx.Devices.First(d => d.DeviceID == deviceID);
-                ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
-            }
+            deviceDTO = details ? ctx.Devices.AsNoTracking().First(d => d.DeviceID == deviceID) : ctx.Devices.First(d => d.DeviceID == deviceID);
+            ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
 
             return ConvertToDomain(deviceDTO);
         }
@@ -189,16 +190,20 @@ namespace DAL
         public void Update(IOT_Device obj)
         {
             DevicesDTO newDevice = ConvertToDTO(obj);
-            IOT_Device found = ReadDevice(obj.Id, false);
-            DevicesDTO foundDevice = ConvertToDTO(found);
-            foundDevice = newDevice;
+            DevicesDTO foundDevice = ctx.Devices.First(d => d.DeviceID == obj.Id);
+            if(foundDevice != null)
+            {
+                foundDevice.LocationX = newDevice.LocationX;
+                foundDevice.LocationY = newDevice.LocationY;
+            }
+            
             ctx.SaveChanges();
         }
 
         public void DeleteDevice(int id)
         {
-            IOT_Device toDelete = ReadDevice(id, false);
-            ctx.Devices.Remove(ConvertToDTO(toDelete));
+            DevicesDTO toDelete = ctx.Devices.First(d => d.DeviceID == id);
+            ctx.Devices.Remove(toDelete);
             ctx.SaveChanges();
         }
 
