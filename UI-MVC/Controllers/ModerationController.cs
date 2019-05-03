@@ -313,13 +313,13 @@ namespace UIMVC.Controllers
             switch (sortOrder)
             {
                 case "platform":
-                    users = users.OrderBy(u => u.Platform); break;
+                    users = users.OrderBy(u => u.PlatformId); break;
                 case "name":
                     users = users.OrderBy(u => u.Name); break;
                 case "birthday":
-                    users = users.OrderBy(u => u.Birthdate); break;
-                case "role":
-                    users = users.OrderBy(u => u.Role); break;
+                    users = users.OrderBy(u => u.DateOfBirth); break;
+//                case "role":
+//                    users = users.OrderBy(u => u.Role); break;
                 default:
                     users = users.OrderBy(u => u.Id); break;
             }

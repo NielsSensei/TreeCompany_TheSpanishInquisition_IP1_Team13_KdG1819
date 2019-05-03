@@ -1,5 +1,5 @@
-@using Domain.Users
-@model IEnumerable<Domain.Users.User>
+@using Domain.Identity
+@model IEnumerable<UIMVCUser>
 
 @{
     ViewData["Title"] = "Overzicht van Users";
@@ -31,14 +31,14 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (User user in Model)
+    @foreach (UIMVCUser user in Model)
     {
         <tr>
             <td>@user.Id</td>
-            <td>@user.Platform</td>
+            <td>@user.PlatformId</td>
             <td>@user.Name</td>
-            <td>@user.Birthdate.ToString("dd-MM-yyyy")</td>
-            <td>@user.Role</td>
+            <td>@user.DateOfBirth.ToString("dd-MM-yyyy")</td>
+            @* <td>@user.Role</td> *@
             <td>@user.Banned</td>
             <td>@user.Active</td>
             <td>
@@ -51,10 +51,10 @@
                     <text><a asp-action="ToggleBanUser">Bannen</a></text>
                 }
 
-                @if (@user.Role == Role.LOGGEDIN && user.Active)
-                {
+@*                 @if (@user.Role == Role.LOGGEDIN && user.Active) *@
+@*                 { *@
                     <text> | <a asp-action="VerifyUser">Verifiëren</a></text>
-                }
+//                }
             </td>
         </tr>
     }
