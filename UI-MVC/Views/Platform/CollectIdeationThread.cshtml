@@ -1,7 +1,10 @@
+@using Domain.Identity
 @using Domain.UserInput
+@using Microsoft.AspNetCore.Identity
 @model Domain.UserInput.IdeationQuestion
 @inject UIMVC.Services.ProjectService ProjectService
 @inject UIMVC.Services.UserService UserService
+@inject UserManager<UIMVCUser> UserManager
 
 @{
     ViewData["Title"] = Model.QuestionTitle;
@@ -24,6 +27,7 @@
     </div>
     <hr/>
     <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
+    <p>@ViewData["Message"]</p>
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {
@@ -52,7 +56,7 @@
             }
         </div>
         <div class="row justify-content-center">
-        @if (idea.Field != null)
+            @if (idea.Field != null)
             {
                 <p>@idea.Field.Text</p>
             }
@@ -67,6 +71,11 @@
                 </ul>
             }
             @* TODO Fields buiten CField & Field *@
+        </div>
+        <div class="row justify-content-center">
+            @* TODO actionbuttons hero *@
+            @Html.ActionLink("Stem op dit idee!","AddVote","Platform", 
+                new { idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id })
         </div>
         <hr/>
     }        
