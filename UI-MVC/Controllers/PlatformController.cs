@@ -74,7 +74,7 @@ namespace UIMVC.Controllers
         {
             Project project = _projectMgr.GetProject(id, false);
 
-            if (project.Visible && project != null)
+            if (project.Visible && project.Id != 0)
             {
                 List<Phase> phases = (List<Phase>) _projectMgr.GetAllPhases(id);
 

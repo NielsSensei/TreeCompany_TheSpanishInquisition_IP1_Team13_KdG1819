@@ -132,7 +132,7 @@ namespace BL
             Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
             if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, null, null, null))
             {
-                VoteMan.MakeVote(feedbackId, userId, null, null, null, false);
+                VoteMan.MakeVote(feedbackId, userId, null, null, null, true);
                 feedback.VoteCount++;
                 EditIdea(feedback);
             }
