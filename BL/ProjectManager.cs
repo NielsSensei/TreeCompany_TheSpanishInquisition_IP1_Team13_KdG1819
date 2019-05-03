@@ -124,6 +124,11 @@ namespace BL
             ProjectRepo.Delete(phaseId);
         }
 
+        public Phase GetPhase(int phaseId)
+        {
+            return ProjectRepo.ReadPhase(phaseId, false);
+        }
+
         #endregion
 
         // Added by NVZ

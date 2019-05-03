@@ -1,34 +1,34 @@
 ﻿@using Domain.UserInput
 @using Domain.Projects
 
-@model Domain.Projects.Project
+
+@model CreateQuestionnaireModel
+@inject UIMVC.Services.ProjectService projserv
+
 @{ 
-    IEnumerable<Domain.Projects.Project> projects = (IEnumerable<Domain.Projects.Project>)ViewData["projects"];
-    Questionnaire newQ = (Questionnaire)ViewData["questionnaire"];
+    
+    Project project = (Project)ViewData["project"];
 }
 
 @{
     Layout = "_Layout";
 }
 
-<h1>Een nieuwe vragenlijst maken voor project @Model.Title</h1>
-  
-        <div class="form-group">
-            
+<h1>Een nieuwe vragenlijst maken voor project: @project.Title</h1>
+
+
+        <form asp-controller="Admin" asp-action="CreateQuestionnaire" asp-route-projectid="@project.Id" asp-route-cqm="@Model" method="post">
             <label for="sel2">Selecteer een fase:</label>
-            <select class="form-control" id="sel2">
-               @foreach (Phase phase in ViewBag.Project)
-               {
-                   <option>@phase.Description</option>
-               }
-            </select>
+            @Html.DropDownList("ParentPhase", new SelectList(project.Phases,"Id","Description"), "Kies een fase", new { @class = "form-control"})
 
-            <form asp-controller="Admin" asp-action="CreateQuestionnaire" method="post">
-                <label>Title</label>
-                <input type="text" name="name" value="@ViewBag.Questionnaire.Title" />
-            </form>
+            
+            <label asp-for="Title">Title</label>
+            <input type="text" asp-for="Title"/>
+            <input type="submit" class="btn btn-primary" value="Vragen toevoegen"/>
 
-        </div>
+        </form>
+
+    </div>
 
     
 

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
@@ -23,16 +24,29 @@ namespace UIMVC.Controllers
             projMgr = new ProjectManager();
             qqMgr = new QuestionnaireQuestionManager();
         }
-        
 
-         
+
+
 
         //Listing some basic methods that map to the functionalities described in YouTrack
         [HttpGet]
         public IActionResult CreateQuestionnaire(int projectId)
         {
-            ViewData["project"] = projMgr.GetProject(projectId,false);
-            ViewData["questionnaire"] = new Questionnaire();
+            Project toAddQuestionnaireTo = projMgr.GetProject(projectId, true);
+
+            List<Phase> availablePhases = new List<Phase>();
+
+            foreach (Phase phase in projMgr.GetAllPhases(projectId).ToList())
+            {
+                if(modMgr.GetModule(phase.Id, projectId) == null)
+                {
+                    availablePhases.Add(phase);
+                }
+            }
+
+            toAddQuestionnaireTo.Phases = availablePhases.ToList();
+
+            ViewData["project"] = toAddQuestionnaireTo;
 
 
             return View();
@@ -40,17 +54,40 @@ namespace UIMVC.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateQuestionnaire(Module questionnaire, int projectId, int phaseId)
+        public IActionResult CreateQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
         {
+            if(cqm == null)
+            {
+                return BadRequest("Questionnaire cannot be NULL!");
+            }
+
+            Project questionnaireProject = projMgr.GetProject(projectId, false);
+            Phase parentPhase = projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+
+
 
             Questionnaire newQuestionnaire = new Questionnaire
             {
-                Project = projMgr.GetProject(projectId, false),
-                
+                Project = questionnaireProject,
+                ParentPhase = parentPhase,
+                OnGoing = false,
+                Title = cqm.Title,
+                LikeCount = 0,
+                FbLikeCount = 0,
+                TwitterLikeCount = 0,
+                ShareCount = 0,
+                VoteLevel = Domain.Users.Role.ANONYMOUS,
+                type = ModuleType.Questionnaire,
+                Phases = new List<Phase>(),
+                Tags = new List<string>(),
                 UserCount = 0,
                 Questions = new List<QuestionnaireQuestion>()
             };
-            return RedirectToAction("AddQuestionnaireQuestion",newQuestionnaire.Id);
+
+            newQuestionnaire.Phases.Add(parentPhase);
+            modMgr.MakeQuestionnaire(newQuestionnaire);
+
+            return RedirectToAction("EditQuestionnaire","Admin",new { Id = newQuestionnaire.Id});
         }
 
         [HttpGet]

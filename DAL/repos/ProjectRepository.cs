@@ -149,7 +149,7 @@ namespace DAL
         public Project Read(int id, bool details)
         {
             ProjectsDTO projectsDTO = null;
-            projectsDTO = details ? ctx.Projects.AsNoTracking().First(p => p.ProjectID == id) : ctx.Projects.First(p => p.ProjectID == id);
+            projectsDTO = details ? ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectID == id) : ctx.Projects.FirstOrDefault(p => p.ProjectID == id);
             ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
             
             return ConvertToDomain(projectsDTO);
