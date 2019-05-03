@@ -1,0 +1,785 @@
+Index: UI-MVC/Models/ProjectViewModel.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Models/ProjectViewModel.cs	(date 1556565942044)
++++ UI-MVC/Models/ProjectViewModel.cs	(date 1556565942044)
+@@ -0,0 +1,10 @@
++using Domain.Projects;
++
++namespace UIMVC.Models
++{
++    public class ProjectViewModel
++    {
++        public Project Project { get; set; }
++        public Phase Phase { get; set; }
++    }
++}
+\ No newline at end of file
+Index: UI-MVC/Views/Project/PartialView/ProjectPhaseDetailPartial.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Views/Project/PartialView/ProjectPhaseDetailPartial.cshtml	(date 1556564928768)
++++ UI-MVC/Views/Project/PartialView/ProjectPhaseDetailPartial.cshtml	(date 1556564928768)
+@@ -0,0 +1,8 @@
++@model Domain.Projects.Phase
++
++<dl>
++    <dt>Id</dt><dd>@Model.Id</dd>
++    <dt>Description</dt><dd>@Model.Description</dd>
++    <dt>Start Date</dt><dd>@Model.StartDate</dd>
++    <dt>End Date</dt><dd>@Model.EndDate</dd>
++</dl>
+\ No newline at end of file
+Index: UI-MVC/Views/Project/Test.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Views/Project/Test.cshtml	(date 1556565765291)
++++ UI-MVC/Views/Project/Test.cshtml	(date 1556565765291)
+@@ -0,0 +1,8 @@
++@model ProjectViewModel
++
++@{
++    ViewBag.Title = "title";
++    Layout = "_Layout";
++}
++
++<h2>title</h2>
+Index: UI-MVC/Views/Project/ProjectDetailPartial.cshtml
+===================================================================
+--- UI-MVC/Views/Project/ProjectDetailPartial.cshtml	(date 1556540807000)
++++ UI-MVC/Views/Project/ProjectDetailPartial.cshtml	(date 1556540807000)
+@@ -1,12 +0,0 @@
+-@model Domain.Projects.Project
+-
+-<dl class="dl-horizontal">
+-    
+-    <dt>Id</dt><dd>@Model.Id</dd>
+-    <dt>Name</dt><dd>@Model.Title</dd>
+-    <dt>Start Date</dt><dd>@Model.StartDate</dd>
+-    <dt>End Date</dt><dd>@Model.EndDate</dd>
+-    <dt>Current Phase</dt><dd>@Model.CurrentPhase</dd>
+-    
+-  
+-</dl>
+Index: Domain/Projects/Project.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Domain/Projects/Project.cs	(date 1556540807000)
++++ Domain/Projects/Project.cs	(date 1556566821829)
+@@ -17,13 +17,29 @@
+         public DateTime StartDate { get; set; }
+ 
+         public DateTime EndDate { get; set; }
+-        public List<Phase> Phases { get; set; }
+-   
++
++
++        private List<Phase> _phases;
++
++        public List<Phase> Phases
++        {
++            get
++            {
++                if (_phases == null)
++                {
++                    _phases = new List<Phase>();
++                }
++
++                return _phases;
++            }
++            set => _phases = value;
++        }
++
+         public Platform Platform { get; set; }
+         public User User { get; set; }
+ 
+         public string Goal { get; set; }
+-        public string Status { get; set; }
++        public string Status { get; set; } //TODO bool? 
+         public bool Visible { get; set; }
+         public int ReactionCount { get; set; }
+         public int LikeCount { get; set; }
+Index: UI-MVC/Services/ProjectService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Services/ProjectService.cs	(date 1556540807000)
++++ UI-MVC/Services/ProjectService.cs	(date 1556542654014)
+@@ -1,3 +1,4 @@
++using System.Collections;
+ using System.Collections.Generic;
+ using BL;
+ using Domain.Projects;
+@@ -16,6 +17,11 @@
+             _moduleManager = new ModuleManager();
+         }
+ 
++        public IEnumerable<Project> GetProjects(Project project)
++        {
++            return _projectManager.GetProjects(project.Id);
++        }
++
+         public IEnumerable<Project> GetPlatformProjects(Platform platform)
+         {
+             return _projectManager.GetPlatformProjects(platform);
+Index: BL/ProjectManager.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- BL/ProjectManager.cs	(date 1556540807000)
++++ BL/ProjectManager.cs	(date 1556569579630)
+@@ -1,6 +1,7 @@
+ using System;
+ using System.Collections;
+ using System.Collections.Generic;
++using System.Linq;
+ using DAL;
+ using Domain;
+ using Domain.Projects;
+@@ -45,12 +46,23 @@
+          */
+         public Project GetProject(int projectId, bool details)
+         {
+-            return ProjectRepo.Read(projectId, details);
++            Project project = ProjectRepo.Read(projectId, details);
++
++            List<Phase> phases = new List<Phase>();
++            phases = ProjectRepo.ReadAllPhases(projectId).ToList();
++
++            project.Phases = phases;
++
++            return project;
+         }
+ 
+-        public IEnumerable<Project> GetProjects()
++        public IEnumerable<Project> GetProjects(int projectId)
+         {
+-            return ProjectRepo.ReadAll();
++            List<Project> projects = new List<Project>();
++
++            projects.AddRange(ProjectRepo.ReadAll(projectId));
++
++            return projects;
+         }
+ 
+         /*
+@@ -122,7 +134,7 @@
+                 ModuleMan.EditModule(alteredModule);
+             }
+ 
+-            ProjectRepo.Delete(projectId, phaseId);
++            //  ProjectRepo.Delete(projectId, phaseId);
+             ProjectRepo.Delete(phaseId);
+         }
+ 
+Index: UI-MVC/Views/Project/Details.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Views/Project/Details.cshtml	(date 1556540807000)
++++ UI-MVC/Views/Project/Details.cshtml	(date 1556569793987)
+@@ -1,3 +1,4 @@
++@using Domain.Projects
+ @model Domain.Projects.Project
+ 
+ 
+@@ -7,4 +8,19 @@
+ 
+ <h2>Project</h2>
+ 
+-<partial name="ProjectDetailPartial" for="@Model"/>
++<dl class="dl-horizontal">
++    
++    <dt>Name</dt><dd>@Model.Title</dd>
++    <dt>Start Date</dt><dd>@Model.StartDate</dd>
++    <dt>End Date</dt><dd>@Model.EndDate</dd>
++    <dt>Current Phase</dt><dd>@Model.CurrentPhase.Id</dd>
++    
++  
++</dl>
++
++@foreach (var phase in Model.Phases)
++{
++    <partial name="PartialView/ProjectPhaseDetailPartial" for="@phase"/>
++
++    
++}
+\ No newline at end of file
+Index: UI-MVC/Views/Project/Create.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Views/Project/Create.cshtml	(date 1556540807000)
++++ UI-MVC/Views/Project/Create.cshtml	(date 1556568428333)
+@@ -1,7 +1,7 @@
+-@model Domain.Projects.Project
++@model UIMVC.Models.ProjectViewModel 
+ 
+ @{
+-    ViewBag.Title = "title";
++    ViewBag.Title = "Create";
+     Layout = "_Layout";
+ }
+ 
+@@ -9,26 +9,39 @@
+ 
+ <form asp-controller="Project" asp-action="Create" method="post">
+     <div class="form-group">
+-        <label asp-for="Title">Naam</label>
+-        <input asp-for="Title" class="form-control"/>
++        <label asp-for="Project.Title">Naam</label>
++        <input asp-for="Project.Title" class="form-control" value="Test"/>
++    </div>
++    <div class="form-group">
++        <label asp-for="Project.StartDate">StartDate</label>
++        <input type="date" asp-for="Project.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
++    </div>
++    <div class="form-group">
++        <label asp-for="Project.EndDate">EndDate</label>
++        <input type="date" asp-for="Project.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+     </div>
+     <div class="form-group">
+-        <label asp-for="StartDate">StartDate</label>
+-        <input type="date" asp-for="StartDate" class="form-control"/>
++        <label asp-for="Project.Goal">Hoofdvraag</label>
++        <input asp-for="Project.Goal" class="form-control" value="Test"/>
+     </div>
+     <div class="form-group">
+-        <label asp-for="EndDate">EndDate</label>
+-        <input type="date" asp-for="EndDate" class="form-control"/>
++        <label asp-for="Project.Status">Status</label>
++        <input asp-for="Project.Status" class="form-control" value="Open"/>
+     </div>
++
+     <div class="form-group">
+-        <label asp-for="Goal">Hoofdvraag</label>
+-        <input asp-for="Goal" class="form-control"/>
++        <label asp-for="Phase.Description">Description</label>
++        <input asp-for="Phase.Description" class="form-control" value="Desciption"/>
+     </div>
+-   
+     <div class="form-group">
+-        
+-        
++        <label asp-for="Phase.StartDate">StartDate</label>
++        <input type="date" asp-for="Phase.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
++    </div>
++    <div class="form-group">
++        <label asp-for="Phase.EndDate">EndDate</label>
++        <input type="date" asp-for="Phase.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+     </div>
+-   
++
++    <input type="submit" value="Opslaan" class="btn"/>
+ 
+ </form>
+\ No newline at end of file
+Index: UI-MVC/UIMVC.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/UIMVC.csproj	(date 1556540807000)
++++ UI-MVC/UIMVC.csproj	(date 1556565605673)
+@@ -17,6 +17,7 @@
+     <PackageReference Include="Microsoft.Net.Compilers" Version="2.10.0" />
+     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+     <PackageReference Include="Sendgrid" Version="9.10.0" />
++    <PackageReference Include="SendGridClient" Version="1.2.0" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+Index: UI-MVC/Views/Project/Index.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Views/Project/Index.cshtml	(date 1556540807000)
++++ UI-MVC/Views/Project/Index.cshtml	(date 1556561710330)
+@@ -1,31 +1,31 @@
+-@model IEnumerable<Domain.Projects.Project>
++@using Domain.Projects
++@using UIMVC.Services
++@model Domain.Projects.Project
++@inject ProjectService ProjectService
++
+ 
+ @{
+-    ViewBag.Title = "Projects";
++    ViewBag.Title = @Model.Title;
+ }
+ 
+-<h2>Projects</h2>
++<section>
+ 
+-<p>
+-    <a asp-action="Create">New Project</a>
+-</p>
++    <h1>@Model.Title</h1>
+ 
+-
+-<table class="table">
+-    <tr>
+-        <th>Nummer</th>
+-        <th>StartDatum</th>
+-        <th>EindDatum</th>
+-    </tr>
++    <div>
++        @if (ProjectService == null)
++        {
++            <h4>Er zijn geen projecten!</h4>
++        }
++        else
++        {
++            foreach (Project project in ProjectService.GetProjects(Model) )
++            {
++                
+ 
+-    @foreach (Domain.Projects.Project project in Model)
+-    {
+-        <tr>
+-            <td>@project.Id</td>
+-            <td>@project.StartDate</td>
+-            <td>@project.EndDate</td>
+-        </tr>
+-    }
++            }
++        }
++    </div>
+ 
+ 
+-</table>
+\ No newline at end of file
++</section>
+\ No newline at end of file
+Index: UI-MVC/wwwroot/dist/site.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/wwwroot/dist/site.css	(date 1556540807000)
++++ UI-MVC/wwwroot/dist/site.css	(date 1556568696772)
+Index: UI-MVC/wwwroot/dist/validation.entry.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/wwwroot/dist/validation.entry.js	(date 1556540807000)
++++ UI-MVC/wwwroot/dist/validation.entry.js	(date 1556568696772)
+Index: UI-MVC/wwwroot/dist/bootstrap_js.entry.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/wwwroot/dist/bootstrap_js.entry.js	(date 1556540807000)
++++ UI-MVC/wwwroot/dist/bootstrap_js.entry.js	(date 1556568696772)
+Index: UI-MVC/wwwroot/dist/index.entry.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/wwwroot/dist/index.entry.js	(date 1556540807000)
++++ UI-MVC/wwwroot/dist/index.entry.js	(date 1556568696772)
+Index: DAL/repos/ProjectRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- DAL/repos/ProjectRepository.cs	(date 1556540807000)
++++ DAL/repos/ProjectRepository.cs	(date 1556569647368)
+@@ -100,6 +100,7 @@
+         
+         private int FindNextAvailablePhaseId()
+         {               
++            
+             int newId = ReadAllPhases().Max(platform => platform.Id)+1;
+             return newId;
+         }
+@@ -150,6 +151,9 @@
+             ProjectsDTO projectsDTO = null;
+             projectsDTO = details ? ctx.Projects.AsNoTracking().First(p => p.ProjectID == id) : ctx.Projects.First(p => p.ProjectID == id);
+             ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
++
++            PhasesDTO phasesDto = null;
++            phasesDto = ctx.Phases.First(p => p.ProjectID == id);
+             
+             return ConvertToDomain(projectsDTO);
+         }
+Index: UI-MVC/wwwroot/dist/site.entry.js.map
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/wwwroot/dist/site.entry.js.map	(date 1556540807000)
++++ UI-MVC/wwwroot/dist/site.entry.js.map	(date 1556568696774)
+@@ -1,1 +1,1 @@
+-{"version":3,"sources":["webpack:///webpack/bootstrap","webpack:///./node_modules/bootstrap/dist/css/bootstrap.css","webpack:///./wwwroot/css/site.scss","webpack:///./node_modules/css-loader/dist/runtime/api.js","webpack:///./node_modules/style-loader/lib/addStyles.js","webpack:///./node_modules/style-loader/lib/urls.js","webpack:///./wwwroot/css/site.scss?dba1","webpack:///./wwwroot/js/site.js"],"names":[],"mappings":";AAAA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;;;AAGA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA,kDAA0C,gCAAgC;AAC1E;AACA;;AAEA;AACA;AACA;AACA,gEAAwD,kBAAkB;AAC1E;AACA,yDAAiD,cAAc;AAC/D;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA,iDAAyC,iCAAiC;AAC1E,wHAAgH,mBAAmB,EAAE;AACrI;AACA;;AAEA;AACA;AACA;AACA,mCAA2B,0BAA0B,EAAE;AACvD,yCAAiC,eAAe;AAChD;AACA;AACA;;AAEA;AACA,8DAAsD,+DAA+D;;AAErH;AACA;;;AAGA;AACA;;;;;;;;;;;;AClFA,uC;;;;;;;;;;;ACAA,2BAA2B,mBAAO,CAAC,wGAAmD;AACtF;AACA,cAAc,QAAS,UAAU,eAAe,EAAE,kBAAkB,oBAAoB,sBAAsB,EAAE,WAAW,kBAAkB,oBAAoB,4BAA4B,0BAA0B,4BAA4B,gBAAgB,eAAe,gBAAgB,cAAc,cAAc,mBAAmB,EAAE,iCAAiC,iBAAiB,kBAAkB,4BAA4B,wBAAwB,wBAAwB,EAAE,oBAAoB,kBAAkB,EAAE,2CAA2C,iBAAiB,EAAE,8BAA8B,sBAAsB,EAAE,0BAA0B,oBAAoB,0BAA0B,oCAAoC,0BAA0B,EAAE,gCAAgC,gBAAgB,EAAE,gCAAgC,kBAAkB,4BAA4B,wBAAwB,wBAAwB,EAAE,eAAe,gBAAgB,eAAe,gBAAgB,uBAAuB,EAAE,wDAAwD,kBAAkB,4BAA4B,wBAAwB,2BAA2B,EAAE,qBAAqB,iBAAiB,EAAE,yBAAyB,oBAAoB,EAAE,uCAAuC,kBAAkB,4BAA4B,wBAAwB,2BAA2B,EAAE,0BAA0B,mBAAmB,EAAE,yBAAyB,yBAAyB,EAAE,6BAA6B,kBAAkB,EAAE,wBAAwB,yBAAyB,EAAE,gHAAgH,uBAAuB,wBAAwB,EAAE,yCAAyC,oBAAoB,qBAAqB,EAAE,wHAAwH,gBAAgB,EAAE,sCAAsC,iBAAiB,EAAE,kKAAkK,sBAAsB,kBAAkB,0BAA0B,EAAE,kDAAkD,iBAAiB,EAAE,wCAAwC,kBAAkB,iBAAiB,EAAE,sCAAsC,kBAAkB,0BAA0B,iBAAiB,2BAA2B,wBAAwB,kBAAkB,EAAE,mBAAmB,yBAAyB,6BAA6B,EAAE;;;;;;;;;;;;;;ACF7mF;;AAEb;AACA;AACA;AACA;AACA;AACA;AACA,gBAAgB;;AAEhB;AACA;AACA;;AAEA;AACA,uCAAuC,gBAAgB;AACvD,OAAO;AACP;AACA;AACA,KAAK;AACL,IAAI;;;AAGJ;AACA;AACA;AACA;;AAEA;;AAEA,mBAAmB,iBAAiB;AACpC;;AAEA;AACA;AACA;AACA;;AAEA,eAAe,oBAAoB;AACnC,4BAA4B;AAC5B;AACA;AACA;;AAEA;AACA;AACA;AACA,SAAS;AACT;AACA;;AAEA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA,KAAK;AACL;AACA;;AAEA;AACA,CAAC;;;AAGD;AACA;AACA;AACA,qDAAqD,cAAc;AACnE;AACA,C;;;;;;;;;;;ACpFA;AACA;AACA;AACA;;AAEA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA,CAAC;;AAED;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;AACA,8CAA8C;AAC9C;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA,KAAK;AACL;AACA;AACA;AACA;AACA;AACA;AACA;AACA,CAAC;;AAED;AACA;AACA;;AAEA,cAAc,mBAAO,CAAC,uDAAQ;;AAE9B;AACA;AACA;AACA;;AAEA;;AAEA;;AAEA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;;AAEA;;AAEA;AACA;;AAEA,iBAAiB,mBAAmB;AACpC;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;;AAEA,iBAAiB,sBAAsB;AACvC;;AAEA;AACA,mBAAmB,2BAA2B;;AAE9C;AACA;AACA;AACA;AACA;;AAEA;AACA,gBAAgB,mBAAmB;AACnC;AACA;;AAEA;AACA;;AAEA,iBAAiB,2BAA2B;AAC5C;AACA;;AAEA,QAAQ,uBAAuB;AAC/B;AACA;AACA,GAAG;AACH;;AAEA,iBAAiB,uBAAuB;AACxC;AACA;;AAEA,2BAA2B;AAC3B;AACA;AACA;;AAEA;AACA;AACA;;AAEA,gBAAgB,iBAAiB;AACjC;AACA;AACA;AACA;AACA;AACA,cAAc;;AAEd,kDAAkD,sBAAsB;AACxE;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;;AAEA;;AAEA;AACA;AACA;AACA,GAAG;AACH;AACA,GAAG;AACH;AACA;AACA;AACA,EAAE;AACF;AACA,EAAE;AACF;AACA;AACA,EAAE;AACF;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA,EAAE;AACF;;AAEA;AACA,KAAK,KAAwC,EAAE,EAE7C;;AAEF,QAAQ,sBAAiB;AACzB;;AAEA;AACA;;AAEA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA,MAAM;AACN;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;;AAEA;AACA;;AAEA,EAAE;AACF;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA,EAAE;AACF;AACA;AACA;AACA;AACA;AACA;;AAEA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA,GAAG;AACH;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA,CAAC;;AAED;AACA;;AAEA;AACA;AACA,EAAE;AACF;AACA;;AAEA;;AAEA;AACA;AACA,GAAG;AACH;AACA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA,EAAE;AACF;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA,uDAAuD;AACvD;;AAEA,6BAA6B,mBAAmB;;AAEhD;;AAEA;;AAEA;AACA;;;;;;;;;;;;;AC9YA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA,wCAAwC,WAAW,EAAE;AACrD,wCAAwC,WAAW,EAAE;;AAErD;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA,GAAG;AACH;AACA,sCAAsC;AACtC,GAAG;AACH;AACA,8DAA8D;AAC9D;;AAEA;AACA;AACA,EAAE;;AAEF;AACA;AACA;;;;;;;;;;;;;ACvFA,cAAc,mBAAO,CAAC,mNAAsG;;AAE5H,4CAA4C,QAAS;;AAErD;AACA;;;;AAIA,eAAe;;AAEf;AACA;;AAEA,aAAa,mBAAO,CAAC,sGAAmD;;AAExE;;AAEA,GAAG,KAAU,EAAE,E;;;;;;;;;;;;ACnBf;AAAA;AAAA;AAAA;AAAA;AAAA;AAC0C;;AAE1C;AAC0B;;AAE1B","file":"site.entry.js","sourcesContent":[" \t// The module cache\n \tvar installedModules = {};\n\n \t// The require function\n \tfunction __webpack_require__(moduleId) {\n\n \t\t// Check if module is in cache\n \t\tif(installedModules[moduleId]) {\n \t\t\treturn installedModules[moduleId].exports;\n \t\t}\n \t\t// Create a new module (and put it into the cache)\n \t\tvar module = installedModules[moduleId] = {\n \t\t\ti: moduleId,\n \t\t\tl: false,\n \t\t\texports: {}\n \t\t};\n\n \t\t// Execute the module function\n \t\tmodules[moduleId].call(module.exports, module, module.exports, __webpack_require__);\n\n \t\t// Flag the module as loaded\n \t\tmodule.l = true;\n\n \t\t// Return the exports of the module\n \t\treturn module.exports;\n \t}\n\n\n \t// expose the modules object (__webpack_modules__)\n \t__webpack_require__.m = modules;\n\n \t// expose the module cache\n \t__webpack_require__.c = installedModules;\n\n \t// define getter function for harmony exports\n \t__webpack_require__.d = function(exports, name, getter) {\n \t\tif(!__webpack_require__.o(exports, name)) {\n \t\t\tObject.defineProperty(exports, name, { enumerable: true, get: getter });\n \t\t}\n \t};\n\n \t// define __esModule on exports\n \t__webpack_require__.r = function(exports) {\n \t\tif(typeof Symbol !== 'undefined' && Symbol.toStringTag) {\n \t\t\tObject.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });\n \t\t}\n \t\tObject.defineProperty(exports, '__esModule', { value: true });\n \t};\n\n \t// create a fake namespace object\n \t// mode & 1: value is a module id, require it\n \t// mode & 2: merge all properties of value into the ns\n \t// mode & 4: return value when already ns object\n \t// mode & 8|1: behave like require\n \t__webpack_require__.t = function(value, mode) {\n \t\tif(mode & 1) value = __webpack_require__(value);\n \t\tif(mode & 8) return value;\n \t\tif((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;\n \t\tvar ns = Object.create(null);\n \t\t__webpack_require__.r(ns);\n \t\tObject.defineProperty(ns, 'default', { enumerable: true, value: value });\n \t\tif(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));\n \t\treturn ns;\n \t};\n\n \t// getDefaultExport function for compatibility with non-harmony modules\n \t__webpack_require__.n = function(module) {\n \t\tvar getter = module && module.__esModule ?\n \t\t\tfunction getDefault() { return module['default']; } :\n \t\t\tfunction getModuleExports() { return module; };\n \t\t__webpack_require__.d(getter, 'a', getter);\n \t\treturn getter;\n \t};\n\n \t// Object.prototype.hasOwnProperty.call\n \t__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };\n\n \t// __webpack_public_path__\n \t__webpack_require__.p = \"\";\n\n\n \t// Load entry module and return exports\n \treturn __webpack_require__(__webpack_require__.s = \"./wwwroot/js/site.js\");\n","// extracted by mini-css-extract-plugin","exports = module.exports = require(\"../../node_modules/css-loader/dist/runtime/api.js\")(false);\n// Module\nexports.push([module.id, \".test {\\n  color: red; }\\n\\n.layoutTitle {\\n  font-size: 20px;\\n  font-weight: bold; }\\n\\n#menu {\\n  display: none;\\n  position: fixed;\\n  justify-content: center;\\n  align-content: center;\\n  background-color: white;\\n  opacity: .9;\\n  width: 70%;\\n  height: 95%;\\n  top: 2.5%;\\n  left: 15%;\\n  border: dashed; }\\n\\n/* ErrorPage */\\n.errorPage {\\n  margin: 20px;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  flex-direction: row; }\\n  .errorPage img {\\n    width: 100%; }\\n\\n/* CreatePlatform */\\n.createPlatform {\\n  margin: 20px; }\\n  .createPlatform * button {\\n    height: inherit; }\\n  .createPlatform .row {\\n    display: flex;\\n    flex-direction: row;\\n    justify-content: space-around;\\n    align-items: center; }\\n    .createPlatform .row div {\\n      flex: 1; }\\n\\n/* SVG icons */\\n.btn-icon {\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  flex-direction: row; }\\n\\n.svg-icon {\\n  height: 1em;\\n  width: 1em;\\n  top: .125em;\\n  position: relative; }\\n\\n/* Home/Index.cs/PlatformList layout*/\\n.home-flex {\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  flex-direction: column; }\\n  .home-flex form {\\n    width: 75%; }\\n    .home-flex form * {\\n      margin: 5px; }\\n\\n/* Login page*/\\n.accountFormPage {\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  flex-direction: column; }\\n  .accountFormPage div {\\n    width: 300px; }\\n  .accountFormPage h4 {\\n    text-align: center; }\\n  .accountFormPage button {\\n    width: 100%; }\\n  .accountFormPage p {\\n    text-align: center; }\\n\\n/* Wrapping element */\\n/* Set some basic padding to keep content from hitting the edges */\\n.body-content {\\n  padding-left: 15px;\\n  padding-right: 15px; }\\n\\n/* Carousel */\\n.carousel-caption p {\\n  font-size: 20px;\\n  line-height: 1.4; }\\n\\n/* Make .svg files in the carousel display properly in older browsers */\\n.carousel-inner .item img[src$=\\\".svg\\\"] {\\n  width: 100%; }\\n\\n/* QR code generator */\\n#qrCode {\\n  margin: 15px; }\\n\\n/* Hide/rearrange for smaller screens */\\n/* Is used for to align a label with it's combobox (select) */\\n/* Used in CollectAllIdeas.cshtml */\\n#comboFilter {\\n  font-weight: bold;\\n  display: flex;\\n  align-items: flex-end; }\\n\\n/*CollectIdea.cshtml*/\\n#ReportHandlerButton {\\n  margin: 1rem; }\\n\\n/* CollectProject */\\n#projectView {\\n  display: flex;\\n  margin: 1rem; }\\n\\n/* Module.cshtml */\\n#modulePart {\\n  display: flex;\\n  border: #1b1e21 solid;\\n  margin: 1rem;\\n  flex-direction: column;\\n  align-items: center;\\n  padding: .2em; }\\n  #modulePart p {\\n    text-align: center;\\n    vertical-align: middle; }\\n\", \"\"]);\n\n","\"use strict\";\n\n/*\n  MIT License http://www.opensource.org/licenses/mit-license.php\n  Author Tobias Koppers @sokra\n*/\n// css base code, injected by the css-loader\nmodule.exports = function (useSourceMap) {\n  var list = []; // return the list of modules as css string\n\n  list.toString = function toString() {\n    return this.map(function (item) {\n      var content = cssWithMappingToString(item, useSourceMap);\n\n      if (item[2]) {\n        return '@media ' + item[2] + '{' + content + '}';\n      } else {\n        return content;\n      }\n    }).join('');\n  }; // import a list of modules into the list\n\n\n  list.i = function (modules, mediaQuery) {\n    if (typeof modules === 'string') {\n      modules = [[null, modules, '']];\n    }\n\n    var alreadyImportedModules = {};\n\n    for (var i = 0; i < this.length; i++) {\n      var id = this[i][0];\n\n      if (id != null) {\n        alreadyImportedModules[id] = true;\n      }\n    }\n\n    for (i = 0; i < modules.length; i++) {\n      var item = modules[i]; // skip already imported module\n      // this implementation is not 100% perfect for weird media query combinations\n      // when a module is imported multiple times with different media queries.\n      // I hope this will never occur (Hey this way we have smaller bundles)\n\n      if (item[0] == null || !alreadyImportedModules[item[0]]) {\n        if (mediaQuery && !item[2]) {\n          item[2] = mediaQuery;\n        } else if (mediaQuery) {\n          item[2] = '(' + item[2] + ') and (' + mediaQuery + ')';\n        }\n\n        list.push(item);\n      }\n    }\n  };\n\n  return list;\n};\n\nfunction cssWithMappingToString(item, useSourceMap) {\n  var content = item[1] || '';\n  var cssMapping = item[3];\n\n  if (!cssMapping) {\n    return content;\n  }\n\n  if (useSourceMap && typeof btoa === 'function') {\n    var sourceMapping = toComment(cssMapping);\n    var sourceURLs = cssMapping.sources.map(function (source) {\n      return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */';\n    });\n    return [content].concat(sourceURLs).concat([sourceMapping]).join('\\n');\n  }\n\n  return [content].join('\\n');\n} // Adapted from convert-source-map (MIT)\n\n\nfunction toComment(sourceMap) {\n  // eslint-disable-next-line no-undef\n  var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));\n  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;\n  return '/*# ' + data + ' */';\n}","/*\n\tMIT License http://www.opensource.org/licenses/mit-license.php\n\tAuthor Tobias Koppers @sokra\n*/\n\nvar stylesInDom = {};\n\nvar\tmemoize = function (fn) {\n\tvar memo;\n\n\treturn function () {\n\t\tif (typeof memo === \"undefined\") memo = fn.apply(this, arguments);\n\t\treturn memo;\n\t};\n};\n\nvar isOldIE = memoize(function () {\n\t// Test for IE <= 9 as proposed by Browserhacks\n\t// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805\n\t// Tests for existence of standard globals is to allow style-loader\n\t// to operate correctly into non-standard environments\n\t// @see https://github.com/webpack-contrib/style-loader/issues/177\n\treturn window && document && document.all && !window.atob;\n});\n\nvar getTarget = function (target, parent) {\n  if (parent){\n    return parent.querySelector(target);\n  }\n  return document.querySelector(target);\n};\n\nvar getElement = (function (fn) {\n\tvar memo = {};\n\n\treturn function(target, parent) {\n                // If passing function in options, then use it for resolve \"head\" element.\n                // Useful for Shadow Root style i.e\n                // {\n                //   insertInto: function () { return document.querySelector(\"#foo\").shadowRoot }\n                // }\n                if (typeof target === 'function') {\n                        return target();\n                }\n                if (typeof memo[target] === \"undefined\") {\n\t\t\tvar styleTarget = getTarget.call(this, target, parent);\n\t\t\t// Special case to return head of iframe instead of iframe itself\n\t\t\tif (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {\n\t\t\t\ttry {\n\t\t\t\t\t// This will throw an exception if access to iframe is blocked\n\t\t\t\t\t// due to cross-origin restrictions\n\t\t\t\t\tstyleTarget = styleTarget.contentDocument.head;\n\t\t\t\t} catch(e) {\n\t\t\t\t\tstyleTarget = null;\n\t\t\t\t}\n\t\t\t}\n\t\t\tmemo[target] = styleTarget;\n\t\t}\n\t\treturn memo[target]\n\t};\n})();\n\nvar singleton = null;\nvar\tsingletonCounter = 0;\nvar\tstylesInsertedAtTop = [];\n\nvar\tfixUrls = require(\"./urls\");\n\nmodule.exports = function(list, options) {\n\tif (typeof DEBUG !== \"undefined\" && DEBUG) {\n\t\tif (typeof document !== \"object\") throw new Error(\"The style-loader cannot be used in a non-browser environment\");\n\t}\n\n\toptions = options || {};\n\n\toptions.attrs = typeof options.attrs === \"object\" ? options.attrs : {};\n\n\t// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>\n\t// tags it will allow on a page\n\tif (!options.singleton && typeof options.singleton !== \"boolean\") options.singleton = isOldIE();\n\n\t// By default, add <style> tags to the <head> element\n        if (!options.insertInto) options.insertInto = \"head\";\n\n\t// By default, add <style> tags to the bottom of the target\n\tif (!options.insertAt) options.insertAt = \"bottom\";\n\n\tvar styles = listToStyles(list, options);\n\n\taddStylesToDom(styles, options);\n\n\treturn function update (newList) {\n\t\tvar mayRemove = [];\n\n\t\tfor (var i = 0; i < styles.length; i++) {\n\t\t\tvar item = styles[i];\n\t\t\tvar domStyle = stylesInDom[item.id];\n\n\t\t\tdomStyle.refs--;\n\t\t\tmayRemove.push(domStyle);\n\t\t}\n\n\t\tif(newList) {\n\t\t\tvar newStyles = listToStyles(newList, options);\n\t\t\taddStylesToDom(newStyles, options);\n\t\t}\n\n\t\tfor (var i = 0; i < mayRemove.length; i++) {\n\t\t\tvar domStyle = mayRemove[i];\n\n\t\t\tif(domStyle.refs === 0) {\n\t\t\t\tfor (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();\n\n\t\t\t\tdelete stylesInDom[domStyle.id];\n\t\t\t}\n\t\t}\n\t};\n};\n\nfunction addStylesToDom (styles, options) {\n\tfor (var i = 0; i < styles.length; i++) {\n\t\tvar item = styles[i];\n\t\tvar domStyle = stylesInDom[item.id];\n\n\t\tif(domStyle) {\n\t\t\tdomStyle.refs++;\n\n\t\t\tfor(var j = 0; j < domStyle.parts.length; j++) {\n\t\t\t\tdomStyle.parts[j](item.parts[j]);\n\t\t\t}\n\n\t\t\tfor(; j < item.parts.length; j++) {\n\t\t\t\tdomStyle.parts.push(addStyle(item.parts[j], options));\n\t\t\t}\n\t\t} else {\n\t\t\tvar parts = [];\n\n\t\t\tfor(var j = 0; j < item.parts.length; j++) {\n\t\t\t\tparts.push(addStyle(item.parts[j], options));\n\t\t\t}\n\n\t\t\tstylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};\n\t\t}\n\t}\n}\n\nfunction listToStyles (list, options) {\n\tvar styles = [];\n\tvar newStyles = {};\n\n\tfor (var i = 0; i < list.length; i++) {\n\t\tvar item = list[i];\n\t\tvar id = options.base ? item[0] + options.base : item[0];\n\t\tvar css = item[1];\n\t\tvar media = item[2];\n\t\tvar sourceMap = item[3];\n\t\tvar part = {css: css, media: media, sourceMap: sourceMap};\n\n\t\tif(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});\n\t\telse newStyles[id].parts.push(part);\n\t}\n\n\treturn styles;\n}\n\nfunction insertStyleElement (options, style) {\n\tvar target = getElement(options.insertInto)\n\n\tif (!target) {\n\t\tthrow new Error(\"Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.\");\n\t}\n\n\tvar lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];\n\n\tif (options.insertAt === \"top\") {\n\t\tif (!lastStyleElementInsertedAtTop) {\n\t\t\ttarget.insertBefore(style, target.firstChild);\n\t\t} else if (lastStyleElementInsertedAtTop.nextSibling) {\n\t\t\ttarget.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);\n\t\t} else {\n\t\t\ttarget.appendChild(style);\n\t\t}\n\t\tstylesInsertedAtTop.push(style);\n\t} else if (options.insertAt === \"bottom\") {\n\t\ttarget.appendChild(style);\n\t} else if (typeof options.insertAt === \"object\" && options.insertAt.before) {\n\t\tvar nextSibling = getElement(options.insertAt.before, target);\n\t\ttarget.insertBefore(style, nextSibling);\n\t} else {\n\t\tthrow new Error(\"[Style Loader]\\n\\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\\n Must be 'top', 'bottom', or Object.\\n (https://github.com/webpack-contrib/style-loader#insertat)\\n\");\n\t}\n}\n\nfunction removeStyleElement (style) {\n\tif (style.parentNode === null) return false;\n\tstyle.parentNode.removeChild(style);\n\n\tvar idx = stylesInsertedAtTop.indexOf(style);\n\tif(idx >= 0) {\n\t\tstylesInsertedAtTop.splice(idx, 1);\n\t}\n}\n\nfunction createStyleElement (options) {\n\tvar style = document.createElement(\"style\");\n\n\tif(options.attrs.type === undefined) {\n\t\toptions.attrs.type = \"text/css\";\n\t}\n\n\tif(options.attrs.nonce === undefined) {\n\t\tvar nonce = getNonce();\n\t\tif (nonce) {\n\t\t\toptions.attrs.nonce = nonce;\n\t\t}\n\t}\n\n\taddAttrs(style, options.attrs);\n\tinsertStyleElement(options, style);\n\n\treturn style;\n}\n\nfunction createLinkElement (options) {\n\tvar link = document.createElement(\"link\");\n\n\tif(options.attrs.type === undefined) {\n\t\toptions.attrs.type = \"text/css\";\n\t}\n\toptions.attrs.rel = \"stylesheet\";\n\n\taddAttrs(link, options.attrs);\n\tinsertStyleElement(options, link);\n\n\treturn link;\n}\n\nfunction addAttrs (el, attrs) {\n\tObject.keys(attrs).forEach(function (key) {\n\t\tel.setAttribute(key, attrs[key]);\n\t});\n}\n\nfunction getNonce() {\n\tif (typeof __webpack_nonce__ === 'undefined') {\n\t\treturn null;\n\t}\n\n\treturn __webpack_nonce__;\n}\n\nfunction addStyle (obj, options) {\n\tvar style, update, remove, result;\n\n\t// If a transform function was defined, run it on the css\n\tif (options.transform && obj.css) {\n\t    result = typeof options.transform === 'function'\n\t\t ? options.transform(obj.css) \n\t\t : options.transform.default(obj.css);\n\n\t    if (result) {\n\t    \t// If transform returns a value, use that instead of the original css.\n\t    \t// This allows running runtime transformations on the css.\n\t    \tobj.css = result;\n\t    } else {\n\t    \t// If the transform function returns a falsy value, don't add this css.\n\t    \t// This allows conditional loading of css\n\t    \treturn function() {\n\t    \t\t// noop\n\t    \t};\n\t    }\n\t}\n\n\tif (options.singleton) {\n\t\tvar styleIndex = singletonCounter++;\n\n\t\tstyle = singleton || (singleton = createStyleElement(options));\n\n\t\tupdate = applyToSingletonTag.bind(null, style, styleIndex, false);\n\t\tremove = applyToSingletonTag.bind(null, style, styleIndex, true);\n\n\t} else if (\n\t\tobj.sourceMap &&\n\t\ttypeof URL === \"function\" &&\n\t\ttypeof URL.createObjectURL === \"function\" &&\n\t\ttypeof URL.revokeObjectURL === \"function\" &&\n\t\ttypeof Blob === \"function\" &&\n\t\ttypeof btoa === \"function\"\n\t) {\n\t\tstyle = createLinkElement(options);\n\t\tupdate = updateLink.bind(null, style, options);\n\t\tremove = function () {\n\t\t\tremoveStyleElement(style);\n\n\t\t\tif(style.href) URL.revokeObjectURL(style.href);\n\t\t};\n\t} else {\n\t\tstyle = createStyleElement(options);\n\t\tupdate = applyToTag.bind(null, style);\n\t\tremove = function () {\n\t\t\tremoveStyleElement(style);\n\t\t};\n\t}\n\n\tupdate(obj);\n\n\treturn function updateStyle (newObj) {\n\t\tif (newObj) {\n\t\t\tif (\n\t\t\t\tnewObj.css === obj.css &&\n\t\t\t\tnewObj.media === obj.media &&\n\t\t\t\tnewObj.sourceMap === obj.sourceMap\n\t\t\t) {\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\tupdate(obj = newObj);\n\t\t} else {\n\t\t\tremove();\n\t\t}\n\t};\n}\n\nvar replaceText = (function () {\n\tvar textStore = [];\n\n\treturn function (index, replacement) {\n\t\ttextStore[index] = replacement;\n\n\t\treturn textStore.filter(Boolean).join('\\n');\n\t};\n})();\n\nfunction applyToSingletonTag (style, index, remove, obj) {\n\tvar css = remove ? \"\" : obj.css;\n\n\tif (style.styleSheet) {\n\t\tstyle.styleSheet.cssText = replaceText(index, css);\n\t} else {\n\t\tvar cssNode = document.createTextNode(css);\n\t\tvar childNodes = style.childNodes;\n\n\t\tif (childNodes[index]) style.removeChild(childNodes[index]);\n\n\t\tif (childNodes.length) {\n\t\t\tstyle.insertBefore(cssNode, childNodes[index]);\n\t\t} else {\n\t\t\tstyle.appendChild(cssNode);\n\t\t}\n\t}\n}\n\nfunction applyToTag (style, obj) {\n\tvar css = obj.css;\n\tvar media = obj.media;\n\n\tif(media) {\n\t\tstyle.setAttribute(\"media\", media)\n\t}\n\n\tif(style.styleSheet) {\n\t\tstyle.styleSheet.cssText = css;\n\t} else {\n\t\twhile(style.firstChild) {\n\t\t\tstyle.removeChild(style.firstChild);\n\t\t}\n\n\t\tstyle.appendChild(document.createTextNode(css));\n\t}\n}\n\nfunction updateLink (link, options, obj) {\n\tvar css = obj.css;\n\tvar sourceMap = obj.sourceMap;\n\n\t/*\n\t\tIf convertToAbsoluteUrls isn't defined, but sourcemaps are enabled\n\t\tand there is no publicPath defined then lets turn convertToAbsoluteUrls\n\t\ton by default.  Otherwise default to the convertToAbsoluteUrls option\n\t\tdirectly\n\t*/\n\tvar autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;\n\n\tif (options.convertToAbsoluteUrls || autoFixUrls) {\n\t\tcss = fixUrls(css);\n\t}\n\n\tif (sourceMap) {\n\t\t// http://stackoverflow.com/a/26603875\n\t\tcss += \"\\n/*# sourceMappingURL=data:application/json;base64,\" + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + \" */\";\n\t}\n\n\tvar blob = new Blob([css], { type: \"text/css\" });\n\n\tvar oldSrc = link.href;\n\n\tlink.href = URL.createObjectURL(blob);\n\n\tif(oldSrc) URL.revokeObjectURL(oldSrc);\n}\n","\n/**\n * When source maps are enabled, `style-loader` uses a link element with a data-uri to\n * embed the css on the page. This breaks all relative urls because now they are relative to a\n * bundle instead of the current page.\n *\n * One solution is to only use full urls, but that may be impossible.\n *\n * Instead, this function \"fixes\" the relative urls to be absolute according to the current page location.\n *\n * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.\n *\n */\n\nmodule.exports = function (css) {\n  // get current location\n  var location = typeof window !== \"undefined\" && window.location;\n\n  if (!location) {\n    throw new Error(\"fixUrls requires window.location\");\n  }\n\n\t// blank or null?\n\tif (!css || typeof css !== \"string\") {\n\t  return css;\n  }\n\n  var baseUrl = location.protocol + \"//\" + location.host;\n  var currentDir = baseUrl + location.pathname.replace(/\\/[^\\/]*$/, \"/\");\n\n\t// convert each url(...)\n\t/*\n\tThis regular expression is just a way to recursively match brackets within\n\ta string.\n\n\t /url\\s*\\(  = Match on the word \"url\" with any whitespace after it and then a parens\n\t   (  = Start a capturing group\n\t     (?:  = Start a non-capturing group\n\t         [^)(]  = Match anything that isn't a parentheses\n\t         |  = OR\n\t         \\(  = Match a start parentheses\n\t             (?:  = Start another non-capturing groups\n\t                 [^)(]+  = Match anything that isn't a parentheses\n\t                 |  = OR\n\t                 \\(  = Match a start parentheses\n\t                     [^)(]*  = Match anything that isn't a parentheses\n\t                 \\)  = Match a end parentheses\n\t             )  = End Group\n              *\\) = Match anything and then a close parens\n          )  = Close non-capturing group\n          *  = Match anything\n       )  = Close capturing group\n\t \\)  = Match a close parens\n\n\t /gi  = Get all matches, not the first.  Be case insensitive.\n\t */\n\tvar fixedCss = css.replace(/url\\s*\\(((?:[^)(]|\\((?:[^)(]+|\\([^)(]*\\))*\\))*)\\)/gi, function(fullMatch, origUrl) {\n\t\t// strip quotes (if they exist)\n\t\tvar unquotedOrigUrl = origUrl\n\t\t\t.trim()\n\t\t\t.replace(/^\"(.*)\"$/, function(o, $1){ return $1; })\n\t\t\t.replace(/^'(.*)'$/, function(o, $1){ return $1; });\n\n\t\t// already a full url? no change\n\t\tif (/^(#|data:|http:\\/\\/|https:\\/\\/|file:\\/\\/\\/|\\s*$)/i.test(unquotedOrigUrl)) {\n\t\t  return fullMatch;\n\t\t}\n\n\t\t// convert the url to a full url\n\t\tvar newUrl;\n\n\t\tif (unquotedOrigUrl.indexOf(\"//\") === 0) {\n\t\t  \t//TODO: should we add protocol?\n\t\t\tnewUrl = unquotedOrigUrl;\n\t\t} else if (unquotedOrigUrl.indexOf(\"/\") === 0) {\n\t\t\t// path should be relative to the base url\n\t\t\tnewUrl = baseUrl + unquotedOrigUrl; // already starts with '/'\n\t\t} else {\n\t\t\t// path should be relative to current directory\n\t\t\tnewUrl = currentDir + unquotedOrigUrl.replace(/^\\.\\//, \"\"); // Strip leading './'\n\t\t}\n\n\t\t// send back the fixed url(...)\n\t\treturn \"url(\" + JSON.stringify(newUrl) + \")\";\n\t});\n\n\t// send back the fixed css\n\treturn fixedCss;\n};\n","\nvar content = require(\"!!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/lib/loader.js!./site.scss\");\n\nif(typeof content === 'string') content = [[module.id, content, '']];\n\nvar transform;\nvar insertInto;\n\n\n\nvar options = {\"hmr\":true}\n\noptions.transform = transform\noptions.insertInto = undefined;\n\nvar update = require(\"!../../node_modules/style-loader/lib/addStyles.js\")(content, options);\n\nif(content.locals) module.exports = content.locals;\n\nif(module.hot) {\n\tmodule.hot.accept(\"!!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/lib/loader.js!./site.scss\", function() {\n\t\tvar newContent = require(\"!!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/lib/loader.js!./site.scss\");\n\n\t\tif(typeof newContent === 'string') newContent = [[module.id, newContent, '']];\n\n\t\tvar locals = (function(a, b) {\n\t\t\tvar key, idx = 0;\n\n\t\t\tfor(key in a) {\n\t\t\t\tif(!b || a[key] !== b[key]) return false;\n\t\t\t\tidx++;\n\t\t\t}\n\n\t\t\tfor(key in b) idx--;\n\n\t\t\treturn idx === 0;\n\t\t}(content.locals, newContent.locals));\n\n\t\tif(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');\n\n\t\tupdate(newContent);\n\t});\n\n\tmodule.hot.dispose(function() { update(); });\n}","﻿// CSS Dependencies: Bootstrap\r\nimport \"bootstrap/dist/css/bootstrap.css\";\r\n\r\n// Custom CSS imports\r\nimport \"../css/site.scss\";\r\n\r\nconsole.log(\"The 'site' bundle has been loaded! OK\");\r\n"],"sourceRoot":""}
+\ No newline at end of file
++{"version":3,"sources":["webpack:///webpack/bootstrap","webpack:///./node_modules/bootstrap/dist/css/bootstrap.css?40ba","webpack:///./wwwroot/css/site.scss","webpack:///./node_modules/css-loader/dist/runtime/api.js","webpack:///./node_modules/style-loader/lib/addStyles.js","webpack:///./node_modules/style-loader/lib/urls.js","webpack:///./wwwroot/css/site.scss?dba1","webpack:///./wwwroot/js/site.js"],"names":[],"mappings":";AAAA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;;;AAGA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA,kDAA0C,gCAAgC;AAC1E;AACA;;AAEA;AACA;AACA;AACA,gEAAwD,kBAAkB;AAC1E;AACA,yDAAiD,cAAc;AAC/D;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA,iDAAyC,iCAAiC;AAC1E,wHAAgH,mBAAmB,EAAE;AACrI;AACA;;AAEA;AACA;AACA;AACA,mCAA2B,0BAA0B,EAAE;AACvD,yCAAiC,eAAe;AAChD;AACA;AACA;;AAEA;AACA,8DAAsD,+DAA+D;;AAErH;AACA;;;AAGA;AACA;;;;;;;;;;;;AClFA,uC;;;;;;;;;;;ACAA,2BAA2B,mBAAO,CAAC,wGAAmD;AACtF;AACA,cAAc,QAAS,UAAU,eAAe,EAAE,kBAAkB,oBAAoB,sBAAsB,EAAE,WAAW,kBAAkB,oBAAoB,4BAA4B,0BAA0B,4BAA4B,gBAAgB,eAAe,gBAAgB,cAAc,cAAc,mBAAmB,EAAE,iCAAiC,iBAAiB,kBAAkB,4BAA4B,wBAAwB,wBAAwB,EAAE,oBAAoB,kBAAkB,EAAE,2CAA2C,iBAAiB,EAAE,8BAA8B,sBAAsB,EAAE,0BAA0B,oBAAoB,0BAA0B,oCAAoC,0BAA0B,EAAE,gCAAgC,gBAAgB,EAAE,gCAAgC,kBAAkB,4BAA4B,wBAAwB,wBAAwB,EAAE,eAAe,gBAAgB,eAAe,gBAAgB,uBAAuB,EAAE,wDAAwD,kBAAkB,4BAA4B,wBAAwB,2BAA2B,EAAE,qBAAqB,iBAAiB,EAAE,yBAAyB,oBAAoB,EAAE,uCAAuC,kBAAkB,4BAA4B,wBAAwB,2BAA2B,EAAE,0BAA0B,mBAAmB,EAAE,yBAAyB,yBAAyB,EAAE,6BAA6B,kBAAkB,EAAE,wBAAwB,yBAAyB,EAAE,gHAAgH,uBAAuB,wBAAwB,EAAE,yCAAyC,oBAAoB,qBAAqB,EAAE,wHAAwH,gBAAgB,EAAE,sCAAsC,iBAAiB,EAAE,kKAAkK,sBAAsB,kBAAkB,0BAA0B,EAAE,kDAAkD,iBAAiB,EAAE,wCAAwC,kBAAkB,iBAAiB,EAAE,sCAAsC,kBAAkB,0BAA0B,iBAAiB,2BAA2B,wBAAwB,kBAAkB,EAAE,mBAAmB,yBAAyB,6BAA6B,EAAE;;;;;;;;;;;;;;ACF7mF;;AAEb;AACA;AACA;AACA;AACA;AACA;AACA,gBAAgB;;AAEhB;AACA;AACA;;AAEA;AACA,uCAAuC,gBAAgB;AACvD,OAAO;AACP;AACA;AACA,KAAK;AACL,IAAI;;;AAGJ;AACA;AACA;AACA;;AAEA;;AAEA,mBAAmB,iBAAiB;AACpC;;AAEA;AACA;AACA;AACA;;AAEA,eAAe,oBAAoB;AACnC,4BAA4B;AAC5B;AACA;AACA;;AAEA;AACA;AACA;AACA,SAAS;AACT;AACA;;AAEA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA,KAAK;AACL;AACA;;AAEA;AACA,CAAC;;;AAGD;AACA;AACA;AACA,qDAAqD,cAAc;AACnE;AACA,C;;;;;;;;;;;ACpFA;AACA;AACA;AACA;;AAEA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA,CAAC;;AAED;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;AACA,8CAA8C;AAC9C;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA,KAAK;AACL;AACA;AACA;AACA;AACA;AACA;AACA;AACA,CAAC;;AAED;AACA;AACA;;AAEA,cAAc,mBAAO,CAAC,uDAAQ;;AAE9B;AACA;AACA;AACA;;AAEA;;AAEA;;AAEA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;;AAEA;;AAEA;AACA;;AAEA,iBAAiB,mBAAmB;AACpC;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;;AAEA,iBAAiB,sBAAsB;AACvC;;AAEA;AACA,mBAAmB,2BAA2B;;AAE9C;AACA;AACA;AACA;AACA;;AAEA;AACA,gBAAgB,mBAAmB;AACnC;AACA;;AAEA;AACA;;AAEA,iBAAiB,2BAA2B;AAC5C;AACA;;AAEA,QAAQ,uBAAuB;AAC/B;AACA;AACA,GAAG;AACH;;AAEA,iBAAiB,uBAAuB;AACxC;AACA;;AAEA,2BAA2B;AAC3B;AACA;AACA;;AAEA;AACA;AACA;;AAEA,gBAAgB,iBAAiB;AACjC;AACA;AACA;AACA;AACA;AACA,cAAc;;AAEd,kDAAkD,sBAAsB;AACxE;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;;AAEA;;AAEA;AACA;AACA;AACA,GAAG;AACH;AACA,GAAG;AACH;AACA;AACA;AACA,EAAE;AACF;AACA,EAAE;AACF;AACA;AACA,EAAE;AACF;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA,EAAE;AACF;;AAEA;AACA,KAAK,KAAwC,EAAE,EAE7C;;AAEF,QAAQ,sBAAiB;AACzB;;AAEA;AACA;;AAEA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA,MAAM;AACN;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;;AAEA;AACA;;AAEA,EAAE;AACF;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA,EAAE;AACF;AACA;AACA;AACA;AACA;AACA;;AAEA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA,GAAG;AACH;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;;AAEA;AACA;AACA,CAAC;;AAED;AACA;;AAEA;AACA;AACA,EAAE;AACF;AACA;;AAEA;;AAEA;AACA;AACA,GAAG;AACH;AACA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA,EAAE;AACF;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA,uDAAuD;AACvD;;AAEA,6BAA6B,mBAAmB;;AAEhD;;AAEA;;AAEA;AACA;;;;;;;;;;;;;AC9YA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;;AAEA;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;AACA;AACA;AACA;AACA;AACA,wCAAwC,WAAW,EAAE;AACrD,wCAAwC,WAAW,EAAE;;AAErD;AACA;AACA;AACA;;AAEA;AACA;;AAEA;AACA;AACA;AACA,GAAG;AACH;AACA,sCAAsC;AACtC,GAAG;AACH;AACA,8DAA8D;AAC9D;;AAEA;AACA;AACA,EAAE;;AAEF;AACA;AACA;;;;;;;;;;;;;ACvFA,cAAc,mBAAO,CAAC,mNAAsG;;AAE5H,4CAA4C,QAAS;;AAErD;AACA;;;;AAIA,eAAe;;AAEf;AACA;;AAEA,aAAa,mBAAO,CAAC,sGAAmD;;AAExE;;AAEA,GAAG,KAAU,EAAE,E;;;;;;;;;;;;ACnBf;AAAA;AAAA;AAAA;AAAA;AAAA;AAC0C;;AAE1C;AAC0B;;AAE1B","file":"site.entry.js","sourcesContent":[" \t// The module cache\n \tvar installedModules = {};\n\n \t// The require function\n \tfunction __webpack_require__(moduleId) {\n\n \t\t// Check if module is in cache\n \t\tif(installedModules[moduleId]) {\n \t\t\treturn installedModules[moduleId].exports;\n \t\t}\n \t\t// Create a new module (and put it into the cache)\n \t\tvar module = installedModules[moduleId] = {\n \t\t\ti: moduleId,\n \t\t\tl: false,\n \t\t\texports: {}\n \t\t};\n\n \t\t// Execute the module function\n \t\tmodules[moduleId].call(module.exports, module, module.exports, __webpack_require__);\n\n \t\t// Flag the module as loaded\n \t\tmodule.l = true;\n\n \t\t// Return the exports of the module\n \t\treturn module.exports;\n \t}\n\n\n \t// expose the modules object (__webpack_modules__)\n \t__webpack_require__.m = modules;\n\n \t// expose the module cache\n \t__webpack_require__.c = installedModules;\n\n \t// define getter function for harmony exports\n \t__webpack_require__.d = function(exports, name, getter) {\n \t\tif(!__webpack_require__.o(exports, name)) {\n \t\t\tObject.defineProperty(exports, name, { enumerable: true, get: getter });\n \t\t}\n \t};\n\n \t// define __esModule on exports\n \t__webpack_require__.r = function(exports) {\n \t\tif(typeof Symbol !== 'undefined' && Symbol.toStringTag) {\n \t\t\tObject.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });\n \t\t}\n \t\tObject.defineProperty(exports, '__esModule', { value: true });\n \t};\n\n \t// create a fake namespace object\n \t// mode & 1: value is a module id, require it\n \t// mode & 2: merge all properties of value into the ns\n \t// mode & 4: return value when already ns object\n \t// mode & 8|1: behave like require\n \t__webpack_require__.t = function(value, mode) {\n \t\tif(mode & 1) value = __webpack_require__(value);\n \t\tif(mode & 8) return value;\n \t\tif((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;\n \t\tvar ns = Object.create(null);\n \t\t__webpack_require__.r(ns);\n \t\tObject.defineProperty(ns, 'default', { enumerable: true, value: value });\n \t\tif(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));\n \t\treturn ns;\n \t};\n\n \t// getDefaultExport function for compatibility with non-harmony modules\n \t__webpack_require__.n = function(module) {\n \t\tvar getter = module && module.__esModule ?\n \t\t\tfunction getDefault() { return module['default']; } :\n \t\t\tfunction getModuleExports() { return module; };\n \t\t__webpack_require__.d(getter, 'a', getter);\n \t\treturn getter;\n \t};\n\n \t// Object.prototype.hasOwnProperty.call\n \t__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };\n\n \t// __webpack_public_path__\n \t__webpack_require__.p = \"\";\n\n\n \t// Load entry module and return exports\n \treturn __webpack_require__(__webpack_require__.s = \"./wwwroot/js/site.js\");\n","// extracted by mini-css-extract-plugin","exports = module.exports = require(\"../../node_modules/css-loader/dist/runtime/api.js\")(false);\n// Module\nexports.push([module.id, \".test {\\n  color: red; }\\n\\n.layoutTitle {\\n  font-size: 20px;\\n  font-weight: bold; }\\n\\n#menu {\\n  display: none;\\n  position: fixed;\\n  justify-content: center;\\n  align-content: center;\\n  background-color: white;\\n  opacity: .9;\\n  width: 70%;\\n  height: 95%;\\n  top: 2.5%;\\n  left: 15%;\\n  border: dashed; }\\n\\n/* ErrorPage */\\n.errorPage {\\n  margin: 20px;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  flex-direction: row; }\\n  .errorPage img {\\n    width: 100%; }\\n\\n/* CreatePlatform */\\n.createPlatform {\\n  margin: 20px; }\\n  .createPlatform * button {\\n    height: inherit; }\\n  .createPlatform .row {\\n    display: flex;\\n    flex-direction: row;\\n    justify-content: space-around;\\n    align-items: center; }\\n    .createPlatform .row div {\\n      flex: 1; }\\n\\n/* SVG icons */\\n.btn-icon {\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  flex-direction: row; }\\n\\n.svg-icon {\\n  height: 1em;\\n  width: 1em;\\n  top: .125em;\\n  position: relative; }\\n\\n/* Home/Index.cs/PlatformList layout*/\\n.home-flex {\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  flex-direction: column; }\\n  .home-flex form {\\n    width: 75%; }\\n    .home-flex form * {\\n      margin: 5px; }\\n\\n/* Login page*/\\n.accountFormPage {\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  flex-direction: column; }\\n  .accountFormPage div {\\n    width: 300px; }\\n  .accountFormPage h4 {\\n    text-align: center; }\\n  .accountFormPage button {\\n    width: 100%; }\\n  .accountFormPage p {\\n    text-align: center; }\\n\\n/* Wrapping element */\\n/* Set some basic padding to keep content from hitting the edges */\\n.body-content {\\n  padding-left: 15px;\\n  padding-right: 15px; }\\n\\n/* Carousel */\\n.carousel-caption p {\\n  font-size: 20px;\\n  line-height: 1.4; }\\n\\n/* Make .svg files in the carousel display properly in older browsers */\\n.carousel-inner .item img[src$=\\\".svg\\\"] {\\n  width: 100%; }\\n\\n/* QR code generator */\\n#qrCode {\\n  margin: 15px; }\\n\\n/* Hide/rearrange for smaller screens */\\n/* Is used for to align a label with it's combobox (select) */\\n/* Used in CollectAllIdeas.cshtml */\\n#comboFilter {\\n  font-weight: bold;\\n  display: flex;\\n  align-items: flex-end; }\\n\\n/*CollectIdea.cshtml*/\\n#ReportHandlerButton {\\n  margin: 1rem; }\\n\\n/* CollectProject */\\n#projectView {\\n  display: flex;\\n  margin: 1rem; }\\n\\n/* Module.cshtml */\\n#modulePart {\\n  display: flex;\\n  border: #1b1e21 solid;\\n  margin: 1rem;\\n  flex-direction: column;\\n  align-items: center;\\n  padding: .2em; }\\n  #modulePart p {\\n    text-align: center;\\n    vertical-align: middle; }\\n\", \"\"]);\n\n","\"use strict\";\n\n/*\n  MIT License http://www.opensource.org/licenses/mit-license.php\n  Author Tobias Koppers @sokra\n*/\n// css base code, injected by the css-loader\nmodule.exports = function (useSourceMap) {\n  var list = []; // return the list of modules as css string\n\n  list.toString = function toString() {\n    return this.map(function (item) {\n      var content = cssWithMappingToString(item, useSourceMap);\n\n      if (item[2]) {\n        return '@media ' + item[2] + '{' + content + '}';\n      } else {\n        return content;\n      }\n    }).join('');\n  }; // import a list of modules into the list\n\n\n  list.i = function (modules, mediaQuery) {\n    if (typeof modules === 'string') {\n      modules = [[null, modules, '']];\n    }\n\n    var alreadyImportedModules = {};\n\n    for (var i = 0; i < this.length; i++) {\n      var id = this[i][0];\n\n      if (id != null) {\n        alreadyImportedModules[id] = true;\n      }\n    }\n\n    for (i = 0; i < modules.length; i++) {\n      var item = modules[i]; // skip already imported module\n      // this implementation is not 100% perfect for weird media query combinations\n      // when a module is imported multiple times with different media queries.\n      // I hope this will never occur (Hey this way we have smaller bundles)\n\n      if (item[0] == null || !alreadyImportedModules[item[0]]) {\n        if (mediaQuery && !item[2]) {\n          item[2] = mediaQuery;\n        } else if (mediaQuery) {\n          item[2] = '(' + item[2] + ') and (' + mediaQuery + ')';\n        }\n\n        list.push(item);\n      }\n    }\n  };\n\n  return list;\n};\n\nfunction cssWithMappingToString(item, useSourceMap) {\n  var content = item[1] || '';\n  var cssMapping = item[3];\n\n  if (!cssMapping) {\n    return content;\n  }\n\n  if (useSourceMap && typeof btoa === 'function') {\n    var sourceMapping = toComment(cssMapping);\n    var sourceURLs = cssMapping.sources.map(function (source) {\n      return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */';\n    });\n    return [content].concat(sourceURLs).concat([sourceMapping]).join('\\n');\n  }\n\n  return [content].join('\\n');\n} // Adapted from convert-source-map (MIT)\n\n\nfunction toComment(sourceMap) {\n  // eslint-disable-next-line no-undef\n  var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));\n  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;\n  return '/*# ' + data + ' */';\n}","/*\n\tMIT License http://www.opensource.org/licenses/mit-license.php\n\tAuthor Tobias Koppers @sokra\n*/\n\nvar stylesInDom = {};\n\nvar\tmemoize = function (fn) {\n\tvar memo;\n\n\treturn function () {\n\t\tif (typeof memo === \"undefined\") memo = fn.apply(this, arguments);\n\t\treturn memo;\n\t};\n};\n\nvar isOldIE = memoize(function () {\n\t// Test for IE <= 9 as proposed by Browserhacks\n\t// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805\n\t// Tests for existence of standard globals is to allow style-loader\n\t// to operate correctly into non-standard environments\n\t// @see https://github.com/webpack-contrib/style-loader/issues/177\n\treturn window && document && document.all && !window.atob;\n});\n\nvar getTarget = function (target, parent) {\n  if (parent){\n    return parent.querySelector(target);\n  }\n  return document.querySelector(target);\n};\n\nvar getElement = (function (fn) {\n\tvar memo = {};\n\n\treturn function(target, parent) {\n                // If passing function in options, then use it for resolve \"head\" element.\n                // Useful for Shadow Root style i.e\n                // {\n                //   insertInto: function () { return document.querySelector(\"#foo\").shadowRoot }\n                // }\n                if (typeof target === 'function') {\n                        return target();\n                }\n                if (typeof memo[target] === \"undefined\") {\n\t\t\tvar styleTarget = getTarget.call(this, target, parent);\n\t\t\t// Special case to return head of iframe instead of iframe itself\n\t\t\tif (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {\n\t\t\t\ttry {\n\t\t\t\t\t// This will throw an exception if access to iframe is blocked\n\t\t\t\t\t// due to cross-origin restrictions\n\t\t\t\t\tstyleTarget = styleTarget.contentDocument.head;\n\t\t\t\t} catch(e) {\n\t\t\t\t\tstyleTarget = null;\n\t\t\t\t}\n\t\t\t}\n\t\t\tmemo[target] = styleTarget;\n\t\t}\n\t\treturn memo[target]\n\t};\n})();\n\nvar singleton = null;\nvar\tsingletonCounter = 0;\nvar\tstylesInsertedAtTop = [];\n\nvar\tfixUrls = require(\"./urls\");\n\nmodule.exports = function(list, options) {\n\tif (typeof DEBUG !== \"undefined\" && DEBUG) {\n\t\tif (typeof document !== \"object\") throw new Error(\"The style-loader cannot be used in a non-browser environment\");\n\t}\n\n\toptions = options || {};\n\n\toptions.attrs = typeof options.attrs === \"object\" ? options.attrs : {};\n\n\t// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>\n\t// tags it will allow on a page\n\tif (!options.singleton && typeof options.singleton !== \"boolean\") options.singleton = isOldIE();\n\n\t// By default, add <style> tags to the <head> element\n        if (!options.insertInto) options.insertInto = \"head\";\n\n\t// By default, add <style> tags to the bottom of the target\n\tif (!options.insertAt) options.insertAt = \"bottom\";\n\n\tvar styles = listToStyles(list, options);\n\n\taddStylesToDom(styles, options);\n\n\treturn function update (newList) {\n\t\tvar mayRemove = [];\n\n\t\tfor (var i = 0; i < styles.length; i++) {\n\t\t\tvar item = styles[i];\n\t\t\tvar domStyle = stylesInDom[item.id];\n\n\t\t\tdomStyle.refs--;\n\t\t\tmayRemove.push(domStyle);\n\t\t}\n\n\t\tif(newList) {\n\t\t\tvar newStyles = listToStyles(newList, options);\n\t\t\taddStylesToDom(newStyles, options);\n\t\t}\n\n\t\tfor (var i = 0; i < mayRemove.length; i++) {\n\t\t\tvar domStyle = mayRemove[i];\n\n\t\t\tif(domStyle.refs === 0) {\n\t\t\t\tfor (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();\n\n\t\t\t\tdelete stylesInDom[domStyle.id];\n\t\t\t}\n\t\t}\n\t};\n};\n\nfunction addStylesToDom (styles, options) {\n\tfor (var i = 0; i < styles.length; i++) {\n\t\tvar item = styles[i];\n\t\tvar domStyle = stylesInDom[item.id];\n\n\t\tif(domStyle) {\n\t\t\tdomStyle.refs++;\n\n\t\t\tfor(var j = 0; j < domStyle.parts.length; j++) {\n\t\t\t\tdomStyle.parts[j](item.parts[j]);\n\t\t\t}\n\n\t\t\tfor(; j < item.parts.length; j++) {\n\t\t\t\tdomStyle.parts.push(addStyle(item.parts[j], options));\n\t\t\t}\n\t\t} else {\n\t\t\tvar parts = [];\n\n\t\t\tfor(var j = 0; j < item.parts.length; j++) {\n\t\t\t\tparts.push(addStyle(item.parts[j], options));\n\t\t\t}\n\n\t\t\tstylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};\n\t\t}\n\t}\n}\n\nfunction listToStyles (list, options) {\n\tvar styles = [];\n\tvar newStyles = {};\n\n\tfor (var i = 0; i < list.length; i++) {\n\t\tvar item = list[i];\n\t\tvar id = options.base ? item[0] + options.base : item[0];\n\t\tvar css = item[1];\n\t\tvar media = item[2];\n\t\tvar sourceMap = item[3];\n\t\tvar part = {css: css, media: media, sourceMap: sourceMap};\n\n\t\tif(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});\n\t\telse newStyles[id].parts.push(part);\n\t}\n\n\treturn styles;\n}\n\nfunction insertStyleElement (options, style) {\n\tvar target = getElement(options.insertInto)\n\n\tif (!target) {\n\t\tthrow new Error(\"Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.\");\n\t}\n\n\tvar lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];\n\n\tif (options.insertAt === \"top\") {\n\t\tif (!lastStyleElementInsertedAtTop) {\n\t\t\ttarget.insertBefore(style, target.firstChild);\n\t\t} else if (lastStyleElementInsertedAtTop.nextSibling) {\n\t\t\ttarget.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);\n\t\t} else {\n\t\t\ttarget.appendChild(style);\n\t\t}\n\t\tstylesInsertedAtTop.push(style);\n\t} else if (options.insertAt === \"bottom\") {\n\t\ttarget.appendChild(style);\n\t} else if (typeof options.insertAt === \"object\" && options.insertAt.before) {\n\t\tvar nextSibling = getElement(options.insertAt.before, target);\n\t\ttarget.insertBefore(style, nextSibling);\n\t} else {\n\t\tthrow new Error(\"[Style Loader]\\n\\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\\n Must be 'top', 'bottom', or Object.\\n (https://github.com/webpack-contrib/style-loader#insertat)\\n\");\n\t}\n}\n\nfunction removeStyleElement (style) {\n\tif (style.parentNode === null) return false;\n\tstyle.parentNode.removeChild(style);\n\n\tvar idx = stylesInsertedAtTop.indexOf(style);\n\tif(idx >= 0) {\n\t\tstylesInsertedAtTop.splice(idx, 1);\n\t}\n}\n\nfunction createStyleElement (options) {\n\tvar style = document.createElement(\"style\");\n\n\tif(options.attrs.type === undefined) {\n\t\toptions.attrs.type = \"text/css\";\n\t}\n\n\tif(options.attrs.nonce === undefined) {\n\t\tvar nonce = getNonce();\n\t\tif (nonce) {\n\t\t\toptions.attrs.nonce = nonce;\n\t\t}\n\t}\n\n\taddAttrs(style, options.attrs);\n\tinsertStyleElement(options, style);\n\n\treturn style;\n}\n\nfunction createLinkElement (options) {\n\tvar link = document.createElement(\"link\");\n\n\tif(options.attrs.type === undefined) {\n\t\toptions.attrs.type = \"text/css\";\n\t}\n\toptions.attrs.rel = \"stylesheet\";\n\n\taddAttrs(link, options.attrs);\n\tinsertStyleElement(options, link);\n\n\treturn link;\n}\n\nfunction addAttrs (el, attrs) {\n\tObject.keys(attrs).forEach(function (key) {\n\t\tel.setAttribute(key, attrs[key]);\n\t});\n}\n\nfunction getNonce() {\n\tif (typeof __webpack_nonce__ === 'undefined') {\n\t\treturn null;\n\t}\n\n\treturn __webpack_nonce__;\n}\n\nfunction addStyle (obj, options) {\n\tvar style, update, remove, result;\n\n\t// If a transform function was defined, run it on the css\n\tif (options.transform && obj.css) {\n\t    result = typeof options.transform === 'function'\n\t\t ? options.transform(obj.css) \n\t\t : options.transform.default(obj.css);\n\n\t    if (result) {\n\t    \t// If transform returns a value, use that instead of the original css.\n\t    \t// This allows running runtime transformations on the css.\n\t    \tobj.css = result;\n\t    } else {\n\t    \t// If the transform function returns a falsy value, don't add this css.\n\t    \t// This allows conditional loading of css\n\t    \treturn function() {\n\t    \t\t// noop\n\t    \t};\n\t    }\n\t}\n\n\tif (options.singleton) {\n\t\tvar styleIndex = singletonCounter++;\n\n\t\tstyle = singleton || (singleton = createStyleElement(options));\n\n\t\tupdate = applyToSingletonTag.bind(null, style, styleIndex, false);\n\t\tremove = applyToSingletonTag.bind(null, style, styleIndex, true);\n\n\t} else if (\n\t\tobj.sourceMap &&\n\t\ttypeof URL === \"function\" &&\n\t\ttypeof URL.createObjectURL === \"function\" &&\n\t\ttypeof URL.revokeObjectURL === \"function\" &&\n\t\ttypeof Blob === \"function\" &&\n\t\ttypeof btoa === \"function\"\n\t) {\n\t\tstyle = createLinkElement(options);\n\t\tupdate = updateLink.bind(null, style, options);\n\t\tremove = function () {\n\t\t\tremoveStyleElement(style);\n\n\t\t\tif(style.href) URL.revokeObjectURL(style.href);\n\t\t};\n\t} else {\n\t\tstyle = createStyleElement(options);\n\t\tupdate = applyToTag.bind(null, style);\n\t\tremove = function () {\n\t\t\tremoveStyleElement(style);\n\t\t};\n\t}\n\n\tupdate(obj);\n\n\treturn function updateStyle (newObj) {\n\t\tif (newObj) {\n\t\t\tif (\n\t\t\t\tnewObj.css === obj.css &&\n\t\t\t\tnewObj.media === obj.media &&\n\t\t\t\tnewObj.sourceMap === obj.sourceMap\n\t\t\t) {\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\tupdate(obj = newObj);\n\t\t} else {\n\t\t\tremove();\n\t\t}\n\t};\n}\n\nvar replaceText = (function () {\n\tvar textStore = [];\n\n\treturn function (index, replacement) {\n\t\ttextStore[index] = replacement;\n\n\t\treturn textStore.filter(Boolean).join('\\n');\n\t};\n})();\n\nfunction applyToSingletonTag (style, index, remove, obj) {\n\tvar css = remove ? \"\" : obj.css;\n\n\tif (style.styleSheet) {\n\t\tstyle.styleSheet.cssText = replaceText(index, css);\n\t} else {\n\t\tvar cssNode = document.createTextNode(css);\n\t\tvar childNodes = style.childNodes;\n\n\t\tif (childNodes[index]) style.removeChild(childNodes[index]);\n\n\t\tif (childNodes.length) {\n\t\t\tstyle.insertBefore(cssNode, childNodes[index]);\n\t\t} else {\n\t\t\tstyle.appendChild(cssNode);\n\t\t}\n\t}\n}\n\nfunction applyToTag (style, obj) {\n\tvar css = obj.css;\n\tvar media = obj.media;\n\n\tif(media) {\n\t\tstyle.setAttribute(\"media\", media)\n\t}\n\n\tif(style.styleSheet) {\n\t\tstyle.styleSheet.cssText = css;\n\t} else {\n\t\twhile(style.firstChild) {\n\t\t\tstyle.removeChild(style.firstChild);\n\t\t}\n\n\t\tstyle.appendChild(document.createTextNode(css));\n\t}\n}\n\nfunction updateLink (link, options, obj) {\n\tvar css = obj.css;\n\tvar sourceMap = obj.sourceMap;\n\n\t/*\n\t\tIf convertToAbsoluteUrls isn't defined, but sourcemaps are enabled\n\t\tand there is no publicPath defined then lets turn convertToAbsoluteUrls\n\t\ton by default.  Otherwise default to the convertToAbsoluteUrls option\n\t\tdirectly\n\t*/\n\tvar autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;\n\n\tif (options.convertToAbsoluteUrls || autoFixUrls) {\n\t\tcss = fixUrls(css);\n\t}\n\n\tif (sourceMap) {\n\t\t// http://stackoverflow.com/a/26603875\n\t\tcss += \"\\n/*# sourceMappingURL=data:application/json;base64,\" + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + \" */\";\n\t}\n\n\tvar blob = new Blob([css], { type: \"text/css\" });\n\n\tvar oldSrc = link.href;\n\n\tlink.href = URL.createObjectURL(blob);\n\n\tif(oldSrc) URL.revokeObjectURL(oldSrc);\n}\n","\n/**\n * When source maps are enabled, `style-loader` uses a link element with a data-uri to\n * embed the css on the page. This breaks all relative urls because now they are relative to a\n * bundle instead of the current page.\n *\n * One solution is to only use full urls, but that may be impossible.\n *\n * Instead, this function \"fixes\" the relative urls to be absolute according to the current page location.\n *\n * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.\n *\n */\n\nmodule.exports = function (css) {\n  // get current location\n  var location = typeof window !== \"undefined\" && window.location;\n\n  if (!location) {\n    throw new Error(\"fixUrls requires window.location\");\n  }\n\n\t// blank or null?\n\tif (!css || typeof css !== \"string\") {\n\t  return css;\n  }\n\n  var baseUrl = location.protocol + \"//\" + location.host;\n  var currentDir = baseUrl + location.pathname.replace(/\\/[^\\/]*$/, \"/\");\n\n\t// convert each url(...)\n\t/*\n\tThis regular expression is just a way to recursively match brackets within\n\ta string.\n\n\t /url\\s*\\(  = Match on the word \"url\" with any whitespace after it and then a parens\n\t   (  = Start a capturing group\n\t     (?:  = Start a non-capturing group\n\t         [^)(]  = Match anything that isn't a parentheses\n\t         |  = OR\n\t         \\(  = Match a start parentheses\n\t             (?:  = Start another non-capturing groups\n\t                 [^)(]+  = Match anything that isn't a parentheses\n\t                 |  = OR\n\t                 \\(  = Match a start parentheses\n\t                     [^)(]*  = Match anything that isn't a parentheses\n\t                 \\)  = Match a end parentheses\n\t             )  = End Group\n              *\\) = Match anything and then a close parens\n          )  = Close non-capturing group\n          *  = Match anything\n       )  = Close capturing group\n\t \\)  = Match a close parens\n\n\t /gi  = Get all matches, not the first.  Be case insensitive.\n\t */\n\tvar fixedCss = css.replace(/url\\s*\\(((?:[^)(]|\\((?:[^)(]+|\\([^)(]*\\))*\\))*)\\)/gi, function(fullMatch, origUrl) {\n\t\t// strip quotes (if they exist)\n\t\tvar unquotedOrigUrl = origUrl\n\t\t\t.trim()\n\t\t\t.replace(/^\"(.*)\"$/, function(o, $1){ return $1; })\n\t\t\t.replace(/^'(.*)'$/, function(o, $1){ return $1; });\n\n\t\t// already a full url? no change\n\t\tif (/^(#|data:|http:\\/\\/|https:\\/\\/|file:\\/\\/\\/|\\s*$)/i.test(unquotedOrigUrl)) {\n\t\t  return fullMatch;\n\t\t}\n\n\t\t// convert the url to a full url\n\t\tvar newUrl;\n\n\t\tif (unquotedOrigUrl.indexOf(\"//\") === 0) {\n\t\t  \t//TODO: should we add protocol?\n\t\t\tnewUrl = unquotedOrigUrl;\n\t\t} else if (unquotedOrigUrl.indexOf(\"/\") === 0) {\n\t\t\t// path should be relative to the base url\n\t\t\tnewUrl = baseUrl + unquotedOrigUrl; // already starts with '/'\n\t\t} else {\n\t\t\t// path should be relative to current directory\n\t\t\tnewUrl = currentDir + unquotedOrigUrl.replace(/^\\.\\//, \"\"); // Strip leading './'\n\t\t}\n\n\t\t// send back the fixed url(...)\n\t\treturn \"url(\" + JSON.stringify(newUrl) + \")\";\n\t});\n\n\t// send back the fixed css\n\treturn fixedCss;\n};\n","\nvar content = require(\"!!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/lib/loader.js!./site.scss\");\n\nif(typeof content === 'string') content = [[module.id, content, '']];\n\nvar transform;\nvar insertInto;\n\n\n\nvar options = {\"hmr\":true}\n\noptions.transform = transform\noptions.insertInto = undefined;\n\nvar update = require(\"!../../node_modules/style-loader/lib/addStyles.js\")(content, options);\n\nif(content.locals) module.exports = content.locals;\n\nif(module.hot) {\n\tmodule.hot.accept(\"!!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/lib/loader.js!./site.scss\", function() {\n\t\tvar newContent = require(\"!!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/lib/loader.js!./site.scss\");\n\n\t\tif(typeof newContent === 'string') newContent = [[module.id, newContent, '']];\n\n\t\tvar locals = (function(a, b) {\n\t\t\tvar key, idx = 0;\n\n\t\t\tfor(key in a) {\n\t\t\t\tif(!b || a[key] !== b[key]) return false;\n\t\t\t\tidx++;\n\t\t\t}\n\n\t\t\tfor(key in b) idx--;\n\n\t\t\treturn idx === 0;\n\t\t}(content.locals, newContent.locals));\n\n\t\tif(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');\n\n\t\tupdate(newContent);\n\t});\n\n\tmodule.hot.dispose(function() { update(); });\n}","﻿// CSS Dependencies: Bootstrap\r\nimport \"bootstrap/dist/css/bootstrap.css\";\r\n\r\n// Custom CSS imports\r\nimport \"../css/site.scss\";\r\n\r\nconsole.log(\"The 'site' bundle has been loaded! OK\");\r\n"],"sourceRoot":""}
+\ No newline at end of file
+Index: UI-MVC/Controllers/ProjectController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Controllers/ProjectController.cs	(date 1556540807000)
++++ UI-MVC/Controllers/ProjectController.cs	(date 1556568398594)
+@@ -1,9 +1,10 @@
+ using System.Collections;
+ using System.Collections.Generic;
+ using BL;
+-using DAL;
+ using Domain.Projects;
++using Domain.Users;
+ using Microsoft.AspNetCore.Mvc;
++using UIMVC.Models;
+ 
+ namespace UIMVC.Controllers
+ {
+@@ -11,11 +12,22 @@
+     {
+         private ProjectManager _mgr;
+ 
++        public ProjectController()
++        {
++            _mgr = new ProjectManager();
++        }
++
+         // GET /Project
+-        public IActionResult Index()
++        [Route("Project/Index/{id}")]
++        public IActionResult Index(int id)
+         {
+-            IEnumerable<Project> projects = _mgr.GetProjects();
+-            return View(projects);
++            Project project = _mgr.GetProject(id, false);
++            if (project == null)
++            {
++                return RedirectToAction("HandleErrorCode", "Errors", 404);
++            }
++
++            return View(project);
+         }
+ 
+ 
+@@ -24,11 +36,33 @@
+             return View();
+         }
+ 
++        public IActionResult Test(ProjectViewModel viewmodel)
++        {
++            return View();
++        }
+ 
+         [HttpPost]
+-        public IActionResult Create(Project createProject)
++        public IActionResult Create(ProjectViewModel projectViewModel)
+         {
+-            Project newProject = _mgr.MakeProject(createProject);
++            Project project = projectViewModel.Project;
++
++            project.Platform = new Platform {Id = 1};
++            project.User = new User() {Id = 1};
++            project.CurrentPhase = new Phase() {Id = 1};
++
++            project.Status = project.Status.ToUpper();
++            project.Visible = true;
++            project.LikeVisibility = 1;
++
++            Project newProject = _mgr.MakeProject(project);
++
++            Phase newPhase = projectViewModel.Phase;
++            
++            
++            newPhase.Project = newProject;
++            _mgr.MakePhase(newPhase, project.Id);
++
++           
+ 
+             return RedirectToAction("Details", new {id = newProject.Id});
+         }
+Index: UI-MVC/wwwroot/dist/site.entry.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/wwwroot/dist/site.entry.js	(date 1556540807000)
++++ UI-MVC/wwwroot/dist/site.entry.js	(date 1556568696772)
+Index: UI-MVC/Services/EmailSender.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/Services/EmailSender.cs	(date 1556540807000)
++++ UI-MVC/Services/EmailSender.cs	(date 1556542805434)
+@@ -25,7 +25,8 @@
+ 
+         public Task Execute(string apiKey, string subject, string message, string email)
+         {
+-            var client = new SendGridClient(apiKey);
++     
++         //   var client = new SendGridClient(apiKey);
+             var msg = new SendGridMessage()
+             {
+                 From = new EmailAddress("xander.veldeman@student.kdg.be", "City of Ideas"),
+@@ -39,7 +40,7 @@
+             // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
+             msg.SetClickTracking(false, false);
+ 
+-            return client.SendEmailAsync(msg);
++            return null; //client.SendEmailAsync(msg); DIT TERUG VRIJMAKEN
+         }
+     }
+ }
+Index: UI-MVC/package-lock.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UI-MVC/package-lock.json	(date 1556540807000)
++++ UI-MVC/package-lock.json	(date 1556566533165)
+@@ -2191,6 +2191,71 @@
+                 }
+             }
+         },
++        "fstream": {
++            "version": "1.0.11",
++            "resolved": "https://registry.npmjs.org/fstream/-/fstream-1.0.11.tgz",
++            "integrity": "sha1-XB+x8RdHcRTwYyoOtLcbPLD9MXE=",
++            "dev": true,
++            "requires": {
++                "graceful-fs": "^4.1.2",
++                "inherits": "~2.0.0",
++                "mkdirp": ">=0.5 0",
++                "rimraf": "2"
++            }
++        },
++        "gauge": {
++            "version": "2.7.4",
++            "resolved": "https://registry.npmjs.org/gauge/-/gauge-2.7.4.tgz",
++            "integrity": "sha1-LANAXHU4w51+s3sxcCLjJfsBi/c=",
++            "dev": true,
++            "requires": {
++                "aproba": "^1.0.3",
++                "console-control-strings": "^1.0.0",
++                "has-unicode": "^2.0.0",
++                "object-assign": "^4.1.0",
++                "signal-exit": "^3.0.0",
++                "string-width": "^1.0.1",
++                "strip-ansi": "^3.0.1",
++                "wide-align": "^1.1.0"
++            },
++            "dependencies": {
++                "ansi-regex": {
++                    "version": "2.1.1",
++                    "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-2.1.1.tgz",
++                    "integrity": "sha1-w7M6te42DYbg5ijwRorn7yfWVN8=",
++                    "dev": true
++                },
++                "is-fullwidth-code-point": {
++                    "version": "1.0.0",
++                    "resolved": "https://registry.npmjs.org/is-fullwidth-code-point/-/is-fullwidth-code-point-1.0.0.tgz",
++                    "integrity": "sha1-754xOG8DGn8NZDr4L95QxFfvAMs=",
++                    "dev": true,
++                    "requires": {
++                        "number-is-nan": "^1.0.0"
++                    }
++                },
++                "string-width": {
++                    "version": "1.0.2",
++                    "resolved": "https://registry.npmjs.org/string-width/-/string-width-1.0.2.tgz",
++                    "integrity": "sha1-EYvfW4zcUaKn5w0hHgfisLmxB9M=",
++                    "dev": true,
++                    "requires": {
++                        "code-point-at": "^1.0.0",
++                        "is-fullwidth-code-point": "^1.0.0",
++                        "strip-ansi": "^3.0.0"
++                    }
++                },
++                "strip-ansi": {
++                    "version": "3.0.1",
++                    "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
++                    "integrity": "sha1-ajhfuIU9lS1f8F0Oiq+UJ43GPc8=",
++                    "dev": true,
++                    "requires": {
++                        "ansi-regex": "^2.0.0"
++                    }
++                }
++            }
++        },
+         "gaze": {
+             "version": "1.1.3",
+             "resolved": "https://registry.npmjs.org/gaze/-/gaze-1.1.3.tgz",
+diff --git UI-MVC/IP1_TSI_DB.db UI-MVC/IP1_TSI_DB.db
+index fb4f2837706a03beba1c9baa6266bff88ee09f1c..71f303fcf0d94bf21ae973ee50daf745607dffb0
+GIT binary patch
+literal 180224
+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
+UcK`qY00000008_l>0kf<|2SN|%K!iX
+
