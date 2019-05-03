@@ -525,7 +525,7 @@ namespace DAL.repos
 
             foreach (IdeasDTO DTO in ctx.Ideas)
             {
-                Idea idea = ReadIdea(DTO.IdeaID, false);
+                Idea idea = ReadWithFields(DTO.IdeaID);
                 myQuery.Add(idea);
             }
 
