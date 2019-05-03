@@ -25,7 +25,6 @@ namespace UIMVC.Areas.Identity
 
                 //TODO: Implement roles
                 services.AddDefaultIdentity<UIMVCUser>(
-                        // Replaced with custom check in Login.cshtml.cs
                     config => { config.SignIn.RequireConfirmedEmail = true; })
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<DAL.Contexts.CityOfIdeasDbContext>()
