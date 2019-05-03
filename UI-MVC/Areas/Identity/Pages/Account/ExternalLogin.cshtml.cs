@@ -121,7 +121,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new UIMVCUser { UserName = Input.Email, Email = Input.Email, EmailConfirmed = true, Name = Input.Name };
+                var user = new UIMVCUser { UserName = info.Principal.FindFirstValue(ClaimTypes.Email), Email = info.Principal.FindFirstValue(ClaimTypes.Email), EmailConfirmed = true, Name = Input.Name };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
