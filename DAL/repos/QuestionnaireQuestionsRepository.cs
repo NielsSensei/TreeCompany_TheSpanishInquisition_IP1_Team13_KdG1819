@@ -6,6 +6,7 @@ using System.Linq;
 using Domain.UserInput;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
+using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
 using Domain.Users;
@@ -16,7 +17,7 @@ namespace DAL
     {
         // Added by DM
         // Modified by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext ctx;
 
         // Added by NVZ
         public QuestionnaireQuestionsRepository()
@@ -102,7 +103,7 @@ namespace DAL
             return new OpenAnswer
             {
                 Id = DTO.AnswerID,
-                User = new User { Id = DTO.UserID },
+                User = new UIMVCUser { Id = DTO.UserID },
                 Question = new QuestionnaireQuestion { Id = DTO.QQuestionID },
                 IsUserEmail = DTO.AnswerText.Contains("@"),
                 AnswerText = DTO.AnswerText
@@ -113,7 +114,7 @@ namespace DAL
         {
             MultipleAnswer ma = null;
             ma.Id = answersDTO.AnswerID;
-            ma.User = new User { Id = answersDTO.UserID };
+            ma.User = new UIMVCUser { Id = answersDTO.UserID };
             ma.Question = new QuestionnaireQuestion { Id = answersDTO.QQuestionID };
             ma.DropdownList = chosenOptionsDTO.Count == 1;
 
@@ -123,6 +124,18 @@ namespace DAL
             }
 
             return ma;
+        }
+        
+        private int FindNextAvailableQQuestionId()
+        {               
+            int newId = ReadAll().Max(qq => qq.Id)+1;
+            return newId;
+        }
+        
+        private int FindNextAvailableAnswerId()
+        {               
+            int newId = ReadAll().Max(answer => answer.Id)+1;
+            return newId;
         }
         #endregion
 
@@ -142,6 +155,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailableQQuestionId();
             ctx.QuestionnaireQuestions.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -151,17 +165,8 @@ namespace DAL
         public QuestionnaireQuestion Read(int id, bool details)
         {
             QuestionnaireQuestionsDTO questionnaireQuestionDTO = null;
-
-            if (details)
-            {
-                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QQuestionID == id);
-                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.QQuestionID);
-            }
-            else
-            {
-                questionnaireQuestionDTO = ctx.QuestionnaireQuestions.First(q => q.QQuestionID == id);
-                ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", questionnaireQuestionDTO.QQuestionID);
-            }
+            questionnaireQuestionDTO = details ? ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QQuestionID == id) : ctx.QuestionnaireQuestions.First(q => q.QQuestionID == id);
+            ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", id);
 
             return ConvertToDomain(questionnaireQuestionDTO);
         }
@@ -169,17 +174,21 @@ namespace DAL
         public void Update(QuestionnaireQuestion obj)
         {
             QuestionnaireQuestionsDTO newQuestionnaireQuestion = ConvertToDTO(obj);
-            QuestionnaireQuestion found = Read(obj.Id, false);
-            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = ConvertToDTO(found);
-            foundQuestionnaireQuestion = newQuestionnaireQuestion;
+            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = ctx.QuestionnaireQuestions.First(qq => qq.QQuestionID == obj.Id);
+            if (foundQuestionnaireQuestion != null)
+            {
+                foundQuestionnaireQuestion.QuestionText = newQuestionnaireQuestion.QuestionText;
+                foundQuestionnaireQuestion.QType = newQuestionnaireQuestion.QType;
+                foundQuestionnaireQuestion.Required = newQuestionnaireQuestion.Required;
+            }
 
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            QuestionnaireQuestion toDelete = Read(id, false);
-            ctx.QuestionnaireQuestions.Remove(ConvertToDTO(toDelete));
+            QuestionnaireQuestionsDTO toDelete = ctx.QuestionnaireQuestions.First(qq => qq.QQuestionID == id);
+            ctx.QuestionnaireQuestions.Remove(toDelete);
             ctx.SaveChanges();
         }
         
@@ -211,6 +220,7 @@ namespace DAL
         public Answer Create(Answer obj)
         {
             QuestionnaireQuestion qq = Read(obj.Question.Id, false);
+            obj.Id = FindNextAvailableAnswerId();
             
             if(qq.QuestionType == QuestionType.OPEN || qq.QuestionType == QuestionType.MAIL)
             {
@@ -225,6 +235,7 @@ namespace DAL
                     ctx.Choices.Add(ConvertToDTO(id,ma.Id,ctx.Choices.Count()+1));
                 }
             }
+           
             ctx.SaveChanges();
 
             return obj;
@@ -234,17 +245,8 @@ namespace DAL
         public OpenAnswer ReadOpenAnswer(int answerID, bool details)
         {
             AnswersDTO answersDTO = null;
-
-            if (details)
-            {
-                answersDTO = ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID);
-                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
-            }
-            else
-            {
-                answersDTO = ctx.Answers.First(i => i.AnswerID == answerID);
-                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
-            }
+            answersDTO = details ? ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID) : ctx.Answers.First(i => i.AnswerID == answerID);
+            ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
 
             return ConvertToDomain(answersDTO);
         }
@@ -252,17 +254,8 @@ namespace DAL
         public MultipleAnswer ReadMultipleAnswer(int answerID, bool details)
         {
             AnswersDTO answersDTO = null;
-
-            if (details)
-            {
-                answersDTO = ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID);
-                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
-            }
-            else
-            {
-                answersDTO = ctx.Answers.First(i => i.AnswerID == answerID);
-                ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
-            }
+            answersDTO = details ? ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID) : ctx.Answers.First(i => i.AnswerID == answerID);
+            ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
 
             List<ChoicesDTO> choicesDTO = ctx.Choices.ToList().FindAll(c => c.AnswerID == answerID);
             List<OptionsDTO> optionsDTO = ctx.Options.ToList().FindAll(o => o.QQuestionID == answersDTO.QQuestionID);
@@ -310,7 +303,6 @@ namespace DAL
         }
         #endregion
 
-
         // Added by NVZ
         // Options CRUD
         #region
@@ -352,10 +344,10 @@ namespace DAL
             throw new DuplicateNameException("Option " + optionText + " niet gevonden voor de QuestionnaireQuestion(ID=" + questionID + ").");
         }
 
-        public void DeleteOption(int optionID, int questionID)
+        public void DeleteOption(int optionID)
         {
-            string toDelete = ReadOption(optionID, questionID);
-            ctx.Options.Remove(ConvertToDTO(optionID, toDelete, questionID));
+            OptionsDTO toDelete = ctx.Options.First(o => o.OptionID == optionID);
+            ctx.Options.Remove(toDelete);
             ctx.SaveChanges();
         }
         

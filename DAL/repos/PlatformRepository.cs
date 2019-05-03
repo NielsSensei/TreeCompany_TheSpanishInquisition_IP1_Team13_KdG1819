@@ -5,6 +5,7 @@ using Domain.Users;
 using DAL.Contexts;
 using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL
 {
@@ -31,7 +32,7 @@ namespace DAL
                 Name = p.Name,
                 SiteUrl = p.Url
                 // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image 
+                // IconImage = p.Image
             };
         }
 
@@ -43,11 +44,21 @@ namespace DAL
                 Name = DTO.Name,
                 Url = DTO.SiteUrl
                 // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image 
+                // IconImage = p.Image
             };
         }
+
+        // Added by XV
+        // Select the biggest current Id from the platforms and increment it by one -XV
+        private int FindNextAvailablePlatformId()
+        {
+            if (!ctx.Platforms.Any()) return 1;
+            int newId = ReadAll().Max(platform => platform.Id) + 1;
+            return newId;
+
+        }
         #endregion
-        
+
         // Added by NVZ
         // Platform CRUD
         #region
@@ -64,6 +75,7 @@ namespace DAL
                 }
             }
 
+            obj.Id = FindNextAvailablePlatformId();
             ctx.Platforms.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -73,34 +85,33 @@ namespace DAL
         public Platform Read(int id, bool details)
         {
             PlatformsDTO platformDTO = null;
-
-            if (details)
-            {
-                platformDTO = ctx.Platforms.AsNoTracking().First(p => p.PlatformID == id);
-                ExtensionMethods.CheckForNotFound(platformDTO, "Platform", platformDTO.PlatformID);
-            }
-            else
-            {
-                platformDTO = ctx.Platforms.First(p => p.PlatformID == id);
-                ExtensionMethods.CheckForNotFound(platformDTO, "Platform", platformDTO.PlatformID);
-            }
+            platformDTO = details ? ctx.Platforms.AsNoTracking().First(p => p.PlatformID == id) : ctx.Platforms.First(p => p.PlatformID == id);
+            ExtensionMethods.CheckForNotFound(platformDTO, "Platform", id);
 
             return ConvertToDomain(platformDTO);
         }
 
+
+        // Modified by XV & NVZ
         public void Update(Platform obj)
         {
             PlatformsDTO newPlatform = ConvertToDTO(obj);
-            Platform found = Read(obj.Id, false);
-            PlatformsDTO foundPlatform = ConvertToDTO(found);
-            foundPlatform = newPlatform;
+            PlatformsDTO foundPlatform = ctx.Platforms.FirstOrDefault(dto => dto.PlatformID == newPlatform.PlatformID);
+            if (foundPlatform != null)
+            {
+                foundPlatform.Name = newPlatform.Name;
+                foundPlatform.SiteUrl = newPlatform.SiteUrl;
+                foundPlatform.IconImage = newPlatform.IconImage;
+                ctx.Platforms.Update(foundPlatform);
+            }
+
             ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            Platform toDelete = Read(id, false);
-            ctx.Platforms.Remove(ConvertToDTO(toDelete));
+            PlatformsDTO toDelete = ctx.Platforms.First(r => r.PlatformID == id);
+            ctx.Platforms.Remove(toDelete);
             ctx.SaveChanges();
         }
 
@@ -115,6 +126,6 @@ namespace DAL
 
             return myQuery;
         }
-        #endregion  
+        #endregion
     }
 }

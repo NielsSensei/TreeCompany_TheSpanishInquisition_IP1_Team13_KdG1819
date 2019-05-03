@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-﻿console.log('The Index bundle has been loaded')
+﻿
 
 /***/ })
 

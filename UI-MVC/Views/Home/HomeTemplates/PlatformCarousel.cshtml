@@ -1,0 +1,47 @@
+@using Domain.Users
+@model IEnumerable<Domain.Users.Platform>
+
+<section class="platformCar">
+    <h1 class="carouselTitle">Uitgelichte platformen</h1>
+    <div class="">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                @for (int i = 1; i <= Model.Count(); i++)
+                {
+                    <li data-target="#carouselExampleIndicators" data-slide-to="@i"></li>
+                }
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="imageCarousel d-block w-100" src="images/ErrorImage.jpg" alt="First slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3>Welcome to City of Ideas</h3>
+                        <p></p>
+                    </div>
+                </div>
+                @foreach (Platform platform in Model)
+                {
+                    <div class="carousel-item">
+                        <a asp-controller="Platform" asp-action="Index" asp-route-id="@platform.Id">
+                        <img class="imageCarousel d-block w-100" src="images/antwerpen.jpg" alt="First slide">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3>@platform.Name</h3>
+                            <p>@platform.Url</p>
+                        </div>
+                        </a>
+                    </div>
+                }
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+</section>
+

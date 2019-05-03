@@ -4,11 +4,11 @@ using System.Text;
 
 namespace DAL.Data_Transfer_Objects
 {
-    class IdeasDTO
+    public class IdeasDTO
     {
         public int IdeaID { get; set; }
         public int IQuestionID { get; set; }
-        public int UserID { get; set; }
+        public string UserID { get; set; }
         public string Title { get; set; }
         public bool Reported { get; set; }
         public bool ReviewByAdmin { get; set; }
@@ -19,5 +19,6 @@ namespace DAL.Data_Transfer_Objects
         public string Status { get; set; }
         public bool VerifiedUser { get; set; }
         public int ParentID { get; set; }
+        public int DeviceID { get; set; }
     }
 }
