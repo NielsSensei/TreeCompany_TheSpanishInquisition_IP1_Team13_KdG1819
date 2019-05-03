@@ -110,6 +110,17 @@ namespace UIMVC.Controllers
             
             return View(iq);
         }
+        
+        #region Idea
+        [Authorize]
+        public IActionResult AddVote(int idea, string user, int thread)
+        {
+            _iqMgr.MakeVote(idea,  user);
+            
+            return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+            { id = thread });
+        }
+        #endregion
         #endregion
     }
 }

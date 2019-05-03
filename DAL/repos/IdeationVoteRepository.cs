@@ -5,6 +5,7 @@ using System.Data;
 using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Domain.Identity;
 
 namespace DAL
 {
@@ -29,6 +30,7 @@ namespace DAL
                 DeviceID = obj.Device.Id,
                 InputID = obj.Idea.Id,
                 InputType = 2, //Voorlopig Idee
+                UserID = obj.User.Id,
                 UserMail = obj.UserMail,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY,
@@ -41,6 +43,7 @@ namespace DAL
             return new Vote
             {
                 Id = DTO.VoteID,
+                User = new UIMVCUser() { Id = DTO.UserID},
                 Device = new IOT_Device { Id = DTO.DeviceID },
                 Idea = new Idea { Id = DTO.InputID },
                 UserMail = DTO.UserMail,
