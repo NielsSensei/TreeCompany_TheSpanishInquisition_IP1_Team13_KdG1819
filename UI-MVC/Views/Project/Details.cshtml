@@ -1,5 +1,7 @@
 @using Domain.Projects
+@using UIMVC.Services
 @model Domain.Projects.Project
+@inject UserService UserService
 
 
 @{
@@ -9,18 +11,18 @@
 <h2>Project</h2>
 
 <dl class="dl-horizontal">
-    
+
     <dt>Name</dt><dd>@Model.Title</dd>
     <dt>Start Date</dt><dd>@Model.StartDate</dd>
     <dt>End Date</dt><dd>@Model.EndDate</dd>
     <dt>Current Phase</dt><dd>@Model.CurrentPhase.Id</dd>
-    
-  
+    <dt>User</dt><dd>@UserService.CollectUserName(@Model.User.Id)</dd>
+    <dt>Platform</dt><dd>@Model.Platform.Id</dd>
+
+
 </dl>
 
 @foreach (var phase in Model.Phases)
 {
     <partial name="_ProjectPhaseDetailPartial" for="@phase"/>
-
-    
 }

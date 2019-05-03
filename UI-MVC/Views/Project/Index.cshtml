@@ -1,21 +1,42 @@
+@model IEnumerable<Domain.Projects.Project>
+@using Domain.Projects
+@using UIMVC.Services
+@inject ProjectService ProjectService
+@{
+    ViewBag.Title = "Index";
+    Layout = "_Layout";
+}
 
+<h2>Index</h2>
 
-
-
+<p>
+    @Html.ActionLink("Create Project", "Create")
+</p>
 <table>
     <tr>
-        <th>Phase Id</th>
-        <th>Phase Description</th>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th></th>
     </tr>
-    @{
-        for (int i = 0; i < 4; i++)
-        {
-            <tr>
-                <td> @Html.TextBox("["+ i +"].Id") </td>
-                <td> @Html.TextBox("["+ i +"].Description")</td>
-            </tr>
-        }
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                @Html.ActionLink("Details", "Details", new {id = item.Id}) |
+                @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+            </td>
+        </tr>
     }
 </table>
-
-<input type="submit" value="Submit"/>

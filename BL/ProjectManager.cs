@@ -65,6 +65,12 @@ namespace BL
             return projects;
         }
 
+        public IEnumerable<Project> GetProjects()
+        {
+            IEnumerable<Project> projects = ProjectRepo.ReadAll();
+            return projects;
+        }
+
         /*
          * Might need this for initialisation. - NVZ
          */

@@ -7,7 +7,7 @@ using Domain.Users;
 
 namespace Domain.Projects
 {
-    public class Project
+    public class     Project
     {
         // Added by NG
         // Modified by XV & NVZ & EKT & DM
