@@ -293,7 +293,10 @@ namespace UIMVC.Controllers
                 _ideaMgr.EditIdea(foundIdea);
             }
         }
+        #endregion
+        #endregion
 
+        #region UIMVCUser
         [HttpGet]
         [Authorize]
         public IActionResult CollectAllUsers(string sortOrder, string searchString)
@@ -339,16 +342,5 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
         #endregion
-        #endregion
-
-
-
-
-
-
-
-
-
-
     }
 }
