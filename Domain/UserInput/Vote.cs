@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Domain.Identity;
 
 namespace Domain.UserInput
 {
@@ -8,6 +9,7 @@ namespace Domain.UserInput
         // Modified by EKT, XV and NVZ & DM
         public int Id { get; set; }
         public string UserMail { get; set; }
+        public UIMVCUser User { get; set; }
         public float? LocationX { get; set; }
         public float? LocationY { get; set; }
         public bool Positive { get; set; }
