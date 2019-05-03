@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +47,9 @@ namespace UIMVC.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+            
+            [Required]
+            public string Name { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -96,7 +100,8 @@ namespace UIMVC.Areas.Identity.Pages.Account
                 {
                     Input = new InputModel
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        Name = info.Principal.FindFirstValue(ClaimTypes.Name)
                     };
                 }
                 return Page();
@@ -116,7 +121,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new UIMVCUser { UserName = Input.Email, Email = Input.Email };
+                var user = new UIMVCUser { UserName = Input.Email, Email = Input.Email, EmailConfirmed = true, Name = Input.Name };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
