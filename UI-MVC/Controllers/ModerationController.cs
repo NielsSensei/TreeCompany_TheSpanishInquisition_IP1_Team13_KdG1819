@@ -7,7 +7,6 @@ using Domain.Identity;
 using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
 
@@ -19,9 +18,9 @@ namespace UIMVC.Controllers
         private readonly IdeationQuestionManager _ideaMgr;
         private readonly ModuleManager _moduleMgr;
         private readonly ProjectManager _projMgr;
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly UserManager _userManager;
 
-        public ModerationController(UserManager<UIMVCUser> userManager)
+        public ModerationController(UserManager userManager)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
@@ -331,6 +330,7 @@ namespace UIMVC.Controllers
         public IActionResult ToggleBanUser(string userId)
         {
             _userManager.ToggleBanUser(userId);
+            // This part is still borked.
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
 
@@ -339,6 +339,7 @@ namespace UIMVC.Controllers
         public IActionResult VerifyUser(string userId)
         {
             _userManager.VerifyUser(userId);
+            // Borked as well.
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
         #endregion
