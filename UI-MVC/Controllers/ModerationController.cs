@@ -328,7 +328,7 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult ToggleBanUser(int userId)
+        public IActionResult ToggleBanUser(string userId)
         {
             _userManager.ToggleBanUser(userId);
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
@@ -336,7 +336,7 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult VerifyUser(int userId)
+        public IActionResult VerifyUser(string userId)
         {
             _userManager.VerifyUser(userId);
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");

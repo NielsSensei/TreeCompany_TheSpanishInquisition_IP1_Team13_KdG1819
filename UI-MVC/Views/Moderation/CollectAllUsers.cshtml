@@ -44,16 +44,16 @@
             <td>
                 @if (@user.Banned)
                 {
-                    <text><a asp-action="ToggleBanUser">Ban opheffen</a></text>
+                    <text><a asp-action="ToggleBanUser" asp-route-userId="@user.Id">Ban opheffen</a></text>
                 }
                 else
                 {
-                    <text><a asp-action="ToggleBanUser">Bannen</a></text>
+                    <text><a asp-action="ToggleBanUser" asp-route-userId="@user.Id">Bannen</a></text>
                 }
 
 @*                 @if (@user.Role == Role.LOGGEDIN && user.Active) *@
 @*                 { *@
-                    <text> | <a asp-action="VerifyUser">Verifiëren</a></text>
+                    <text> | <a asp-action="VerifyUser" asp-route-userId="@user.Id">Verifiëren</a></text>
 //                }
             </td>
         </tr>
