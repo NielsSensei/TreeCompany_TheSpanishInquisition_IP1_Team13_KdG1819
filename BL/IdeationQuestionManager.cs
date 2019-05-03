@@ -127,7 +127,7 @@ namespace BL
             }
         }
 
-        public void MakeVote(int feedbackId, string userId)
+        public bool MakeVote(int feedbackId, string userId)
         {
             Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
             if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, null, null, null))
@@ -135,7 +135,11 @@ namespace BL
                 VoteMan.MakeVote(feedbackId, userId, null, null, null, true);
                 feedback.VoteCount++;
                 EditIdea(feedback);
+
+                return true;
             }
+
+            return false;
         }
         
         // Added by NVZ

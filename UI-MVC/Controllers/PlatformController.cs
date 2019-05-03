@@ -104,9 +104,11 @@ namespace UIMVC.Controllers
             return View(ideation);            
         }
 
-        public IActionResult CollectIdeationThread(int id)
+        public IActionResult CollectIdeationThread(int id, string message)
         {
             IdeationQuestion iq = _iqMgr.GetQuestion(id, false);
+
+            ViewData["Message"] = message;
             
             return View(iq);
         }
@@ -115,10 +117,14 @@ namespace UIMVC.Controllers
         [Authorize]
         public IActionResult AddVote(int idea, string user, int thread)
         {
-            _iqMgr.MakeVote(idea,  user);
+            if (_iqMgr.MakeVote(idea, user))
+            {
+                return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                    { id = thread, message = "Stem gelukt, dankjewel!" }); 
+            }
             
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-            { id = thread });
+                { id = thread, message = "Al gestemd op dit idee!" });
         }
         #endregion
         #endregion
