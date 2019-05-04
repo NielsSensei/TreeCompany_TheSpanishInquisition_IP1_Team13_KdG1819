@@ -140,31 +140,9 @@ namespace UIMVC.Controllers
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
             Questionnaire q = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
+            ViewData["Project"] = q.Project;
             return View(q);
         }
-
-
-
-
-
-
-        public IActionResult UpdateProject()
-        {
-            return null;
-        }
-
-        public IActionResult RemoveProject()
-        {
-            return null;
-        }
-
-
-        //Dont know if neccessary 
-        public IActionResult HideProject()
-        {
-            return null;
-        }
-
 
 
     }
