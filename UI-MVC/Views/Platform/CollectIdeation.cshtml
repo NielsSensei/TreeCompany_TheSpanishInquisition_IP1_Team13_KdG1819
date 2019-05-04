@@ -23,7 +23,7 @@
             @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
             {
                 likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount, twitterLikeCount = Model.TwitterLikeCount, 
-                shareCount = Model.ShareCount, retweetCount = Model.RetweetCount,iconStyle = 3
+                shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
             })
             <br/>
             <p>@Model.ExtraInfo</p>
@@ -33,6 +33,10 @@
                 <p>Deze ideation is georganiseerd dankzij dit evenement</p> 
             }
             <p>Tags: @Html.Partial("_TagsPartial", Model.Tags)</p>
+            @* TODO zet hier ne rolecheck op *@
+            <a class="btn btn-primary" type=submit asp-controller="Moderation" asp-action="AddTag"
+                    formmethod="get" asp-route-ideation="@Model.Id">Voeg een Tag Toe </a>
+            <br/><br/>
             @* TODO vervang images door Media *@
             <img alt="IdeationMedia" src="https://via.placeholder.com/250"/>
         </div>
@@ -68,7 +72,7 @@
                 {
                     <p>Lees meer: <a href="">@iq.SiteURL</a></p>
                 }
-                <a>TODO: link hier naar IQ thread</a>
+                <a asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
                 <hr/>
             }
         </div>

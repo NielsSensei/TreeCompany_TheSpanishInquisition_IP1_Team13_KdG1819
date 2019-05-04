@@ -8,5 +8,7 @@ namespace UIMVC.Models
         public int shareCount { get; set; }
         public int retweetCount { get; set; }
         public int iconStyle { get; set; }
+        
+        public string Username { get; set; }
     }
 }

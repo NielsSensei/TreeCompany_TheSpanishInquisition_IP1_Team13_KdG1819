@@ -17,12 +17,16 @@ namespace UIMVC.Controllers
     {
         private readonly PlatformManager _platformMgr;
         private readonly IdeationQuestionManager _ideaMgr;
+        private readonly ModuleManager _moduleMgr;
+        private readonly ProjectManager _projMgr;
         private readonly UserManager<UIMVCUser> _userManager;
 
         public ModerationController(UserManager<UIMVCUser> userManager)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
+            _moduleMgr = new ModuleManager();
+            _projMgr = new ProjectManager();
             _userManager = userManager;
         }
 
@@ -61,6 +65,89 @@ namespace UIMVC.Controllers
         #endregion
 
         #region Ideation
+        //TODO add rolecheck hero we need to be admin yeet *@
+        //TODO sprint2 eens dat edwin klaar is met ze ding kunnen we ooit iets doen met events
+        [Authorize]
+        [HttpGet]
+        public IActionResult AddIdeation(int project)
+        {
+            List<Phase> allPhases = (List<Phase>) _projMgr.GetAllPhases(project);
+            List<Phase> availablePhases = new List<Phase>();
+
+            foreach (Phase phase in allPhases)
+            {
+                if (_moduleMgr.GetModule(phase.Id, project) == null)
+                {
+                    availablePhases.Add(phase);
+                }
+            }
+
+            if (availablePhases.Count == 0)
+            {
+                return BadRequest("No available phases");
+            }
+
+            ViewData["Phases"] = availablePhases;
+            ViewData["Project"] = project;
+           
+            return View();
+        }
+        
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddIdeation(CreateIdeationModel cim, int project, string user)
+        {
+            if (cim == null)
+            {
+                return BadRequest("Ideation can't be null");
+            }
+
+            Ideation i = new Ideation() 
+            {
+                Project = new Project() {Id = project},
+                ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
+                User = new UIMVCUser(){Id = user},
+                type = ModuleType.Ideation,
+                Title = cim.Title,
+                OnGoing = true
+            };
+            
+            if (cim.ExtraInfo != null)
+            {
+                i.ExtraInfo = cim.ExtraInfo;  
+            }
+            
+            _moduleMgr.MakeIdeation(i);
+            
+            return RedirectToAction("CollectProject", "Platform", new {Id = project});
+        }
+        
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpGet]
+        public IActionResult AddTag(int ideation)
+        {
+            ViewData["Ideation"] = ideation;
+
+            return View();
+        }
+        
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddTag(string tag, int ideation)
+        {
+            if (tag == null)
+            {
+                return BadRequest("Tag can't be null");
+            }
+            
+            _moduleMgr.MakeTag(tag, ideation, false);
+            
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
+        }
+        
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpGet]

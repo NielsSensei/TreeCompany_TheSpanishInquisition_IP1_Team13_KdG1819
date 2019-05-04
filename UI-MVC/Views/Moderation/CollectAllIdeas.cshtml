@@ -7,6 +7,10 @@
     ViewData["Title"] = "All Ideas";
 }
 
+@section Tags{
+        <script type="text/javascript" src="js/collectallideas.js" defer></script>
+}
+
 <h2>Hier zie je een overzicht van alle ideeën.</h2>
 <hr/>
 <div class="form-group">
@@ -18,9 +22,9 @@
             <div class="col-10">
                 @Html.DropDownList("Filter", new SelectListItem[]
                 {
-                    new SelectListItem() { Text = "All ideas", Value = "all" },
-                    new SelectListItem() { Text = "Reported ideas", Value = "report" },
-                    new SelectListItem() { Text = "Ideas where an admin is needed", Value = "admin" }
+                    new SelectListItem() { Text = "Alle ideeen", Value = "all" },
+                    new SelectListItem() { Text = "Geraporteerde ideeen", Value = "report" },
+                    new SelectListItem() { Text = "Ideeen waar een admin nodig is", Value = "admin" }
                 },
                 //TODO onchange naar aparte js?
                 new { @class = "form-control", @onchange= "document.location.href = '/Moderation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;" })
@@ -43,7 +47,6 @@
             <th>Aantal Shares</th>
             <th>Aantal Retweets</th>
         </tr>
-        <!-- TODO: link naar Ideation Thread -->
         <!-- TODO: link naar User profiel? -->
         @foreach (Idea idea in Model)
         {
@@ -51,7 +54,8 @@
             {
                 <tr>
                     <td>@idea.Id</td>
-                    <td>@idea.IdeaQuestion.Id</td>
+                    <td><a asp-controller="Platform" asp-action="CollectIdeationThread" 
+                           asp-route-id="@idea.IdeaQuestion.Id">@idea.IdeaQuestion.Id</a></td>
                     <td>@UserService.CollectUserName(idea.User.Id)</td>
                     <td>@idea.Reported</td>
                     <td>@idea.ReviewByAdmin</td>
