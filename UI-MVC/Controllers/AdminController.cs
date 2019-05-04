@@ -87,7 +87,7 @@ namespace UIMVC.Controllers
             newQuestionnaire.Phases.Add(parentPhase);
             modMgr.MakeQuestionnaire(newQuestionnaire);
 
-            return RedirectToAction("EditQuestionnaire","Admin",new { Id = newQuestionnaire.Id});
+            return RedirectToAction("EditQuestionnaire",new { questionnaireId = newQuestionnaire.Id});
         }
 
         [HttpGet]
@@ -130,17 +130,17 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult PublishQuestionnaire(int questionnaireid)
+        public IActionResult PublishQuestionnaire(int questionnaireId)
         {
 
-            return View(modMgr.GetModule(questionnaireid, false, true));
+            return View(modMgr.GetModule(questionnaireId, false, true));
         }
 
-        [HttpPost]
-        public IActionResult UpdateQuestionnaire(Questionnaire q)
+        [HttpGet]
+        public IActionResult EditQuestionnaire(int questionnaireId)
         {
-            modMgr.EditModule(q);
-            return RedirectToAction("Index");
+            Questionnaire q = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
+            return View(q);
         }
 
 
