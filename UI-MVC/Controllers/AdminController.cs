@@ -30,7 +30,7 @@ namespace UIMVC.Controllers
 
         //Listing some basic methods that map to the functionalities described in YouTrack
         [HttpGet]
-        public IActionResult CreateQuestionnaire(int projectId)
+        public IActionResult AddQuestionnaire(int projectId)
         {
             Project toAddQuestionnaireTo = projMgr.GetProject(projectId, true);
 
@@ -54,7 +54,7 @@ namespace UIMVC.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
+        public IActionResult AddQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
         {
             if(cqm == null)
             {
@@ -147,10 +147,6 @@ namespace UIMVC.Controllers
 
 
 
-        public IActionResult CreateNewProject()
-        {
-            return null;
-        }
 
         public IActionResult UpdateProject()
         {

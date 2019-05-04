@@ -49,6 +49,13 @@ namespace BL
         {
             return PlatformRepo.ReadAll();
         }
+        
+        // Added by XV
+        public IEnumerable<Platform> SearchPlatforms(string search)
+        {
+            return PlatformRepo.ReadAll()
+                .Where(platform => platform.Name.ToLower().Contains(search.ToLower()) || platform.Url.ToLower().Contains(search.ToLower()));
+        }
 
         #endregion
 

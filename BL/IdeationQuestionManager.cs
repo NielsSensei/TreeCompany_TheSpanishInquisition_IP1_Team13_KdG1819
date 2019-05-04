@@ -116,15 +116,32 @@ namespace BL
 
         // Added by NG
         // Vote
-        public void MakeVote(int feedbackId, int userId, int? deviceId, double? x, double? y)
+        public void MakeVote(int feedbackId, string userId, int? deviceId, double? x, double? y)
         {
             Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
-            if (VoteMan.HandleVotingOnFeedback(feedbackId, userId, deviceId, x, y))
-            {
+            if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, deviceId, x, y))
+            { 
+                //TODO fix voting via device
                 feedback.VoteCount++;
+                EditIdea(feedback);
             }
         }
 
+        public bool MakeVote(int feedbackId, string userId)
+        {
+            Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
+            if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, null, null, null))
+            {
+                VoteMan.MakeVote(feedbackId, userId, null, null, null, true);
+                feedback.VoteCount++;
+                EditIdea(feedback);
+
+                return true;
+            }
+
+            return false;
+        }
+        
         // Added by NVZ
         // Field
         public IEnumerable<Field> GetAllFields(int ideaID)
