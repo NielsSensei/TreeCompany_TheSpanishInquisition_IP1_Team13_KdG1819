@@ -5,6 +5,7 @@ using System.Data;
 using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Domain.Identity;
 
 namespace DAL
 {
@@ -23,31 +24,45 @@ namespace DAL
         #region
         private VotesDTO ConvertToDTO(Vote obj)
         {
-            return new VotesDTO
+            VotesDTO v = new VotesDTO
             {
                 VoteID = obj.Id,
-                DeviceID = obj.Device.Id,
                 InputID = obj.Idea.Id,
                 InputType = 2, //Voorlopig Idee
+                UserID = obj.User.Id,
                 UserMail = obj.UserMail,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY,
                 Choices = ExtensionMethods.ListToString(obj.Choices)
             };
+
+            if (obj.Device != null)
+            {
+                v.DeviceID = obj.Device.Id;
+            }
+
+            return v;
         }    
 
         private Vote ConvertToDomain(VotesDTO DTO)
         {
-            return new Vote
+            Vote v = new Vote()
             {
                 Id = DTO.VoteID,
-                Device = new IOT_Device { Id = DTO.DeviceID },
+                User = new UIMVCUser() { Id = DTO.UserID},
                 Idea = new Idea { Id = DTO.InputID },
                 UserMail = DTO.UserMail,
                 LocationX = DTO.LocationX,
                 LocationY = DTO.LocationY,
                 Choices = ExtensionMethods.StringToList(DTO.Choices)
             };
+
+            if (DTO.DeviceID != 0)
+            {
+                v.Device = new IOT_Device(){ Id = DTO.DeviceID };
+            }
+            
+            return v;
         }
 
         private DevicesDTO ConvertToDTO(IOT_Device obj)
@@ -88,17 +103,20 @@ namespace DAL
         #region
         public Vote Create(Vote obj)
         {
-            IEnumerable<Vote> votes = ReadAll(obj.Device.Id);
-
-            foreach (Vote v in votes)
+            if (obj.Device != null)
             {
-                if(v.UserMail == obj.UserMail)
-                {
-                    throw new DuplicateNameException("Vote(ID=" + obj.Id + ") en Vote(ID=" + v.Id + ") hebben dezelfde email en Device(ID=" + 
-                        obj.Device.Id + "), dit is absoluut niet toegestaan!");
-                }
-            }
+                IEnumerable<Vote> votes = ReadAll(obj.Device.Id);
 
+                foreach (Vote v in votes)
+                {
+                    if(v.UserMail == obj.UserMail)
+                    {
+                        throw new DuplicateNameException("Vote(ID=" + obj.Id + ") en Vote(ID=" + v.Id + ") hebben dezelfde email en Device(ID=" + 
+                                                         obj.Device.Id + "), dit is absoluut niet toegestaan!");
+                    }
+                }  
+            }
+            
             obj.Id = FindNextAvailableVoteId();
             ctx.Votes.Add(ConvertToDTO(obj));
             ctx.SaveChanges();

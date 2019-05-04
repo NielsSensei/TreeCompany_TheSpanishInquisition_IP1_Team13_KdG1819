@@ -2,9 +2,11 @@
 using System.Linq;
 using BL;
 using Domain.Projects;
+using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
@@ -13,11 +15,13 @@ namespace UIMVC.Controllers
     {
         private readonly PlatformManager _platformMgr;
         private readonly ProjectManager _projectMgr;
+        private readonly IdeationQuestionManager _iqMgr;
 
         public PlatformController()
         {
             _platformMgr = new PlatformManager();
             _projectMgr = new ProjectManager();
+            _iqMgr = new IdeationQuestionManager();
         }
 
         [Route("Platform/{id}")]
@@ -30,6 +34,17 @@ namespace UIMVC.Controllers
             }
             return View(platform);
         }
+
+        #region Platform
+
+        public IActionResult Search(string search)
+        {
+            ViewData["search"] = search;
+            var platforms = _platformMgr.SearchPlatforms(search);
+            return View(platforms);
+        }
+
+        #endregion
 
         #region Change
         [Authorize]
@@ -59,7 +74,7 @@ namespace UIMVC.Controllers
         {
             Project project = _projectMgr.GetProject(id, false);
 
-            if (project.Visible && project != null)
+            if (project.Visible && project.Id != 0)
             {
                 List<Phase> phases = (List<Phase>) _projectMgr.GetAllPhases(id);
 
@@ -88,6 +103,30 @@ namespace UIMVC.Controllers
             
             return View(ideation);            
         }
+
+        public IActionResult CollectIdeationThread(int id, string message)
+        {
+            IdeationQuestion iq = _iqMgr.GetQuestion(id, false);
+
+            ViewData["Message"] = message;
+            
+            return View(iq);
+        }
+        
+        #region Idea
+        [Authorize]
+        public IActionResult AddVote(int idea, string user, int thread)
+        {
+            if (_iqMgr.MakeVote(idea, user))
+            {
+                return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                    { id = thread, message = "Stem gelukt, dankjewel!" }); 
+            }
+            
+            return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                { id = thread, message = "Al gestemd op dit idee!" });
+        }
+        #endregion
         #endregion
     }
 }
