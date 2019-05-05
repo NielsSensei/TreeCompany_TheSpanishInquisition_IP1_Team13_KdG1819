@@ -93,6 +93,21 @@ namespace BL
         {
             return ProjectRepo.ReadAllPhases(projectId);
         }
+
+        public IEnumerable<Phase> GetAllPhasesForModule(int moduleId)
+        {
+            List<Phase> filteredList = new List<Phase>();
+
+            foreach (Phase p in ProjectRepo.ReadAllPhases())
+            {
+                if (p.Module.Id == moduleId) filteredList.Add(p);
+            }
+
+            return filteredList;
+
+
+            
+        }
         
         public void MakePhase(Phase newPhase, int projectId)
         {
@@ -108,6 +123,7 @@ namespace BL
                 ModuleMan.EditModule(alteredModule);
             }
         }
+
 
         public void RemovePhase(int projectId, int phaseId)
         {

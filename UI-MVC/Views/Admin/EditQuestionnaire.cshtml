@@ -2,19 +2,21 @@
 @using Domain.Users
 @using Domain.UserInput
 
-@model Questionnaire
+
+@model EditQuestionnaireModel
 
 @{
     Project project = (Project)ViewData["Project"];
+    Questionnaire questionnaire = (Questionnaire)ViewData["Questionnaire"];
 
 }
 
 <h1>Vragenlijst beheren</h1>
-<form asp-controller="Admin" asp-action="EditQuestionnaire" method="post" asp-route="@Model">
+<form asp-controller="Admin" asp-action="EditQuestionnaire" method="post" asp-route-eqm="@Model" asp-route-questionnaireid="@questionnaire.Id">
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" label-for="Title">Titel</label>
         <div class="col-sm-10">
-            <input class="form-control" type="text" asp-for="Title">
+            <input class="form-control" type="text" asp-for="Title" value="@questionnaire.Title">
         </div>
     </div>
 
@@ -23,21 +25,21 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Huidige fase</label>
             <div class="col-sm-10">
-                <input class="form-control" type="text" placeholder="@Model.ParentPhase.Description">
+                <input class="form-control" type="Text" value="@questionnaire.ParentPhase.Description" />
             </div>
         </div>
 
     </fieldset>
 
     <div class="form-group row">
-        <label for="ParentPhase" class="col-sm-2 col-form-label">Selecteer een fase waaraan je deze vragenlijst wil koppelen:</label>
+        <label for="ParentPhase" class="col-sm-2 col-form-label">Selecteer een andere fase:</label>
         @Html.DropDownList("ParentPhase", new SelectList(project.Phases, "Id", "Description"), "Kies een fase", new { @class = "form-control" })
     </div>
 
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" label-for="OnGoing">Publiek</label>
 
-        if(@Model.Questions == null){
+        @if(questionnaire.Questions == null){
         <label class="form-check-label alert-danger">Het is aangeraden eerst enkele vragen toe te voegen voor je de vragenlijst publiek maakt</label>
         } else{
         <div class="col-sm-10">
@@ -52,7 +54,7 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" label-for="Title">Welk authorisatielevel moet je hebben om deze questionnaire in te vullen?</label>
         <div class="col-sm-10">
-
+            @Html.DropDownListFor(m => m.VoteLevel, new SelectList(Enum.GetValues(typeof(Role))), "Huidige authorisatielevel: " + questionnaire.VoteLevel.ToString(), new { @class = "form-control"})
         </div>
     </div>
 
@@ -61,9 +63,9 @@
 
 </form>
 
-<h3 class="display-3">Vragen voor deze vragenlijst</h3>
+<h3 >Vragen voor deze vragenlijst</h3>
 
-@if (Model.Questions == null)
+@if (questionnaire.Questions == null)
 {
     <h4>Nog geen vragen aanwezig.</h4>
     <button class="btn btn-primary">Vraag toevoegen</button>
@@ -83,7 +85,7 @@ else
 
             </tr>
         </thead>
-        @foreach (QuestionnaireQuestion qQ in Model.Questions)
+        @foreach (QuestionnaireQuestion qQ in questionnaire.Questions)
         {
             <tr>
                 <th scope="row">@qQ.Id</th>
@@ -115,7 +117,7 @@ else
 
 <h3>Tags</h3>
 
-@if (Model.Tags == null)
+@if (questionnaire.Tags == null)
 {
     <p>Geen tags beschikbaar</p>
     <button class="btn btn-primary">Tag toevoegen</button>
@@ -123,7 +125,7 @@ else
 }
 else
 {
-    <p>Tags: @Html.Partial("_TagsPartial", Model.Tags)</p>
+    <p>Tags: @Html.Partial("_TagsPartial", questionnaire.Tags)</p>
 
 }
 

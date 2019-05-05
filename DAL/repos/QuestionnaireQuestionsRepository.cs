@@ -206,7 +206,7 @@ namespace DAL
 
         public IEnumerable<QuestionnaireQuestion> ReadAllByQuestionnaireId(int questionnaireId)
         {
-            return ReadAll().Where(c => c.Questionnaire.Id == questionnaireId);
+            return ReadAll().Where(c => c.Module.Id == questionnaireId);
         }
         #endregion       
         

@@ -140,8 +140,79 @@ namespace UIMVC.Controllers
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
             Questionnaire q = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
+
+            List<Phase> availablePhases = new List<Phase>();
+            Phase parentPhase = projMgr.GetPhase(q.ParentPhase.Id);
+            List<QuestionnaireQuestion> questions = qqMgr.GetAllByModuleId(questionnaireId).ToList();
+            foreach (QuestionnaireQuestion question in questions)
+            {
+                question.Answers = qqMgr.GetAnswers(question.Id);
+            }
+
+
+
+            foreach (Phase phase in projMgr.GetAllPhases(q.Project.Id).ToList())
+            {
+                if (modMgr.GetModule(phase.Id, q.Project.Id) == null)
+                {
+                    availablePhases.Add(phase);
+                }
+            }
+
+            q.Project.Phases = availablePhases.ToList();
+            q.ParentPhase = parentPhase;
+            q.Questions = questions;
+
             ViewData["Project"] = q.Project;
-            return View(q);
+            ViewData["Questionnaire"] = q;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult EditQuestionnaire(EditQuestionnaireModel eqm, int questionnaireid)
+        {
+            Questionnaire toBeUpdated = (Questionnaire)modMgr.GetModule(questionnaireid, false, true);
+            toBeUpdated.Phases = projMgr.GetAllPhasesForModule(toBeUpdated.Id).ToList();
+
+           
+
+            Phase parentPhase = new Phase();
+            String parentPhaseContent = Request.Form["ParentPhase"];
+
+            if (!parentPhaseContent.Equals(""))
+            {
+                parentPhase = projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+                toBeUpdated.Phases.Add(parentPhase);
+                
+
+                Phase previousParent = projMgr.GetPhase(toBeUpdated.ParentPhase.Id);
+                previousParent.Module = null;
+
+                if (toBeUpdated.Phases.Contains(previousParent))
+                {
+                    toBeUpdated.Phases.Remove(previousParent);
+                }
+                toBeUpdated.ParentPhase = parentPhase;
+                projMgr.EditPhase(previousParent);
+
+            }
+            else
+            {
+                parentPhase = toBeUpdated.ParentPhase;
+            }
+                             
+            toBeUpdated.OnGoing = eqm.OnGoing;
+            toBeUpdated.Title = eqm.Title;
+            toBeUpdated.VoteLevel = eqm.VoteLevel;
+            
+            modMgr.EditModule(toBeUpdated);
+
+            
+
+            
+
+
+            return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});
         }
 
 
