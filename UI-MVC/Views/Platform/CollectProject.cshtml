@@ -11,36 +11,55 @@
 }
 
 @* Hoe gaan we de mobile layout doen? *@
-<div class="container" id="projectView">
-    <div class="col-4">
-        <h2>Alle fases</h2>
-        <h3>Huidige fase:</h3>
-        @Html.DisplayFor(m => Model.CurrentPhase)
-        <h3>Andere fases:</h3>
-        @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
-        {
-            @Html.DisplayFor(m => p)
-        }
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <h2>@Model.Title</h2>
+            @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+            {
+                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
+                twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
+            })
+            <p>@Model.Goal</p>
+        </div>
+        <div class="col-8">
+            @* TODO vervang images door projectImages *@
+            <img alt="projectImage" src="https://via.placeholder.com/700x350"/>
+        </div>
     </div>
-    <div class="col-4">
-        <h2>@Model.Title</h2>
-        @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-        {
-            likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
-            twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
-        })
-        <p>@Model.Goal</p>
-    </div>
-    <div class="col-4">
-        @* TODO vervang images door projectImages *@
-        <img alt="projectImage" src="https://via.placeholder.com/350"/>
+    <hr>
+    <h2>Alle fases</h2>
+    <div class="row">
+        <div class="col-4">
+            
+            <h3>Huidige fase:</h3>
+            @Html.DisplayFor(m => Model.CurrentPhase)
+        </div>
+        <div class="col-8">
+            <h3>Andere fases:</h3>
+            <table class="table">
+                <thead>
+                    <th>Omschrijving</th>
+                    <th>van</th>
+                    <th>tot</th>
+                </thead>
+                @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
+                {
+                    <tr>
+                        <td>@p.Description</td>
+                        <td>@p.StartDate.ToShortDateString()</td>
+                        <td>@p.EndDate.ToShortDateString()</td>
+                    </tr>
+                }
+            </table>
+        </div>
     </div>
 </div>
 <hr/>
 @if (ViewData["Questionnaires"] != null || ViewData["Ideations"] != null)
 {
     <div class="container">
-        <div class="row">
+        <div class="row align-items-center">
             @if (ViewData["Questionnaires"] != null)
             {
                 foreach (Questionnaire questionnaire in (IEnumerable<Questionnaire>) ViewData["Questionnaires"])
