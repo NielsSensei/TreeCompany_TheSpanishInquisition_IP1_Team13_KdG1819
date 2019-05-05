@@ -31,7 +31,7 @@
     <h2>Alle fases</h2>
     <div class="row">
         <div class="col-4">
-            
+
             <h3>Huidige fase:</h3>
             @Html.DisplayFor(m => Model.CurrentPhase)
         </div>
@@ -39,9 +39,9 @@
             <h3>Andere fases:</h3>
             <table class="table">
                 <thead>
-                    <th>Omschrijving</th>
-                    <th>van</th>
-                    <th>tot</th>
+                <th>Omschrijving</th>
+                <th>van</th>
+                <th>tot</th>
                 </thead>
                 @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
                 {
@@ -58,24 +58,22 @@
 <hr/>
 @if (ViewData["Questionnaires"] != null || ViewData["Ideations"] != null)
 {
-    <div class="container">
-        <div class="row align-items-center">
-            @if (ViewData["Questionnaires"] != null)
+    <div class="card-columns">
+        @if (ViewData["Questionnaires"] != null)
+        {
+            foreach (Questionnaire questionnaire in (IEnumerable<Questionnaire>) ViewData["Questionnaires"])
             {
-                foreach (Questionnaire questionnaire in (IEnumerable<Questionnaire>) ViewData["Questionnaires"])
-                {
-                    @Html.DisplayFor(m => questionnaire)
-                }
+                @Html.DisplayFor(m => questionnaire)
             }
+        }
 
-            @if (ViewData["Ideations"] != null)
+        @if (ViewData["Ideations"] != null)
+        {
+            foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
             {
-                foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
-                {
-                    @Html.DisplayFor(m => ideation)
-                }
+                @Html.DisplayFor(m => ideation)
             }
-        </div>
+        }
     </div>
 }
 else
