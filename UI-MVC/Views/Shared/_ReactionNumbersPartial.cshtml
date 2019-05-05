@@ -20,7 +20,6 @@
                     <p>@Model.twitterLikeCount</p>
                 </div>
             </div>
-
         </div>
     }
 
@@ -32,16 +31,34 @@
 
     @if (Model.iconStyle == 3)
     {
-        <img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/>
-        <p>@Model.likeCount</p>
-        <img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/>
-        <p>@Model.fbLikeCount</p>
-        <img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/>
-        <p>@Model.twitterLikeCount</p>
-        <img alt="shareCount" src="https://image.flaticon.com/icons/svg/1051/1051309.svg" height="50" width="50"/>
-        <p>@Model.shareCount</p>
-        <img alt="retweetCount" src="https://image.flaticon.com/icons/svg/9/9148.svg" height="50" width="50"/>
-        <p>@Model.retweetCount</p>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-2 align-items-end">
+                    <img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/>
+                    <p>@Model.likeCount</p>
+                </div>
+
+                <div class="col-sm-2 align-items-end">
+                    <img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/>
+                    <p>@Model.fbLikeCount</p>
+                </div>
+
+                <div class="col-sm-2 align-items-end">
+                    <img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/>
+                    <p>@Model.twitterLikeCount</p>
+                </div>
+                
+                <div class="col-sm-2 align-items-end">
+                    <img alt="shareCount" src="https://image.flaticon.com/icons/svg/1051/1051309.svg" height="50" width="50"/>
+                    <p>@Model.shareCount</p>
+                </div>
+                
+                <div class="col-sm-2 align-items-end">
+                    <img alt="retweetCount" src="https://image.flaticon.com/icons/svg/9/9148.svg" height="50" width="50"/>
+                    <p>@Model.retweetCount</p>
+                </div>
+            </div>
+        </div>
     }
 
     @if (Model.iconStyle == 4)

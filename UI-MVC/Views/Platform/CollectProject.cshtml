@@ -56,6 +56,20 @@
     </div>
 </div>
 <hr/>
+@* TODO Add a role check for the user*@
+<section class="container">
+    <div class="row justify-content-around">
+        <a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">
+            Maak een nieuwe ideation
+        </a>
+
+        <a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
+            Nieuwe vragenlijst maken
+        </a>
+    </div>
+
+</section>
+<hr>
 @if (ViewData["Questionnaires"] != null || ViewData["Ideations"] != null)
 {
     <div class="card-columns">
@@ -79,13 +93,4 @@
 else
 {
     <p>Geen modules voor dit project.</p>
-    
 }
-<hr/>
-
-<a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">	
-    Maak een nieuwe ideation	
-</a> 
-
-<a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
-Nieuwe vragenlijst maken</a>
