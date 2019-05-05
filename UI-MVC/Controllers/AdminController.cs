@@ -122,7 +122,7 @@ namespace UIMVC.Controllers
             qqMgr.MakeQuestion(newQuestion, toAdd.Id);
             modMgr.EditModule(toAdd);
 
-            return RedirectToAction("CreateQuestionnaire", toAdd.Id);
+            return RedirectToAction("AddQuestionnaire", toAdd.Id);
 
             
 
@@ -133,7 +133,8 @@ namespace UIMVC.Controllers
         public IActionResult PublishQuestionnaire(int questionnaireId)
         {
 
-            return View(modMgr.GetModule(questionnaireId, false, true));
+            //return View(modMgr.GetModule(questionnaireId, false, true));
+            return null;
         }
 
         [HttpGet]
@@ -142,30 +143,6 @@ namespace UIMVC.Controllers
             Questionnaire q = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
             return View(q);
         }
-
-
-
-
-
-
-        public IActionResult UpdateProject()
-        {
-            return null;
-        }
-
-        public IActionResult RemoveProject()
-        {
-            return null;
-        }
-
-
-        //Dont know if neccessary 
-        public IActionResult HideProject()
-        {
-            return null;
-        }
-
-
-
+        
     }
 }
