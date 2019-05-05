@@ -1,8 +1,6 @@
 @model IEnumerable<string>
 
-<section class="row justify-content-between">
-    @foreach (string s in Model)
-    {
-        <p class="btn btn-light m-0">@s</p>
-    }
-</section>
+@foreach (string s in Model)
+{
+    <p class="btn btn-light m-0 mx-1">@s</p>
+}

@@ -32,17 +32,18 @@
                 <p>Deze ideation is georganiseerd dankzij dit evenement</p>
             }
             <section>
-                <div class="row justify-content-between">
-                    <h6 class="font-weight-bold">Tags:</h6>
+                <h6 class="font-weight-bold">Tags:</h6>
+
+                <div class="row justify-content-start">
+                    @Html.Partial("_TagsPartial", Model.Tags)
                     @* TODO zet hier ne rolecheck op *@
-                    <a class="btn btn-primary" asp-controller="Moderation" asp-action="AddTag"
+                    <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
                        formmethod="get" asp-route-ideation="@Model.Id">
-                        Voeg een Tag Toe
+                        extra tag
                     </a>
                 </div>
-                
-                @Html.Partial("_TagsPartial", Model.Tags)
-                
+
+
             </section>
 
         </div>
