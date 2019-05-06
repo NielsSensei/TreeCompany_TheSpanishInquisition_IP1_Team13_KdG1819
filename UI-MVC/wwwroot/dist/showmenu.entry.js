@@ -81,24 +81,35 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./wwwroot/js/collectallideas.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./wwwroot/js/showmenu.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./wwwroot/js/collectallideas.js":
-/*!***************************************!*\
-  !*** ./wwwroot/js/collectallideas.js ***!
-  \***************************************/
+/***/ "./wwwroot/js/showmenu.js":
+/*!********************************!*\
+  !*** ./wwwroot/js/showmenu.js ***!
+  \********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-console.log('CollectAllIdeas has been loaded');
+﻿console.log('The Index bundle has been loaded')
 
-       
+var menu = document.getElementById('menu');
+var buttonOpen = document.getElementById('activateMenu');
+var buttonClose = document.getElementById('closeMenu');
 
+buttonOpen.onclick = function() {
+    console.log("clickOpen");
+    menu.style = "display: flex";
+};
+
+buttonClose.onclick = function() {
+    console.log("clickClose");
+    menu.style = "display: none";
+};
 
 /***/ })
 
 /******/ });
-//# sourceMappingURL=collectallideas.entry.js.map
+//# sourceMappingURL=showmenu.entry.js.map
