@@ -1,67 +1,6 @@
 ﻿/* Platform */
 INSERT INTO Platforms(PlatformID,Name,SiteUrl) 
 VALUES(1,'Stad Antwerpen','www.cityofideas.be')
-/* Users 
-0 = Anonymous
-1 = loggedin
-2 = loggedinverified
-3 = loggedinorg
-4 = moderator
-5 = admin
-6 = superadmin
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(1,'TSI_LoggedIn','niels.vanzandbergen@student.kdg.be',1,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(2,'TSI_BANNED','niels.vanzandbergen@student.kdg.be',1,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(3,'TSI_INACTIVE','niels.vanzandbergen@student.kdg.be',1,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(4,'TSI_LoggedInVerified','niels.vanzandbergen@student.kdg.be',2,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(5,'TSI_LoggedInOrganisation','niels.vanzandbergen@student.kdg.be',3,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(6,'TSI_Moderator','niels.vanzandbergen@student.kdg.be',4,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(7,'TSI_Admin','niels.vanzandbergen@student.kdg.be',5,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(8,'TSI_SuperAdmin','niels.vanzandbergen@student.kdg.be',6,1)
-*/
-
-/* UserDetails 
-BIT 0 = true | 1 = false 
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(1,'9120',0,1,1,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(2,'9120',1,2,0,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(3,'9120',0,3,0,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(4,'9120',0,1,1,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate,OrgName,Description)
-Values(5,'9120',0,0,1,'30-01-2019','The Spanish Inquisition','Een groep programmeurs die klaar is om de wereld over te nemen omdat niemand hen verwacht')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(6,'9120',0,1,1,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(7,'9120',0,1,1,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(8,'9120',0,1,1,'1997-09-08')
-*/
 
 /* Organisationevents */
 INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate)

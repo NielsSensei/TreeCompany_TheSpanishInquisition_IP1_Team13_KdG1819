@@ -182,18 +182,25 @@ namespace UIMVC.Controllers
         
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
-        [HttpPost]
         public IActionResult DestroyIdeation(int id)
         {
             Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
             
-            _moduleMgr.RemoveModule(id, i.Project.Id, false);
-            
             List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
             foreach (IdeationQuestion iq in iqs)
             {
+                List<Idea> ideas = _ideaMgr.GetIdeas(iq.Id);
+                foreach (Idea idea in ideas)
+                {
+                    _ideaMgr.RemoveFields(idea.Id);
+                    _ideaMgr.RemoveReports(idea.Id);
+                    _ideaMgr.RemoveIdea(idea.Id);
+                }
                 
+                _ideaMgr.RemoveQuestion(iq.Id);
             }
+            
+            _moduleMgr.RemoveModule(id, i.Project.Id, false);
             
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
         }
@@ -316,15 +323,6 @@ namespace UIMVC.Controllers
         }
         #endregion
         #endregion
-
-
-
-
-
-
-
-
-
-
+        
     }
 }

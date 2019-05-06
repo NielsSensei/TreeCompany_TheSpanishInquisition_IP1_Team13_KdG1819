@@ -78,6 +78,9 @@
     </div>
 </div>
 <hr/>
+<div class="col-md-3">
+    <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
+</div>
 <div id="menu">
     <div class="row">
         <div class="col-md-10">
@@ -86,8 +89,8 @@
               <p>Ben je zeker?</p>  
             </div>
             <div class="row">
-                <button asp-controller="Moderation" formmethod="post" asp-action="DestroyIdeation" asp-route-id="@Model.Id"
-                        type="button" class="btn btn-primary">Bevestig</button>
+                <a asp-controller="Moderation" asp-action="DestroyIdeation" asp-route-id="@Model.Id"
+                        type="button" class="btn btn-primary">Bevestig</a>
                 <button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
             </div>
         </div>
