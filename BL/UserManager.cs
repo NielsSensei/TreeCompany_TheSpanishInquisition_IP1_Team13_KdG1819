@@ -7,17 +7,9 @@ using Microsoft.Extensions.Options;
 
 namespace BL
 {
-    public class UserManager : UserManager<UIMVCUser>
+    public class UserManager
     {
-        public UserManager(IUserStore<UIMVCUser> store, IOptions<IdentityOptions> optionsAccessor,
-            IPasswordHasher<UIMVCUser> passwordHasher, IEnumerable<IUserValidator<UIMVCUser>> userValidators,
-            IEnumerable<IPasswordValidator<UIMVCUser>> passwordValidators, ILookupNormalizer keyNormalizer,
-            IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<UIMVCUser>> logger) : base(
-            store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services,
-            logger)
-        {
-        }
-        
+        /*
         public void VerifyUser(string userToVerify)
         {
             // How does UserManager (Identity) save objects?
@@ -45,6 +37,6 @@ namespace BL
             }
 
             UserRepo.Update(alteredUser);
-        }
+        }*/
     }
 }

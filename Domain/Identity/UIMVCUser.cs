@@ -19,7 +19,7 @@ namespace Domain.Identity
         public DateTime DateOfBirth { get; set; }
         
         [PersonalData]
-        public int PlatformId { get; set; }
+        public int PlatformDetails { get; set; }
         
         [PersonalData]
         public string OrgName { get; set; }

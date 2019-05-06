@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BL;
 using Domain.Projects;
 using Domain.Identity;
 using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
 
@@ -18,9 +20,9 @@ namespace UIMVC.Controllers
         private readonly IdeationQuestionManager _ideaMgr;
         private readonly ModuleManager _moduleMgr;
         private readonly ProjectManager _projMgr;
-        private readonly UserManager _userManager;
+        private readonly UserManager<UIMVCUser> _userManager;
 
-        public ModerationController(UserManager userManager)
+        public ModerationController(UserManager<UIMVCUser> userManager)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
@@ -312,7 +314,7 @@ namespace UIMVC.Controllers
             switch (sortOrder)
             {
                 case "platform":
-                    users = users.OrderBy(u => u.PlatformId); break;
+                    users = users.OrderBy(u => u.PlatformDetails); break;
                 case "name":
                     users = users.OrderBy(u => u.Name); break;
                 case "birthday":
@@ -325,15 +327,21 @@ namespace UIMVC.Controllers
             return View(users);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
-        public IActionResult ToggleBanUser(string userId)
+        public async Task<IActionResult> ToggleBanUser(string userId)
         {
-            _userManager.ToggleBanUser(userId);
+            UIMVCUser userFound = await _userManager.FindByIdAsync(userId);
+            
+            if (userFound == null) return RedirectToAction("CollectAllUsers");
+            
+            userFound.Banned = !userFound.Banned;
+            var result = await _userManager.UpdateAsync(userFound);
+                
+            return RedirectToAction("CollectAllUsers");
             // This part is still borked.
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
         }
-
+        /*
         [HttpPost]
         [Authorize]
         public IActionResult VerifyUser(string userId)
@@ -341,7 +349,7 @@ namespace UIMVC.Controllers
             _userManager.VerifyUser(userId);
             // Borked as well.
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
-        }
+        }*/
         #endregion
     }
 }
