@@ -4,10 +4,7 @@ namespace Domain.Projects
 {
     public class Phase
     {
-        public Phase()
-        {
-            IsCurrentPhase = false;
-        }
+        
 
         //Added by NG
         public int Id { get; set; }
@@ -16,8 +13,6 @@ namespace Domain.Projects
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-
-        public bool IsCurrentPhase { get; set; }
 
         // Added by EKT
         // Modified by NVZ

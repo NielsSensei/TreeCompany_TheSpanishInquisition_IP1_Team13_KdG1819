@@ -1,4 +1,4 @@
-﻿@using Domain.Projects
+@using Domain.Projects
 @using UIMVC.Services
 @model Domain.Users.Platform
 @inject ProjectService ProjectService
@@ -11,7 +11,10 @@
     <hr/>
     <p>This is where I'd put an image if I (knew how I) could convert from BLOB</p>
     <hr/>
+    <a asp-controller="Project" asp-action="Create" asp-route-platform="@Model.Id">Maak nieuw project aan</a>
+    <hr/>
     <div class="row">
+
         @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())
         {
             <h4>Er zijn geen projecten voor dit platform</h4>
@@ -19,13 +22,13 @@
         else
         {
             foreach (Project project in ProjectService.CollectPlatformProjects(Model))
-             {
-                 <div class="col-md-3">
-                     @Html.DisplayFor(m => project)
-                     <a asp-controller="Platform" asp-action="CollectProject" asp-route-id="@project.Id">Ga naar Project</a>  
-                     <a asp-controller="Project" asp-action="Edit" asp-route-id="@project.Id">Pas project aan</a>
-                 </div>
-             }
+            {
+                <div class="col-md-3">
+                    @Html.DisplayFor(m => project)
+                    <a asp-controller="Platform" asp-action="CollectProject" asp-route-id="@project.Id">Ga naar Project</a>
+                    <a asp-controller="Project" asp-action="Edit" asp-route-id="@project.Id">Pas project aan</a>
+                </div>
+            }
         }
     </div>
 </section>

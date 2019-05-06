@@ -28,19 +28,6 @@ namespace UIMVC.Controllers
 
         #region Index
 
-        public ActionResult Index()
-        {
-            var projects = _mgr.GetProjects();
-            return View(projects);
-        }
-
-        public IActionResult Details(int id)
-        {
-            Project project = _mgr.GetProject(id, false);
-
-            return View(project);
-        }
-
 
         // GET /Project
         /*[Route("Project/Index/{id}")]
@@ -69,16 +56,15 @@ namespace UIMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(int platform)
         {
-            ViewData["platforms"] = _mgrPlatform.ReadAllPlatforms();
-
+            ViewData["platform"] = platform;
             return View();
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Create(ProjectViewModel pvm, string user)
+        public IActionResult Create(ProjectViewModel pvm, int platform)
         {
             UIMVCUser projectUser = _userManager.GetUserAsync(HttpContext.User).Result;
 
@@ -87,31 +73,31 @@ namespace UIMVC.Controllers
                 return BadRequest("Project cannot be null");
             }
 
-            /*pvm.Project.CurrentPhase = pvm.Phases.Find(e => e.IsCurrentPhase);
-
-            Project project = new Project()
+            Project pr = new Project()
             {
                 User = projectUser,
                 CurrentPhase = pvm.Project.CurrentPhase,
                 EndDate = pvm.Project.EndDate,
                 StartDate = pvm.Project.StartDate,
                 Title = pvm.Project.Title,
-                Platform = new Platform() {Id = Int32.Parse(Request.Form["Platform"].ToString())},
+                Platform = new Platform() {Id = platform},
                 Status = pvm.Project.Status.ToUpper(),
                 LikeVisibility = 1,
+                Visible = pvm.Project.Visible
             };
+            Project newProject = _mgr.MakeProject(pr);
+
+            pvm.Phases.Add(pr.CurrentPhase);
             
-            Project newProject = _mgr.MakeProject(project);
-          
             foreach (var phase in pvm.Phases)
             {
-                project.Phases.Add(phase);
-                phase.Project = project;
+                pr.Phases.Add(phase);
+                phase.Project = pr;
                 _mgr.MakePhase(phase, newProject.Id);
-            }*/
+            }
 
 
-
+/*
             Project project1 = pvm.Project;
             project1.Platform = new Platform() {Id = Int32.Parse(Request.Form["Platform"].ToString())};
             project1.User = projectUser;
@@ -132,8 +118,9 @@ namespace UIMVC.Controllers
                 newPhase.Project = newProject;
                 _mgr.MakePhase(newPhase, project1.Id);
             }
+            */
 
-            return RedirectToAction("Details", new {id = newProject.Id});
+            return RedirectToAction("Index", "Platform", new {id = newProject.Platform.Id});
         }
 
         #endregion
@@ -146,7 +133,7 @@ namespace UIMVC.Controllers
         public IActionResult Edit(int id)
         {
             Project project = _mgr.GetProject(id, false);
-
+            ViewData["platforms"] = _mgrPlatform.ReadAllPlatforms();
             if (project == null)
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
@@ -161,7 +148,7 @@ namespace UIMVC.Controllers
         {
             _mgr.EditProject(project);
             // TODO: make the redirect work
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Platform", new {id = project.Platform.Id});
         }
 
         #endregion
@@ -169,10 +156,11 @@ namespace UIMVC.Controllers
 
         //GET: /Project/Detail/<project_id>
 
-
-        public IActionResult Delete(object id)
+        [HttpPost]
+        public IActionResult Delete(int id)
         {
-            throw new System.NotImplementedException();
-        }
+            _mgr.RemoveProject(id);
+            return RedirectToAction("Index", "Platform", new {id = id});
+         }
     }
 }

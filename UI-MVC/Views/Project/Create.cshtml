@@ -6,89 +6,84 @@
 @{
     ViewBag.Title = "Create";
     Layout = "_Layout";
-
-    IEnumerable<Platform> platforms = (IEnumerable<Platform>) ViewData["platforms"];
 }
+
 
 <h2>Create Project</h2>
 
+<form asp-controller="Project" asp-action="Create" method="post" asp-route-pvm="@Model", asp-route-platform="@ViewData["platform"]">
 
-<form asp-controller="Project" asp-action="Create" method="post">
+   
 
     <div class="form-row">
+
+
         <div class="form-group col-md-12">
             <label asp-for="Project.Title">Naam</label>
             <input asp-for="Project.Title" class="form-control" value="Test"/>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.StartDate">StartDate</label>
+            <label asp-for="Project.StartDate">Startdatum</label>
             <input type="date" asp-for="Project.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.EndDate">EndDate</label>
+            <label asp-for="Project.EndDate">Einddatum</label>
             <input type="date" asp-for="Project.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.Goal">Hoofdvraag</label>
-            <input asp-for="Project.Goal" class="form-control" value="Test"/>
+            <label asp-for="Project.Goal">Doel</label>
+            <input asp-for="Project.Goal" class="form-control" value="Goal"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="Project.Status">Status</label>
-            <input asp-for="Project.Status" class="form-control" value="Open"/>
+            <input asp-for="Project.Status"  class="form-control" value="Open"/>
         </div>
+        
     </div>
     <div class="form-group">
         <input type="checkbox" asp-for="Project.Visible"/>
-        <label asp-for="Project.Visible">Visible</label>
+        <label asp-for="Project.Visible">Zichtbaar</label>
     </div>
+    
+    <h5>Huidige Fase</h5>
 
-
-    <div class="form-group">
-
-        <label asp-for="Project.Platform.Name">Platform Naam</label>
-        @Html.DropDownList("Platform", new SelectList(platforms, "Id", "Name"), "Kies een platform", new {@class = "form-control"})
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label asp-for="Project.CurrentPhase.Description">Beschrijving</label>
+            <input asp-for="Project.CurrentPhase.Description" class="form-control" value="Desciption"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Project.CurrentPhase.StartDate">Startdatum</label>
+            <input type="date" asp-for="Project.CurrentPhase.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Project.CurrentPhase.EndDate">Einddatum</label>
+            <input type="date" asp-for="Project.CurrentPhase.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+        </div>
     </div>
-
-
-    <div class="form-group">
-        <label asp-for="Project.Phases.Capacity">How many Phases</label> @*DIT BEPAALD HOEVEEL PHASES ER KOMEN*@
-        <input asp-for="Project.Phases.Capacity" class="form-control"/>
-    </div>
-
-    @* @Html.Partial("CreatePhase", Model.Project.Phases.Capacity)*@
-    @*Create Phase*@
-
 
     @{
-        for (int i = 0; i < 2 /*@Model.Phases.Count*/; i++)
+        for (int i = 0; i < 1 /*@Model.Phases.Count*/; i++)
         {
             <h5>Phase @(i + 1)</h5>
 
-            <div class="form-row">
+            <div class="form-row" id="phases">
                 <div class="form-group col-md-12">
-                    <label asp-for="Phases[i].Description">Description</label>
+                    <label asp-for="Phases[i].Description">Beschrijving</label>
                     <input asp-for="Phases[i].Description" class="form-control" value="Desciption"/>
                 </div>
                 <div class="form-group col-md-6">
-                    <label asp-for="Phases[i].StartDate">StartDate</label>
+                    <label asp-for="Phases[i].StartDate">Startdatum</label>
                     <input type="date" asp-for="Phases[i].StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
                 </div>
                 <div class="form-group col-md-6">
-                    <label asp-for="Phases[i].EndDate">EndDate</label>
+                    <label asp-for="Phases[i].EndDate">Einddatum</label>
                     <input type="date" asp-for="Phases[i].EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
-                </div>
-                <div class="form-group col-md-6">
-                    @Html.RadioButtonFor(m => m.Phases[i].IsCurrentPhase, true)
-                    <label asp-for="Phases[i].IsCurrentPhase">Set as Current Phase</label>
                 </div>
             </div>
         }
     }
 
-
-    <input type="submit" value="Opslaan" class="btn"/>
+    <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
 </form>
-<script >
 
-
-</script>

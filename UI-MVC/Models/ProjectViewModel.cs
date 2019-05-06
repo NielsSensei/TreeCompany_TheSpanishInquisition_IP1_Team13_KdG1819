@@ -10,6 +10,5 @@ namespace UIMVC.Models
  
         public List<Phase> Phases { get; set; }
 
-        public Platform Platform { get; set; }
-    }
+     }
 }

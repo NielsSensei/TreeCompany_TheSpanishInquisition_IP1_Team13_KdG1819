@@ -56,14 +56,6 @@ namespace BL
             return project;
         }
 
-        public IEnumerable<Project> GetProjects(int projectId)
-        {
-            List<Project> projects = new List<Project>();
-
-            projects.AddRange(ProjectRepo.ReadAll(projectId));
-
-            return projects;
-        }
 
         public IEnumerable<Project> GetProjects()
         {

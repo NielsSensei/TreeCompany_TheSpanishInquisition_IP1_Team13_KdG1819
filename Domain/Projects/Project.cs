@@ -40,7 +40,7 @@ namespace Domain.Projects
         public UIMVCUser User { get; set; }
        
         public string Goal { get; set; }
-        public string Status { get; set; } //TODO bool? 
+        public string Status { get; set; }  
         public bool Visible { get; set; }
         public int ReactionCount { get; set; }
         public int LikeCount { get; set; }

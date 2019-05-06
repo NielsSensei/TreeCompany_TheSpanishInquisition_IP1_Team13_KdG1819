@@ -20,10 +20,6 @@ namespace UIMVC.Services
             _ideationQuestionManager = new IdeationQuestionManager();
         }
 
-        public IEnumerable<Project> GetProjects(Project project)
-        {
-            return _projectManager.GetProjects(project.Id);
-        }
 
         public IEnumerable<Project> CollectPlatformProjects(Platform platform)
         {
@@ -44,6 +40,5 @@ namespace UIMVC.Services
         {
             return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
         }
-        
     }
 }
