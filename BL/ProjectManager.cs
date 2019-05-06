@@ -44,6 +44,8 @@ namespace BL
         /*
          * Simple getter to get information about our Project. - NVZ
          */
+           
+
         public Project GetProject(int projectId, bool details)
         {
             Project project = ProjectRepo.Read(projectId, details);
@@ -74,6 +76,11 @@ namespace BL
         public void RemoveProject(int projectId)
         {
             ProjectRepo.Delete(projectId);
+        }
+
+        public IEnumerable<Project> GetAllProjectsForPlatform(int platformId)
+        {
+            return ProjectRepo.ReadAllForPlatform(platformId);
         }
 
         #endregion
@@ -137,6 +144,11 @@ namespace BL
             
         }
 
+        public Phase GetPhase(int phaseId)
+        {
+            return ProjectRepo.ReadPhase(phaseId, false);
+        }
+
         #endregion
 
         // Added by NVZ
@@ -183,7 +195,7 @@ namespace BL
 
         public IEnumerable<Project> GetPlatformProjects(Platform platform)
         {
-            return ProjectRepo.ReadAll(platform.Id);
+            return ProjectRepo.ReadAllForPlatform(platform.Id);
         }
 
         #endregion
