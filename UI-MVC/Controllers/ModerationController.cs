@@ -179,7 +179,24 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
-
+        
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpPost]
+        public IActionResult DestroyIdeation(int id)
+        {
+            Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
+            
+            _moduleMgr.RemoveModule(id, i.Project.Id, false);
+            
+            List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
+            foreach (IdeationQuestion iq in iqs)
+            {
+                
+            }
+            
+            return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
+        }
         #region Ideas
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
