@@ -54,6 +54,7 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
+                IsDeleted = obj.IsDeleted,
                 ParentID = obj.ParentIdea.Id,
                 DeviceID = obj.Device.Id
             };
@@ -144,6 +145,7 @@ namespace DAL.repos
                 ShareCount= DTO.ShareCount,
                 Status = DTO.Status,
                 VerifiedUser = DTO.VerifiedUser,
+                IsDeleted = DTO.IsDeleted,
                 ParentIdea = new Idea { Id = DTO.ParentID },
                 Device = new IOT_Device { Id = DTO.DeviceID }
             };
@@ -414,6 +416,7 @@ namespace DAL.repos
                 foundIdea.Status = newIdea.Status;
                 foundIdea.VerifiedUser = newIdea.VerifiedUser;
                 foundIdea.DeviceID = newIdea.DeviceID;
+                foundIdea.IsDeleted = newIdea.IsDeleted;
                 ctx.Ideas.Update(foundIdea);
             }
            
@@ -484,39 +487,9 @@ namespace DAL.repos
         */
         public void DeleteIdea(int ideaID)
         {
-            Idea i = ReadWithFields(ideaID);
-            i.Title = "[deleted]";
-            i.Visible = false;
-            
-            if (i.Field != null)
-            {
-                i.Field.Text = "[deleted]"; 
-            }
-
-            if (i.Cfield != null)
-            {
-                i.Cfield.Options = null;   
-            }
-
-            if (i.Mfield != null)
-            {
-                i.Mfield.LocationX = 0;
-                i.Mfield.LocationY = 0;  
-            }
-
-            if (i.Ifield != null)
-            {
-                i.Ifield.UploadedImage = null;
-                i.Ifield.Url = null;  
-            }
-
-            if (i.Vfield != null)
-            {
-                i.Vfield.Url = null;
-                i.Vfield.UploadedVideo = null;  
-            }
-                 
-            Update(i);
+            IdeasDTO i = ctx.Ideas.First(byeIdea => byeIdea.IdeaID == ideaID);
+            ctx.Ideas.Remove(i);
+            ctx.SaveChanges();
         }
 
         public IEnumerable<Idea> ReadAllIdeas()

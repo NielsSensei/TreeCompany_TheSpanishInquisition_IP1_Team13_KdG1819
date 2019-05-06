@@ -176,6 +176,7 @@ CREATE TABLE Ideas(
 	Title NVARCHAR(100) NOT NULL,
 	Status VARCHAR(100),
 	VerifiedUser BIT NOT NULL,
+	IsDeleted BIT NOT NULL,
 	ParentID INT,
 	DeviceID INT,
 

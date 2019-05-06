@@ -192,20 +192,20 @@ INSERT INTO IdeationQuestions(IQuestionID,ModuleID,QuestionTitle,Description,Web
 VALUES(1,2,'Hoe maken we de Groenplaats groener?','Sinds 1990 is de Groenplaats niet meer groen zoals je kan zien via de link, dit is zeer jammer.','voorbeeldlink.be')
 
 /* ideas */
-INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID)
-VALUES(1,1,1,0,0,1,'#MakeGroenplaatsGreenAgain','NIET GESELECTEERD',0,0,0,0,0,0)
+INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID, IsDeleted)
+VALUES(1,1,1,0,0,1,'#MakeGroenplaatsGreenAgain','NIET GESELECTEERD',0,0,0,0,0,0,0)
 
-INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID)
-VALUES(2,1,1,0,0,1,'Groenplaats Stadspark','NIET GESELECTEERD',0,0,0,0,0,0)
+INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID, IsDeleted)
+VALUES(2,1,1,0,0,1,'Groenplaats Stadspark','NIET GESELECTEERD',0,0,0,0,0,0,0)
 
-INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID)
-VALUES(3,1,1,0,0,1,'Theater','NIET GESELECTEERD',0,0,0,0,0,0)
+INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID, IsDeleted)
+VALUES(3,1,1,0,0,1,'Theater','NIET GESELECTEERD',0,0,0,0,0,0,0)
 
-INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID)
-VALUES(4,1,1,1,0,1,'Cinema','NIET GESELECTEERD',0,0,0,0,0,0)
+INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID, IsDeleted)
+VALUES(4,1,1,1,0,1,'Cinema','NIET GESELECTEERD',0,0,0,0,0,0,0)
 
-INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID)
-VALUES(5,1,1,1,0,1,'SPA','NIET GESELECTEERD',0,0,0,0,0,0)
+INSERT INTO Ideas(IdeaID,IQuestionID,UserID,Reported,ReviewByAdmin,Visible,Title,Status,VerifiedUser,VoteCount,RetweetCount,ShareCount,ParentID,DeviceID, IsDeleted)
+VALUES(5,1,1,1,0,1,'SPA','NIET GESELECTEERD',0,0,0,0,0,0,0)
 
 /* ideafields */
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)

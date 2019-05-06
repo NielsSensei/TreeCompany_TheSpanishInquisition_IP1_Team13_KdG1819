@@ -276,7 +276,11 @@ namespace UIMVC.Controllers
         [Authorize]
         public IActionResult DestroyIdea(int idea)
         {
-            _ideaMgr.RemoveIdea(idea);
+            Idea toDelete = _ideaMgr.GetIdea(idea);
+            toDelete.IsDeleted = true;
+            
+            _ideaMgr.EditIdea(toDelete);
+            
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
         }
 
