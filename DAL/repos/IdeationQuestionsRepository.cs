@@ -54,6 +54,7 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
+                IsDeleted = obj.IsDeleted,
                 ParentID = obj.ParentIdea.Id,
                 DeviceID = obj.Device.Id
             };
@@ -144,6 +145,7 @@ namespace DAL.repos
                 ShareCount= DTO.ShareCount,
                 Status = DTO.Status,
                 VerifiedUser = DTO.VerifiedUser,
+                IsDeleted = DTO.IsDeleted,
                 ParentIdea = new Idea { Id = DTO.ParentID },
                 Device = new IOT_Device { Id = DTO.DeviceID }
             };
@@ -292,16 +294,12 @@ namespace DAL.repos
 
             ctx.SaveChanges();
         }
-
-        /* Ik heb momenteel de optie opengehouden zoals het zoals reddit te doen. https://imgur.com/a/oeLkyL2 zodat de Ide�n niet mee verwijderd worden.
-         Een hard delete van de vraag en de hele "thread" zal waarschijnlijk ook nog kunnen, dat mag je veranderen naar bespreking met mij. -NVZ */
+        
         public void Delete(int id)
         {
-            IdeationQuestion iq = Read(id, false);
-            iq.QuestionText = "[deleted]";
-            iq.QuestionTitle = "[deleted]";
-            iq.Description = "[deleted]";
-            Update(iq);
+            IdeationQuestionsDTO dto = ctx.IdeationQuestions.First(d => d.IQuestionID == id);
+            ctx.IdeationQuestions.Remove(dto);
+            ctx.SaveChanges();
         }
 
         public IEnumerable<IdeationQuestion> ReadAll()
@@ -414,6 +412,7 @@ namespace DAL.repos
                 foundIdea.Status = newIdea.Status;
                 foundIdea.VerifiedUser = newIdea.VerifiedUser;
                 foundIdea.DeviceID = newIdea.DeviceID;
+                foundIdea.IsDeleted = newIdea.IsDeleted;
                 ctx.Ideas.Update(foundIdea);
             }
            
@@ -479,44 +478,28 @@ namespace DAL.repos
             ctx.SaveChanges();
         }
 
-        /* Het veiligste is het zoals reddit te doen: https://imgur.com/a/oeLkyL2. Anders worden de childs mee gedelete misschien of bestaan ze wel db wise
-         * maar worden ze niet getoond. Het beste is enkel de 2 deleted tonen in dit geval. - NVZ
-        */
+        public void DeleteField(int id)
+        {
+            IdeaFieldsDTO i = ctx.IdeaFields.First(f => f.FieldID == id);
+            ctx.IdeaFields.Remove(i);
+            ctx.SaveChanges();
+        }
+        
+        public void DeleteFields(int ideaID)
+        {
+            List<Field> fields = (List<Field>) ReadAllFields(ideaID);
+
+            foreach (Field field in fields)
+            {
+                DeleteField(field.Id);
+            }
+        }
+ 
         public void DeleteIdea(int ideaID)
         {
-            Idea i = ReadWithFields(ideaID);
-            i.Title = "[deleted]";
-            i.Visible = false;
-            
-            if (i.Field != null)
-            {
-                i.Field.Text = "[deleted]"; 
-            }
-
-            if (i.Cfield != null)
-            {
-                i.Cfield.Options = null;   
-            }
-
-            if (i.Mfield != null)
-            {
-                i.Mfield.LocationX = 0;
-                i.Mfield.LocationY = 0;  
-            }
-
-            if (i.Ifield != null)
-            {
-                i.Ifield.UploadedImage = null;
-                i.Ifield.Url = null;  
-            }
-
-            if (i.Vfield != null)
-            {
-                i.Vfield.Url = null;
-                i.Vfield.UploadedVideo = null;  
-            }
-                 
-            Update(i);
+            IdeasDTO i = ctx.Ideas.First(byeIdea => byeIdea.IdeaID == ideaID);
+            ctx.Ideas.Remove(i);
+            ctx.SaveChanges();
         }
 
         public IEnumerable<Idea> ReadAllIdeas()
@@ -632,6 +615,15 @@ namespace DAL.repos
             ctx.SaveChanges();
         }
 
+        public void DeleteReports(int ideaID)
+        {
+            List<Report> reports = (List<Report>) ReadAllReportsByIdea(ideaID);
+
+            foreach (Report report in reports)
+            {
+               DeleteReport(report.Id);
+            }
+        }
         public IEnumerable<Report> ReadAllReports()
         {
             List<Report> myQuery = new List<Report>();
