@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -40,14 +42,17 @@ namespace UIMVC
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
-                options.User.RequireUniqueEmail = false;
             });
 
              services.AddAuthentication().AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            }); 
+            }).AddMicrosoftAccount(msOptions =>
+                 {
+                     msOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                     msOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+                 }); 
 
             // Configuring SendGrid email sender
             services.AddTransient<IEmailSender, EmailSender>();
