@@ -1,0 +1,30 @@
+﻿@using Domain.UserInput
+@using Domain.Projects
+
+
+@model CreateQuestionnaireModel
+@inject UIMVC.Services.ProjectService projserv
+
+@{ 
+    
+    Project project = (Project)ViewData["project"];
+}
+
+@{
+    Layout = "_Layout";
+}
+
+<h1>Een nieuwe vragenlijst maken voor project: @project.Title</h1>
+
+
+        <form asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@project.Id" asp-route-cqm="@Model" method="post">
+            <label for="sel2">Selecteer een fase:</label>
+            @Html.DropDownList("ParentPhase", new SelectList(project.Phases,"Id","Description"), "Kies een fase", new { @class = "form-control"})
+
+            
+            <label asp-for="Title">Title</label>
+            <input type="text" asp-for="Title"/>
+            <input type="submit" class="btn btn-primary" value="Vragen toevoegen"/>
+
+        </form>
+        
