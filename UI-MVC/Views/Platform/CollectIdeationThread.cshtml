@@ -31,52 +31,63 @@
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {
-        <div class="row justify-content-center">
-            <h4>@idea.Title</h4>
-        </div>
-        <div class="row justify-content-center">
-            @if (!idea.VerifiedUser)
-            {
-                @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+        if (idea.IsDeleted)
+        {
+            <div class="row justify-content-center">
+                <h4>[Verwijderd]</h4>
+            </div>
+            <hr/>
+        }
+
+        if (!idea.IsDeleted)
+        {
+            <div class="row justify-content-center">
+                <h4>@idea.Title</h4>
+            </div>
+            <div class="row justify-content-center">
+                @if (!idea.VerifiedUser)
                 {
-                    likeCount = idea.VoteCount,
-                    shareCount = idea.ShareCount, retweetCount = idea.RetweetCount, iconStyle = 4,
-                    Username = UserService.CollectUserName(idea.User.Id)
-                })
-            }
-            
-            @if (idea.VerifiedUser)
-            {
-                @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-                {
-                    likeCount = idea.VoteCount,
-                    shareCount = idea.ShareCount, retweetCount = idea.RetweetCount, iconStyle = 5,
-                    Username = UserService.CollectUserName(idea.User.Id)
-                })
-            }
-        </div>
-        <div class="row justify-content-center">
-            @if (idea.Field != null)
-            {
-                <p>@idea.Field.Text</p>
-            }
-            
-            @if (idea.Cfield != null)
-            {
-                <ul>
-                    @foreach (string o in idea.Cfield.Options)
+                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
                     {
-                        <li>@o</li>
-                    }
-                </ul>
-            }
-            @* TODO Fields buiten CField & Field *@
-        </div>
-        <div class="row justify-content-center">
-            @* TODO actionbuttons hero *@
-            @Html.ActionLink("Stem op dit idee!","AddVote","Platform", 
-                new { idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id })
-        </div>
-        <hr/>
-    }        
+                        likeCount = idea.VoteCount,
+                        shareCount = idea.ShareCount, retweetCount = idea.RetweetCount, iconStyle = 4,
+                        Username = UserService.CollectUserName(idea.User.Id)
+                    })
+                }
+            
+                @if (idea.VerifiedUser)
+                {
+                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+                    {
+                        likeCount = idea.VoteCount,
+                        shareCount = idea.ShareCount, retweetCount = idea.RetweetCount, iconStyle = 5,
+                        Username = UserService.CollectUserName(idea.User.Id)
+                    })
+                }
+            </div>
+            <div class="row justify-content-center">
+                @if (idea.Field != null)
+                {
+                    <p>@idea.Field.Text</p>
+                }
+            
+                @if (idea.Cfield != null)
+                {
+                    <ul>
+                        @foreach (string o in idea.Cfield.Options)
+                        {
+                            <li>@o</li>
+                        }
+                    </ul>
+                }
+                @* TODO Fields buiten CField & Field *@
+            </div>
+            <div class="row justify-content-center">
+                @* TODO actionbuttons hero *@
+                @Html.ActionLink("Stem op dit idee!","AddVote","Platform", 
+                    new { idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id })
+            </div>
+            <hr/>
+        }
+    }
 </div>
