@@ -31,10 +31,11 @@ namespace DAL
         #region
         private Project ConvertToDomain(ProjectsDTO DTO)
         {
+
             return new Project()
             {
                 Id = DTO.ProjectID,
-                CurrentPhase = new Phase() { Id = DTO.CurrentPhaseID },
+                CurrentPhase = new Phase(){Id = DTO.CurrentPhaseID},
                 User = new UIMVCUser() { Id = DTO.UserID },
                 Platform = new Platform() { Id = DTO.PlatformID },
                 Title = DTO.Title,
@@ -123,12 +124,15 @@ namespace DAL
             IEnumerable<Project> projects = ReadAllForPlatform(obj.Platform.Id);
 
             foreach(Project p in projects){
+                // TODO: 2 projecten Park Noord en Park Zuid geven een DuplicateNameException
                 if(ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
                 {
                     throw new DuplicateNameException("Dit project bestaat al of is misschien gelijkaardig. Project(ID=" + obj.Id + ") dat je wil aanmaken: " + 
                         obj.Title + ". Project(ID=" + p.Title + ") dat al bestaat: " + p.Title + ".");
                 }
             }
+            
+            
 
             obj.Id = FindNextAvailableProjectId();
             ctx.Projects.Add(ConvertToDTO(obj));
@@ -158,7 +162,9 @@ namespace DAL
         public void Update(Project obj)
         {
             ProjectsDTO newProj = ConvertToDTO(obj);
+            newProj.CurrentPhaseID = obj.CurrentPhase.Id;
             ProjectsDTO foundProj = ctx.Projects.First(p => p.ProjectID == obj.Id);
+           
             if (foundProj != null)
             {
                 foundProj.Title = newProj.Title;
@@ -170,6 +176,7 @@ namespace DAL
                 foundProj.FbLikeCount = newProj.FbLikeCount;
                 foundProj.TwitterLikeCount = newProj.TwitterLikeCount;
                 foundProj.LikeVisibility = newProj.LikeVisibility;
+                foundProj.CurrentPhaseID = newProj.CurrentPhaseID;
             }
 
             ctx.SaveChanges();

@@ -36,6 +36,29 @@ namespace BL
         * properties you need and the ones you do not. - NVZ
         * 
         */
+        public Project MakeProject(Project project)
+        { 
+            Project newProject = ProjectRepo.Create(project);
+            
+            List<Phase> savedPhases = new List<Phase>();
+            
+            foreach (var phase in project.Phases)
+            {
+                phase.Project = newProject;
+                Phase savedPhase = MakePhase(phase, newProject.Id);
+                savedPhases.Add(savedPhase);
+                ProjectRepo.Update(newProject);
+            }
+
+            newProject.Phases = savedPhases;
+
+            
+           // ProjectRepo.
+
+            return GetProject(newProject.Id, false);
+
+        }
+
         public void EditProject(Project project)
         {
             ProjectRepo.Update(project);
@@ -44,7 +67,7 @@ namespace BL
         /*
          * Simple getter to get information about our Project. - NVZ
          */
-           
+
 
         public Project GetProject(int projectId, bool details)
         {
@@ -58,20 +81,9 @@ namespace BL
             return project;
         }
 
-
-        public IEnumerable<Project> GetProjects()
-        {
-            IEnumerable<Project> projects = ProjectRepo.ReadAll();
-            return projects;
-        }
-
         /*
          * Might need this for initialisation. - NVZ
          */
-        public Project MakeProject(Project project)
-        {
-            return ProjectRepo.Create(project);
-        }
 
         public void RemoveProject(int projectId)
         {
@@ -111,11 +123,12 @@ namespace BL
             return ProjectRepo.ReadAllPhases(projectId);
         }
 
-        public void MakePhase(Phase newPhase, int projectId)
+        public Phase MakePhase(Phase newPhase, int projectId)
         {
-            ProjectRepo.Create(newPhase);
+           
+           Phase savedPhase = ProjectRepo.Create(newPhase);
             var alteredProject = ProjectRepo.Read(projectId, false);
-            alteredProject.Phases.Add(newPhase);
+            alteredProject.Phases.Add(savedPhase);
             ProjectRepo.Update(alteredProject);
             if (newPhase.Module != null)
             {
@@ -124,6 +137,8 @@ namespace BL
                 alteredModule.Phases.Add(newPhase);
                 ModuleMan.EditModule(alteredModule);
             }
+
+            return savedPhase;
         }
 
         public void RemovePhase(int projectId, int phaseId)

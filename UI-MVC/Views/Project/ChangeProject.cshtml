@@ -1,7 +1,7 @@
 @model Domain.Projects.Project
 
 @{
-    ViewBag.Title = "Edit: " + Model.Title;
+    ViewBag.Title = "Change: " + Model.Title;
     Layout = "_Layout";
 }
 
@@ -17,27 +17,11 @@
         <hr/>
         @Html.ValidationSummary(true, "", new {@class = "text-danger"})
         @Html.HiddenFor(model => model.Id)
-
-
-        <div class="form-group">
-            <div class="col-md-10">
-
-                <label asp-for="@Model.Id">Id</label>
-                <input asp-for="Id" class="form-control" value="@Model.Id" readonly="readonly"/>
-            </div>
-
-        </div>
-
+        
         <div class="form-group">
             <div class="col-md-10">
                 <label asp-for="@Model.Platform">Platform</label>
                 <input asp-for="Modules" class="form-control" value="@Model.Platform.Id" readonly="readonly"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-10">
-                <label asp-for="@Model.User">User</label>
-                <input asp-for="Modules" class="form-control" value="@Model.User.Id" readonly="readonly"/>
             </div>
         </div>
 

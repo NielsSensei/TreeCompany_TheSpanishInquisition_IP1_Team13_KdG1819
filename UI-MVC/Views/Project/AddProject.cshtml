@@ -1,23 +1,14 @@
-@using System.Collections
-@using DAL.Data_Transfer_Objects
-@using Domain.Projects
-@using Domain.Users
 @model UIMVC.Models.ProjectViewModel
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create New Project";
     Layout = "_Layout";
 }
 
 
-<h2>Create Project</h2>
+<h2>Add Project</h2>
 
-<form asp-controller="Project" asp-action="Create" method="post" asp-route-pvm="@Model", asp-route-platform="@ViewData["platform"]">
-
-   
-
+<form asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model", asp-route-platform="@ViewData["platform"]">
     <div class="form-row">
-
-
         <div class="form-group col-md-12">
             <label asp-for="Project.Title">Naam</label>
             <input asp-for="Project.Title" class="form-control" value="Test"/>
@@ -36,17 +27,18 @@
         </div>
         <div class="form-group col-md-6">
             <label asp-for="Project.Status">Status</label>
-            <input asp-for="Project.Status"  class="form-control" value="Open"/>
+            <input asp-for="Project.Status" class="form-control" value="Open"/>
         </div>
-        
+
     </div>
     <div class="form-group">
         <input type="checkbox" asp-for="Project.Visible"/>
         <label asp-for="Project.Visible">Zichtbaar</label>
     </div>
-    
+
     <h5>Huidige Fase</h5>
 
+    @*
     <div class="form-row">
         <div class="form-group col-md-12">
             <label asp-for="Project.CurrentPhase.Description">Beschrijving</label>
@@ -54,16 +46,17 @@
         </div>
         <div class="form-group col-md-6">
             <label asp-for="Project.CurrentPhase.StartDate">Startdatum</label>
-            <input type="date" asp-for="Project.CurrentPhase.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+            <input type="date" asp-for="Project.CurrentPhase.StartDate" class="form-control" value="1/1/2019 12:00:00 AM"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="Project.CurrentPhase.EndDate">Einddatum</label>
-            <input type="date" asp-for="Project.CurrentPhase.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+            <input type="date" asp-for="Project.CurrentPhase.EndDate" class="form-control" value="1/6/2019 12:00:00 AM"/>
         </div>
     </div>
+    *@
 
     @{
-        for (int i = 0; i < 1 /*@Model.Phases.Count*/; i++)
+        for (int i = 0; i < 2; i++)
         {
             <h5>Phase @(i + 1)</h5>
 
@@ -74,11 +67,15 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label asp-for="Phases[i].StartDate">Startdatum</label>
-                    <input type="date" asp-for="Phases[i].StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+                    <input type="date" asp-for="Phases[i].StartDate" class="form-control" value="1/1/2019 12:00:00 AM"/>
                 </div>
                 <div class="form-group col-md-6">
                     <label asp-for="Phases[i].EndDate">Einddatum</label>
-                    <input type="date" asp-for="Phases[i].EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+                    <input type="date" asp-for="Phases[i].EndDate" class="form-control" value="1/1/2019 12:00:00 AM"/>
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.RadioButtonFor(m => m.Phases[i].IsCurrent, true)
+                    <label name="current" asp-for="Phases[i].IsCurrent">Set as Current Phase</label>
                 </div>
             </div>
         }
@@ -86,4 +83,3 @@
 
     <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
 </form>
-
