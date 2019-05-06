@@ -14,69 +14,86 @@
     <script type="module" src="~/dist/showmenu.entry.js" defer></script>
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-6">
+<section class="container">
+    <section class="row">
+        <div class="col-5">
             <h2>@Model.Title</h2>
             <p>door @Userservice.CollectUserName(Model.User.Id)</p>
             @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
             {
-                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount, twitterLikeCount = Model.TwitterLikeCount, 
+                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount, twitterLikeCount = Model.TwitterLikeCount,
                 shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
             })
-            <br/>
             <p>@Model.ExtraInfo</p>
             @if (Model.Event.Id != 0)
             {
                 @* TODO Zorgt voor een eventPagina *@
-                <p>Deze ideation is georganiseerd dankzij dit evenement</p> 
+                <p>Deze ideation is georganiseerd dankzij dit evenement</p>
             }
-            <p>Tags: @Html.Partial("_TagsPartial", Model.Tags)</p>
-            @* TODO zet hier ne rolecheck op *@
-            <a class="btn btn-primary" type=submit asp-controller="Moderation" asp-action="AddTag"
-                    formmethod="get" asp-route-ideation="@Model.Id">Voeg een Tag Toe </a>
-            <br/><br/>
-            @* TODO vervang images door Media *@
-            <img alt="IdeationMedia" src="https://via.placeholder.com/250"/>
+            <section>
+                <h6 class="font-weight-bold">Tags:</h6>
+
+                <div class="row justify-content-start">
+                    @Html.Partial("_TagsPartial", Model.Tags)
+                    @* TODO zet hier ne rolecheck op *@
+                    <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
+                       formmethod="get" asp-route-ideation="@Model.Id">
+                        @*TODO hier met een menuke*@
+                        Voeg Een Nieuwe Tag Toe
+                    </a>
+                </div>
+            </section>
         </div>
-        <div class="col-6">
-            <br/>
-            @* TODO zet hier ne rolecheck op *@
-            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
-            {
-                <p>Geen centrale vragen gesteld, wat jammer.</p>
-                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
-                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
-            }
-            
-            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
-            {
-                <p>1 centrale vraag</p>
-                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
-                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
-            }
-            
-            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
-            {
-                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</p>
-                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
-                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
-            }           
-            <hr/>
+        <div class="col-7">
+            @* TODO vervang images door Media *@
+            <img alt="IdeationMedia" src="https://via.placeholder.com/600x400"/>
+        </div>
+    </section>
+    <hr>
+    <section class="container">
+        <div class="row justify-content-between">
+            <div>
+                @* TODO zet hier ne rolecheck op *@
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
+                {
+                    <h1>Geen centrale vragen gesteld, wat jammer.</h1>
+                }
+
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
+                {
+                    <h1>1 centrale vraag</h1>
+                }
+
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
+                {
+                    <h1>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</h1>
+                }
+            </div>
+            <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
+               asp-route-ideation="@Model.Id">
+                Stel een nieuwe centrale vraag
+            </a>
+        </div>
+        <section class="card-columns">
             @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))
             {
-                <p class="font-weight-bold">@iq.QuestionTitle</p>
-                <p>@iq.Description</p>
-                if (iq.SiteURL != null)
-                {
-                    <p>Lees meer: <a href="">@iq.SiteURL</a></p>
-                }
-                <a asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
-                <hr/>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@iq.QuestionTitle</h5>
+                        <p class="card-text">@iq.Description</p>
+                        @if (iq.SiteURL != null)
+                        {
+                            <p>Meer info: <a href="">@iq.SiteURL</a></p>
+                        }
+                    </div>
+                    <div class="card-footer text-center">
+                        <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
+                    </div>
+                </div>     
             }
-        </div>
-    </div>
-</div>
+        </section>
+    </section>
+</section>
 <hr/>
 <div class="col-md-3">
     <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
@@ -96,4 +113,3 @@
         </div>
     </div>
 </div>
-
