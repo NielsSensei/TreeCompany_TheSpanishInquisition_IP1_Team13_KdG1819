@@ -189,6 +189,25 @@ namespace UIMVC.Controllers
             Ideation i = _moduleMgr.GetIdeation(id);
 
             ViewData["Project"] = i.Project.Id;
+            
+            List<Phase> allPhases = (List<Phase>) _projMgr.GetAllPhases(i.Project.Id);
+            List<Phase> availablePhases = new List<Phase>();
+
+            foreach (Phase phase in allPhases)
+            {
+                if (_moduleMgr.GetQuestionnaire(phase.Id, i.Project.Id) == null)
+                {
+                    availablePhases.Add(phase);
+                }
+            }
+
+            if (availablePhases.Count == 0)
+            {
+                return BadRequest("No available phases");
+            }
+
+            ViewData["Phases"] = availablePhases;
+            
             ViewData["Ideation"] = id;
             AlterIdeationModel aim = new AlterIdeationModel()
             {

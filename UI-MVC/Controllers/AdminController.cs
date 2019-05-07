@@ -96,10 +96,7 @@ namespace UIMVC.Controllers
             ViewData["Questionnaire"] = modMgr.GetQuestionnaire(questionnaireid, false);
             return View(new QuestionnaireQuestion());
         }
-
-
-
-
+        
         [HttpPost]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
         {
@@ -132,14 +129,14 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult PublishQuestionnaire(int questionnaireId)
         {
-
-            return View(modMgr.GetModule(questionnaireId, false, true));
+            return null;
+            //return View(modMgr.GetQuestionnaire(questionnaireId, false));
         }
 
         [HttpGet]
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
-            Questionnaire q = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
+            Questionnaire q = modMgr.GetQuestionnaire(questionnaireId, false);
 
             List<Phase> availablePhases = new List<Phase>();
             Phase parentPhase = projMgr.GetPhase(q.ParentPhase.Id);
@@ -153,7 +150,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in projMgr.GetAllPhases(q.Project.Id).ToList())
             {
-                if (modMgr.GetModule(phase.Id, q.Project.Id) == null)
+                if (modMgr.GetQuestionnaire(phase.Id, q.Project.Id) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -171,7 +168,7 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult EditQuestionnaire(EditQuestionnaireModel eqm, int questionnaireid)
         {
-            Questionnaire toBeUpdated = (Questionnaire)modMgr.GetModule(questionnaireid, false, true);
+            Questionnaire toBeUpdated = modMgr.GetQuestionnaire(questionnaireid, false);
 
             Phase parentPhase = new Phase();
             String parentPhaseContent = Request.Form["ParentPhase"];
