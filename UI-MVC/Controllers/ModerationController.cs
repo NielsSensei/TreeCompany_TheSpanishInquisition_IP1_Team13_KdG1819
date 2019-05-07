@@ -77,7 +77,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in allPhases)
             {
-                if (_moduleMgr.GetModule(phase.Id, project) == null)
+                if (_moduleMgr.GetIdeation(phase.Id, project) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -183,10 +183,66 @@ namespace UIMVC.Controllers
 
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
+        [HttpGet]
+        public IActionResult ChangeIdeation(int id)
+        {
+            Ideation i = _moduleMgr.GetIdeation(id);
+
+            ViewData["Project"] = i.Project.Id;
+            
+            List<Phase> allPhases = (List<Phase>) _projMgr.GetAllPhases(i.Project.Id);
+            List<Phase> availablePhases = new List<Phase>();
+
+            foreach (Phase phase in allPhases)
+            {
+                if (_moduleMgr.GetIdeation(phase.Id, i.Project.Id) == null)
+                {
+                    availablePhases.Add(phase);
+                }
+            }
+            
+            ViewData["Phases"] = availablePhases;
+            ViewData["PhaseCount"] = availablePhases.Count;
+            
+            ViewData["Ideation"] = id;
+            AlterIdeationModel aim = new AlterIdeationModel()
+            {
+                Title = i.Title,
+                ExtraInfo = i.ExtraInfo,
+                ParentPhase = _projMgr.GetPhase(i.ParentPhase.Id)
+            };
+            
+            return View(aim);
+        }
+
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpPost]
+        public IActionResult ConfirmChangeIdeation(int ideation)
+        {
+            Ideation i = new Ideation()
+            {
+                Id = ideation,
+                Title = Request.Form["Title"].ToString(),
+                ExtraInfo = Request.Form["ExtraInfo"].ToString()
+            };
+
+            if (Request.Form["ParentPhase"].ToString() != null)
+            {
+                i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+            }
+            
+            _moduleMgr.EditIdeation(i);
+            
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
+        }
+        
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
         public IActionResult DestroyIdeation(int id)
         {
-            Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
-
+            Ideation i = _moduleMgr.GetIdeation(id);
+            
             List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
             foreach (IdeationQuestion iq in iqs)
             {
