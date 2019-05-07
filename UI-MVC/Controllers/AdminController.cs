@@ -117,7 +117,7 @@ namespace UIMVC.Controllers
 
             toAdd.Questions.Add(qQ);
             qqMgr.MakeQuestion(newQuestion, toAdd.Id);
-            modMgr.EditModule(toAdd);
+            modMgr.EditQuestionnaire(toAdd);
 
             return RedirectToAction("AddQuestionnaire", toAdd.Id);
 
@@ -202,7 +202,7 @@ namespace UIMVC.Controllers
             toBeUpdated.Title = eqm.Title;
             
             
-            modMgr.EditModule(toBeUpdated);
+            modMgr.EditQuestionnaire(toBeUpdated);
 
             return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});
         }

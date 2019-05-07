@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-10">
             <h1>Een Ideation Aanpassen.</h1>
-            <form asp-controller="Moderation" asp-action="ChangeIdeation" method="post" asp-route-aim="@Model" 
+            <form asp-controller="Moderation" asp-action="ConfirmChangeIdeation" method="post" 
                   asp-route-ideation="@ViewData["Ideation"]">
                 <div class="form-group">
                     <label>ProjectID</label>
@@ -22,17 +22,32 @@
                         </div>
                     </div>
                 </fieldset>
-                <div class="form-group row">
-                    <label for="ParentPhase" class="col-sm-2 col-form-label">Selecteer een andere fase:</label>
-                    @Html.DropDownList("ParentPhase", new SelectList((System.Collections.IEnumerable) ViewData["Phases"], "Id", "Description"), "Kies een fase", new { @class = "form-control" })
+                @if ((int)ViewData["PhaseCount"] > 0)
+                {
+                    <div class="form-group row">
+                        <label for="ParentPhase" class="col-sm-2 col-form-label">Selecteer een andere fase:</label>
+                        @Html.DropDownList("ParentPhase", new SelectList((System.Collections.IEnumerable) ViewData["Phases"], "Id", "Description"), "Kies een fase", new { @class = "form-control" })
+                    </div>
+                }
+                
+                @if ((int)ViewData["PhaseCount"] == 0)
+                {
+                    <p>Geen andere vrije fases, wat jammer.</p>
+                }
+                                
+                <div class="form-group">
+                    <label label-for="Title">Titel van de module</label>
+                    @Html.TextBoxFor(c => c.Title,  "Title", new
+                    {
+                        @class = "form-control"
+                    })
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.Title">Titel van de module</label>
-                    <input asp-for="@Model.Title" class="form-control" placeholder="@Model.Title"/>
-                </div>
-                <div class="form-group">
-                    <label asp-for="@Model.ExtraInfo">Geef hier extra informatie</label>
-                    <input asp-for="@Model.ExtraInfo" class="form-control" placeholder="@Model.ExtraInfo"/>
+                    <label label-for="ExtraInfo">Geef hier extra informatie</label>
+                    @Html.TextBoxFor(c => c.ExtraInfo,  "ExtraInfo", new
+                                         {
+                                             @class = "form-control"
+                                         })
                 </div>
                 <br/>
                 <div class="row">

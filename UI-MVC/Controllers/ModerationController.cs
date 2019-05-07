@@ -77,7 +77,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in allPhases)
             {
-                if (_moduleMgr.GetQuestionnaire(phase.Id, project) == null)
+                if (_moduleMgr.GetIdeation(phase.Id, project) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -195,24 +195,21 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in allPhases)
             {
-                if (_moduleMgr.GetQuestionnaire(phase.Id, i.Project.Id) == null)
+                if (_moduleMgr.GetIdeation(phase.Id, i.Project.Id) == null)
                 {
                     availablePhases.Add(phase);
                 }
             }
-
-            if (availablePhases.Count == 0)
-            {
-                return BadRequest("No available phases");
-            }
-
+            
             ViewData["Phases"] = availablePhases;
+            ViewData["PhaseCount"] = availablePhases.Count;
             
             ViewData["Ideation"] = id;
             AlterIdeationModel aim = new AlterIdeationModel()
             {
                 Title = i.Title,
-                ExtraInfo = i.ExtraInfo
+                ExtraInfo = i.ExtraInfo,
+                ParentPhase = _projMgr.GetPhase(i.ParentPhase.Id)
             };
             
             return View(aim);
@@ -221,13 +218,21 @@ namespace UIMVC.Controllers
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
-        public IActionResult ChangeIdeation(AlterIdeationModel aim, int ideation)
+        public IActionResult ConfirmChangeIdeation(int ideation)
         {
-            Ideation i = _moduleMgr.GetIdeation(ideation);
-            i.Title = aim.Title;
-            i.ExtraInfo = aim.ExtraInfo;
+            Ideation i = new Ideation()
+            {
+                Id = ideation,
+                Title = Request.Form["Title"].ToString(),
+                ExtraInfo = Request.Form["ExtraInfo"].ToString()
+            };
+
+            if (Request.Form["ParentPhase"].ToString() != null)
+            {
+                i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+            }
             
-            _moduleMgr.EditModule(i);
+            _moduleMgr.EditIdeation(i);
             
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
