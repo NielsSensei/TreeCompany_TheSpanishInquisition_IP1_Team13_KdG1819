@@ -127,6 +127,7 @@ namespace DAL
         
         private int FindNextAvailableIdeationId()
         {               
+            if (!ctx.Ideations.Any()) return 1;
             int newId = ctx.Modules.Max(q => q.ModuleID) + 1;
             return newId;
         }

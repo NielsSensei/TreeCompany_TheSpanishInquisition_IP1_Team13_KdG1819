@@ -230,19 +230,22 @@ namespace DAL.repos
         }
         
         private int FindNextAvailableIQuestionId()
-        {               
+        {
+            if (!ctx.IdeationQuestions.Any()) return 1;
             int newId = ReadAll().Max(IQuestion => IQuestion.Id)+1;
             return newId;
         }
 
         private int FindNextAvailableIdeaId()
         {
+            if (!ctx.Ideas.Any()) return 1;
             int newId = ReadAllIdeas().Max(idea => idea.Id)+1;
             return newId;
         }
                 
         private int FindNextAvailableReportId()
         {
+            if (!ctx.Reports.Any()) return 1;
             int newId = ReadAllReports().Max(report => report.Id)+1;
             return newId;
         }

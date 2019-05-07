@@ -37,17 +37,11 @@
                                 
                 <div class="form-group">
                     <label label-for="Title">Titel van de module</label>
-                    @Html.TextBoxFor(c => c.Title,  "Title", new
-                    {
-                        @class = "form-control"
-                    })
+                    @Html.TextBoxFor(c => c.Title, new { @class = "form-control" })
                 </div>
                 <div class="form-group">
                     <label label-for="ExtraInfo">Geef hier extra informatie</label>
-                    @Html.TextBoxFor(c => c.ExtraInfo,  "ExtraInfo", new
-                                         {
-                                             @class = "form-control"
-                                         })
+                    @Html.TextBoxFor(c => c.ExtraInfo,   new { @class = "form-control" })
                 </div>
                 <br/>
                 <div class="row">
