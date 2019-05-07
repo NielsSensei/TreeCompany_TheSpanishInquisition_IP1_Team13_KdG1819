@@ -90,50 +90,37 @@ namespace UIMVC.Controllers
             return RedirectToAction("EditQuestionnaire",new { questionnaireId = newQuestionnaire.Id});
         }
 
-        [HttpGet]
-        public IActionResult AddQuestionnaireQuestion(int questionnaireid)
-        {
-            ViewData["Questionnaire"] = modMgr.GetModule(questionnaireid, false, true);
-            return View(new QuestionnaireQuestion());
-        }
-
 
 
 
         [HttpPost]
-        public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
+        public IActionResult AddQuestionnaireQuestion(int questionnaireid, CreateQuestionnaireQuestionModel cqqm)
         {
-            Questionnaire toAdd = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
+            Questionnaire toAdd = (Questionnaire) modMgr.GetModule(questionnaireid, false, true);
+
             QuestionnaireQuestion newQuestion = new QuestionnaireQuestion
             {
 
-                QuestionText = qQ.QuestionText,
-                QuestionType = qQ.QuestionType,
+                QuestionText = cqqm.QuestionText,
+                QuestionType = cqqm.QuestionType,
                 Module = toAdd,
                 Questionnaire = toAdd,
-                Optional = qQ.Optional,
+                Optional = cqqm.Optional,
                 Answers = new List<Answer>()
 
 
 
             };
 
-            toAdd.Questions.Add(qQ);
+           
             qqMgr.MakeQuestion(newQuestion, toAdd.Id);
             modMgr.EditModule(toAdd);
 
-            return RedirectToAction("CreateQuestionnaire", toAdd.Id);
+            return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});
 
             
 
             
-        }
-
-        [HttpGet]
-        public IActionResult PublishQuestionnaire(int questionnaireId)
-        {
-
-            return View(modMgr.GetModule(questionnaireId, false, true));
         }
 
         [HttpGet]
@@ -165,6 +152,7 @@ namespace UIMVC.Controllers
 
             ViewData["Project"] = q.Project;
             ViewData["Questionnaire"] = q;
+            ViewData["Cqqm"] = new CreateQuestionnaireQuestionModel();
             return View();
         }
 
@@ -208,6 +196,12 @@ namespace UIMVC.Controllers
             modMgr.EditModule(toBeUpdated);
 
             return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});
+        }
+
+        [HttpPost]
+        public IActionResult DeleteQuestionnaire(EditQuestionnaireModel eqm, int projectid)
+        {
+            return RedirectToAction("");
         }
 
 

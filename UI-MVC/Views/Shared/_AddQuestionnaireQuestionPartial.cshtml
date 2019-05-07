@@ -1,0 +1,68 @@
+﻿@using Domain.Projects
+@using Domain.UserInput
+
+@model CreateQuestionnaireQuestionModel
+
+
+
+@{
+    Questionnaire questionnaire = (Questionnaire)ViewData["Questionnaire"];
+}
+
+@section Scripts{ 
+    <script type="text/javascript" src="~/js/addQuestionnaireQuestion.js"></script>
+}
+
+
+<div class="modal fade" id="addQuestion" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="addQuestion">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Annuleren">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="AddQuestionnaireQuestion" asp-controller="Admin" method="post" asp-route-cqqm="@Model" asp-route-questionnaireid="@questionnaire.Id" class="addQQuestionForm">
+                <div class="modal-body addQQuestion">
+
+                    <div class="form-group row">
+                        <label class="col-form-label" label-for="Title">Vraag:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" asp-for="QuestionText" placeholder="Bvb. Wat vindt u van dit idee?" />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-form-label" label-for="Title">Selecteer een vraag type:</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.QuestionType, new SelectList(Enum.GetValues(typeof(QuestionType))), "Selecteer een type", new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Optioneel</label>
+                        <div class="col-sm-10">
+                            <input class="form-check-input" type="checkbox" asp-for="Optional">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <a class="btn btn-primary addOption">Optie toevoegen</a>
+                    </div>
+
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" value="Vraag toevoegen" class="btn btn-outline-primary" />
+                    </div>
+                    </form>
+
+        </div>
+    </div>
+</div>
+

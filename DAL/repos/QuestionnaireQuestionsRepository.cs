@@ -127,7 +127,11 @@ namespace DAL
         }
         
         private int FindNextAvailableQQuestionId()
-        {               
+        {   
+            if(ReadAll().Count() == 0)
+            {
+                return 1;
+            }
             int newId = ReadAll().Max(qq => qq.Id)+1;
             return newId;
         }
@@ -146,14 +150,19 @@ namespace DAL
         {
             IEnumerable<QuestionnaireQuestion> qqs = ReadAllByQuestionnaireId(obj.Questionnaire.Id);
 
-            foreach (QuestionnaireQuestion qq in qqs)
+            /*if (qqs.Any())
             {
-                if (ExtensionMethods.HasMatchingWords(obj.QuestionText, qq.QuestionText) > 0)
+                foreach (QuestionnaireQuestion qq in qqs)
                 {
-                    throw new DuplicateNameException("QuestionnaireQuestion(ID=" + obj.Id + ") is een gelijkaardige vraag aan QuestionnaireQuestion(ID=" + 
-                        qq.Id + ") de vraag specifiek was: " + obj.QuestionText + ".");
+
+                    if (ExtensionMethods.HasMatchingWords(obj.QuestionText, qq.QuestionText) > 0)
+                    {
+                        throw new DuplicateNameException("QuestionnaireQuestion(ID=" + obj.Id + ") is een gelijkaardige vraag aan QuestionnaireQuestion(ID=" +
+                            qq.Id + ") de vraag specifiek was: " + obj.QuestionText + ".");
+                    }
                 }
-            }
+            }*/
+            
 
             obj.Id = FindNextAvailableQQuestionId();
             ctx.QuestionnaireQuestions.Add(ConvertToDTO(obj));
