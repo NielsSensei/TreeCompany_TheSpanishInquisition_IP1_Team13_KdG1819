@@ -1,6 +1,9 @@
 @model IEnumerable<string>
 
-@foreach (string s in Model)
+@if (Model.Any())
 {
-    <p class="btn btn-light m-0 mx-1">@s</p>
+    foreach (string s in Model)
+    {
+        <p class="btn btn-light m-0 mx-1">@s</p>
+    } 
 }
