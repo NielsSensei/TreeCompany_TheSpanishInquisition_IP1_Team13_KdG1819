@@ -1,22 +1,17 @@
+@model Domain.Projects.Ideation
+
 <div class="container">
     <div class="row">
         <div class="col-md-10">
             <h1>Een Ideation Aanpassen.</h1>
-            <form asp-controller="Moderation" asp-action="AddIdeation" method="post" asp-route-cim="@Model" 
-                  asp-route-project="@ViewData["Project"]" asp-route-user="@UserManager.GetUserId(User)">
+            <form asp-controller="Moderation" asp-action="ChangeIdeation" method="post" >
                 <div class="form-group">
                     <label>ProjectID</label>
                     <input disabled value="@ViewData["Project"]" class="form-control"/>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ModuleType">Type</label>
-                    <input asp-for="ModuleType" disabled class="form-control" value="Ideation"/>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Parent">Vrije Fases</label>
-                    @Html.DropDownList("Parent", new SelectList((System.Collections.IEnumerable) ViewData["Phases"],
-                        "Id","Description"),"Kies een fase", 
-                        new { @class = "form-control" })
+                    <label>Type</label>
+                    <input disabled class="form-control" value="Ideation"/>
                 </div>
                 <div class="form-group">
                     <label asp-for="Title">Titel van de module</label>

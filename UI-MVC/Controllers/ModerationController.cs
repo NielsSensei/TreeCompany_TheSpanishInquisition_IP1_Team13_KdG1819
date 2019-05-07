@@ -179,6 +179,26 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
+
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpGet]
+        public IActionResult ChangeIdeation(int id)
+        {
+            Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
+            
+            return View(i);
+        }
+
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpPost]
+        public IActionResult ChangeIdeation(Ideation ideation)
+        {
+            _moduleMgr.EditModule(ideation);
+            
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation.Id});
+        }
         
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
