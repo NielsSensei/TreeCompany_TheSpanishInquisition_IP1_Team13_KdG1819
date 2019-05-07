@@ -22,12 +22,10 @@
             <div class="col-10">
                 @Html.DropDownList("Filter", new SelectListItem[]
                 {
-                    new SelectListItem() { Text = "Alle ideeen", Value = "all" },
-                    new SelectListItem() { Text = "Geraporteerde ideeen", Value = "report" },
-                    new SelectListItem() { Text = "Ideeen waar een admin nodig is", Value = "admin" }
-                },
-                //TODO onchange naar aparte js?
-                new { @class = "form-control", @onchange= "document.location.href = '/Moderation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;" })
+                    new SelectListItem() {Text = "Alle ideeen", Value = "all"},
+                    new SelectListItem() {Text = "Geraporteerde ideeen", Value = "report"},
+                    new SelectListItem() {Text = "Ideeen waar een admin nodig is", Value = "admin"}
+                }, new {@class = "form-control", onchange = "document.location.href = '/Moderation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;"})
             </div>
         </div>
     </div>

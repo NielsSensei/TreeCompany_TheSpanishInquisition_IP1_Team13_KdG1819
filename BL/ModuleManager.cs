@@ -136,14 +136,10 @@ namespace BL
         {
             if (questionnaire)
             {
-                var removedQuestionnaire = QuestionnaireRepo.Read(moduleId, true);
-                ProjectMan.GetProject(projectId, false).Modules.Remove(removedQuestionnaire);
                 QuestionnaireRepo.Delete(moduleId);    
             }
             else
             {
-                var removedIdeation = IdeationRepo.Read(moduleId, true);
-                ProjectMan.GetProject(projectId, false).Modules.Remove(removedIdeation);
                 IdeationRepo.Delete(moduleId);
             }
         }

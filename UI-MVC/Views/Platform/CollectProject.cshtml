@@ -11,64 +11,86 @@
 }
 
 @* Hoe gaan we de mobile layout doen? *@
-<div class="container" id="projectView">
-    <div class="col-4">
-        <h2>Alle fases</h2>
-        <h3>Huidige fase:</h3>
-        @Html.DisplayFor(m => Model.CurrentPhase)
-        <h3>Andere fases:</h3>
-        @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
-        {
-            @Html.DisplayFor(m => p)
-        }
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <h2>@Model.Title</h2>
+            @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+            {
+                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
+                twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
+            })
+            <p>@Model.Goal</p>
+        </div>
+        <div class="col-8">
+            @* TODO vervang images door projectImages *@
+            <img alt="projectImage" src="https://via.placeholder.com/700x350"/>
+        </div>
     </div>
-    <div class="col-4">
-        <h2>@Model.Title</h2>
-        @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-        {
-            likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
-            twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
-        })
-        <p>@Model.Goal</p>
-    </div>
-    <div class="col-4">
-        @* TODO vervang images door projectImages *@
-        <img alt="projectImage" src="https://via.placeholder.com/350"/>
+    <hr>
+    <h2>Alle fases</h2>
+    <div class="row">
+        <div class="col-4">
+
+            <h3>Huidige fase:</h3>
+            @Html.DisplayFor(m => Model.CurrentPhase)
+        </div>
+        <div class="col-8">
+            <h3>Andere fases:</h3>
+            <table class="table">
+                <thead>
+                <th>Omschrijving</th>
+                <th>van</th>
+                <th>tot</th>
+                </thead>
+                @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
+                {
+                    <tr>
+                        <td>@p.Description</td>
+                        <td>@p.StartDate.ToShortDateString()</td>
+                        <td>@p.EndDate.ToShortDateString()</td>
+                    </tr>
+                }
+            </table>
+        </div>
     </div>
 </div>
 <hr/>
+@* TODO Add a role check for the user*@
+<section class="container">
+    <div class="row justify-content-around">
+        <a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">
+            Maak een nieuwe ideation
+        </a>
+
+        <a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
+            Nieuwe vragenlijst maken
+        </a>
+    </div>
+
+</section>
+<hr>
 @if (ViewData["Questionnaires"] != null || ViewData["Ideations"] != null)
 {
-    <div class="container">
-        <div class="row">
-            @if (ViewData["Questionnaires"] != null)
+    <div class="card-columns">
+        @if (ViewData["Questionnaires"] != null)
+        {
+            foreach (Questionnaire questionnaire in (IEnumerable<Questionnaire>) ViewData["Questionnaires"])
             {
-                foreach (Questionnaire questionnaire in (IEnumerable<Questionnaire>) ViewData["Questionnaires"])
-                {
-                    @Html.DisplayFor(m => questionnaire)
-                }
+                @Html.DisplayFor(m => questionnaire)
             }
+        }
 
-            @if (ViewData["Ideations"] != null)
+        @if (ViewData["Ideations"] != null)
+        {
+            foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
             {
-                foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
-                {
-                    @Html.DisplayFor(m => ideation)
-                }
+                @Html.DisplayFor(m => ideation)
             }
-        </div>
+        }
     </div>
 }
 else
 {
     <p>Geen modules voor dit project.</p>
-    
 }
-<hr/>
-
-<a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">	
-    Maak een nieuwe ideation	
-</a> 
-
-<a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
-Nieuwe vragenlijst maken</a>
