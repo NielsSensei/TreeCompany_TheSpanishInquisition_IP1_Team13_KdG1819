@@ -93,6 +93,8 @@ namespace BL
         {
             return ProjectRepo.ReadAllPhases(projectId);
         }
+
+        
         
         public void MakePhase(Phase newPhase, int projectId)
         {
@@ -108,6 +110,7 @@ namespace BL
                 ModuleMan.EditModule(alteredModule);
             }
         }
+
 
         public void RemovePhase(int projectId, int phaseId)
         {
