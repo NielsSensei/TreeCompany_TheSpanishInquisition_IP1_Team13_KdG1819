@@ -27,7 +27,9 @@ namespace UIMVC.Controllers
                 Reported = false,
                 ReviewByAdmin = false,
                 Visible = true,
-                Status = "NIET GESELECTEERD"
+                Status = "NIET GESELECTEERD",
+                Device = new IOT_Device(){ Id = 0 },
+                ParentIdea =  new Idea() { Id = 0 }
             };
 
             if (parent != 0)

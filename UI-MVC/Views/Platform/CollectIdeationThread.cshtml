@@ -27,91 +27,39 @@
     </div>
     <hr/>
     <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
-    <div class="row" id="newIdea">
-        <form asp-controller="Thread" asp-action="AddIdea" asp-route-ideationQuestion="@Model.Id"
-              asp-route-user="@UserManager.GetUserId(User)" asp-route-parent="0">
-            <div class="form-group">
-                <label>Titel:</label>
-                @Html.TextBox("newIdeaTitle","", new { @class="form-control"})
-            </div>
-            @* Voorlopig enkel gewoon Field *@
-            <div class="form-group">
-                <label>Text:</label>
-                @Html.TextBox("newIdeaField","", new { @class="form-control"})
-            </div>
-            <button class="btn btn-outline-primary" type="submit">Voeg zelf jouw idee toe</button>
-        </form>
-    </div>
+    @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionID = Model.Id, ParentID = 0})
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {
-        if (idea.IsDeleted)
-        {
-            <div class="row justify-content-center">
-                <h4>[Verwijderd]</h4>
-            </div>
-            <hr/>
-        }
-
-        if (!idea.IsDeleted)
-        {
-            <div class="row justify-content-center">
-                <h4>@idea.Title</h4>
-            </div>
-            <div class="row justify-content-center">
-                @if (!idea.VerifiedUser)
-                {
-                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+        @Html.Partial("Thread/_CollectIdea", idea)
+        @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionID = Model.Id, ParentID = idea.Id})   
+        <hr/>
+        <div class="container">
+           <h5>Reacties op dit idee:</h5>
+            @foreach (Idea child in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == idea.Id))
+            {
+                <div class="row">
+                    @Html.Partial("Thread/_CollectIdea", child)  
+                    @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionID = Model.Id, ParentID = child.Id})   
+                </div>
+                <div class="row">
+                    @foreach (Idea grandchild in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == child.Id))
                     {
-                        likeCount = idea.VoteCount,
-                        shareCount = idea.ShareCount, retweetCount = idea.RetweetCount, iconStyle = 4,
-                        Username = UserService.CollectUserName(idea.User.Id)
-                    })
-                }
-            
-                @if (idea.VerifiedUser)
-                {
-                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-                    {
-                        likeCount = idea.VoteCount,
-                        shareCount = idea.ShareCount, retweetCount = idea.RetweetCount, iconStyle = 5,
-                        Username = UserService.CollectUserName(idea.User.Id)
-                    })
-                }
-            </div>
-            <div class="row justify-content-center">
-                @if (idea.Field != null)
-                {
-                    <p>@idea.Field.Text</p>
-                }
-            
-                @if (idea.Cfield != null)
-                {
-                    <ul>
-                        @foreach (string o in idea.Cfield.Options)
-                        {
-                            <li>@o</li>
-                        }
-                    </ul>
-                }
-                @* TODO Fields buiten CField & Field *@
-            </div>
-            <div class="row justify-content-center">
-                @* TODO actionbuttons hero *@
-                @if (!UserManager.GetUserId(User).Equals(idea.User.Id))
-                {
-                    <div class="row">
-                        <div class="col-6">
-                            @Html.ActionLink("Stem op dit idee! ", "AddVote", "Platform",
-                            new {idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id})
+                        @Html.Partial("Thread/_CollectIdea", grandchild)
+                        @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){IdeationQuestionID = Model.Id, ParentID =
+                                grandchild.Id})
+                        
+                        <div class="row">
+                          @foreach (Idea finalReaction in ProjectService.CollectThreadIdeas(Model).Where(i => 
+                              i.ParentIdea.Id == grandchild.Id))
+                          {
+                            @Html.Partial("Thread/_CollectIdea", finalReaction)
+                          }  
                         </div>
-                        <div class="col-6">
-                            <p>@ViewData["Message"]</p>
-                        </div>
-                    </div>
-                }
-            </div>
-            <hr/>
-        }
+                    }
+                </div>
+            }
+        </div>
+        <hr/>
     }
 </div>

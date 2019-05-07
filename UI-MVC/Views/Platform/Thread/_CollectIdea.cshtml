@@ -1,0 +1,74 @@
+@inject UIMVC.Services.UserService UserService
+@inject UserManager<UIMVCUser> UserManager
+@using Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@model Domain.UserInput.Idea
+
+@if (Model.IsDeleted)
+{
+<div class="row">
+    <h4>[Verwijderd]</h4>
+</div>
+<hr/>
+}
+
+@if (!Model.IsDeleted)
+{
+<div class="row">
+    <h4>@Model.Title</h4>
+</div>
+<div class="row">
+    @if (!Model.VerifiedUser)
+    {
+        @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+        {
+            likeCount = Model.VoteCount,
+            shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 4,
+            Username = UserService.CollectUserName(Model.User.Id)
+        })
+    }
+            
+    @if (Model.VerifiedUser)
+    {
+        @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+        {
+            likeCount = Model.VoteCount,
+            shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 5,
+            Username = UserService.CollectUserName(Model.User.Id)
+        })
+    }
+</div>
+<div class="row">
+    @if (Model.Field != null)
+    {
+        <p>@Model.Field.Text</p>
+    }
+            
+    @if (Model.Cfield != null)
+    {
+        <ul>
+            @foreach (string o in Model.Cfield.Options)
+            {
+                <li>@o</li>
+            }
+        </ul>
+    }
+    @* TODO Fields buiten CField & Field *@
+</div>
+}
+
+<div class="row">
+    @* TODO actionbuttons hero *@
+    @if (!UserManager.GetUserId(User).Equals(Model.User.Id))
+    {
+        <div class="row">
+            <div class="col-6">
+                @Html.ActionLink("Stem op dit idee! ", "AddVote", "Platform",
+                    new {idea = Model.Id, user = UserManager.GetUserId(User), thread = Model.Id})
+            </div>
+            <div class="col-6">
+                <p>@ViewData["Message"]</p>
+            </div>
+        </div>
+    }
+</div>
