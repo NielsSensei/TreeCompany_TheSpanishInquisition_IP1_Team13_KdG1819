@@ -110,7 +110,7 @@ namespace DAL
         
         private int FindNextAvailableIdeationId()
         {               
-            int newId = ReadAll().Max(ideation => ideation.Id)+1;
+            int newId = ctx.Modules.Max(q => q.ModuleID) + 1;
             return newId;
         }
         #endregion

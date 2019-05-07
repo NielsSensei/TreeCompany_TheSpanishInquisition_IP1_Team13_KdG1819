@@ -81,6 +81,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  margin-bottom: .5em;
 }
 
 .svg-icon {
@@ -170,11 +171,7 @@
   margin: 1rem;
 }
 
-/* CollectProject */
-#projectView {
-  display: flex;
-  margin: 1rem;
-}
+
 
 /* Module.cshtml */
 #modulePart {

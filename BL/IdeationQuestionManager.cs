@@ -148,7 +148,11 @@ namespace BL
         {
             return IdeationQuestionRepo.ReadAllFields(ideaID);
         }
-        
+
+        public void RemoveFields(int ideaID)
+        {
+            IdeationQuestionRepo.DeleteFields(ideaID);
+        }
         // Added by NVZ
         // Report
         public void RemoveReport(int id)
@@ -156,6 +160,10 @@ namespace BL
             IdeationQuestionRepo.DeleteReport(id);
         }
         
+        public void RemoveReports(int ideaID)
+        {
+            IdeationQuestionRepo.DeleteReports(ideaID);   
+        }
         public void EditReport(Report obj)
         {
             IdeationQuestionRepo.Update(obj);
