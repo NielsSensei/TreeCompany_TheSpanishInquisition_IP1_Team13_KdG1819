@@ -27,6 +27,14 @@
     </div>
     <hr/>
     <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
+    <a class="btn btn-outline-primary">Voeg zelf jouw idee toe</a>
+    <div class="row" id="newIdea">
+        <form asp-controller="Thread" asp-action="AddIdea" asp-route-ideationQuestion="@Model.Id" 
+              asp-route-user="@UserManager.GetUserId(User)">
+            <label>Titel:</label>
+            <input class="form-control"></input>
+        </form>
+    </div>
     <p>@ViewData["Message"]</p>
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
@@ -84,8 +92,11 @@
             </div>
             <div class="row justify-content-center">
                 @* TODO actionbuttons hero *@
-                @Html.ActionLink("Stem op dit idee!","AddVote","Platform", 
-                    new { idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id })
+                @if (UserManager.GetUserId(User).Equals(idea.User.Id))
+                {
+                    @Html.ActionLink("Stem op dit idee!","AddVote","Platform", 
+                        new { idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id })
+                }
             </div>
             <hr/>
         }

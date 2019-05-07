@@ -133,7 +133,8 @@ namespace UIMVC.Controllers
         public IActionResult PublishQuestionnaire(int questionnaireId)
         {
 
-            return View(modMgr.GetModule(questionnaireId, false, true));
+            //return View(modMgr.GetModule(questionnaireId, false, true));
+            return null;
         }
 
         [HttpGet]
