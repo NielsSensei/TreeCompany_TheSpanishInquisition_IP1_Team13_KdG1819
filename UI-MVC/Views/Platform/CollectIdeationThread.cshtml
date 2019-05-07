@@ -27,7 +27,21 @@
     </div>
     <hr/>
     <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
-    <p>@ViewData["Message"]</p>
+    <div class="row" id="newIdea">
+        <form asp-controller="Thread" asp-action="AddIdea" asp-route-ideationQuestion="@Model.Id"
+              asp-route-user="@UserManager.GetUserId(User)" asp-route-parent="0">
+            <div class="form-group">
+                <label>Titel:</label>
+                @Html.TextBox("newIdeaTitle","", new { @class="form-control"})
+            </div>
+            @* Voorlopig enkel gewoon Field *@
+            <div class="form-group">
+                <label>Text:</label>
+                @Html.TextBox("newIdeaField","", new { @class="form-control"})
+            </div>
+            <button class="btn btn-outline-primary" type="submit">Voeg zelf jouw idee toe</button>
+        </form>
+    </div>
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {
@@ -84,8 +98,18 @@
             </div>
             <div class="row justify-content-center">
                 @* TODO actionbuttons hero *@
-                @Html.ActionLink("Stem op dit idee!","AddVote","Platform", 
-                    new { idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id })
+                @if (!UserManager.GetUserId(User).Equals(idea.User.Id))
+                {
+                    <div class="row">
+                        <div class="col-6">
+                            @Html.ActionLink("Stem op dit idee! ", "AddVote", "Platform",
+                            new {idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id})
+                        </div>
+                        <div class="col-6">
+                            <p>@ViewData["Message"]</p>
+                        </div>
+                    </div>
+                }
             </div>
             <hr/>
         }

@@ -251,6 +251,7 @@ namespace UIMVC.Controllers
                 {
                     _ideaMgr.RemoveFields(idea.Id);
                     _ideaMgr.RemoveReports(idea.Id);
+                    _ideaMgr.RemoveVotes(idea.Id);
                     _ideaMgr.RemoveIdea(idea.Id);
                 }
 

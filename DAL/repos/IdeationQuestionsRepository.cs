@@ -40,7 +40,7 @@ namespace DAL.repos
 
         private IdeasDTO ConvertToDTO(Idea obj)
         {
-            return new IdeasDTO
+            IdeasDTO DTO =  new IdeasDTO()
             {
                 IdeaID = obj.Id,
                 IQuestionID = obj.IdeaQuestion.Id,
@@ -54,10 +54,20 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
-                IsDeleted = obj.IsDeleted,
-                ParentID = obj.ParentIdea.Id,
-                DeviceID = obj.Device.Id
+                IsDeleted = obj.IsDeleted
             };
+
+            if (obj.ParentIdea == null)
+            {
+                DTO.ParentID = 0;
+            }
+
+            if (obj.Device == null)
+            {
+                DTO.DeviceID = 0;
+            }
+            
+            return DTO;
         }
 
         private IdeaFieldsDTO ConvertToDTO(Field obj)
@@ -249,6 +259,13 @@ namespace DAL.repos
             int newId = ReadAllReports().Max(report => report.Id)+1;
             return newId;
         }
+
+        private int FindNextAvailableFieldId()
+        {
+            if (!ctx.IdeaFields.Any()) return 1;
+            int newId = ReadAllFields().Max(field => field.Id)+1;
+            return newId;
+        }
         #endregion
 
         // Added by NVZ
@@ -338,16 +355,40 @@ namespace DAL.repos
                         i.Id + " met titel " + i.Title + ".");
                 }
             }
-
-            idea.Visible = true;
+            
             idea.Id = FindNextAvailableIdeaId();
            
             ctx.Ideas.Add(ConvertToDTO(idea));
-            ctx.IdeaFields.Add(ConvertToDTO(idea.Field));
-            ctx.IdeaFields.Add(ConvertToDTO(idea.Cfield));
-            ctx.IdeaFields.Add(ConvertToDTO(idea.Ifield));
-            ctx.IdeaFields.Add(ConvertToDTO(idea.Vfield));
-            ctx.IdeaFields.Add(ConvertToDTO(idea.Mfield));
+
+            if (idea.Field != null)
+            {
+                idea.Field.Id = FindNextAvailableFieldId();
+                ctx.IdeaFields.Add(ConvertToDTO(idea.Field));   
+            }
+
+            if (idea.Cfield != null)
+            {
+                idea.Cfield.Id = FindNextAvailableFieldId();
+                ctx.IdeaFields.Add(ConvertToDTO(idea.Cfield)); 
+            }
+            
+            if (idea.Ifield != null)
+            {
+                idea.Ifield.Id = FindNextAvailableFieldId();
+                ctx.IdeaFields.Add(ConvertToDTO(idea.Ifield));
+            }
+            
+            if (idea.Vfield != null)
+            {
+                idea.Vfield.Id = FindNextAvailableFieldId();
+                ctx.IdeaFields.Add(ConvertToDTO(idea.Vfield));
+            }
+            
+            if (idea.Mfield != null)
+            {
+                idea.Mfield.Id = FindNextAvailableFieldId();
+                ctx.IdeaFields.Add(ConvertToDTO(idea.Mfield));
+            }
 
             ctx.SaveChanges();
 
