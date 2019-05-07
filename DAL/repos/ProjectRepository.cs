@@ -269,6 +269,8 @@ namespace DAL
         {
             return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectID);
         }
+
+        
         #endregion
         
         // Added by NVZ
