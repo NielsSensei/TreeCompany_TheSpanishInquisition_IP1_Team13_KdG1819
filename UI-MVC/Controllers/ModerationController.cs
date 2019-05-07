@@ -32,7 +32,7 @@ namespace UIMVC.Controllers
         }
 
         #region AddPlatform
-        
+
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize]
@@ -90,10 +90,10 @@ namespace UIMVC.Controllers
 
             ViewData["Phases"] = availablePhases;
             ViewData["Project"] = project;
-           
+
             return View();
         }
-        
+
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
@@ -104,7 +104,7 @@ namespace UIMVC.Controllers
                 return BadRequest("Ideation can't be null");
             }
 
-            Ideation i = new Ideation() 
+            Ideation i = new Ideation()
             {
                 Project = new Project() {Id = project},
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
@@ -113,17 +113,17 @@ namespace UIMVC.Controllers
                 Title = cim.Title,
                 OnGoing = true
             };
-            
+
             if (cim.ExtraInfo != null)
             {
-                i.ExtraInfo = cim.ExtraInfo;  
+                i.ExtraInfo = cim.ExtraInfo;
             }
-            
+
             _moduleMgr.MakeIdeation(i);
-            
+
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
-        
+
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpGet]
@@ -133,7 +133,7 @@ namespace UIMVC.Controllers
 
             return View();
         }
-        
+
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
@@ -143,12 +143,12 @@ namespace UIMVC.Controllers
             {
                 return BadRequest("Tag can't be null");
             }
-            
+
             _moduleMgr.MakeTag(tag, ideation, false);
-            
+
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
-        
+
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpGet]
@@ -181,6 +181,30 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        public IActionResult DestroyIdeation(int id)
+        {
+            Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
+
+            List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
+            foreach (IdeationQuestion iq in iqs)
+            {
+                List<Idea> ideas = _ideaMgr.GetIdeas(iq.Id);
+                foreach (Idea idea in ideas)
+                {
+                    _ideaMgr.RemoveFields(idea.Id);
+                    _ideaMgr.RemoveReports(idea.Id);
+                    _ideaMgr.RemoveIdea(idea.Id);
+                }
+
+                _ideaMgr.RemoveQuestion(iq.Id);
+            }
+
+            _moduleMgr.RemoveModule(id, i.Project.Id, false);
+
+            return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
+        }
         #region Ideas
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
@@ -277,7 +301,11 @@ namespace UIMVC.Controllers
         [Authorize]
         public IActionResult DestroyIdea(int idea)
         {
-            _ideaMgr.RemoveIdea(idea);
+            Idea toDelete = _ideaMgr.GetIdea(idea);
+            toDelete.IsDeleted = true;
+
+            _ideaMgr.EditIdea(toDelete);
+
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
         }
 
@@ -332,16 +360,16 @@ namespace UIMVC.Controllers
         public async Task<IActionResult> ToggleBanUser(string userId)
         {
             UIMVCUser userFound = await _userManager.FindByIdAsync(userId);
-            
+
             if (userFound == null) return RedirectToAction("CollectAllUsers");
-            
+
             userFound.Banned = !userFound.Banned;
             var result = await _userManager.UpdateAsync(userFound);
-                
+
             return RedirectToAction("CollectAllUsers");
             // This part is still borked.
         }
-        
+
         [HttpGet]
         [Authorize]
         public IActionResult VerifyUser(string userId)
