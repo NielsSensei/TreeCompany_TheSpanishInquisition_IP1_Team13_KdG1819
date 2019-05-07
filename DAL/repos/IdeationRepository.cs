@@ -185,6 +185,11 @@ namespace DAL
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
             }
+            
+            if (newModule.PhaseID != foundModule.PhaseID)
+            {
+                foundModule.PhaseID = newModule.PhaseID;
+            }
 
             ctx.SaveChanges();
         }

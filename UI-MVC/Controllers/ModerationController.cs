@@ -76,7 +76,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in allPhases)
             {
-                if (_moduleMgr.GetModule(phase.Id, project) == null)
+                if (_moduleMgr.GetQuestionnaire(phase.Id, project) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -185,28 +185,38 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult ChangeIdeation(int id)
         {
-            Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
+            Ideation i = _moduleMgr.GetIdeation(id);
 
             ViewData["Project"] = i.Project.Id;
+            ViewData["Ideation"] = id;
+            AlterIdeationModel aim = new AlterIdeationModel()
+            {
+                Title = i.Title,
+                ExtraInfo = i.ExtraInfo
+            };
             
-            return View(i);
+            return View(aim);
         }
 
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
-        public IActionResult ChangeIdeation(Ideation ideation)
+        public IActionResult ChangeIdeation(AlterIdeationModel aim, int ideation)
         {
-            _moduleMgr.EditModule(ideation);
+            Ideation i = _moduleMgr.GetIdeation(ideation);
+            i.Title = aim.Title;
+            i.ExtraInfo = aim.ExtraInfo;
             
-            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation.Id});
+            _moduleMgr.EditModule(i);
+            
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
         
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         public IActionResult DestroyIdeation(int id)
         {
-            Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
+            Ideation i = _moduleMgr.GetIdeation(id);
             
             List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
             foreach (IdeationQuestion iq in iqs)

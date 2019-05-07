@@ -102,8 +102,7 @@ namespace BL
             ProjectRepo.Update(alteredProject);
             if (newPhase.Module != null)
             {
-                var moduleType = newPhase.Module.GetType() == typeof(Questionnaire);
-                var alteredModule = ModuleMan.GetModule(newPhase.Module.Id, false, moduleType);
+                var alteredModule = ModuleMan.GetQuestionnaire(newPhase.Module.Id, false);
                 alteredModule.Phases.Add(newPhase);
                 //ModuleMan.EditModule(alteredModule);
             }
@@ -116,8 +115,7 @@ namespace BL
             alteredProject.Phases.Remove(removedPhase);
             if (removedPhase.Module != null)
             {
-                var moduleType = removedPhase.Module.GetType() == typeof(Questionnaire);
-                var alteredModule = ModuleMan.GetModule(removedPhase.Module.Id, false, moduleType);
+                var alteredModule = ModuleMan.GetQuestionnaire(removedPhase.Module.Id, false);
                 alteredModule.Phases.Remove(removedPhase);
                 //ModuleMan.EditModule(alteredModule);
             }

@@ -38,7 +38,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in projMgr.GetAllPhases(projectId).ToList())
             {
-                if(modMgr.GetModule(phase.Id, projectId) == null)
+                if(modMgr.GetQuestionnaire(phase.Id, projectId) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -93,7 +93,7 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid)
         {
-            ViewData["Questionnaire"] = modMgr.GetModule(questionnaireid, false, true);
+            ViewData["Questionnaire"] = modMgr.GetQuestionnaire(questionnaireid, false);
             return View(new QuestionnaireQuestion());
         }
 
@@ -103,7 +103,7 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
         {
-            Questionnaire toAdd = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
+            Questionnaire toAdd = modMgr.GetQuestionnaire(questionnaireId, false);
             QuestionnaireQuestion newQuestion = new QuestionnaireQuestion
             {
 
@@ -140,7 +140,7 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
-            Questionnaire q = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
+            Questionnaire q = modMgr.GetQuestionnaire(questionnaireId, false);
             return View(q);
         }
         

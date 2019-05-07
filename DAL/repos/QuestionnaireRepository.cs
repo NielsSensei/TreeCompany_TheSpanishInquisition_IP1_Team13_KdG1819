@@ -120,6 +120,11 @@ namespace DAL
                 foundModule.Tags = newModule.Tags;
             }
 
+            if (newModule.PhaseID != foundModule.PhaseID)
+            {
+                foundModule.PhaseID = newModule.PhaseID;
+            }
+
             ctx.SaveChanges();
         }
 

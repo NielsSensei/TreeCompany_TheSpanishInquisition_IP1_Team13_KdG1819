@@ -44,13 +44,12 @@ namespace BL
          * 
          */
         //Modified by NG
-        public Module GetModule(int moduleId, bool details, bool questionnaire)
+        public Questionnaire GetQuestionnaire(int moduleId, bool details)
         {
-            if (questionnaire)
-            {
-                return QuestionnaireRepo.Read(moduleId, details);
-            } 
+             return QuestionnaireRepo.Read(moduleId, details);
+        } 
 
+        public Ideation GetIdeation(int moduleId){
             return IdeationRepo.ReadWithModule(moduleId);            
         }
 
@@ -61,7 +60,7 @@ namespace BL
          * Indien hij daar ook een exception geeft weten we dat de fase 'vrij' is. -NVZ
          * 
          */
-        public Module GetModule(int phaseId, int projectID)
+        public Module GetQuestionnaire(int phaseId, int projectID)
         {
             try
             {      
