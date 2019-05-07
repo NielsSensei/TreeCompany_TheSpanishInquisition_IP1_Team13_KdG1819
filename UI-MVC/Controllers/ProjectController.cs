@@ -16,11 +16,13 @@ namespace UIMVC.Controllers
     public class ProjectController : Controller
     {
         private ProjectManager _mgr;
+        private ModuleManager _modMan;
         private PlatformManager _mgrPlatform;
         private readonly UserManager<UIMVCUser> _userManager;
 
         public ProjectController(UserManager<UIMVCUser> userManager)
         {
+            _modMan = new ModuleManager();
             _mgr = new ProjectManager();
             _mgrPlatform = new PlatformManager();
             _userManager = userManager;
@@ -105,10 +107,20 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult DestroyProject(int id)
         {
+            var modController = new ModerationController(_userManager);
+            
             Project project = _mgr.GetProject(id, false);
             int platformId = project.Platform.Id;
 
             project.Phases = (List<Phase>) _mgr.GetAllPhases(project.Id);
+            
+            /*if (project.Modules.Count != 0)
+            {
+                foreach (var module in project.Modules)
+                {
+                    modController.DestroyIdeation(module.Id);
+                }
+            }*/
 
             foreach (var phase in project.Phases)
             {
