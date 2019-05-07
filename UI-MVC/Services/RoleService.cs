@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Domain.Identity;
 using Domain.Users;
@@ -61,11 +62,11 @@ namespace UIMVC.Services
 
         #region AuthorizationHTML
         // Check if it's this type of user OR higher
-        public async Task<bool> IsModerator(UIMVCUser user)
+        public async Task<bool> IsModerator(ClaimsPrincipal user)
         {
-            if (await _userManager.IsInRoleAsync(user, "MODERATOR") ||
-                await _userManager.IsInRoleAsync(user, "ADMIN") ||
-                await _userManager.IsInRoleAsync(user, "SUPERADMIN"))
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "MODERATOR") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "ADMIN") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
             {
                 return true;
             }
@@ -74,10 +75,10 @@ namespace UIMVC.Services
             
         }
         
-        public async Task<bool> IsAdmin(UIMVCUser user)
+        public async Task<bool> IsAdmin(ClaimsPrincipal user)
         {
-            if (await _userManager.IsInRoleAsync(user, "ADMIN") ||
-                await _userManager.IsInRoleAsync(user, "SUPERADMIN"))
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "ADMIN") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
             {
                 return true;
             }
@@ -85,9 +86,9 @@ namespace UIMVC.Services
             return false;
         }
         
-        public async Task<bool> IsSuperAdmin(UIMVCUser user)
+        public async Task<bool> IsSuperAdmin(ClaimsPrincipal user)
         {
-            if (await _userManager.IsInRoleAsync(user, "SUPERADMIN"))
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
             {
                 return true;
             }

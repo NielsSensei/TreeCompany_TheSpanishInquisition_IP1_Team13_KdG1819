@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using UIMVC.Models;
 
 namespace UIMVC.Controllers
@@ -30,6 +31,7 @@ namespace UIMVC.Controllers
 
         //Listing some basic methods that map to the functionalities described in YouTrack
         [HttpGet]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaire(int projectId)
         {
             Project toAddQuestionnaireTo = projMgr.GetProject(projectId, true);
@@ -54,6 +56,7 @@ namespace UIMVC.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
         {
             if(cqm == null)
@@ -91,6 +94,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid)
         {
             ViewData["Questionnaire"] = modMgr.GetModule(questionnaireid, false, true);
@@ -101,6 +105,7 @@ namespace UIMVC.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
         {
             Questionnaire toAdd = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
@@ -138,6 +143,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
             Questionnaire q = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);

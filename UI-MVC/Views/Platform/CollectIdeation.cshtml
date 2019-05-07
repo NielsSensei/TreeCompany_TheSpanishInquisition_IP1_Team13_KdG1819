@@ -1,8 +1,13 @@
+@using Domain.Identity
 @using Domain.UserInput
+@using Domain.Users
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @using UIMVC.Services
 @model Domain.Projects.Ideation
 @inject UserService Userservice
 @inject QuestionService Questionservice
+@inject RoleService RoleService
 
 @{
     Layout = "_Layout";
@@ -25,6 +30,10 @@
                 shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
             })
             <p>@Model.ExtraInfo</p>
+            @if (RoleService.IsAdmin(User).Result)
+            {
+                <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
+            }
             @if (Model.Event.Id != 0)
             {
                 @* TODO Zorgt voor een eventPagina *@
@@ -34,13 +43,25 @@
                 <h6 class="font-weight-bold">Tags:</h6>
 
                 <div class="row justify-content-start">
-                    @Html.Partial("_TagsPartial", Model.Tags)
+                    @if (Model.Tags.Any())
+                    {
+                        @Html.Partial("_TagsPartial", Model.Tags)
+                    }
+                    else
+                    {
+                        <p>Geen tags gevonden</p>
+                    }
+
                     @* TODO zet hier ne rolecheck op *@
-                    <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
-                       formmethod="get" asp-route-ideation="@Model.Id">
-                        @*TODO hier met een menuke*@
-                        nieuwe tag
-                    </a>
+                    @if (RoleService.IsAdmin(User).Result)
+                    {
+                        <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
+                           formmethod="get" asp-route-ideation="@Model.Id">
+                            @*TODO hier met een menuke*@
+                            nieuwe tag
+                        </a>
+                    }
+
                 </div>
             </section>
         </div>
@@ -69,10 +90,13 @@
                     <h1>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</h1>
                 }
             </div>
-            <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
-               asp-route-ideation="@Model.Id">
-                Stel een nieuwe centrale vraag
-            </a>
+            @if (RoleService.IsAdmin(User).Result)
+            {
+                <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
+                   asp-route-ideation="@Model.Id">
+                    Stel een nieuwe centrale vraag
+                </a>
+            }
         </div>
         <section class="card-columns">
             @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))
@@ -89,25 +113,23 @@
                     <div class="card-footer text-center">
                         <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
                     </div>
-                </div>     
+                </div>
             }
         </section>
     </section>
 </section>
-<hr/>
-<div class="col-md-3">
-    <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
-</div>
 <div id="menu">
     <div class="row">
         <div class="col-md-10">
             <div class="row">
-              <h1>Verwijderen van een ideation</h1>
-              <p>Ben je zeker?</p>  
+                <h1>Verwijderen van een ideation</h1>
+                <p>Ben je zeker?</p>
             </div>
             <div class="row">
                 <a asp-controller="Moderation" asp-action="DestroyIdeation" asp-route-id="@Model.Id"
-                        type="button" class="btn btn-primary">Bevestig</a>
+                   type="button" class="btn btn-primary">
+                    Bevestig
+                </a>
                 <button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
             </div>
         </div>
