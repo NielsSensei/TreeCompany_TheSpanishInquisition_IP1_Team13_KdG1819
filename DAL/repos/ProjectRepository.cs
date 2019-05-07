@@ -98,12 +98,24 @@ namespace DAL
 
         private int FindNextAvailableProjectId()
         {
-            int newId = ReadAll().Max(platform => platform.Id) + 1;
-            return newId;
+            if (ReadAll().Count() == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                int newId = ReadAll().Max(platform => platform.Id) + 1;
+                return newId;
+            }
+            
         }
 
         private int FindNextAvailablePhaseId()
         {
+            if (ReadAllPhases().Count() == 0)
+            {
+                return 1;
+            }
             int newId = ReadAllPhases().Max(platform => platform.Id) + 1;
             return newId;
         }
@@ -128,15 +140,18 @@ namespace DAL
         {
             IEnumerable<Project> projects = ReadAllForPlatform(obj.Platform.Id);
 
-            foreach (Project p in projects)
+            if (projects != null)
             {
-                // TODO: 2 projecten Park Noord en Park Zuid geven een DuplicateNameException
-                if (ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
+                foreach (Project p in projects)
                 {
-                    throw new DuplicateNameException(
-                        "Dit project bestaat al of is misschien gelijkaardig. Project(ID=" + obj.Id +
-                        ") dat je wil aanmaken: " +
-                        obj.Title + ". Project(ID=" + p.Title + ") dat al bestaat: " + p.Title + ".");
+                    // TODO: 2 projecten Park Noord en Park Zuid geven een DuplicateNameException
+                    if (ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
+                    {
+                        throw new DuplicateNameException(
+                            "Dit project bestaat al of is misschien gelijkaardig. Project(ID=" + obj.Id +
+                            ") dat je wil aanmaken: " +
+                            obj.Title + ". Project(ID=" + p.Title + ") dat al bestaat: " + p.Title + ".");
+                    }
                 }
             }
 
@@ -164,7 +179,6 @@ namespace DAL
                 ? ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectID == id)
                 : ctx.Projects.FirstOrDefault(p => p.ProjectID == id);
             ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
-
             return ConvertToDomain(projectsDTO);
         }
 
@@ -172,8 +186,8 @@ namespace DAL
         {
             ProjectsDTO newProj = ConvertToDTO(obj);
             newProj.CurrentPhaseID = obj.CurrentPhase.Id;
-            ProjectsDTO foundProj = ctx.Projects.First(p => p.ProjectID == obj.Id);
 
+            ProjectsDTO foundProj = ctx.Projects.First(p => p.ProjectID == obj.Id);
             if (foundProj != null)
             {
                 foundProj.Title = newProj.Title;
@@ -201,7 +215,7 @@ namespace DAL
         public IEnumerable<Project> ReadAll()
         {
             List<Project> myQuery = new List<Project>();
-
+            
             foreach (ProjectsDTO DTO in ctx.Projects)
             {
                 myQuery.Add(ConvertToDomain(DTO));
@@ -217,15 +231,14 @@ namespace DAL
 
         #endregion
 
-        // Added by NVZ
-        // Phase CRUD
+// Added by NVZ
+// Phase CRUD
 
         #region
 
         public Phase Create(Phase obj)
         {
             IEnumerable<Phase> phases = ReadAllPhases(obj.Project.Id);
-
             foreach (Phase p in phases)
             {
                 if (p.StartDate > obj.StartDate && p.EndDate < obj.EndDate)
@@ -240,7 +253,6 @@ namespace DAL
             obj.Id = FindNextAvailablePhaseId();
             ctx.Phases.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
-
             return obj;
         }
 
@@ -251,7 +263,6 @@ namespace DAL
                 ? ctx.Phases.AsNoTracking().First(p => p.PhaseID == phaseID)
                 : ctx.Phases.First(p => p.PhaseID == phaseID);
             ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phaseID);
-
             return ConvertToDomain(phasesDTO);
         }
 
@@ -279,7 +290,6 @@ namespace DAL
         public IEnumerable<Phase> ReadAllPhases()
         {
             List<Phase> myQuery = new List<Phase>();
-
             foreach (PhasesDTO DTO in ctx.Phases)
             {
                 myQuery.Add(ConvertToDomain(DTO));
@@ -295,40 +305,40 @@ namespace DAL
 
         #endregion
 
-        // Added by NVZ
-        // Images CRUD
-        // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
+// Added by NVZ
+// Images CRUD
+// TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
 
         #region
 
         public Image Create(Image obj)
         {
-            /* if (!images.Contains(obj))
-            {
-                images.Add(obj);
-            } */
+/* if (!images.Contains(obj))
+{
+    images.Add(obj);
+} */
             throw new DuplicateNameException("This Image already exists!");
         }
 
         public Image Read(int projectID, int imageID)
         {
-            /* Image i = Read(projectID).PreviewImages.ToList()[imageID - 1];
-            if (i != null)
-            {
-                return i;
-            } */
+/* Image i = Read(projectID).PreviewImages.ToList()[imageID - 1];
+if (i != null)
+{
+    return i;
+} */
             throw new KeyNotFoundException("This Image can't be found!");
         }
 
         public void Update(Image obj)
         {
-            //DeleteImage(obj);
-            //Create(obj);
+//DeleteImage(obj);
+//Create(obj);
         }
 
         public void DeleteImage(Image obj)
         {
-            //images.Remove(obj);
+//images.Remove(obj);
         }
 
         #endregion
