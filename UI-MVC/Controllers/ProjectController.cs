@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using BL;
 using DAL.Data_Transfer_Objects;
 using Domain.Identity;
@@ -9,6 +10,7 @@ using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using UIMVC.Models;
 
 namespace UIMVC.Controllers
@@ -40,7 +42,7 @@ namespace UIMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddProject(ProjectViewModel pvm, int platform)
+        public IActionResult AddProject(CreateProjectModel pvm, int platform)
         {
             UIMVCUser projectUser = _userManager.GetUserAsync(HttpContext.User).Result;
             if (pvm == null)
@@ -87,16 +89,24 @@ namespace UIMVC.Controllers
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
             }
 
-            return View(project);
+            ViewData["Project"] = project;
+            return View();
         }
 
         [HttpPost]
         //[Authorize]
-        public IActionResult ChangeProject(Project project)
+        public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
-            _mgr.EditProject(project);
+            Project updateProj = _mgr.GetProject(id, false);
+
+            updateProj.Title = epm.Title;
+            updateProj.Goal = epm.Goal;
+            updateProj.StartDate = epm.StartDate;
+            updateProj.EndDate = epm.EndDate;
+
+            _mgr.EditProject(updateProj);
             // TODO: make the redirect work
-            return RedirectToAction("Index", "Platform", new {id = project.Platform.Id});
+            return RedirectToAction("Index", "Platform", new {id = updateProj.Platform.Id});
         }
 
         #endregion
@@ -108,12 +118,12 @@ namespace UIMVC.Controllers
         public IActionResult DestroyProject(int id)
         {
             var modController = new ModerationController(_userManager);
-            
+
             Project project = _mgr.GetProject(id, false);
             int platformId = project.Platform.Id;
 
             project.Phases = (List<Phase>) _mgr.GetAllPhases(project.Id);
-            
+
             /*if (project.Modules.Count != 0)
             {
                 foreach (var module in project.Modules)

@@ -26,8 +26,6 @@ namespace UIMVC.Controllers
         }
 
 
-
-
         //Listing some basic methods that map to the functionalities described in YouTrack
         [HttpGet]
         public IActionResult AddQuestionnaire(int projectId)
@@ -38,7 +36,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in projMgr.GetAllPhases(projectId).ToList())
             {
-                if(modMgr.GetModule(phase.Id, projectId) == null)
+                if (modMgr.GetModule(phase.Id, projectId) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -56,14 +54,13 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult AddQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
         {
-            if(cqm == null)
+            if (cqm == null)
             {
                 return BadRequest("Questionnaire cannot be NULL!");
             }
 
             Project questionnaireProject = projMgr.GetProject(projectId, false);
             Phase parentPhase = projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
-
 
 
             Questionnaire newQuestionnaire = new Questionnaire
@@ -87,7 +84,7 @@ namespace UIMVC.Controllers
             newQuestionnaire.Phases.Add(parentPhase);
             modMgr.MakeQuestionnaire(newQuestionnaire);
 
-            return RedirectToAction("EditQuestionnaire",new { questionnaireId = newQuestionnaire.Id});
+            return RedirectToAction("EditQuestionnaire", new {questionnaireId = newQuestionnaire.Id});
         }
 
         [HttpGet]
@@ -98,24 +95,18 @@ namespace UIMVC.Controllers
         }
 
 
-
-
         [HttpPost]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
         {
             Questionnaire toAdd = (Questionnaire) modMgr.GetModule(questionnaireId, false, true);
             QuestionnaireQuestion newQuestion = new QuestionnaireQuestion
             {
-
                 QuestionText = qQ.QuestionText,
                 QuestionType = qQ.QuestionType,
                 Module = toAdd,
                 Questionnaire = toAdd,
                 Optional = qQ.Optional,
                 Answers = new List<Answer>()
-
-
-
             };
 
             toAdd.Questions.Add(qQ);
@@ -123,17 +114,13 @@ namespace UIMVC.Controllers
             modMgr.EditModule(toAdd);
 
             return RedirectToAction("AddQuestionnaire", toAdd.Id);
-
-            
-
-            
         }
 
         [HttpGet]
         public IActionResult PublishQuestionnaire(int questionnaireId)
         {
-
-            return View(modMgr.GetModule(questionnaireId, false, true));
+            //return View(modMgr.GetModule(questionnaireId, false, true));
+            return null;
         }
 
         [HttpGet]
@@ -148,7 +135,6 @@ namespace UIMVC.Controllers
             {
                 question.Answers = qqMgr.GetAnswers(question.Id);
             }
-
 
 
             foreach (Phase phase in projMgr.GetAllPhases(q.Project.Id).ToList())
@@ -171,7 +157,7 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult EditQuestionnaire(EditQuestionnaireModel eqm, int questionnaireid)
         {
-            Questionnaire toBeUpdated = (Questionnaire)modMgr.GetModule(questionnaireid, false, true);
+            Questionnaire toBeUpdated = (Questionnaire) modMgr.GetModule(questionnaireid, false, true);
 
             Phase parentPhase = new Phase();
             String parentPhaseContent = Request.Form["ParentPhase"];
@@ -182,34 +168,30 @@ namespace UIMVC.Controllers
                 parentPhase.Module = toBeUpdated;
 
 
-
                 Phase previousParent = projMgr.GetPhase(toBeUpdated.ParentPhase.Id);
                 previousParent.Module = null;
 
-                
+
                 toBeUpdated.ParentPhase = parentPhase;
                 projMgr.EditPhase(previousParent);
-
             }
             else
             {
                 parentPhase = toBeUpdated.ParentPhase;
             }
 
-            if(eqm.VoteLevel != null)
+            if (eqm.VoteLevel != null)
             {
                 toBeUpdated.VoteLevel = eqm.VoteLevel;
             }
-                             
+
             toBeUpdated.OnGoing = eqm.OnGoing;
             toBeUpdated.Title = eqm.Title;
-            
-            
+
+
             modMgr.EditModule(toBeUpdated);
 
-            return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});
+            return RedirectToAction("EditQuestionnaire", new {questionnaireId = questionnaireid});
         }
-
-
     }
 }

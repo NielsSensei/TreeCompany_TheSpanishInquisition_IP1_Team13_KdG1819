@@ -1,80 +1,48 @@
-@model Domain.Projects.Project
-
+@using Domain.Projects
+@model UIMVC.Models.EditProjectModel
 @{
-    ViewBag.Title = "Change: " + Model.Title;
+
+    Project project = (Project) ViewData["Project"];
+
     Layout = "_Layout";
+    ViewBag.Title = "Change: " + project.Title;
 }
 
-<h2>Aanpassen van @Model.Title</h2>
+<h2>Aanpassen van @project.Title</h2>
 
-
-<form asp-controller="Project" asp-action="ChangeProject" method="post" asp-route-project="@Model">
+<form asp-controller="Project" asp-action="ChangeProject" method="post" asp-route-epm="@Model" asp-route-id="@project.Id">
     <div class="form-row">
+
+
         <div class="form-group col-md-12">
             <label asp-for="Title">Naam</label>
-            <input asp-for="Title" class="form-control" value="@Model.Title"/>
+            <input asp-for="Title" class="form-control" value="@project.Title"/>
+        </div>
+        <div class="form-group col-md-12">
+            <label asp-for="Goal">Doel</label>
+            <input asp-for="Goal" class="form-control" value="@project.Goal"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="StartDate">Startdatum</label>
-            <input type="date" asp-for="StartDate" class="form-control" value="@Model.StartDate"/>
+            <input type="date" asp-for="StartDate" class="form-control" value="@project.StartDate"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="EndDate">Einddatum</label>
-            <input type="date" asp-for="EndDate" class="form-control" value="@Model.EndDate"/>
+            <input type="date" asp-for="EndDate" class="form-control" value="@project.EndDate"/>
         </div>
+
         <div class="form-group col-md-6">
-            <label asp-for="Goal">Doel</label>
-            <input asp-for="Goal" class="form-control" value="@Model.Goal"/>
+            <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
         </div>
-        <div class="form-group col-md-6">
-            <label asp-for="Status">Status</label>
-            <input asp-for="Status" class="form-control" value="@Model.Status"/>
-        </div>
-
     </div>
-    <div class="form-group">
-        <input type="checkbox" asp-for="Visible" value="@Model.Visible"/>
-        <label asp-for="Visible">Zichtbaar</label>
-    </div>
-
-
-    @{
-        for (int i = 0; i < @Model.Phases.Count; i++)
-        {
-            <h5>Phase @(i + 1)</h5>
-
-            <div class="form-row" id="phases">
-                <div class="form-group col-md-12">
-                    <label asp-for="Phases[i].Description">Beschrijving</label>
-                    <input asp-for="Phases[i].Description" class="form-control" value="@Model.Phases[i].Description"/>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Phases[i].StartDate">Start datum</label>
-                    <input type="date" asp-for="Phases[i].StartDate" class="form-control" value="@Model.Phases[i].StartDate"/>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Phases[i].EndDate">Eind datum</label>
-                    <input type="date" asp-for="Phases[i].EndDate" class="form-control" value="@Model.Phases[i].EndDate"/>
-                </div>
-                <div class="form-group col-md-6" name="radioCurrent">
-                    @Html.RadioButtonFor(m => m.Phases[i].IsCurrent, true)
-                    <label name="current" asp-for="Phases[i].IsCurrent">Set as Current Phase</label>
-                </div>
-            </div>
-        }
-    }
-
-    <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
-
-
 
 </form>
 
 
 <div>
     <br>
-    <a class="btn btn-primary" asp-controller="Platform" asp-action="Index" asp-route-id="@Model.Platform.Id">Ga terug</a>    <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">Verwijder project</a>
 
+    <a class="btn btn-primary" asp-controller="Platform" asp-action="Index" asp-route-id="@project.Platform.Id">Ga terug</a> <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@project.Id">Verwijder project</a>
 
 
 </div>

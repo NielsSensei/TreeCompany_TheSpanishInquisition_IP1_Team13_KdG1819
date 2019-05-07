@@ -4,7 +4,7 @@ using Domain.Users;
 
 namespace UIMVC.Models
 {
-    public class ProjectViewModel
+    public class CreateProjectModel
     {
         public Project Project { get; set; }
  

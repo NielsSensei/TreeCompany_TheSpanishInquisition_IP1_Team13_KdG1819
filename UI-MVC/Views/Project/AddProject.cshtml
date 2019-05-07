@@ -1,4 +1,4 @@
-@model UIMVC.Models.ProjectViewModel
+@model UIMVC.Models.CreateProjectModel
 @{
     ViewBag.Title = "Create New Project";
     Layout = "_Layout";
@@ -35,26 +35,8 @@
         <input type="checkbox" asp-for="Project.Visible"/>
         <label asp-for="Project.Visible">Zichtbaar</label>
     </div>
-
-    <h5>Huidige Fase</h5>
-
-    @*
-    <div class="form-row">
-        <div class="form-group col-md-12">
-            <label asp-for="Project.CurrentPhase.Description">Beschrijving</label>
-            <input asp-for="Project.CurrentPhase.Description" class="form-control" value="Desciption"/>
-        </div>
-        <div class="form-group col-md-6">
-            <label asp-for="Project.CurrentPhase.StartDate">Startdatum</label>
-            <input type="date" asp-for="Project.CurrentPhase.StartDate" class="form-control" value="1/1/2019 12:00:00 AM"/>
-        </div>
-        <div class="form-group col-md-6">
-            <label asp-for="Project.CurrentPhase.EndDate">Einddatum</label>
-            <input type="date" asp-for="Project.CurrentPhase.EndDate" class="form-control" value="1/6/2019 12:00:00 AM"/>
-        </div>
-    </div>
-    *@
-
+    
+    
     @{
         for (int i = 0; i < 2; i++)
         {
@@ -77,6 +59,10 @@
                     @Html.RadioButtonFor(m => m.Phases[i].IsCurrent, true)
                     <label name="current" asp-for="Phases[i].IsCurrent">Set as Current Phase</label>
                 </div>
+                @*
+                <input asp-for="Phases[i].IsCurrent" type="radio" id="currPhase" name="currPhase" value="true" checked>
+                <label name="currPhase" asp-for="Phases[i].IsCurrent">Set as Current Phase</label>
+                *@
             </div>
         }
     }
