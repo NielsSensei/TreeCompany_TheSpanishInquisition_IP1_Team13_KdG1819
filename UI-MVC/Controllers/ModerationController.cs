@@ -341,15 +341,13 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectAllUsers");
             // This part is still borked.
         }
-        /*
-        [HttpPost]
+        
+        [HttpGet]
         [Authorize]
         public IActionResult VerifyUser(string userId)
         {
-            _userManager.VerifyUser(userId);
-            // Borked as well.
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllUsers");
-        }*/
+            throw new NotImplementedException("Roles need to be implemented");
+        }
         #endregion
     }
 }
