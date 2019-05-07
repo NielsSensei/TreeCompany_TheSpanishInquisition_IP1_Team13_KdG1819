@@ -87,12 +87,14 @@ namespace DAL
         
         private int FindNextAvailableVoteId()
         {               
-            int newId = ReadAll().Max(vote => vote.Id)+1;
+            if (!ctx.Votes.Any()) return 1;
+            int newId = ReadAll().Max(vote => vote.Id) + 1;
             return newId;
         }
         
         private int FindNextAvailableDeviceId()
-        {               
+        {          
+            if (!ctx.Devices.Any()) return 1;
             int newId = ReadAllDevices().Max(device => device.Id)+1;
             return newId;
         }

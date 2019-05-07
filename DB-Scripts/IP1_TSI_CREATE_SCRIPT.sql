@@ -71,6 +71,7 @@ CREATE TABLE Phases(
 	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
+	IsCurrent BIT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Phases PRIMARY KEY(PhaseID),
