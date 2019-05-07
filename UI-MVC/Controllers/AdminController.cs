@@ -172,9 +172,6 @@ namespace UIMVC.Controllers
         public IActionResult EditQuestionnaire(EditQuestionnaireModel eqm, int questionnaireid)
         {
             Questionnaire toBeUpdated = (Questionnaire)modMgr.GetModule(questionnaireid, false, true);
-            toBeUpdated.Phases = projMgr.GetAllPhasesForModule(toBeUpdated.Id).ToList();
-
-           
 
             Phase parentPhase = new Phase();
             String parentPhaseContent = Request.Form["ParentPhase"];
@@ -182,16 +179,14 @@ namespace UIMVC.Controllers
             if (!parentPhaseContent.Equals(""))
             {
                 parentPhase = projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
-                toBeUpdated.Phases.Add(parentPhase);
-                
+                parentPhase.Module = toBeUpdated;
+
+
 
                 Phase previousParent = projMgr.GetPhase(toBeUpdated.ParentPhase.Id);
                 previousParent.Module = null;
 
-                if (toBeUpdated.Phases.Contains(previousParent))
-                {
-                    toBeUpdated.Phases.Remove(previousParent);
-                }
+                
                 toBeUpdated.ParentPhase = parentPhase;
                 projMgr.EditPhase(previousParent);
 
@@ -200,17 +195,17 @@ namespace UIMVC.Controllers
             {
                 parentPhase = toBeUpdated.ParentPhase;
             }
+
+            if(eqm.VoteLevel != null)
+            {
+                toBeUpdated.VoteLevel = eqm.VoteLevel;
+            }
                              
             toBeUpdated.OnGoing = eqm.OnGoing;
             toBeUpdated.Title = eqm.Title;
-            toBeUpdated.VoteLevel = eqm.VoteLevel;
+            
             
             modMgr.EditModule(toBeUpdated);
-
-            
-
-            
-
 
             return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});
         }
