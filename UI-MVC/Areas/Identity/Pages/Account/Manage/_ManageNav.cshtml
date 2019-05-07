@@ -1,24 +1,55 @@
-﻿@using UIMVCUser = Domain.Identity.UIMVCUser
+﻿@using UIMVC.Services
+@using UIMVCUser = Domain.Identity.UIMVCUser
 @inject SignInManager<UIMVCUser> SignInManager
+@inject RoleService RoleService
+@inject UserManager<UIMVCUser> UserManager
 
 @{
-    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any(); 
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 <ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a>
+    </li>
     @if (hasExternalLogins)
     {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
+        <li id="external-logins" class="nav-item">
+            <a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a>
+        </li>
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a>
+    </li>
 
     <!-- TODO: Maak hiervan een Role Check Van!!! -->
-    <li class="nav-item"><bold>Moderation Panel</bold></li>
 
-    <li class="nav-item"><a class="nav-link" asp-controller="Moderation" asp-action="CollectAllUsers">Toon alle gebruikers</a></li>
-    <li class="nav-item"><a class="nav-link" asp-controller="Moderation" asp-action="CollectAllIdeas">Toon alle ideeën</a></li>
-    <li class="nav-item"><a class="nav-link" asp-controller="Moderation" asp-action="AddPlatform">Platform Management</a></li>
+    @if (RoleService.IsModerator(await UserManager.GetUserAsync(User)).Result)
+    {
+        <li class="nav-item">
+            <bold>Moderation Panel</bold>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Moderation" asp-action="CollectAllUsers">Toon alle gebruikers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Moderation" asp-action="CollectAllIdeas">Toon alle ideeën</a>
+        </li>
+
+        @if (RoleService.IsSuperAdmin(await UserManager.GetUserAsync(User)).Result)
+         {
+             <li class="nav-item">
+                 <a class="nav-link" asp-controller="Moderation" asp-action="AddPlatform">Platform Management</a>
+             </li>
+         }
+    }
+
+
 
 </ul>

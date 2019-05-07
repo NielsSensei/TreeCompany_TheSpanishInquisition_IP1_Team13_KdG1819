@@ -35,7 +35,7 @@ namespace UIMVC.Controllers
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform()
         {
             ViewData["platforms"] = _platformMgr.ReadAllPlatforms();
@@ -44,7 +44,7 @@ namespace UIMVC.Controllers
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform(CreatePlatformModel cpm)
         {
             if (cpm == null)
@@ -68,7 +68,7 @@ namespace UIMVC.Controllers
         #region Ideation
         //TODO add rolecheck hero we need to be admin yeet *@
         //TODO sprint2 eens dat edwin klaar is met ze ding kunnen we ooit iets doen met events
-        [Authorize]
+        [Authorize(Roles = "SUPERADMIN, MODERATOR, ADMIN")]
         [HttpGet]
         public IActionResult AddIdeation(int project)
         {
@@ -95,7 +95,7 @@ namespace UIMVC.Controllers
         }
 
         //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddIdeation(CreateIdeationModel cim, int project, string user)
         {
@@ -125,7 +125,7 @@ namespace UIMVC.Controllers
         }
 
         //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddTag(int ideation)
         {
@@ -135,7 +135,7 @@ namespace UIMVC.Controllers
         }
 
         //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddTag(string tag, int ideation)
         {
@@ -150,7 +150,7 @@ namespace UIMVC.Controllers
         }
 
         //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddCentralQuestion(int ideation)
         {
@@ -159,7 +159,7 @@ namespace UIMVC.Controllers
         }
 
         //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddCentralQuestion(CreateIdeationQuestionModel ciqm, int ideation)
         {
@@ -182,7 +182,7 @@ namespace UIMVC.Controllers
         }
 
         //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult DestroyIdeation(int id)
         {
             Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
@@ -208,7 +208,7 @@ namespace UIMVC.Controllers
         #region Ideas
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectAllIdeas(string filter = "all")
         {
             List<Idea> ideas = new List<Idea>();
@@ -225,7 +225,7 @@ namespace UIMVC.Controllers
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectIdea(int id)
         {
             Idea idea = _ideaMgr.GetIdea(id);
@@ -242,7 +242,7 @@ namespace UIMVC.Controllers
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult ReviewByAdmin(int idea, int  report)
         {
             Idea foundIdea = _ideaMgr.GetIdea(idea);
@@ -259,7 +259,7 @@ namespace UIMVC.Controllers
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult ApproveReport(int report)
         {
             Report foundReport = _ideaMgr.GetReport(report);
@@ -273,7 +273,7 @@ namespace UIMVC.Controllers
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DenyReport(int report, int idea)
         {
             Report foundReport = _ideaMgr.GetReport(report);
@@ -287,7 +287,7 @@ namespace UIMVC.Controllers
 
         //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DestroyReport(int report, int idea)
         {
             _ideaMgr.RemoveReport(report);
@@ -298,7 +298,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DestroyIdea(int idea)
         {
             Idea toDelete = _ideaMgr.GetIdea(idea);
@@ -327,7 +327,7 @@ namespace UIMVC.Controllers
 
         #region UIMVCUser
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectAllUsers(string sortOrder, string searchString)
         {
 
@@ -356,7 +356,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public async Task<IActionResult> ToggleBanUser(string userId)
         {
             UIMVCUser userFound = await _userManager.FindByIdAsync(userId);
@@ -371,7 +371,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult VerifyUser(string userId)
         {
             throw new NotImplementedException("Roles need to be implemented");
