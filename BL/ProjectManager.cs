@@ -6,6 +6,7 @@ using DAL;
 using Domain;
 using Domain.Projects;
 using Domain.Users;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BL
 {
@@ -37,11 +38,11 @@ namespace BL
         * 
         */
         public Project MakeProject(Project project)
-        { 
+        {
             Project newProject = ProjectRepo.Create(project);
-            
+
             List<Phase> savedPhases = new List<Phase>();
-            
+
             foreach (var phase in project.Phases)
             {
                 phase.Project = newProject;
@@ -52,11 +53,10 @@ namespace BL
 
             newProject.Phases = savedPhases;
 
-            
-           // ProjectRepo.
+
+            // ProjectRepo.
 
             return GetProject(newProject.Id, false);
-
         }
 
         public void EditProject(Project project)
@@ -125,8 +125,7 @@ namespace BL
 
         public Phase MakePhase(Phase newPhase, int projectId)
         {
-           
-           Phase savedPhase = ProjectRepo.Create(newPhase);
+            Phase savedPhase = ProjectRepo.Create(newPhase);
             var alteredProject = ProjectRepo.Read(projectId, false);
             alteredProject.Phases.Add(savedPhase);
             ProjectRepo.Update(alteredProject);
@@ -146,6 +145,7 @@ namespace BL
             var removedPhase = ProjectRepo.ReadPhase(phaseId, false);
             var alteredProject = ProjectRepo.Read(projectId, false);
             alteredProject.Phases.Remove(removedPhase);
+        
             if (removedPhase.Module != null)
             {
                 var moduleType = removedPhase.Module.GetType() == typeof(Questionnaire);
@@ -153,10 +153,13 @@ namespace BL
                 alteredModule.Phases.Remove(removedPhase);
                 ModuleMan.EditModule(alteredModule);
             }
+            else
+            {
+                ProjectRepo.DeletePhase(removedPhase.Id);
+            }
 
             //TODO: Enkel de phase moet verwijdert worden project niet? 
-            ProjectRepo.Delete(projectId);
-            
+            // ProjectRepo.Delete(projectId);
         }
 
         public Phase GetPhase(int phaseId)

@@ -8,46 +8,73 @@
 <h2>Aanpassen van @Model.Title</h2>
 
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>Student</h4>
-        <hr/>
-        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
-        @Html.HiddenFor(model => model.Id)
-        
-        <div class="form-group">
-            <div class="col-md-10">
-                <label asp-for="@Model.Platform">Platform</label>
-                <input asp-for="Modules" class="form-control" value="@Model.Platform.Id" readonly="readonly"/>
-            </div>
+<form asp-controller="Project" asp-action="ChangeProject" method="post" asp-route-project="@Model">
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label asp-for="Title">Naam</label>
+            <input asp-for="Title" class="form-control" value="@Model.Title"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="StartDate">Startdatum</label>
+            <input type="date" asp-for="StartDate" class="form-control" value="@Model.StartDate"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="EndDate">Einddatum</label>
+            <input type="date" asp-for="EndDate" class="form-control" value="@Model.EndDate"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Goal">Doel</label>
+            <input asp-for="Goal" class="form-control" value="@Model.Goal"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Status">Status</label>
+            <input asp-for="Status" class="form-control" value="@Model.Status"/>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Title, "", new {@class = "text-danger"})
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Status, htmlAttributes: new {@class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Status, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Status, "", new {@class = "text-danger"})
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input class="btn btn-primary" type="submit" value="Save" class="btn btn-default"/>
-            </div>
-        </div>      
     </div>
-}
+    <div class="form-group">
+        <input type="checkbox" asp-for="Visible" value="@Model.Visible"/>
+        <label asp-for="Visible">Zichtbaar</label>
+    </div>
+
+
+    @{
+        for (int i = 0; i < @Model.Phases.Count; i++)
+        {
+            <h5>Phase @(i + 1)</h5>
+
+            <div class="form-row" id="phases">
+                <div class="form-group col-md-12">
+                    <label asp-for="Phases[i].Description">Beschrijving</label>
+                    <input asp-for="Phases[i].Description" class="form-control" value="@Model.Phases[i].Description"/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Phases[i].StartDate">Start datum</label>
+                    <input type="date" asp-for="Phases[i].StartDate" class="form-control" value="@Model.Phases[i].StartDate"/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Phases[i].EndDate">Eind datum</label>
+                    <input type="date" asp-for="Phases[i].EndDate" class="form-control" value="@Model.Phases[i].EndDate"/>
+                </div>
+                <div class="form-group col-md-6" name="radioCurrent">
+                    @Html.RadioButtonFor(m => m.Phases[i].IsCurrent, true)
+                    <label name="current" asp-for="Phases[i].IsCurrent">Set as Current Phase</label>
+                </div>
+            </div>
+        }
+    }
+
+    <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
+
+
+
+</form>
+
+
 <div>
-    <a class="btn btn-primary" asp-controller="Platform" asp-action="Index" asp-route-id="@Model.Platform.Id">Ga terug</a>
+    <br>
+    <a class="btn btn-primary" asp-controller="Platform" asp-action="Index" asp-route-id="@Model.Platform.Id">Ga terug</a>    <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">Verwijder project</a>
+
+
+
 </div>

@@ -46,10 +46,10 @@ namespace UIMVC.Controllers
                 return BadRequest("Project cannot be null");
             }
 
-           // pvm.Phases[0].IsCurrent = true;
+            // pvm.Phases[0].IsCurrent = true;
 
             Phase currentPhase = pvm.Phases.Find(phase => phase.IsCurrent);
-            
+
             Project pr = new Project()
             {
                 User = projectUser,
@@ -62,7 +62,7 @@ namespace UIMVC.Controllers
                 LikeVisibility = 1,
                 Goal = pvm.Project.Goal,
                 Visible = pvm.Project.Visible,
-                Phases =  pvm.Phases
+                Phases = pvm.Phases
             };
             Project newProject = _mgr.MakeProject(pr);
 
@@ -79,7 +79,7 @@ namespace UIMVC.Controllers
         public IActionResult ChangeProject(int id)
         {
             Project project = _mgr.GetProject(id, false);
-            ViewData["platforms"] = _mgrPlatform.ReadAllPlatforms();
+
             if (project == null)
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
@@ -99,11 +99,27 @@ namespace UIMVC.Controllers
 
         #endregion
 
-        [HttpPost]
+
+        #region
+
+        [HttpGet]
         public IActionResult DestroyProject(int id)
         {
+            Project project = _mgr.GetProject(id, false);
+            int platformId = project.Platform.Id;
+
+            project.Phases = (List<Phase>) _mgr.GetAllPhases(project.Id);
+
+            foreach (var phase in project.Phases)
+            {
+                _mgr.RemovePhase(project.Id, phase.Id);
+            }
+
             _mgr.RemoveProject(id);
-            return RedirectToAction("Index", "Platform", new {id = id});
+
+            return RedirectToAction("Index", "Platform", new {id = platformId});
         }
+
+        #endregion
     }
 }
