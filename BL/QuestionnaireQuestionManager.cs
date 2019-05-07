@@ -70,28 +70,31 @@ namespace BL
         * 
         * UPDATE 20/4 see @QQRepo voor editen van antwoorden.
         * 
+        *
+        */
         
         public void EditAnswer(string propName, int answerId, int questionId)
         {
             throw new NotImplementedException("I might need this!");
-        } */
+        } 
+       
         
-        /*
-         * This getter is good to show the result. - NVZ
-         
-        public List<Answer> GetAnswers(int questionId, bool details)
+         /* This getter is good to show the result. - NVZ */
+            
+        public List<Answer> GetAnswers(int questionId)
         {
-            throw new NotImplementedException("I might need this!");
-        }  */
+            return QuestionnaireQuestionRepo.ReadAll(questionId).ToList();
+        }  
         
         /*
          * Unfortunately I realised that we did not include this in the
          * moduling process but it is needed. - NVZ
+         * 
          
         public void MakeAnswer(Answer answer, int moduleId, int questionId)
         {
             throw new NotImplementedException("I need this!");
-        } */
+        } 
         #endregion
            
         // Added by NVZ
