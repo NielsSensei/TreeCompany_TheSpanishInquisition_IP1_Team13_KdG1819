@@ -186,6 +186,8 @@ namespace UIMVC.Controllers
         public IActionResult ChangeIdeation(int id)
         {
             Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
+
+            ViewData["Project"] = i.Project.Id;
             
             return View(i);
         }
