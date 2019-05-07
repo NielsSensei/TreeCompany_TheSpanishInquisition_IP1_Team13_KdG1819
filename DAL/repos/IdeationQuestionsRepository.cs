@@ -54,7 +54,9 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
-                IsDeleted = obj.IsDeleted
+                IsDeleted = obj.IsDeleted,
+                ParentID = obj.ParentIdea.Id,
+                DeviceID = obj.Device.Id
             };
 
             if (obj.ParentIdea == null)
