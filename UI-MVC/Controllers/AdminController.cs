@@ -122,7 +122,7 @@ namespace UIMVC.Controllers
             qqMgr.MakeQuestion(newQuestion, toAdd.Id);
             modMgr.EditModule(toAdd);
 
-            return RedirectToAction("CreateQuestionnaire", toAdd.Id);
+            return RedirectToAction("AddQuestionnaire", toAdd.Id);
 
             
 
