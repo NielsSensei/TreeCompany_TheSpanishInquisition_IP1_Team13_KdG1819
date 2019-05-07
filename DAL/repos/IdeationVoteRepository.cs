@@ -155,6 +155,16 @@ namespace DAL
             ctx.Votes.Remove(toDelete);
             ctx.SaveChanges();
         }
+
+        public void DeleteVotes(int id)
+        {
+            List<Vote> votes = (List<Vote>) ReadAllByIdea(id);
+
+            foreach (Vote vote in votes)
+            {
+                Delete(vote.Id);
+            }
+        }
         
         public IEnumerable<Vote> ReadAll()
         {
@@ -171,7 +181,12 @@ namespace DAL
         public IEnumerable<Vote> ReadAll(int deviceID)
         {
             return ReadAll().ToList().FindAll(vote => vote.Device.Id == deviceID);
-        } 
+        }
+
+        public IEnumerable<Vote> ReadAllByIdea(int ideaID)
+        {
+            return ReadAll().ToList().FindAll(vote => vote.Idea.Id == ideaID);
+        }
         #endregion
                
         
