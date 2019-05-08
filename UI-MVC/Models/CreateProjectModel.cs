@@ -6,7 +6,7 @@ using Domain.Users;
 
 namespace UIMVC.Models
 {
-    public class ProjectViewModel
+    public class CreateProjectModel
     {
         [Required]
         public string Title { get; set; }
