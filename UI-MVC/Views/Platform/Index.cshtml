@@ -26,10 +26,6 @@
             {
                 <div class="col-md-3">
                     @Html.DisplayFor(m => project)
-                    <a asp-controller="Platform" asp-action="CollectProject" asp-route-id="@project.Id">Ga naar Project</a> | 
-                    <a asp-controller="Project" asp-action="ChangeProject" asp-route-id="@project.Id">Pas project aan</a> |
-                    <a asp-controller="Project" asp-action="DestroyProject" asp-route-id="@project.Id">Verwijder project</a>
-
                 </div>
             }
         }

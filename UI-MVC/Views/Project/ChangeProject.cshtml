@@ -1,11 +1,10 @@
 @using Domain.Projects
 @model UIMVC.Models.EditProjectModel
+
 @{
-
     Project project = (Project) ViewData["Project"];
-
     Layout = "_Layout";
-    ViewBag.Title = "Change: " + project.Title;
+    ViewBag.Title = "Pas: " + project.Title+" aan";
 }
 
 <h2>Aanpassen van @project.Title</h2>

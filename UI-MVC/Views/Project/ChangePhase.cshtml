@@ -1,0 +1,42 @@
+@using Domain.Projects
+@model PhaseModel
+
+@{
+    ViewBag.Title = "title";
+
+    Phase phase = (Phase) ViewData["Phase"];
+    Layout = "_Layout";
+    ViewBag.Title = "Pas: " + phase.Description + " aan";
+}
+
+<h2>Aanpassen van @phase.Description</h2>
+
+<form asp-controller="Project" asp-action="ChangePhase" method="post" asp-route-pm="@Model" asp-route-phaseId="@phase.Id">
+    <div class="form-row">
+
+        <div class="form-group col-md-12">
+            <label asp-for="Description">Omschrijving</label>
+            <input asp-for="Description" class="form-control"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="StartDate">Start datum</label>
+            <input asp-for="StartDate" class="form-control" value="1/1/0001"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="EndDate">Eind datum</label>
+            <input asp-for="EndDate" class="form-control" value="1/1/0001"/>
+        </div>
+
+        <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
+
+    </div>
+</form>
+
+<div>
+    <br>
+
+    <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@phase.Project.Id">Ga terug</a> 
+    <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyPhase" asp-route-id="@phase.Id">Verwijder fase</a>
+
+
+</div>

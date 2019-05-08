@@ -3,7 +3,7 @@ using Domain.Projects;
 
 namespace UIMVC.Models
 {
-    public class CreatePhaseModel
+    public class PhaseModel
     {
         public string Description { get; set; }
         public DateTime StartDate { get; set; }

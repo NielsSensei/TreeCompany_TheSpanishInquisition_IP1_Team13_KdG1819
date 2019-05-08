@@ -30,6 +30,9 @@ namespace UIMVC.Controllers
             _userManager = userManager;
         }
 
+        
+        #region Project
+        
         #region Add
 
         [Authorize]
@@ -76,7 +79,7 @@ namespace UIMVC.Controllers
 
         #region ChangeProject
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public IActionResult ChangeProject(int id)
         {
@@ -92,7 +95,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
             Project updateProj = _mgr.GetProject(id, false);
@@ -103,14 +106,13 @@ namespace UIMVC.Controllers
             updateProj.EndDate = epm.EndDate;
 
             _mgr.EditProject(updateProj);
-            // TODO: make the redirect work
-            return RedirectToAction("Index", "Platform", new {id = updateProj.Platform.Id});
+            return RedirectToAction("CollectProject", "Platform", new {id = updateProj.Id});
         }
 
         #endregion
 
 
-        #region
+        #region DeleteProject
 
         [HttpGet]
         public IActionResult DestroyProject(int id)
@@ -142,7 +144,15 @@ namespace UIMVC.Controllers
 
         #endregion
 
+        #endregion
+        
+        #region phase
 
+        #region AddPhase
+
+        
+
+        
         [Authorize]
         [HttpGet]
         public IActionResult AddPhase(int projectId)
@@ -155,28 +165,69 @@ namespace UIMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddPhase(CreatePhaseModel cpm, int projectId)
+        public IActionResult AddPhase(PhaseModel pm, int projectId)
         {
-            if (cpm == null)
+            if (pm == null)
             {
-                return BadRequest("Project cannot be null");
+                return BadRequest("Phase cannot be null");
             }
 
             Phase p = new Phase()
             {
                 Project = _mgr.GetProject(projectId, false),
-                Description = cpm.Description,
-                StartDate = cpm.StartDate,
-                EndDate = cpm.EndDate
+                Description = pm.Description,
+                StartDate = pm.StartDate,
+                EndDate = pm.EndDate
             };
 
             _mgr.MakePhase(p, projectId);
 
             return RedirectToAction("CollectProject", "Platform", new {id = projectId});
         }
+        #endregion
 
         
+        #region ChangePhase
+
         
+
+        
+        [Authorize]
+        [HttpGet]
+        public IActionResult ChangePhase(int phaseId)
+        {
+            Phase phase = _mgr.GetPhase(phaseId);
+
+
+
+            if (phase == null)
+            {
+                return RedirectToAction("HandleErrorCode", "Errors", 404);
+
+            }
+            
+            ViewData["Phase"] = phase;
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult ChangePhase(PhaseModel pm, int phaseId)
+        {
+
+            Phase updatePhase = _mgr.GetPhase(phaseId);
+
+            updatePhase.Description = pm.Description;
+            updatePhase.StartDate = pm.StartDate;
+            updatePhase.EndDate = pm.EndDate;
+            
+            _mgr.EditPhase(updatePhase);
+            return RedirectToAction("CollectProject", "Platform", new {id = updatePhase.Project.Id});
+        }
+        
+        #endregion
+
+
         
         [Authorize]
         [HttpGet]
@@ -191,6 +242,14 @@ namespace UIMVC.Controllers
             _mgr.EditProject(p);
 
             return RedirectToAction("CollectProject", "Platform", new {id = projectId});
+        }
+
+        #endregion
+
+
+        public IActionResult DestroyPhase()
+        {
+            throw new NotImplementedException();
         }
     }
 }
