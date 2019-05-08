@@ -48,6 +48,7 @@
                 <th>van</th>
                 <th>tot</th>
                 <th></th>
+                <th></th>
                 </thead>
                 @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
                 {
@@ -63,6 +64,12 @@
                         <td>
                             <a class="btn btn-light" asp-controller="Project" asp-action="ChangePhase" asp-route-phaseId="@p.Id">
                                 pas aan
+                            </a>
+                        </td>
+                        
+                        <td>
+                            <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id" >
+                                Wis
                             </a>
                         </td>
 

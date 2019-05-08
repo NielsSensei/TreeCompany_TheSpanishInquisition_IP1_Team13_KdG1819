@@ -17,22 +17,20 @@ namespace UIMVC.Controllers
 {
     public class ProjectController : Controller
     {
-        private ProjectManager _mgr;
-        private ModuleManager _modMan;
-        private PlatformManager _mgrPlatform;
+        private ProjectManager _projManager;
+        private ModuleManager _modManager;
         private readonly UserManager<UIMVCUser> _userManager;
 
         public ProjectController(UserManager<UIMVCUser> userManager)
         {
-            _modMan = new ModuleManager();
-            _mgr = new ProjectManager();
-            _mgrPlatform = new PlatformManager();
-            _userManager = userManager;
+            _modManager = new ModuleManager();
+            _projManager = new ProjectManager();
+             _userManager = userManager;
         }
 
-        
+
         #region Project
-        
+
         #region Add
 
         [Authorize]
@@ -69,7 +67,7 @@ namespace UIMVC.Controllers
 
             pr.Phases.Add(pr.CurrentPhase);
 
-            Project newProject = _mgr.MakeProject(pr);
+            Project newProject = _projManager.MakeProject(pr);
 
             return RedirectToAction("Index", "Platform", new {id = newProject.Platform.Id});
         }
@@ -83,7 +81,7 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult ChangeProject(int id)
         {
-            Project project = _mgr.GetProject(id, false);
+            Project project = _projManager.GetProject(id, false);
 
             if (project == null)
             {
@@ -98,14 +96,14 @@ namespace UIMVC.Controllers
         [Authorize]
         public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
-            Project updateProj = _mgr.GetProject(id, false);
+            Project updateProj = _projManager.GetProject(id, false);
 
             updateProj.Title = epm.Title;
             updateProj.Goal = epm.Goal;
             updateProj.StartDate = epm.StartDate;
             updateProj.EndDate = epm.EndDate;
 
-            _mgr.EditProject(updateProj);
+            _projManager.EditProject(updateProj);
             return RedirectToAction("CollectProject", "Platform", new {id = updateProj.Id});
         }
 
@@ -114,30 +112,33 @@ namespace UIMVC.Controllers
 
         #region DeleteProject
 
+        [Authorize]
         [HttpGet]
         public IActionResult DestroyProject(int id)
         {
-            var modController = new ModerationController(_userManager);
-
-            Project project = _mgr.GetProject(id, false);
+            Project project = _projManager.GetProject(id, false);
             int platformId = project.Platform.Id;
-
-            project.Phases = (List<Phase>) _mgr.GetAllPhases(project.Id);
-
-            /*if (project.Modules.Count != 0)
+            project.Phases = (List<Phase>) _projManager.GetAllPhases(project.Id);
+            /*
+            if (project.Modules.Count != 0)
             {
                 foreach (var module in project.Modules)
                 {
-                    modController.DestroyIdeation(module.Id);
+                    _modManager.RemoveModule(module.Id, project.Id, true); //TODO() IsQuestionnaire toevoegen in Module?
                 }
-            }*/
+            }
+*/
 
-            foreach (var phase in project.Phases)
+            if (project.Phases.Count != 0)
             {
-                _mgr.RemovePhase(project.Id, phase.Id);
+                foreach (var phase in project.Phases)
+                {
+                    _projManager.RemovePhase(project.Id, phase.Id);
+                }
             }
 
-            _mgr.RemoveProject(id);
+            _projManager.RemoveProject(id);
+
 
             return RedirectToAction("Index", "Platform", new {id = platformId});
         }
@@ -145,14 +146,11 @@ namespace UIMVC.Controllers
         #endregion
 
         #endregion
-        
+
         #region phase
 
         #region AddPhase
 
-        
-
-        
         [Authorize]
         [HttpGet]
         public IActionResult AddPhase(int projectId)
@@ -174,38 +172,34 @@ namespace UIMVC.Controllers
 
             Phase p = new Phase()
             {
-                Project = _mgr.GetProject(projectId, false),
+                Project = _projManager.GetProject(projectId, false),
                 Description = pm.Description,
                 StartDate = pm.StartDate,
                 EndDate = pm.EndDate
             };
 
-            _mgr.MakePhase(p, projectId);
+            _projManager.MakePhase(p, projectId);
 
             return RedirectToAction("CollectProject", "Platform", new {id = projectId});
         }
+
         #endregion
 
-        
+
         #region ChangePhase
 
-        
-
-        
         [Authorize]
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
-            Phase phase = _mgr.GetPhase(phaseId);
-
+            Phase phase = _projManager.GetPhase(phaseId);
 
 
             if (phase == null)
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
-
             }
-            
+
             ViewData["Phase"] = phase;
             return View();
         }
@@ -214,42 +208,44 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult ChangePhase(PhaseModel pm, int phaseId)
         {
-
-            Phase updatePhase = _mgr.GetPhase(phaseId);
+            Phase updatePhase = _projManager.GetPhase(phaseId);
 
             updatePhase.Description = pm.Description;
             updatePhase.StartDate = pm.StartDate;
             updatePhase.EndDate = pm.EndDate;
-            
-            _mgr.EditPhase(updatePhase);
+
+            _projManager.EditPhase(updatePhase);
             return RedirectToAction("CollectProject", "Platform", new {id = updatePhase.Project.Id});
         }
-        
+
         #endregion
 
 
-        
+
         [Authorize]
         [HttpGet]
         public IActionResult SetCurrentPhase(int projectId, int phaseId)
         {
-            Project p = _mgr.GetProject(projectId, true);
+            Project p = _projManager.GetProject(projectId, true);
 
-            Phase ph = _mgr.GetPhase(phaseId);
+            Phase ph = _projManager.GetPhase(phaseId);
 
             p.CurrentPhase = ph;
 
-            _mgr.EditProject(p);
+            _projManager.EditProject(p);
 
             return RedirectToAction("CollectProject", "Platform", new {id = projectId});
         }
 
         #endregion
 
-
-        public IActionResult DestroyPhase()
+        [Authorize]
+        [HttpGet]
+        public IActionResult DestroyPhase(int phaseId, int projectId)
         {
-            throw new NotImplementedException();
+            _projManager.RemovePhase(projectId, phaseId);
+            
+            return RedirectToAction("CollectProject", "Platform", new {id = projectId});
         }
     }
 }
