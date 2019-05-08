@@ -10,6 +10,11 @@
     ViewData["Title"] = Model.QuestionTitle;
 }
 
+@section Scripts
+{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
 <div class="container"> 
     <div class="row">
         <div class="col-12">
@@ -32,8 +37,8 @@
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {
         @Html.Partial("Thread/_CollectIdea", idea)
-        @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionID = Model.Id, ParentID = idea.Id})   
-        <hr/>
+        
+        @*<hr/>
         <div class="container">
            <h5>Reacties op dit idee:</h5>
             @foreach (Idea child in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == idea.Id))
@@ -59,7 +64,7 @@
                     }
                 </div>
             }
-        </div>
+        </div>*@
         <hr/>
     }
 </div>

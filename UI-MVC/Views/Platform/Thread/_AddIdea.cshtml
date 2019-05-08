@@ -3,7 +3,7 @@
 @inject UserManager<UIMVCUser> UserManager
 @model UIMVC.Models.AddIdeaModel
 
-<div class="row" id="newIdea">
+<div class="row text-center" id="newIdea">
     <form asp-controller="Thread" asp-action="AddIdea" asp-route-ideationQuestion="@Model.IdeationQuestionID"
           asp-route-user="@UserManager.GetUserId(User)" asp-route-parent="@Model.ParentID">
         <div class="form-group">
@@ -13,7 +13,7 @@
         @* Voorlopig enkel gewoon Field *@
         <div class="form-group">
             <label>Text:</label>
-            @Html.TextBox("newIdeaField","", new { @class="form-control"})
+            @Html.TextArea("newIdeaField","", new { @class="form-control"})
         </div>
         <button class="btn btn-outline-primary" type="submit">Voeg jouw idee toe</button>
     </form>
