@@ -134,24 +134,37 @@ namespace UIMVC.Services
             // Get all of the user's roles
             IEnumerable<string> appUserRolesString = await _userManager.GetRolesAsync(appUser);
             // Create a new list
-            IEnumerable<Role> appUserRoles = new List<Role>();
+            List<Role> appUserRoles = new List<Role>();
             // Populate the list with the transformed roles (string -> Domain.Users.Role)
-            appUserRolesString.ToList().ForEach(s => appUserRoles.Append((Role) Enum.Parse(typeof(Role), s)));
+            //appUserRolesString.ToList().ForEach(s => appUserRoles.Append((Role) Enum.Parse(typeof(Role), s)));
+            foreach (string roleString in appUserRolesString)
+            {
+                Role role = (Role) Enum.Parse(typeof(Role), roleString);
+                appUserRoles.Add(role);
+            }
             
             IEnumerable<string> userCompareRolesString = await _userManager.GetRolesAsync(userCompare);
-            IEnumerable<Role> userCompareRoles = new List<Role>();
-            userCompareRolesString.ToList().ForEach(s => userCompareRoles.Append((Role) Enum.Parse(typeof(Role), s)));
-
+            List<Role> userCompareRoles = new List<Role>();
+            //userCompareRolesString.ToList().ForEach(s => userCompareRoles.Add((Role) Enum.Parse(typeof(Role), s)));
+            foreach (string roleString in userCompareRolesString)
+            {
+                Role role = (Role) Enum.Parse(typeof(Role), roleString);
+                userCompareRoles.Add(role);
+            }
+            
+            
             // Check if both lists have roles
             if (appUserRoles.Any() && userCompareRoles.Any())
             {
                 // return a boolean based on the highest role (based on the Enum Typecode)
-                return appUserRoles.Max(role => role.GetTypeCode()) >= userCompareRoles.Max(role => role.GetTypeCode());
+                int appUserRoleHighest = (int) appUserRoles.Max(role => role);
+                int userCompareRoleHighest = (int) userCompareRoles.Max(role => role);
+                return appUserRoleHighest <= userCompareRoleHighest;
             }
 
             if (appUserRoles.Any() && userCompareRoles.Any() == false)
             {
-                return true;
+                return false;
             }
             
             if (appUserRoles.Any() == false && userCompareRoles.Any())

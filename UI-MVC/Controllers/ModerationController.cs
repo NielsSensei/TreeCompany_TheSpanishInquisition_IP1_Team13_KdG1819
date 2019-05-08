@@ -22,14 +22,16 @@ namespace UIMVC.Controllers
         private readonly ModuleManager _moduleMgr;
         private readonly ProjectManager _projMgr;
         private readonly UserManager<UIMVCUser> _userManager;
+        private readonly RoleService _roleService;
 
-        public ModerationController(UserManager<UIMVCUser> userManager)
+        public ModerationController(UserManager<UIMVCUser> userManager, RoleService roleService)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
             _moduleMgr = new ModuleManager();
             _projMgr = new ProjectManager();
             _userManager = userManager;
+            _roleService = roleService;
         }
 
         #region AddPlatform
@@ -348,7 +350,8 @@ namespace UIMVC.Controllers
             UIMVCUser userFound = await _userManager.FindByIdAsync(userId);
 
             if (userFound == null) return RedirectToAction("CollectAllUsers");
-
+            if (await _roleService.IsSameRoleOrHigher(HttpContext.User, userFound)) return RedirectToAction("CollectAllUsers");
+            
             userFound.Banned = !userFound.Banned;
             _userManager.SetLockoutEnabledAsync(userFound, userFound.Banned);
             if (userFound.Banned)
