@@ -59,9 +59,9 @@ namespace UIMVC.Controllers
                 Goal = pvm.Goal,
                 Visible = true,
             };
-            
+
             pr.Phases.Add(pr.CurrentPhase);
-            
+
             Project newProject = _mgr.MakeProject(pr);
 
             return RedirectToAction("Index", "Platform", new {id = newProject.Platform.Id});
@@ -119,5 +119,56 @@ namespace UIMVC.Controllers
         }
 
         #endregion
+
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult AddPhase(int projectId)
+        {
+            ViewData["project"] = projectId;
+
+            return View();
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddPhase(CreatePhaseModel cpm, int projectId)
+        {
+            if (cpm == null)
+            {
+                return BadRequest("Project cannot be null");
+            }
+
+            Phase p = new Phase()
+            {
+                Project = _mgr.GetProject(projectId, false),
+                Description = cpm.Description,
+                StartDate = cpm.StartDate,
+                EndDate = cpm.EndDate
+            };
+
+            _mgr.MakePhase(p, projectId);
+
+            return RedirectToAction("CollectProject", "Platform", new {id = projectId});
+        }
+
+        
+        
+        
+        [Authorize]
+        [HttpGet]
+        public IActionResult SetCurrentPhase(int projectId, int phaseId)
+        {
+            Project p = _mgr.GetProject(projectId, true);
+
+            Phase ph = _mgr.GetPhase(phaseId);
+
+            p.CurrentPhase = ph;
+
+            _mgr.EditProject(p);
+
+            return RedirectToAction("CollectProject", "Platform", new {id = projectId});
+        }
     }
 }

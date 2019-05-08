@@ -28,7 +28,13 @@
         </div>
     </div>
     <hr>
-    <h2>Alle fases</h2>
+    <div class="row">
+        <div class="col-10">
+            <h2>Alle fases</h2>
+        </div>
+
+        <a class="btn btn-primary" asp-controller="Project" asp-action="AddPhase" asp-route-projectId="@Model.Id" method="get">Nieuwe fase</a>
+    </div>
     <div class="row">
         <div class="col-4">
 
@@ -42,6 +48,7 @@
                 <th>Omschrijving</th>
                 <th>van</th>
                 <th>tot</th>
+                <th></th>
                 </thead>
                 @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
                 {
@@ -49,6 +56,11 @@
                         <td>@p.Description</td>
                         <td>@p.StartDate.ToShortDateString()</td>
                         <td>@p.EndDate.ToShortDateString()</td>
+                        <td>
+                            <a class="btn btn-light" asp-controller="Project" asp-action="SetCurrentPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
+                                zet huidige fase
+                            </a>
+                        </td>
                     </tr>
                 }
             </table>

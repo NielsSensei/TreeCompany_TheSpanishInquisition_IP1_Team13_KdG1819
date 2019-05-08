@@ -54,15 +54,3 @@
 
     <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
 </form>
-
-<script type="text/javascript">
-
-    errorItems = self.form.find(":invalid");
-    errorItems.each(function(index, node) {
-        var item = $(this);
-        var message = (node.validity.patternMismatch ? node.dataset.patternError : node.dataset.error) ||
-            "Invalid value.";
-        item.get(0).setCustomValidity(message);
-    });
-
-</script>
