@@ -5,81 +5,64 @@
 }
 
 
-<h2>Add Project</h2>
+<br>
 
+<h2>Maak een nieuw project aan</h2>
+<br>
 <form asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model", asp-route-platform="@ViewData["platform"]">
+
     <div class="form-row">
         <div class="form-group col-md-12">
-            <label asp-for="Project.Title">Naam</label>
-            <input asp-for="Project.Title" class="form-control" value="Test"/>
+            <label asp-for="Title">Naam</label>
+            <input asp-for="Title" class="form-control" required pattern="^[A-Za-z\-]+$"
+                   data-error="Firstname must not be empty." data-pattern-error="Firstname must contain only letters."/>
+
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.StartDate">Startdatum</label>
-            <input type="date" asp-for="Project.StartDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+            <label asp-for="StartDate">Start datum</label>
+            <input type="date" asp-for="StartDate" class="form-control" value="1/1/0001 "/>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.EndDate">Einddatum</label>
-            <input type="date" asp-for="Project.EndDate" class="form-control" value="1/1/0001 12:00:00 AM"/>
+            <label asp-for="EndDate">Eind datum</label>
+            <input type="date" asp-for="EndDate" class="form-control" value="1/1/0001 "/>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.Goal">Doel</label>
-            <input asp-for="Project.Goal" class="form-control" value="Goal"/>
+            <label asp-for="Goal">Doel</label>
+            <input asp-for="Goal" class="form-control" value="Goal"/>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.Status">Status</label>
-            <input asp-for="Project.Status" class="form-control" value="Open"/>
+            <label asp-for="Status">Status</label>
+            <input asp-for="Status" class="form-control" value="Open"/>
         </div>
 
-    </div>
-    <div class="form-group">
-        <input type="checkbox" asp-for="Project.Visible"/>
-        <label asp-for="Project.Visible">Zichtbaar</label>
-    </div>
 
-    <h5>Huidige Fase</h5>
+        <h4>Huidige fase:</h4>
 
-    @*
-    <div class="form-row">
         <div class="form-group col-md-12">
-            <label asp-for="Project.CurrentPhase.Description">Beschrijving</label>
-            <input asp-for="Project.CurrentPhase.Description" class="form-control" value="Desciption"/>
+            <label asp-for="CurrentPhase.Description">Omschrijving</label>
+            <input asp-for="CurrentPhase.Description" class="form-control" value="Test"/>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.CurrentPhase.StartDate">Startdatum</label>
-            <input type="date" asp-for="Project.CurrentPhase.StartDate" class="form-control" value="1/1/2019 12:00:00 AM"/>
+            <label asp-for="CurrentPhase.StartDate">Start datum</label>
+            <input asp-for="CurrentPhase.StartDate" class="form-control" value="1/1/0001"/>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="Project.CurrentPhase.EndDate">Einddatum</label>
-            <input type="date" asp-for="Project.CurrentPhase.EndDate" class="form-control" value="1/6/2019 12:00:00 AM"/>
+            <label asp-for="CurrentPhase.EndDate">Eind datum</label>
+            <input asp-for="CurrentPhase.EndDate" class="form-control" value="1/1/0001"/>
         </div>
     </div>
-    *@
-
-    @{
-        for (int i = 0; i < 2; i++)
-        {
-            <h5>Phase @(i + 1)</h5>
-
-            <div class="form-row" id="phases">
-                <div class="form-group col-md-12">
-                    <label asp-for="Phases[i].Description">Beschrijving</label>
-                    <input asp-for="Phases[i].Description" class="form-control" value="Desciption"/>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Phases[i].StartDate">Startdatum</label>
-                    <input type="date" asp-for="Phases[i].StartDate" class="form-control" value="1/1/2019 12:00:00 AM"/>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Phases[i].EndDate">Einddatum</label>
-                    <input type="date" asp-for="Phases[i].EndDate" class="form-control" value="1/1/2019 12:00:00 AM"/>
-                </div>
-                <div class="form-group col-md-6">
-                    @Html.RadioButtonFor(m => m.Phases[i].IsCurrent, true)
-                    <label name="current" asp-for="Phases[i].IsCurrent">Set as Current Phase</label>
-                </div>
-            </div>
-        }
-    }
 
     <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
 </form>
+
+<script type="text/javascript">
+
+    errorItems = self.form.find(":invalid");
+    errorItems.each(function(index, node) {
+        var item = $(this);
+        var message = (node.validity.patternMismatch ? node.dataset.patternError : node.dataset.error) ||
+            "Invalid value.";
+        item.get(0).setCustomValidity(message);
+    });
+
+</script>

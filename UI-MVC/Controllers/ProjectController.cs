@@ -46,24 +46,22 @@ namespace UIMVC.Controllers
                 return BadRequest("Project cannot be null");
             }
 
-            // pvm.Phases[0].IsCurrent = true;
-
-            Phase currentPhase = pvm.Phases.Find(phase => phase.IsCurrent);
-
             Project pr = new Project()
             {
                 User = projectUser,
-                CurrentPhase = currentPhase,
-                EndDate = pvm.Project.EndDate,
-                StartDate = pvm.Project.StartDate,
-                Title = pvm.Project.Title,
+                CurrentPhase = pvm.CurrentPhase,
+                EndDate = pvm.EndDate,
+                StartDate = pvm.StartDate,
+                Title = pvm.Title,
                 Platform = new Platform() {Id = platform},
-                Status = pvm.Project.Status.ToUpper(),
+                Status = pvm.Status.ToUpper(),
                 LikeVisibility = 1,
-                Goal = pvm.Project.Goal,
-                Visible = pvm.Project.Visible,
-                Phases = pvm.Phases
+                Goal = pvm.Goal,
+                Visible = true,
             };
+            
+            pr.Phases.Add(pr.CurrentPhase);
+            
             Project newProject = _mgr.MakeProject(pr);
 
             return RedirectToAction("Index", "Platform", new {id = newProject.Platform.Id});
