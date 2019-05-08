@@ -39,10 +39,14 @@ namespace DAL
                 TwitterLikeCount = obj.TwitterLikeCount,
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
-                Tags = ExtensionMethods.ListToString(obj.Tags),
                 IsQuestionnaire = obj.type == ModuleType.Questionnaire
             };
 
+            if (obj.Tags != null)
+            {
+                DTO.Tags = ExtensionMethods.ListToString(obj.Tags);
+            }
+            
             if (obj.Project != null)
             {
                 DTO.ProjectID = obj.Project.Id;
@@ -63,12 +67,20 @@ namespace DAL
             IdeationsDTO DTO = new IdeationsDTO()
             {
                     ModuleID = obj.Id,
-                    UserID = obj.User.Id,
-                    ExtraInfo = obj.ExtraInfo,
+                    ExtraInfo = obj.ExtraInfo
                     //MediaFile = obj.Media,
-                    RequiredFields = (byte) obj.RequiredFields
             };
 
+            if (obj.User != null)
+            {
+                DTO.UserID = obj.User.Id;
+            }
+            
+            if (obj.RequiredFields > 0)
+            {
+                DTO.RequiredFields = (byte) obj.RequiredFields;
+            }
+            
             if (obj.Event != null)
             {
                 DTO.EventID = obj.Event.Id;
@@ -104,12 +116,18 @@ namespace DAL
             ideation.TwitterLikeCount = DTO.TwitterLikeCount;
             ideation.ShareCount = DTO.ShareCount;
             ideation.RetweetCount = DTO.RetweetCount;
-            ideation.Tags = ExtensionMethods.StringToList(DTO.Tags);
+            ideation.Tags = new List<string>();
+            
+            if (DTO.Tags != null)
+            {
+                ideation.Tags = ExtensionMethods.StringToList(DTO.Tags); 
+            }
             return ideation;
         }
         
         private int FindNextAvailableIdeationId()
         {               
+            if (!ctx.Ideations.Any()) return 1;
             int newId = ctx.Modules.Max(q => q.ModuleID) + 1;
             return newId;
         }
@@ -184,6 +202,11 @@ namespace DAL
                 foundModule.ShareCount = newModule.ShareCount;
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
+            }
+            
+            if (newModule.PhaseID != foundModule.PhaseID)
+            {
+                foundModule.PhaseID = newModule.PhaseID;
             }
 
             ctx.SaveChanges();
