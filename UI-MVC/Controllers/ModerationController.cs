@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
+using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
@@ -33,7 +34,6 @@ namespace UIMVC.Controllers
 
         #region AddPlatform
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform()
@@ -42,7 +42,6 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform(CreatePlatformModel cpm)
@@ -66,7 +65,6 @@ namespace UIMVC.Controllers
         #endregion
 
         #region Ideation
-        //TODO add rolecheck hero we need to be admin yeet *@
         //TODO sprint2 eens dat edwin klaar is met ze ding kunnen we ooit iets doen met events
         [Authorize(Roles = "SUPERADMIN, MODERATOR, ADMIN")]
         [HttpGet]
@@ -94,7 +92,6 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddIdeation(CreateIdeationModel cim, int project, string user)
@@ -124,7 +121,6 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddTag(int ideation)
@@ -134,7 +130,6 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddTag(string tag, int ideation)
@@ -149,7 +144,6 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddCentralQuestion(int ideation)
@@ -158,7 +152,6 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddCentralQuestion(CreateIdeationQuestionModel ciqm, int ideation)
@@ -181,7 +174,6 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult DestroyIdeation(int id)
         {
@@ -206,7 +198,6 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
         }
         #region Ideas
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectAllIdeas(string filter = "all")
@@ -222,8 +213,7 @@ namespace UIMVC.Controllers
 
             return View(ideas);
         }
-
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
+        
         [HttpGet]
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectIdea(int id)
@@ -240,7 +230,6 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Errors", actionName: "HandleErrorCode", routeValues: id);
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult ReviewByAdmin(int idea, int  report)
@@ -257,7 +246,6 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "admin");
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult ApproveReport(int report)
@@ -271,7 +259,6 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "report");
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DenyReport(int report, int idea)
@@ -285,7 +272,6 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "report");
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DestroyReport(int report, int idea)
@@ -364,7 +350,14 @@ namespace UIMVC.Controllers
             if (userFound == null) return RedirectToAction("CollectAllUsers");
 
             userFound.Banned = !userFound.Banned;
+            _userManager.SetLockoutEnabledAsync(userFound, userFound.Banned);
+            if (userFound.Banned)
+            {
+                _userManager.SetLockoutEndDateAsync(userFound, DateTime.MaxValue);
+            }
             var result = await _userManager.UpdateAsync(userFound);
+            
+            
 
             return RedirectToAction("CollectAllUsers");
             // This part is still borked.

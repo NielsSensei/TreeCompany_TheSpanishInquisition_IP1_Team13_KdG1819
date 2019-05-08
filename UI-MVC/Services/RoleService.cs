@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Domain.Identity;
@@ -37,6 +38,7 @@ namespace UIMVC.Services
                     Name = _configuration["SuperAdmin:AccountName"],
                     Email = _configuration["SuperAdmin:Email"],
                     UserName = _configuration["SuperAdmin:Email"],
+                    EmailConfirmed = true
                 };
 
                 _userManager.CreateAsync(user, _configuration["SuperAdmin:Secret"]);
@@ -101,6 +103,7 @@ namespace UIMVC.Services
             
         }
         
+        // XV
         public async Task<bool> IsAdmin(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "ADMIN") ||
@@ -112,6 +115,7 @@ namespace UIMVC.Services
             return false;
         }
         
+        // XV
         public async Task<bool> IsSuperAdmin(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
@@ -120,6 +124,47 @@ namespace UIMVC.Services
             }
 
             return false;
+        }
+
+        // XV
+        public async Task<bool> IsSameRoleOrHigher(ClaimsPrincipal appUserClaim, UIMVCUser userCompare)
+        {
+            // Find the user using its claim
+            UIMVCUser appUser = await _userManager.GetUserAsync(appUserClaim);
+            // Get all of the user's roles
+            IEnumerable<string> appUserRolesString = await _userManager.GetRolesAsync(appUser);
+            // Create a new list
+            IEnumerable<Role> appUserRoles = new List<Role>();
+            // Populate the list with the transformed roles (string -> Domain.Users.Role)
+            appUserRolesString.ToList().ForEach(s => appUserRoles.Append((Role) Enum.Parse(typeof(Role), s)));
+            
+            IEnumerable<string> userCompareRolesString = await _userManager.GetRolesAsync(userCompare);
+            IEnumerable<Role> userCompareRoles = new List<Role>();
+            userCompareRolesString.ToList().ForEach(s => userCompareRoles.Append((Role) Enum.Parse(typeof(Role), s)));
+
+            // Check if both lists have roles
+            if (appUserRoles.Any() && userCompareRoles.Any())
+            {
+                // return a boolean based on the highest role (based on the Enum Typecode)
+                return appUserRoles.Max(role => role.GetTypeCode()) >= userCompareRoles.Max(role => role.GetTypeCode());
+            }
+
+            if (appUserRoles.Any() && userCompareRoles.Any() == false)
+            {
+                return true;
+            }
+            
+            if (appUserRoles.Any() == false && userCompareRoles.Any())
+            {
+                return false;
+            }
+            
+            if (appUserRoles.Any() == false && userCompareRoles.Any() == false)
+            {
+                return true;
+            }
+            
+            throw new Exception("You shouldn't be able to get here");
         }
 
         #endregion
