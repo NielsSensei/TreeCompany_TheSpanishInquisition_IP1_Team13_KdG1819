@@ -126,7 +126,15 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
                 { id = thread, message = "Al gestemd op dit idee!" });
         }
+        
+        [Authorize]
+        public IActionResult AddReport(int idea, string flagger, int thread)
+        {
+            throw new System.NotImplementedException();
+        }
         #endregion
         #endregion
+
+        
     }
 }

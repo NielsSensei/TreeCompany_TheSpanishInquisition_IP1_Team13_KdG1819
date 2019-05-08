@@ -10,6 +10,11 @@
     ViewData["Title"] = Model.QuestionTitle;
 }
 
+@section Tags
+{
+    <script type="module" src="~/dist/reportidea.entry.js" defer></script>
+}
+
 <div class="container"> 
     <div class="row">
         <div class="col-12">
@@ -42,6 +47,8 @@
             <button class="btn btn-outline-primary" type="submit">Voeg zelf jouw idee toe</button>
         </form>
     </div>
+    <br/>
+    <p>@ViewData["Message"]</p>
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {
@@ -103,10 +110,13 @@
                     <div class="row">
                         <div class="col-6">
                             @Html.ActionLink("Stem op dit idee! ", "AddVote", "Platform",
-                            new {idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id})
+                                new {idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id})
                         </div>
                         <div class="col-6">
-                            <p>@ViewData["Message"]</p>
+                            <a id="activateReport" class="@idea.Id">
+                                <img src="https://image.flaticon.com/icons/svg/148/148882.svg" alt="flagIcon"
+                                     width="25px" height="25px" title="Rapporteer dit idee."/>
+                            </a>
                         </div>
                     </div>
                 }
@@ -114,4 +124,18 @@
             <hr/>
         }
     }
+</div>
+<div id="Reportmenu">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="row">
+                <label>Reden van de rapportering:</label>
+                @Html.TextBox("Reason", "", new { @class = "form-control"})
+                <a id="bevestigReport" asp-controller="Platform" asp-action="AddReport" type="button" 
+                   class="btn btn-primary" asp-route-flagger="@UserManager.GetUserId(User)"
+                   asp-route-thread="@Model.Id">Rapporteer</a>
+                <button type="button" class="btn btn-secondary" id="closeReport">Annuleren</button>
+            </div>
+        </div>
+    </div>
 </div>
