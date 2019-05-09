@@ -65,7 +65,6 @@ namespace UIMVC.Controllers
         public IActionResult ChangePlatform(Platform platform)
         {
             _platformMgr.EditPlatform(platform);
-            // TODO: make the redirect work
             return RedirectToAction("Index", new {id = platform.Id});
         }
         #endregion

@@ -71,7 +71,67 @@ namespace UIMVC.Services
                     EmailConfirmed = true
                 };
 
-                _userManager.CreateAsync(user, _configuration["SuperAdmin:Secret"]);
+                _userManager.CreateAsync(user, _configuration["Moderator:Secret"]);
+                
+                var userFound = await _userManager.FindByEmailAsync(user.UserName);
+                AssignToRole(userFound, Role.MODERATOR);
+            }
+            if (_userManager.FindByEmailAsync(_configuration["LoggedInOrg:Email"]) != null)
+            {
+                UIMVCUser user = new UIMVCUser
+                {
+                    Name = _configuration["LoggedInOrg:AccountName"],
+                    Email = _configuration["LoggedInOrg:Email"],
+                    UserName = _configuration["LoggedInOrg:Email"],
+                    EmailConfirmed = true
+                };
+
+                _userManager.CreateAsync(user, _configuration["LoggedInOrg:Secret"]);
+                
+                var userFound = await _userManager.FindByEmailAsync(user.UserName);
+                AssignToRole(userFound, Role.MODERATOR);
+            }
+            if (_userManager.FindByEmailAsync(_configuration["LoggedInVerified:Email"]) != null)
+            {
+                UIMVCUser user = new UIMVCUser
+                {
+                    Name = _configuration["LoggedInVerified:AccountName"],
+                    Email = _configuration["LoggedInVerified:Email"],
+                    UserName = _configuration["LoggedInVerified:Email"],
+                    EmailConfirmed = true
+                };
+
+                _userManager.CreateAsync(user, _configuration["LoggedInVerified:Secret"]);
+                
+                var userFound = await _userManager.FindByEmailAsync(user.UserName);
+                AssignToRole(userFound, Role.MODERATOR);
+            }
+            if (_userManager.FindByEmailAsync(_configuration["LoggedIn:Email"]) != null)
+            {
+                UIMVCUser user = new UIMVCUser
+                {
+                    Name = _configuration["LoggedIn:AccountName"],
+                    Email = _configuration["LoggedIn:Email"],
+                    UserName = _configuration["LoggedIn:Email"],
+                    EmailConfirmed = true
+                };
+
+                _userManager.CreateAsync(user, _configuration["LoggedIn:Secret"]);
+                
+                var userFound = await _userManager.FindByEmailAsync(user.UserName);
+                AssignToRole(userFound, Role.MODERATOR);
+            }
+            if (_userManager.FindByEmailAsync(_configuration["Anonymous:Email"]) != null)
+            {
+                UIMVCUser user = new UIMVCUser
+                {
+                    Name = _configuration["Anonymous:AccountName"],
+                    Email = _configuration["Anonymous:Email"],
+                    UserName = _configuration["Anonymous:Email"],
+                    EmailConfirmed = true
+                };
+
+                _userManager.CreateAsync(user, _configuration["Anonymous:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
                 AssignToRole(userFound, Role.MODERATOR);
@@ -119,6 +179,21 @@ namespace UIMVC.Services
         #endregion
 
         #region AuthorizationHTML
+        
+        public async Task<bool> IsVerified(ClaimsPrincipal user)
+        {
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "LOGGEDINVERIFIED") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "MODERATOR") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "ADMIN") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
+            {
+                return true;
+            }
+
+            return false;
+            
+        }
+        
         // Check if it's this type of user OR higher
         public async Task<bool> IsModerator(ClaimsPrincipal user)
         {

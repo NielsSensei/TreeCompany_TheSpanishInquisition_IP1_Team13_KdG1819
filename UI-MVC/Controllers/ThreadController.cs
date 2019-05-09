@@ -1,24 +1,29 @@
 using System.Data;
+using System.Threading.Tasks;
 using BL;
 using Domain.Identity;
 using Domain.UserInput;
+using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
     public class ThreadController : Controller
     {
         private readonly IdeationQuestionManager _iqMgr;
+        private readonly RoleService _roleService;
 
-        public ThreadController()
+        public ThreadController(RoleService roleService)
         {
             _iqMgr = new IdeationQuestionManager();
+            _roleService = roleService;
         }
         
         [Authorize]
-        public IActionResult AddIdea(int ideationQuestion, string user, int parent)
+        public async Task<IActionResult> AddIdea(int ideationQuestion, string user, int parent)
         {
             Idea idea = new Idea()
             {
@@ -37,8 +42,9 @@ namespace UIMVC.Controllers
             {
                 idea.ParentIdea = new Idea(){ Id = parent};
             }
-            
-            //TODO als verified dan voegt ge dit toe aan de idea.
+
+            // Check if the user is verified
+            idea.VerifiedUser = await _roleService.IsVerified(User);
             
             if (!Request.Form["newIdeaTitle"].ToString().Equals(null))
             {

@@ -52,7 +52,6 @@
                         <p>Geen tags gevonden</p>
                     }
 
-                    @* TODO zet hier ne rolecheck op *@
                     @if (RoleService.IsAdmin(User).Result)
                     {
                         <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
@@ -74,7 +73,6 @@
     <section class="container">
         <div class="row justify-content-between">
             <div>
-                @* TODO zet hier ne rolecheck op *@
                 @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
                 {
                     <h1>Geen centrale vragen gesteld, wat jammer.</h1>
