@@ -40,7 +40,7 @@ namespace DAL.repos
 
         private IdeasDTO ConvertToDTO(Idea obj)
         {
-            IdeasDTO DTO =  new IdeasDTO()
+            return new IdeasDTO()
             {
                 IdeaID = obj.Id,
                 IQuestionID = obj.IdeaQuestion.Id,
@@ -58,18 +58,6 @@ namespace DAL.repos
                 ParentID = obj.ParentIdea.Id,
                 DeviceID = obj.Device.Id
             };
-
-            if (obj.ParentIdea == null)
-            {
-                DTO.ParentID = 0;
-            }
-
-            if (obj.Device == null)
-            {
-                DTO.DeviceID = 0;
-            }
-            
-            return DTO;
         }
 
         private IdeaFieldsDTO ConvertToDTO(Field obj)
@@ -351,7 +339,7 @@ namespace DAL.repos
 
             foreach (Idea i in ideas)
             {
-                if(ExtensionMethods.HasMatchingWords(i.Title, idea.Title) > 0)
+                if(i.Title == idea.Title && !i.IsDeleted)
                 {
                     throw new DuplicateNameException("Idea(ID=" + idea.Id + ") met titel " + idea.Title + " heeft een gelijkaardige titel aan Idea(ID=" +
                         i.Id + " met titel " + i.Title + ".");
