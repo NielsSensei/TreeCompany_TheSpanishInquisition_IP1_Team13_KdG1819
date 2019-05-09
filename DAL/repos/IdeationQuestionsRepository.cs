@@ -339,7 +339,7 @@ namespace DAL.repos
 
             foreach (Idea i in ideas)
             {
-                if(ExtensionMethods.HasMatchingWords(i.Title, idea.Title) > 0)
+                if(i.Title == idea.Title && !i.IsDeleted)
                 {
                     throw new DuplicateNameException("Idea(ID=" + idea.Id + ") met titel " + idea.Title + " heeft een gelijkaardige titel aan Idea(ID=" +
                         i.Id + " met titel " + i.Title + ".");
