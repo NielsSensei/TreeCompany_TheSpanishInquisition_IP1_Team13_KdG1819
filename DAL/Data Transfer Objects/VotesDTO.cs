@@ -9,7 +9,6 @@ namespace DAL.Data_Transfer_Objects
         public int VoteID { get; set; }
         public int DeviceID { get; set; }
         public int InputID { get; set; }
-        public string UserID { get; set; }
         public byte InputType { get; set; }
         public string UserMail { get; set; }
         public float? LocationX { get; set; }

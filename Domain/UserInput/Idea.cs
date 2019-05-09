@@ -23,7 +23,6 @@ namespace Domain.UserInput
         public Idea ParentIdea { get; set; }
         public bool VerifiedUser { get; set; }
         public IOT_Device Device { get; set; }
-        public bool IsDeleted { get; set; }
 
         // NOTES about boolean properties Reported & Visible.
         // 1. When an idea is reported it is still visible while the Moderation team takes its time to

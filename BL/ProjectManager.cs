@@ -41,8 +41,6 @@ namespace BL
         /*
          * Simple getter to get information about our Project. - NVZ
          */
-           
-
         public Project GetProject(int projectId, bool details)
         {
             return ProjectRepo.Read(projectId, details);
@@ -59,11 +57,6 @@ namespace BL
         public void RemoveProject(int projectId)
         {
             ProjectRepo.Delete(projectId);
-        }
-
-        public IEnumerable<Project> GetAllProjectsForPlatform(int platformId)
-        {
-            return ProjectRepo.ReadAllForPlatform(platformId);
         }
 
         #endregion
@@ -93,8 +86,6 @@ namespace BL
         {
             return ProjectRepo.ReadAllPhases(projectId);
         }
-
-        
         
         public void MakePhase(Phase newPhase, int projectId)
         {
@@ -104,12 +95,12 @@ namespace BL
             ProjectRepo.Update(alteredProject);
             if (newPhase.Module != null)
             {
-                var alteredModule = ModuleMan.GetQuestionnaire(newPhase.Module.Id, false);
+                var moduleType = newPhase.Module.GetType() == typeof(Questionnaire);
+                var alteredModule = ModuleMan.GetModule(newPhase.Module.Id, false, moduleType);
                 alteredModule.Phases.Add(newPhase);
-                //ModuleMan.EditModule(alteredModule);
+                ModuleMan.EditModule(alteredModule);
             }
         }
-
 
         public void RemovePhase(int projectId, int phaseId)
         {
@@ -118,16 +109,12 @@ namespace BL
             alteredProject.Phases.Remove(removedPhase);
             if (removedPhase.Module != null)
             {
-                var alteredModule = ModuleMan.GetQuestionnaire(removedPhase.Module.Id, false);
+                var moduleType = removedPhase.Module.GetType() == typeof(Questionnaire);
+                var alteredModule = ModuleMan.GetModule(removedPhase.Module.Id, false, moduleType);
                 alteredModule.Phases.Remove(removedPhase);
-                //ModuleMan.EditModule(alteredModule);
+                ModuleMan.EditModule(alteredModule);
             }
             ProjectRepo.Delete(phaseId);
-        }
-
-        public Phase GetPhase(int phaseId)
-        {
-            return ProjectRepo.ReadPhase(phaseId, false);
         }
 
         #endregion
@@ -176,7 +163,7 @@ namespace BL
 
         public IEnumerable<Project> GetPlatformProjects(Platform platform)
         {
-            return ProjectRepo.ReadAllForPlatform(platform.Id);
+            return ProjectRepo.ReadAll(platform.Id);
         }
 
         #endregion
