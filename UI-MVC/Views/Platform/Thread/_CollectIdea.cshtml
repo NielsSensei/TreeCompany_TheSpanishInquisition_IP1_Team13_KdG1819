@@ -87,6 +87,12 @@ else
                             Stemmen
                         </a>
                     }
+                    
+                    @if(UserManager.GetUserId(User).Equals(Model.ToView.User.Id)){
+                        <button type="button" class="btn btn-primary" data-toggle="modal" 
+                                data-target="#deleteIdeaModal@(Model.ToView.Id)">Idee Verwijderen
+                        </button> 
+                    }
                 </div>
             </section>
         </div>
@@ -121,6 +127,22 @@ else
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
+    </div>
+</section>
 
+<section class="modal fade" id="deleteIdeaModal@(Model.ToView.Id)" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Ben je zeker dat je je idee wil verwijderen?</h5>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-primary" asp-controller="Moderation"
+                        asp-action="DestroyIdea" asp-route-idea="Model.ToView.Id" formmethod="post"
+                        asp-route-from="IdeationThread" asp-route-thread="0">Bevestig
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </section>
