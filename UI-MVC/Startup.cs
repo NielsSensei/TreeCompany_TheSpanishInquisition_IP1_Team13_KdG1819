@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -43,6 +45,12 @@ namespace UIMVC
                 options.User.RequireUniqueEmail = false;
             });
 
+            // Settings for reverse proxy for deployment
+            services.Configure<ForwardedHeadersOptions>(options => 
+            {
+                options.KnownProxies.Add(IPAddress.Parse("34.76.133.167"));
+            });
+
              services.AddAuthentication().AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
@@ -77,6 +85,14 @@ namespace UIMVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            // Settings for Reverse Proxy for deployment (Nathan)
+            // Must be before UseAuthentication
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             // See UIMVC/Areas/Identity/IdentityHostingStartup for configuration
             app.UseAuthentication();
             app.UseCookiePolicy();
