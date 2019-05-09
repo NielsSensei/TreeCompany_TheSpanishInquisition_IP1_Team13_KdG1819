@@ -5,12 +5,13 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-<h4>Inloggen met je  @Model.LoginProvider account.</h4>
+<h4>Associate your @Model.LoginProvider account.</h4>
 <hr />
 
 <p class="text-info">
-    Inloggen met je <strong>@Model.LoginProvider</strong> account was een groot success.
-    Geef hier je emailadres en klik op registeren om het loginproces te finaliseren.
+    You've successfully authenticated with <strong>@Model.LoginProvider</strong>.
+    Please enter an email address for this site below and click the Register button to finish
+    logging in.
 </p>
 
 <div class="row">
@@ -21,11 +22,11 @@
                 <label asp-for="Input.Email"></label>
                 <input asp-for="Input.Email" readonly class="form-control" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
-                <label asp-for="Input.Name">Naam</label>
+                <label asp-for="Input.Name"></label>
                 <input asp-for="Input.Name" class="form-control" />
                 <span asp-validation-for="Input.Name" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Registreren</button>
+            <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>
 </div>

@@ -1,4 +1,3 @@
-using System.Data;
 using BL;
 using Domain.Identity;
 using Domain.UserInput;
@@ -28,9 +27,7 @@ namespace UIMVC.Controllers
                 Reported = false,
                 ReviewByAdmin = false,
                 Visible = true,
-                Status = "NIET GESELECTEERD",
-                Device = new IOT_Device(){ Id = 0 },
-                ParentIdea =  new Idea() { Id = 0 }
+                Status = "NIET GESELECTEERD"
             };
 
             if (parent != 0)
@@ -57,24 +54,12 @@ namespace UIMVC.Controllers
 
                 idea.Field = field;
             }
-            
+
             //TODO dit met iq settings.
             if (idea.Field != null || idea.Cfield != null || idea.Mfield != null || idea.Vfield != null
                 || idea.Ifield != null) 
             {
-                try
-                {
-                    _iqMgr.MakeIdea(idea);
-                }
-                catch (DuplicateNameException e)
-                {
-                    return RedirectToAction("CollectIdeationThread", "Platform",
-                        new
-                        {
-                            Id = ideationQuestion, message = "Dit idee heeft iemand anders al eens " +
-                                                             "bedacht, je kan er wel op reageren."
-                        });
-                }
+                _iqMgr.MakeIdea(idea);     
             }
             
             return RedirectToAction("CollectIdeationThread", "Platform", new { Id = ideationQuestion });
