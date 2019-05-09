@@ -102,6 +102,9 @@ namespace UIMVC.Controllers
             updateProj.Goal = epm.Goal;
             updateProj.StartDate = epm.StartDate;
             updateProj.EndDate = epm.EndDate;
+            updateProj.Visible = epm.Visible;
+            updateProj.Status= epm.Status.ToUpper();
+            
 
             _projManager.EditProject(updateProj);
             return RedirectToAction("CollectProject", "Platform", new {id = updateProj.Id});
@@ -236,9 +239,6 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectProject", "Platform", new {id = projectId});
         }
 
-        #endregion
-
-
         #region DestroyPhase
 
         [Authorize]
@@ -251,5 +251,10 @@ namespace UIMVC.Controllers
         }
 
         #endregion
+        
+        
+        #endregion
+
+
     }
 }

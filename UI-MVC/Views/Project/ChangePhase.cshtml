@@ -27,16 +27,16 @@
             <input asp-for="EndDate" class="form-control" value="1/1/0001"/>
         </div>
 
-        <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
+        <div class="form-group col-md-5">
+        <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@phase.Project.Id">Ga terug</a>
 
+        <input class="btn btn-primary" type="submit" value="Opslaan" class="btn"/>
+        </div>
     </div>
 </form>
 
 <div>
-    <br>
 
-    <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@phase.Project.Id">Ga terug</a> 
-    <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyPhase" asp-route-id="@phase.Id">Verwijder fase</a>
 
 
 </div>

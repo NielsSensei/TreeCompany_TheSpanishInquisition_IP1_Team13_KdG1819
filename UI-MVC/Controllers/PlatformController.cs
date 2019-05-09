@@ -10,7 +10,6 @@ using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
-    
     public class PlatformController : Controller
     {
         private readonly PlatformManager _platformMgr;
@@ -32,6 +31,7 @@ namespace UIMVC.Controllers
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
             }
+
             return View(platform);
         }
 
@@ -47,6 +47,7 @@ namespace UIMVC.Controllers
         #endregion
 
         #region Change
+
         [Authorize]
         public IActionResult ChangePlatform(int id)
         {
@@ -55,6 +56,7 @@ namespace UIMVC.Controllers
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
             }
+
             return View(platform);
         }
 
@@ -73,6 +75,11 @@ namespace UIMVC.Controllers
         public IActionResult CollectProject(int id)
         {
             Project project = _projectMgr.GetProject(id, false);
+
+            if (!project.Visible)
+            {
+                return RedirectToAction("Index", "Platform", new {id = project.Platform.Id});
+            }
 
             if (project.Visible && project.Id != 0)
             {
@@ -120,11 +127,11 @@ namespace UIMVC.Controllers
             if (_iqMgr.MakeVote(idea, user))
             {
                 return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                    { id = thread, message = "Stem gelukt, dankjewel!" }); 
+                    {id = thread, message = "Stem gelukt, dankjewel!"});
             }
-            
+
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                { id = thread, message = "Al gestemd op dit idee!" });
+                {id = thread, message = "Al gestemd op dit idee!"});
         }
         #endregion
         #endregion

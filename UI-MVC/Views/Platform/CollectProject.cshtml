@@ -21,6 +21,19 @@
                 twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
             })
             <p>@Model.Goal</p>
+
+            
+            <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" asp-route-id="@Model.Id">
+                @*<img src="https://img.icons8.com/metro/25/000000/edit.png">*@ Wijzig project
+            </a><br/>
+
+            
+            <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">
+                Wis project@*<img src="https://img.icons8.com/ios/25/000000/trash.png">*@
+            </a><br/>
+            
+            
+            
         </div>
         <div class="col-8">
             @* TODO vervang images door projectImages *@
@@ -59,7 +72,8 @@
                         <td>@p.EndDate.ToShortDateString()</td>
                         <td>
                             <a class="btn btn-light" asp-controller="Project" asp-action="SetCurrentPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
-                                <img src="https://img.icons8.com/ios/25/000000/map-pin-filled.png">                          </a>
+                                <img src="https://img.icons8.com/ios/25/000000/map-pin-filled.png">
+                            </a>
                         </td>
                         <td>
                             <a class="btn btn-light" asp-controller="Project" asp-action="ChangePhase" asp-route-phaseId="@p.Id">
@@ -69,7 +83,8 @@
 
                         <td>
                             <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
-                                <img src="https://img.icons8.com/ios/25/000000/trash.png">                                </a>
+                                <img src="https://img.icons8.com/ios/25/000000/trash.png">
+                            </a>
                         </td>
 
                     </tr>
