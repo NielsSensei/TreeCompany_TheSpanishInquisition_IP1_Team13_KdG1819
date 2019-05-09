@@ -91,6 +91,11 @@ else
                            asp-route-thread="@Model.ToView.IdeaQuestion.Id">
                             Stemmen
                         </a>
+                        
+                        <a data-toggle="modal" data-target="#makeReportModal@(Model.ToView.Id)">
+                            <img alt="reportflag" src="https://image.flaticon.com/icons/svg/148/148882.svg"
+                                 title="Rapporteer dit idee!" width="25px" height="25px"/>
+                        </a>
                     }
                 </div>
             </section>
