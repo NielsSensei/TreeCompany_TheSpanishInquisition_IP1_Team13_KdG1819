@@ -176,7 +176,7 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
+        
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult ChangeIdeation(int id)
@@ -210,8 +210,8 @@ namespace UIMVC.Controllers
             return View(aim);
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult ConfirmChangeIdeation(int ideation)
         {
@@ -239,8 +239,8 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult DestroyIdeation(int id)
         {
             Ideation i = _moduleMgr.GetIdeation(id);
