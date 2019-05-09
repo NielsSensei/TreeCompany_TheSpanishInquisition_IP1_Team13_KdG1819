@@ -123,23 +123,14 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
-
+        
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
-        [HttpGet]
         public IActionResult AddTag(int ideation)
         {
-            ViewData["Ideation"] = ideation;
-
-            return View();
-        }
-
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
-        [HttpPost]
-        public IActionResult AddTag(string tag, int ideation)
-        {
-            if (tag == null)
+            string tag = Request.Form["GetMeATag"].ToString();
+            
+            if (tag.Equals(""))
             {
                 return BadRequest("Tag can't be null");
             }

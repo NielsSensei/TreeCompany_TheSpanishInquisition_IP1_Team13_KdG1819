@@ -5,10 +5,10 @@
     IEnumerable<Platform> platforms = (IEnumerable<Platform>) ViewData["platforms"];
 }
 
-@section Tags {
-    <script type="module" src="~/dist/showmenu.entry.js" defer></script>
+@section Scripts
+{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
 }
-
 
 @* TODO: Add multiple models: one for list of platforms and one for the creation of a platform*@
 <div class="container createPlatform">
@@ -17,7 +17,9 @@
             <h2>Alle beschikbare platformen</h2>
         </div>
         <div class="col-md-3">
-            <button class="btn btn-primary" id="activateMenu">Maak een platform</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#makePlatformModal">
+              Maak een platform
+            </button>
         </div>
     </div>
     <div>
@@ -50,11 +52,12 @@
     </div>
 </div>
 
-<div id="menu">
-    <div class="row">
-        <div class="col-md-10">
-            <h1>Een nieuw platform maken</h1>
-            <form asp-controller="Moderation" asp-action="AddPlatform" method="post">
+<div class="modal fade" id="makePlatformModal" tabindex="-1" role="dialog" 
+     aria-labelledby="makePlatformModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <form asp-controller="Moderation" asp-action="AddPlatform" method="post">
+            <div class="modal-body m-auto">
                 <div class="form-group">
                     <label asp-for="Name">Naam van het platform</label>
                     <input asp-for="Name" class="form-control"/>
@@ -62,12 +65,13 @@
                 <div class="form-group">
                     <label asp-for="Url">Een verkorte URL</label>
                     <input asp-for="Url" class="form-control"/>
-                </div>
-                <div class="row">
-                    <input type="submit" class="btn btn-primary" value="Maak dit platform aan"/><button type="button" class="btn btn-secondary" 
-                                                                                                        id="closeMenu">Annuleren</button>
-                </div>
-            </form>
-        </div>
+                </div>            
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" value="Maak dit platform aan"/>    
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div> 
+        </form>
     </div>
+  </div>
 </div>
