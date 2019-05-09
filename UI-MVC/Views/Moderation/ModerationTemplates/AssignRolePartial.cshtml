@@ -1,0 +1,10 @@
+@using Domain.Users
+@model AssignRoleModel
+
+<form asp-action="SetRole" asp-controller="Moderation" asp-route-arm="@Model">
+        @Html.DropDownList("Role", new SelectList(Enum.GetNames(typeof(Role))), "Kies een rol",
+            new {@class = "form-control"})
+    <div>
+        <button class="btn btn-primary" type="submit">Bevestig</button>
+    </div>
+</form>

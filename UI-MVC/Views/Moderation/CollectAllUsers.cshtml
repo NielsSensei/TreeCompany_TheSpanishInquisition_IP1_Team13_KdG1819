@@ -23,27 +23,38 @@
 <table class="table">
     <thead>
     <tr>
-        <th><a asp-action="CollectAllUsers">Id</a></th>
-        <th><a asp-action="CollectAllUsers" asp-route-sortOrder="platform">Platform</a></th>
-        <th><a asp-action="CollectAllUsers" asp-route-sortOrder="name">Naam</a></th>
-        <th><a asp-action="CollectAllUsers" asp-route-sortOrder="birthday">Geboortedatum</a></th>
+        <th>
+            <a asp-action="CollectAllUsers">Id</a>
+        </th>
+        <th>
+            <a asp-action="CollectAllUsers" asp-route-sortOrder="platform">Platform</a>
+        </th>
+        <th>
+            <a asp-action="CollectAllUsers" asp-route-sortOrder="name">Naam</a>
+        </th>
+        <th>
+            <a asp-action="CollectAllUsers" asp-route-sortOrder="birthday">Geboortedatum</a>
+        </th>
         <th>Rollen</th>
         <th>Actief</th>
         <th>Verbannen?</th>
+        <th>Rollen toekennen</th>
     </tr>
     </thead>
     <tbody>
     @foreach (UIMVCUser user in Model)
     {
         <tr>
-            <td>@user.Id</td>
+            <td>@user.Id.Substring(0, 5)...</td>
             <td>@user.PlatformDetails</td>
             <td>@user.Name</td>
             <td>@user.DateOfBirth.ToString("dd-MM-yyyy")</td>
-            <td>@foreach (string role in await RoleService.GetRolesForUser(user))
+            <td>
+                @foreach (string role in await RoleService.GetRolesForUser(user))
                 {
                     <pre>@role</pre>
-                }</td>
+                }
+            </td>
             <td>@user.Active</td>
             <td>
                 @if (await RoleService.IsSameRoleOrHigher(User, user))
@@ -52,17 +63,17 @@
                 }
                 else if (user.Banned)
                 {
-                <text><a asp-action="ToggleBanUser" asp-route-userId="@user.Id">Ban opheffen</a></text>
+                    <text><a asp-action="ToggleBanUser" asp-route-userId="@user.Id">Ban opheffen</a></text>
                 }
                 else
                 {
-                <text><a asp-action="ToggleBanUser" asp-route-userId="@user.Id">Bannen</a></text>
+                    <text><a asp-action="ToggleBanUser" asp-route-userId="@user.Id">Bannen</a></text>
                 }
-                @*TODO User verified role*@
-                @*                 @if (@user.Role == Role.LOGGEDIN && user.Active) *@
-                @*                 { *@
-                @* <text> | <a asp-action="VerifyUser" asp-route-userId="@user.Id">Verifiëren</a></text> *@
-                @* } *@
+            </td>
+            <td>
+                <form asp-action="" method="post">
+                    @Html.Partial("ModerationTemplates/AssignRolePartial", new AssignRoleModel(){UserId = user.Id})
+                </form>
             </td>
         </tr>
     }

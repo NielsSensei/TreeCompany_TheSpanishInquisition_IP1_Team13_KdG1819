@@ -365,6 +365,12 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectAllUsers");
             // This part is still borked.
         }
+        
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        public IActionResult SetRole(AssignRoleModel arm)
+        {
+            throw new NotImplementedException("Roles need to be implemented");
+        }
 
         [HttpGet]
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
