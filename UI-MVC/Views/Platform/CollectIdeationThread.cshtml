@@ -10,6 +10,11 @@
     ViewData["Title"] = Model.QuestionTitle;
 }
 
+@section Scripts
+{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
 <div class="container"> 
     <div class="row">
         <div class="col-12">
@@ -27,91 +32,13 @@
     </div>
     <hr/>
     <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
-    <div class="row" id="newIdea">
-        <form asp-controller="Thread" asp-action="AddIdea" asp-route-ideationQuestion="@Model.Id"
-              asp-route-user="@UserManager.GetUserId(User)" asp-route-parent="0">
-            <div class="form-group">
-                <label>Titel:</label>
-                @Html.TextBox("newIdeaTitle","", new { @class="form-control"})
-            </div>
-            @* Voorlopig enkel gewoon Field *@
-            <div class="form-group">
-                <label>Text:</label>
-                @Html.TextBox("newIdeaField","", new { @class="form-control"})
-            </div>
-            <button class="btn btn-outline-primary" type="submit">Voeg zelf jouw idee toe</button>
-        </form>
-    </div>
+    @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionID = Model.Id, ParentID = 0})
+    <br/>
+    <p>@ViewData["Message"]</p>
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {
-        if (idea.IsDeleted)
-        {
-            <div class="row justify-content-center">
-                <h4>[Verwijderd]</h4>
-            </div>
-            <hr/>
-        }
-
-        if (!idea.IsDeleted)
-        {
-            <div class="row justify-content-center">
-                <h4>@idea.Title</h4>
-            </div>
-            <div class="row justify-content-center">
-                @if (!idea.VerifiedUser)
-                {
-                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-                    {
-                        likeCount = idea.VoteCount,
-                        shareCount = idea.ShareCount, retweetCount = idea.RetweetCount, iconStyle = 4,
-                        Username = UserService.CollectUserName(idea.User.Id)
-                    })
-                }
-            
-                @if (idea.VerifiedUser)
-                {
-                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-                    {
-                        likeCount = idea.VoteCount,
-                        shareCount = idea.ShareCount, retweetCount = idea.RetweetCount, iconStyle = 5,
-                        Username = UserService.CollectUserName(idea.User.Id)
-                    })
-                }
-            </div>
-            <div class="row justify-content-center">
-                @if (idea.Field != null)
-                {
-                    <p>@idea.Field.Text</p>
-                }
-            
-                @if (idea.Cfield != null)
-                {
-                    <ul>
-                        @foreach (string o in idea.Cfield.Options)
-                        {
-                            <li>@o</li>
-                        }
-                    </ul>
-                }
-                @* TODO Fields buiten CField & Field *@
-            </div>
-            <div class="row justify-content-center">
-                @* TODO actionbuttons hero *@
-                @if (!UserManager.GetUserId(User).Equals(idea.User.Id))
-                {
-                    <div class="row">
-                        <div class="col-6">
-                            @Html.ActionLink("Stem op dit idee! ", "AddVote", "Platform",
-                            new {idea = idea.Id, user = UserManager.GetUserId(User), thread = Model.Id})
-                        </div>
-                        <div class="col-6">
-                            <p>@ViewData["Message"]</p>
-                        </div>
-                    </div>
-                }
-            </div>
-            <hr/>
-        }
+        @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = idea, IdeaLevel = 0 })
+        <hr/>
     }
 </div>
