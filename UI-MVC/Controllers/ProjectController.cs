@@ -10,6 +10,7 @@ using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using UIMVC.Models;
 
@@ -36,7 +37,7 @@ namespace UIMVC.Controllers
         [Authorize]
         [HttpGet]
         public IActionResult AddProject(int platform)
-        {
+        { 
             ViewData["platform"] = platform;
             return View();
         }
@@ -122,15 +123,15 @@ namespace UIMVC.Controllers
             Project project = _projManager.GetProject(id, false);
             int platformId = project.Platform.Id;
             project.Phases = (List<Phase>) _projManager.GetAllPhases(project.Id);
-            /*
-            if (project.Modules.Count != 0)
+            
+            /*if (project.Modules.Count != 0)
             {
                 foreach (var module in project.Modules)
                 {
                     _modManager.RemoveModule(module.Id, project.Id, true); //TODO() IsQuestionnaire toevoegen in Module?
                 }
-            }
-*/
+            }*/
+
 
             if (project.Phases.Count != 0)
             {

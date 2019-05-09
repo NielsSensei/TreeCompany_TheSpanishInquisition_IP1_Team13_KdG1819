@@ -10,12 +10,6 @@ namespace Domain.Projects
 {
     public class Project
     {
-        public Project()
-        {
-           // _phases = new List<Phase>();
-            //   _currentPhase = _phases.Find(phase => phase.isCurrent);
-        }
-
         // Added by NG
         // Modified by XV & NVZ & EKT & DM
         public int Id { get; set; }

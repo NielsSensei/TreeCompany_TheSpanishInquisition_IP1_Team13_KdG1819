@@ -14,11 +14,11 @@
     </div>
     <div class="form-group col-md-6">
         <label asp-for="StartDate">Start datum</label>
-        <input asp-for="StartDate" class="form-control" value="1/1/0001"/>
+        <input type="date" asp-for="StartDate" class="form-control" />
     </div>
     <div class="form-group col-md-6">
         <label asp-for="EndDate">Eind datum</label>
-        <input asp-for="EndDate" class="form-control" value="1/1/0001"/>
+        <input type="date" asp-for="EndDate" class="form-control" />
     </div>
 
     <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>

@@ -4,31 +4,30 @@
     Layout = "_Layout";
 }
 
+ 
 
 <br>
 
 <h2>Maak een nieuw project aan</h2>
 <br>
-<form asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model", asp-route-platform="@ViewData["platform"]">
+<form id="ProjectForm" asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model", asp-route-platform="@ViewData["platform"]">
 
     <div class="form-row">
         <div class="form-group col-md-12">
             <label asp-for="Title">Naam</label>
-            <input asp-for="Title" class="form-control" required pattern="^[A-Za-z\-]+$"
-                   data-error="Firstname must not be empty." data-pattern-error="Firstname must contain only letters."/>
-
+            <input type="text" asp-for="Title" class="form-control"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="StartDate">Start datum</label>
-            <input type="date" asp-for="StartDate" class="form-control" value="1/1/0001 "/>
+            <input type="date" asp-for="StartDate" class="form-control" required />
         </div>
         <div class="form-group col-md-6">
             <label asp-for="EndDate">Eind datum</label>
-            <input type="date" asp-for="EndDate" class="form-control" value="1/1/0001 "/>
+            <input type="date" asp-for="EndDate" class="form-control" required />
         </div>
         <div class="form-group col-md-6">
             <label asp-for="Goal">Doel</label>
-            <input asp-for="Goal" class="form-control" value="Goal"/>
+            <input asp-for="Goal" class="form-control" required/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="Status">Status</label>
@@ -37,28 +36,30 @@
 
         <div class="form-group col-md-12">
             <input type="checkbox" data-val="true" id="Visible" name="Visible" value="true">
-            <input name="Visible" type="hidden" value="false">
+            <input name="Visible" type="hidden" value="false" >
             <label asp-for="Visible">Zichtbaar</label>
 
         </div>
 
 
-        
-
         <div class="form-group col-md-12">
             <h4>Huidige fase:</h4>
             <label asp-for="CurrentPhase.Description">Omschrijving</label>
-            <input asp-for="CurrentPhase.Description" class="form-control" value="Test"/>
+            <input   asp-for="CurrentPhase.Description" class="form-control" value="Test"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="CurrentPhase.StartDate">Start datum</label>
-            <input asp-for="CurrentPhase.StartDate" class="form-control" value="1/1/0001"/>
+            <input type="date" asp-for="CurrentPhase.StartDate" class="form-control" value="1/1/0001"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="CurrentPhase.EndDate">Eind datum</label>
-            <input asp-for="CurrentPhase.EndDate" class="form-control" value="1/1/0001"/>
+            <input type="date" asp-for="CurrentPhase.EndDate" class="form-control" value="1/1/0001"/>
         </div>
     </div>
 
     <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

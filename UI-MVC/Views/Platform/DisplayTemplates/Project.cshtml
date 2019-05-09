@@ -3,14 +3,12 @@
 <section class="card ">
     <div class="card-body">
         <h4 class="card-title"> @Model.Title </h4>
+        <br/>
         <hr>
         <p>
             <span class="font-weight-bold">Doel:</span> @Model.Goal</p>
     </div>
     <div class="card-footer text-center">
         <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@Model.Id">Ga naar Project</a><br/>
-        <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">
-            <img src="https://img.icons8.com/ios/25/000000/trash.png">   
-        </a><br/>
     </div>
 </section>

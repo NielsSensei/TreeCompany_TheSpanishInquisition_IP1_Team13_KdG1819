@@ -11,6 +11,7 @@
 }
 
 @* Hoe gaan we de mobile layout doen? *@
+
 <div class="container">
     <div class="row">
         <div class="col-4">
@@ -22,18 +23,18 @@
             })
             <p>@Model.Goal</p>
 
-            
-            <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" asp-route-id="@Model.Id">
-                @*<img src="https://img.icons8.com/metro/25/000000/edit.png">*@ Wijzig project
-            </a><br/>
+            <div class="project-actions">
+                <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" asp-route-id="@Model.Id">
+                    @*<img src="https://img.icons8.com/metro/25/000000/edit.png">*@ Wijzig project
+                </a>
+                <br/>
 
-            
-            <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">
-                Wis project@*<img src="https://img.icons8.com/ios/25/000000/trash.png">*@
-            </a><br/>
-            
-            
-            
+                <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">
+                    Wis project@*<img src="https://img.icons8.com/ios/25/000000/trash.png">*@
+                </a><br/>
+            </div>
+
+
         </div>
         <div class="col-8">
             @* TODO vervang images door projectImages *@
@@ -46,7 +47,10 @@
         <div class="col-4">
 
             <h3>Huidige fase:</h3>
-            @Html.DisplayFor(m => Model.CurrentPhase)
+            @Html.DisplayFor(m => Model.CurrentPhase)<br/>
+            <a class="btn btn-primary" asp-controller="Project" asp-action="AddPhase" asp-route-projectId="@Model.Id">
+                Voeg fase toe@*<img src="https://img.icons8.com/ios/25/000000/trash.png">*@
+            </a>
         </div>
         <div class="col-8">
             <h3>Andere fases:</h3>
@@ -126,13 +130,13 @@
 else
 {
     <p>Geen modules voor dit project.</p>
-    
 }
 <hr/>
 
-<a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">	
-    Maak een nieuwe ideation	
-</a> 
+<a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">
+    Maak een nieuwe ideation
+</a>
 
 <a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
-Nieuwe vragenlijst maken</a>
+    Nieuwe vragenlijst maken
+</a>
