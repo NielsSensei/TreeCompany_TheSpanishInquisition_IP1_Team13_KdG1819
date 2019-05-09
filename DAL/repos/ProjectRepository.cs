@@ -97,26 +97,16 @@ namespace DAL
         }
 
         private int FindNextAvailableProjectId()
-        {
-            if (ReadAll().Count() == 0)
-            {
-                return 1;
-            }
-            else
-            {
-                int newId = ReadAll().Max(platform => platform.Id) + 1;
-                return newId;
-            }
-            
+        {               
+            if (!ctx.Projects.Any()) return 1;
+            int newId = ReadAll().Max(platform => platform.Id)+1;
+            return newId;
         }
 
         private int FindNextAvailablePhaseId()
-        {
-            if (ReadAllPhases().Count() == 0)
-            {
-                return 1;
-            }
-            int newId = ReadAllPhases().Max(platform => platform.Id) + 1;
+        {               
+            if (!ctx.Phases.Any()) return 1;
+            int newId = ReadAllPhases().Max(platform => platform.Id)+1;
             return newId;
         }
 

@@ -85,6 +85,11 @@ namespace BL
             return IdeationQuestionRepo.ReadWithFields(ideaId);
         }
 
+        public void MakeIdea(Idea idea)
+        {
+            IdeationQuestionRepo.Create(idea);
+        }
+        
         public void RemoveIdea(int ideaId)
         {
             IdeationQuestionRepo.DeleteIdea(ideaId);
@@ -140,6 +145,11 @@ namespace BL
             }
 
             return false;
+        }
+
+        public void RemoveVotes(int ideaID)
+        {
+            VoteMan.RemoveVotes(ideaID);
         }
         
         // Added by NVZ
