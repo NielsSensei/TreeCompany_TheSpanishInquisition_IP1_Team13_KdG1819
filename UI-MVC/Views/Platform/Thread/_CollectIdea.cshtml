@@ -10,27 +10,25 @@
 @if (Model.ToView.IsDeleted)
 {
     <section class="card">
-        
+        <div class="card-title">
+            <div class="row justify-content-center-between m-auto">
+                <h4>[Verwijderd]</h4> 
+            </div>
+            <div class="row justify-content-center-between m-auto">
+                @if (Model.IdeaLevel < 3)
+                {
+                    <div class="card-footer">
+                        @foreach (Idea child in ProjectService.CollectThreadIdeas(
+                            Model.ToView.IdeaQuestion).Where(i => i.ParentIdea.Id == Model.ToView.Id))
+                        {
+                            @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = child, 
+                                IdeaLevel = (byte)(Model.IdeaLevel+1) })
+                        }
+                    </div>
+                }        
+            </div>
+        </div> 
     </section>
-    <div class="card-title">
-        <div class="row justify-content-center-between m-auto">
-           <h4>[Verwijderd]</h4> 
-        </div>
-        <div class="row justify-content-center-between m-auto">
-           @if (Model.IdeaLevel < 3)
-           {
-                <div class="card-footer">
-                    @foreach (Idea child in ProjectService.CollectThreadIdeas(Model.ToView.IdeaQuestion).Where(
-                                i => i.ParentIdea.Id == Model.ToView.Id))
-                    {
-                        @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = child, IdeaLevel = 
-                                   (byte)(Model.IdeaLevel+1) })
-                    }
-                </div>
-           
-           }        
-        </div>
-    </div>
 }
 else
 {
