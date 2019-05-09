@@ -106,7 +106,7 @@ namespace UIMVC.Controllers
         #region Ideation
         public IActionResult CollectIdeation(int id)
         {
-            Ideation ideation = (Ideation) _projectMgr.ModuleMan.GetModule(id, false, false);
+            Ideation ideation = _projectMgr.ModuleMan.GetIdeation(id);
             
             return View(ideation);            
         }
@@ -116,6 +116,7 @@ namespace UIMVC.Controllers
             IdeationQuestion iq = _iqMgr.GetQuestion(id, false);
 
             ViewData["Message"] = message;
+            ViewData["IdeationQuestion"] = iq;
             
             return View(iq);
         }
