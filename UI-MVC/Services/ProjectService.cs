@@ -34,10 +34,6 @@ namespace UIMVC.Services
             return _moduleManager.GetIdeations(project.Id);
         }
 
-        public IEnumerable<Phase> CollectProjectPhases(Project project)
-        {
-            return _projectManager.GetAllPhases(project.Id);
-        }
         public IEnumerable<Idea> CollectThreadIdeas(IdeationQuestion ideationQuestion)
         {
             return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);

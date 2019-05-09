@@ -40,7 +40,7 @@ namespace DAL.repos
 
         private IdeasDTO ConvertToDTO(Idea obj)
         {
-            return new IdeasDTO()
+            return new IdeasDTO
             {
                 IdeaID = obj.Id,
                 IQuestionID = obj.IdeaQuestion.Id,
@@ -54,7 +54,6 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
-                IsDeleted = obj.IsDeleted,
                 ParentID = obj.ParentIdea.Id,
                 DeviceID = obj.Device.Id
             };
@@ -145,7 +144,6 @@ namespace DAL.repos
                 ShareCount= DTO.ShareCount,
                 Status = DTO.Status,
                 VerifiedUser = DTO.VerifiedUser,
-                IsDeleted = DTO.IsDeleted,
                 ParentIdea = new Idea { Id = DTO.ParentID },
                 Device = new IOT_Device { Id = DTO.DeviceID }
             };
@@ -230,30 +228,20 @@ namespace DAL.repos
         }
         
         private int FindNextAvailableIQuestionId()
-        {
-            if (!ctx.IdeationQuestions.Any()) return 1;
+        {               
             int newId = ReadAll().Max(IQuestion => IQuestion.Id)+1;
             return newId;
         }
 
         private int FindNextAvailableIdeaId()
         {
-            if (!ctx.Ideas.Any()) return 1;
             int newId = ReadAllIdeas().Max(idea => idea.Id)+1;
             return newId;
         }
                 
         private int FindNextAvailableReportId()
         {
-            if (!ctx.Reports.Any()) return 1;
             int newId = ReadAllReports().Max(report => report.Id)+1;
-            return newId;
-        }
-
-        private int FindNextAvailableFieldId()
-        {
-            if (!ctx.IdeaFields.Any()) return 1;
-            int newId = ReadAllFields().Max(field => field.Id)+1;
             return newId;
         }
         #endregion
@@ -304,12 +292,16 @@ namespace DAL.repos
 
             ctx.SaveChanges();
         }
-        
+
+        /* Ik heb momenteel de optie opengehouden zoals het zoals reddit te doen. https://imgur.com/a/oeLkyL2 zodat de Ide�n niet mee verwijderd worden.
+         Een hard delete van de vraag en de hele "thread" zal waarschijnlijk ook nog kunnen, dat mag je veranderen naar bespreking met mij. -NVZ */
         public void Delete(int id)
         {
-            IdeationQuestionsDTO dto = ctx.IdeationQuestions.First(d => d.IQuestionID == id);
-            ctx.IdeationQuestions.Remove(dto);
-            ctx.SaveChanges();
+            IdeationQuestion iq = Read(id, false);
+            iq.QuestionText = "[deleted]";
+            iq.QuestionTitle = "[deleted]";
+            iq.Description = "[deleted]";
+            Update(iq);
         }
 
         public IEnumerable<IdeationQuestion> ReadAll()
@@ -339,46 +331,22 @@ namespace DAL.repos
 
             foreach (Idea i in ideas)
             {
-                if(i.Title == idea.Title && !i.IsDeleted)
+                if(ExtensionMethods.HasMatchingWords(i.Title, idea.Title) > 0)
                 {
                     throw new DuplicateNameException("Idea(ID=" + idea.Id + ") met titel " + idea.Title + " heeft een gelijkaardige titel aan Idea(ID=" +
                         i.Id + " met titel " + i.Title + ".");
                 }
             }
-            
+
+            idea.Visible = true;
             idea.Id = FindNextAvailableIdeaId();
            
             ctx.Ideas.Add(ConvertToDTO(idea));
-
-            if (idea.Field != null)
-            {
-                idea.Field.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Field));   
-            }
-
-            if (idea.Cfield != null)
-            {
-                idea.Cfield.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Cfield)); 
-            }
-            
-            if (idea.Ifield != null)
-            {
-                idea.Ifield.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Ifield));
-            }
-            
-            if (idea.Vfield != null)
-            {
-                idea.Vfield.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Vfield));
-            }
-            
-            if (idea.Mfield != null)
-            {
-                idea.Mfield.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Mfield));
-            }
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Field));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Cfield));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Ifield));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Vfield));
+            ctx.IdeaFields.Add(ConvertToDTO(idea.Mfield));
 
             ctx.SaveChanges();
 
@@ -446,7 +414,6 @@ namespace DAL.repos
                 foundIdea.Status = newIdea.Status;
                 foundIdea.VerifiedUser = newIdea.VerifiedUser;
                 foundIdea.DeviceID = newIdea.DeviceID;
-                foundIdea.IsDeleted = newIdea.IsDeleted;
                 ctx.Ideas.Update(foundIdea);
             }
            
@@ -512,28 +479,44 @@ namespace DAL.repos
             ctx.SaveChanges();
         }
 
-        public void DeleteField(int id)
-        {
-            IdeaFieldsDTO i = ctx.IdeaFields.First(f => f.FieldID == id);
-            ctx.IdeaFields.Remove(i);
-            ctx.SaveChanges();
-        }
-        
-        public void DeleteFields(int ideaID)
-        {
-            List<Field> fields = (List<Field>) ReadAllFields(ideaID);
-
-            foreach (Field field in fields)
-            {
-                DeleteField(field.Id);
-            }
-        }
- 
+        /* Het veiligste is het zoals reddit te doen: https://imgur.com/a/oeLkyL2. Anders worden de childs mee gedelete misschien of bestaan ze wel db wise
+         * maar worden ze niet getoond. Het beste is enkel de 2 deleted tonen in dit geval. - NVZ
+        */
         public void DeleteIdea(int ideaID)
         {
-            IdeasDTO i = ctx.Ideas.First(byeIdea => byeIdea.IdeaID == ideaID);
-            ctx.Ideas.Remove(i);
-            ctx.SaveChanges();
+            Idea i = ReadWithFields(ideaID);
+            i.Title = "[deleted]";
+            i.Visible = false;
+            
+            if (i.Field != null)
+            {
+                i.Field.Text = "[deleted]"; 
+            }
+
+            if (i.Cfield != null)
+            {
+                i.Cfield.Options = null;   
+            }
+
+            if (i.Mfield != null)
+            {
+                i.Mfield.LocationX = 0;
+                i.Mfield.LocationY = 0;  
+            }
+
+            if (i.Ifield != null)
+            {
+                i.Ifield.UploadedImage = null;
+                i.Ifield.Url = null;  
+            }
+
+            if (i.Vfield != null)
+            {
+                i.Vfield.Url = null;
+                i.Vfield.UploadedVideo = null;  
+            }
+                 
+            Update(i);
         }
 
         public IEnumerable<Idea> ReadAllIdeas()
@@ -649,15 +632,6 @@ namespace DAL.repos
             ctx.SaveChanges();
         }
 
-        public void DeleteReports(int ideaID)
-        {
-            List<Report> reports = (List<Report>) ReadAllReportsByIdea(ideaID);
-
-            foreach (Report report in reports)
-            {
-               DeleteReport(report.Id);
-            }
-        }
         public IEnumerable<Report> ReadAllReports()
         {
             List<Report> myQuery = new List<Report>();
