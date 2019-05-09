@@ -28,7 +28,6 @@ namespace DAL.Contexts
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlite("Data Source=TheSpanishDatabase.db");
-                optionsBuilder.EnableSensitiveDataLogging();
             }
             
         }
