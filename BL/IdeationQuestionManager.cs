@@ -85,6 +85,11 @@ namespace BL
             return IdeationQuestionRepo.ReadWithFields(ideaId);
         }
 
+        public void MakeIdea(Idea idea)
+        {
+            IdeationQuestionRepo.Create(idea);
+        }
+        
         public void RemoveIdea(int ideaId)
         {
             IdeationQuestionRepo.DeleteIdea(ideaId);
@@ -116,22 +121,48 @@ namespace BL
 
         // Added by NG
         // Vote
-        public void MakeVote(int feedbackId, int userId, int? deviceId, double? x, double? y)
+        public void MakeVote(int feedbackId, string userId, int? deviceId, double? x, double? y)
         {
             Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
-            if (VoteMan.HandleVotingOnFeedback(feedbackId, userId, deviceId, x, y))
-            {
+            if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, deviceId, x, y))
+            { 
+                //TODO fix voting via device
                 feedback.VoteCount++;
+                EditIdea(feedback);
             }
         }
 
+        public bool MakeVote(int feedbackId, string userId)
+        {
+            Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
+            if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, null, null, null))
+            {
+                VoteMan.MakeVote(feedbackId, userId, null, null, null, true);
+                feedback.VoteCount++;
+                EditIdea(feedback);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public void RemoveVotes(int ideaID)
+        {
+            VoteMan.RemoveVotes(ideaID);
+        }
+        
         // Added by NVZ
         // Field
         public IEnumerable<Field> GetAllFields(int ideaID)
         {
             return IdeationQuestionRepo.ReadAllFields(ideaID);
         }
-        
+
+        public void RemoveFields(int ideaID)
+        {
+            IdeationQuestionRepo.DeleteFields(ideaID);
+        }
         // Added by NVZ
         // Report
         public void RemoveReport(int id)
@@ -139,6 +170,10 @@ namespace BL
             IdeationQuestionRepo.DeleteReport(id);
         }
         
+        public void RemoveReports(int ideaID)
+        {
+            IdeationQuestionRepo.DeleteReports(ideaID);   
+        }
         public void EditReport(Report obj)
         {
             IdeationQuestionRepo.Update(obj);

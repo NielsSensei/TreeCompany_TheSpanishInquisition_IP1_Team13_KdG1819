@@ -95,12 +95,14 @@ namespace DAL
         
         private int FindNextAvailableProjectId()
         {               
+            if (!ctx.Projects.Any()) return 1;
             int newId = ReadAll().Max(platform => platform.Id)+1;
             return newId;
         }
         
         private int FindNextAvailablePhaseId()
         {               
+            if (!ctx.Phases.Any()) return 1;
             int newId = ReadAllPhases().Max(platform => platform.Id)+1;
             return newId;
         }
@@ -120,7 +122,7 @@ namespace DAL
          */
             public Project Create(Project obj)
             {
-            IEnumerable<Project> projects = ReadAll(obj.Platform.Id);
+            IEnumerable<Project> projects = ReadAllForPlatform(obj.Platform.Id);
 
             foreach(Project p in projects){
                 if(ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
@@ -149,7 +151,7 @@ namespace DAL
         public Project Read(int id, bool details)
         {
             ProjectsDTO projectsDTO = null;
-            projectsDTO = details ? ctx.Projects.AsNoTracking().First(p => p.ProjectID == id) : ctx.Projects.First(p => p.ProjectID == id);
+            projectsDTO = details ? ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectID == id) : ctx.Projects.FirstOrDefault(p => p.ProjectID == id);
             ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
             
             return ConvertToDomain(projectsDTO);
@@ -194,7 +196,7 @@ namespace DAL
             return myQuery;
         }
 
-        public IEnumerable<Project> ReadAll(int platformID)
+        public IEnumerable<Project> ReadAllForPlatform(int platformID)
         {
             return ReadAll().ToList().FindAll(p => p.Platform.Id == platformID);
         }
@@ -269,6 +271,8 @@ namespace DAL
         {
             return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectID);
         }
+
+        
         #endregion
         
         // Added by NVZ
