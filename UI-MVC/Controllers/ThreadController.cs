@@ -3,7 +3,6 @@ using BL;
 using Domain.Identity;
 using Domain.UserInput;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UIMVC.Controllers

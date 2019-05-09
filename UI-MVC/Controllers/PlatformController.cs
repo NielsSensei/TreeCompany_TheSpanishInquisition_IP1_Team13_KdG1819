@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BL;
+using Domain.Identity;
 using Domain.Projects;
 using Domain.UserInput;
 using Domain.Users;
@@ -127,11 +128,39 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
                 { id = thread, message = "Al gestemd op dit idee!" });
         }
-        
+
         [Authorize]
         public IActionResult AddReport(int idea, string flagger, int thread)
         {
-            throw new System.NotImplementedException();
+            Idea ToReport = _iqMgr.GetIdea(idea);
+
+            Report report = new Report()
+            {
+                Idea = ToReport,
+                Flagger = new UIMVCUser() {Id = flagger},
+                Reportee = new UIMVCUser() {Id = ToReport.User.Id},
+                Status = ReportStatus.STATUS_NOTVIEWED
+            };
+
+            if (Request.Form["Reason"].ToString() != null)
+            {
+                Report alreadyReport = _iqMgr.GetAllReportsByIdea(idea).FirstOrDefault(
+                    r => r.Flagger.Id.Equals(flagger));
+
+                if (alreadyReport == null)
+                {
+                    _iqMgr.MakeReport(report);
+                    
+                    return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                        { id = thread, message = "Idee geraporteerd!" });
+                }
+                
+                return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                    { id = thread, message = "Je oude rapport is nog in de behandeling" });
+            }
+            
+            return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                { id = thread, message = "Je hebt geen reden opgegeven voor je rapport!" });
         }
         #endregion
         #endregion
