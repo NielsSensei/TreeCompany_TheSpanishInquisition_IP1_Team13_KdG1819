@@ -25,7 +25,7 @@ namespace UIMVC.Controllers
         {
             _modManager = new ModuleManager();
             _projManager = new ProjectManager();
-             _userManager = userManager;
+            _userManager = userManager;
         }
 
 
@@ -62,7 +62,7 @@ namespace UIMVC.Controllers
                 Status = pvm.Status.ToUpper(),
                 LikeVisibility = 1,
                 Goal = pvm.Goal,
-                Visible = true,
+                Visible = pvm.Visible
             };
 
             pr.Phases.Add(pr.CurrentPhase);
@@ -221,7 +221,6 @@ namespace UIMVC.Controllers
         #endregion
 
 
-
         [Authorize]
         [HttpGet]
         public IActionResult SetCurrentPhase(int projectId, int phaseId)
@@ -239,13 +238,18 @@ namespace UIMVC.Controllers
 
         #endregion
 
+
+        #region DestroyPhase
+
         [Authorize]
         [HttpGet]
         public IActionResult DestroyPhase(int phaseId, int projectId)
         {
             _projManager.RemovePhase(projectId, phaseId);
-            
+
             return RedirectToAction("CollectProject", "Platform", new {id = projectId});
         }
+
+        #endregion
     }
 }

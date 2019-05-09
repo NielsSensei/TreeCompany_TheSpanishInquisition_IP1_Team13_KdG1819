@@ -32,7 +32,7 @@
         <div class="col-10">
             <h2>Alle fases</h2>
         </div>
-        <a class="btn btn-primary" asp-controller="Project" asp-action="AddPhase" asp-route-projectId="@Model.Id" method="get">Nieuwe fase</a>       
+        <a class="btn btn-primary" asp-controller="Project" asp-action="AddPhase" asp-route-projectId="@Model.Id" method="get">Nieuwe fase</a>
     </div>
     <div class="row">
         <div class="col-4">
@@ -47,8 +47,9 @@
                 <th>Omschrijving</th>
                 <th>van</th>
                 <th>tot</th>
-                <th></th>
-                <th></th>
+                <th>huidig</th>
+                <th>pas aan</th>
+                <th>wis</th>
                 </thead>
                 @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
                 {
@@ -58,19 +59,17 @@
                         <td>@p.EndDate.ToShortDateString()</td>
                         <td>
                             <a class="btn btn-light" asp-controller="Project" asp-action="SetCurrentPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
-                                zet als huidige
-                            </a>
+                                <img src="https://img.icons8.com/ios/25/000000/map-pin-filled.png">                          </a>
                         </td>
                         <td>
                             <a class="btn btn-light" asp-controller="Project" asp-action="ChangePhase" asp-route-phaseId="@p.Id">
-                                pas aan
+                                <img src="https://img.icons8.com/metro/25/000000/edit.png">
                             </a>
                         </td>
-                        
+
                         <td>
-                            <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id" >
-                                Wis
-                            </a>
+                            <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
+                                <img src="https://img.icons8.com/ios/25/000000/trash.png">                                </a>
                         </td>
 
                     </tr>
@@ -117,13 +116,13 @@
 else
 {
     <p>Geen modules voor dit project.</p>
-    
 }
 <hr/>
 
-<a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">	
-    Maak een nieuwe ideation	
-</a> 
+<a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">
+    Maak een nieuwe ideation
+</a>
 
 <a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
-Nieuwe vragenlijst maken</a>
+    Nieuwe vragenlijst maken
+</a>

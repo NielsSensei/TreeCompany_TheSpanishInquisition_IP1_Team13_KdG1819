@@ -8,16 +8,16 @@ namespace UIMVC.Models
 {
     public class CreateProjectModel
     {
-        [Required]
-        public string Title { get; set; }
+        [Required] public string Title { get; set; }
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
         public string Goal { get; set; }
-        
-        public string Status { get; set; }
-        
-        public Phase CurrentPhase { get; set; }
 
+        public string Status { get; set; }
+
+        public bool Visible { get; set; }
+
+        public Phase CurrentPhase { get; set; }
     }
 }

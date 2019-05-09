@@ -35,10 +35,18 @@
             <input asp-for="Status" class="form-control" value="Open"/>
         </div>
 
+        <div class="form-group col-md-12">
+            <input type="checkbox" data-val="true" id="Visible" name="Visible" value="true">
+            <input name="Visible" type="hidden" value="false">
+            <label asp-for="Visible">Zichtbaar</label>
 
-        <h4>Huidige fase:</h4>
+        </div>
+
+
+        
 
         <div class="form-group col-md-12">
+            <h4>Huidige fase:</h4>
             <label asp-for="CurrentPhase.Description">Omschrijving</label>
             <input asp-for="CurrentPhase.Description" class="form-control" value="Test"/>
         </div>
