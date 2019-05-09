@@ -10,11 +10,6 @@
     ViewData["Title"] = Model.QuestionTitle;
 }
 
-@section Tags
-{
-    <script type="module" src="~/dist/reportidea.entry.js" defer></script>
-}
-
 @section Scripts
 {
     <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
@@ -46,18 +41,4 @@
         @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = idea, IdeaLevel = 0 })
         <hr/>
     }
-</div>
-<div id="Reportmenu">
-    <div class="row">
-        <div class="col-md-10">
-            <div class="row">
-                <label>Reden van de rapportering:</label>
-                @Html.TextBox("Reason", "", new { @class = "form-control"})
-                <a id="bevestigReport" asp-controller="Platform" asp-action="AddReport" type="button" 
-                   class="btn btn-primary" asp-route-flagger="@UserManager.GetUserId(User)"
-                   asp-route-thread="@Model.Id">Rapporteer</a>
-                <button type="button" class="btn btn-secondary" id="closeReport">Annuleren</button>
-            </div>
-        </div>
-    </div>
 </div>

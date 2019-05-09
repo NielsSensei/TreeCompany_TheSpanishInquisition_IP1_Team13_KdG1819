@@ -7,6 +7,11 @@
 @model UIMVC.Models.IdeaViewModel
 @inject ProjectService ProjectService
 
+@section Tags
+{
+    <script type="module" src="~/dist/reportidea.entry.js" defer></script>
+}
+
 @if (Model.ToView.IsDeleted)
 {
     <div class="row">
@@ -124,3 +129,43 @@ else
 
     </div>
 </section>
+
+<section class="modal fade" id="makeReportModal@(Model.ToView.Id)" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body m-auto">
+                <label>Reden van de rapportering:</label>
+                @Html.TextBox("Reason", "", new { @class = "form-control"})
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-6">
+                       <a id="bevestigReport" asp-controller="Platform" asp-action="AddReport" type="button"
+                       class="btn btn-primary" asp-route-flagger="@UserManager.GetUserId(User)"
+                       asp-route-thread="@Model.ToView.IdeaQuestion.Id">Rapporteer</a> 
+                    </div>
+                    <div class="col-6">
+                       <button type="button" class="btn btn-secondary" id="closeReport">Annuleren</button>                     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@*
+<div id="Reportmenu">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="row">
+                <label>Reden van de rapportering:</label>
+                @Html.TextBox("Reason", "", new { @class = "form-control"})
+                <a id="bevestigReport" asp-controller="Platform" asp-action="AddReport" type="button" 
+                   class="btn btn-primary" asp-route-flagger="@UserManager.GetUserId(User)"
+                   asp-route-thread="@Model.Id">Rapporteer</a>
+                <button type="button" class="btn btn-secondary" id="closeReport">Annuleren</button>
+            </div>
+        </div>
+    </div>
+</div>
+*@

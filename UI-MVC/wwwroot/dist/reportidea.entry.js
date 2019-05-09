@@ -97,6 +97,7 @@ console.log('reportidea has been loaded');
 
 var menu = document.getElementById('Reportmenu');
 var buttonClose = document.getElementById('closeReport');
+var aTag = document.getElementById('bevestigReport');
 
 buttonClose.onclick = function() {
     console.log("clickClose");
@@ -108,16 +109,16 @@ var buttonsOpen = document.querySelectorAll("#activateReport");
 console.log(buttonsOpen.length);
 
 for(var i = 0; i < buttonsOpen.length; i++){
-    console.log(buttonsOpen[i].className);
-}
-
-/*for(var i = 0; i < buttonsOpen.length; i++){
-    buttonsOpen[i].onclick = function() {
+    buttonsOpen[i].addEventListener("click",function(){
         console.log("clickOpen");
+        console.log(this.className);
         menu.style = "display: flex";
-        console.log(buttonsOpen[i].className);
-    };
-}*/
+
+        var att = document.createAttribute("asp-route-idea");       
+        att.value = this.className;                           
+        aTag.setAttributeNode(att);
+    },false);
+}
 
 /***/ })
 

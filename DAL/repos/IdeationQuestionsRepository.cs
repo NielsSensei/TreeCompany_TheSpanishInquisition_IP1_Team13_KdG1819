@@ -40,7 +40,7 @@ namespace DAL.repos
 
         private IdeasDTO ConvertToDTO(Idea obj)
         {
-            return new IdeasDTO()
+            IdeasDTO DTO =  new IdeasDTO()
             {
                 IdeaID = obj.Id,
                 IQuestionID = obj.IdeaQuestion.Id,
