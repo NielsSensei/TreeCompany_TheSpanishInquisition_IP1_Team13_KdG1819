@@ -69,8 +69,16 @@ else
                                 data-target="#makeCommentModal@(Model.ToView.Id)">Reageren
                         </button>  
                     }
-                    
-                    @if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        @* TODO Add an ANONYMOUS way to vote? *@
+                        <a class="btn btn-primary" asp-controller="Platform" asp-action="AddVote" 
+                           asp-route-idea="@Model.ToView.Id"
+                           asp-route-user="@UserManager.GetUserId(User)" 
+                           asp-route-thread="@Model.ToView.IdeaQuestion.Id">
+                            Stemmen
+                        </a>
+                    } else if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
                     {
                         <a class="btn btn-primary" asp-controller="Platform" asp-action="AddVote" 
                            asp-route-idea="@Model.ToView.Id"
