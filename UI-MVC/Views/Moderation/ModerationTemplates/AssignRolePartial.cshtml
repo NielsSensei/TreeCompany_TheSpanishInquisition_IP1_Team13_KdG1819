@@ -1,9 +1,11 @@
 @using Domain.Users
 @model AssignRoleModel
 
-<form asp-action="SetRole" asp-controller="Moderation" asp-route-arm="@Model">
-        @Html.DropDownList("Role", new SelectList(Enum.GetNames(typeof(Role))), "Kies een rol",
-            new {@class = "form-control"})
+<form asp-action="SetRole" asp-controller="Moderation" asp-route-arm="@Model" method="get">
+    <label asp-for="Role" for="Role">@Model.UserId</label>
+    <select id="Role" asp-for="Role" asp-items="Html.GetEnumSelectList<Role>()">
+        <option selected="selected" value="">Kies een rol</option>
+    </select>
     <div>
         <button class="btn btn-primary" type="submit">Bevestig</button>
     </div>

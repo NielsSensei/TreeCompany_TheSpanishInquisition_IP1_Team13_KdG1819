@@ -367,9 +367,11 @@ namespace UIMVC.Controllers
         }
         
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
-        public IActionResult SetRole(AssignRoleModel arm)
+        public async Task<IActionResult> SetRole(AssignRoleModel arm)
         {
-            throw new NotImplementedException("Roles need to be implemented");
+            var user = await _userManager.FindByIdAsync(arm.UserId);
+            _roleService.AssignToRole(user, arm.Role);
+            return RedirectToAction("CollectAllUsers", "Moderation");
         }
 
         [HttpGet]
