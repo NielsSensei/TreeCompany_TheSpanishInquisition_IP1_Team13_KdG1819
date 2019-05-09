@@ -11,5 +11,6 @@ namespace UIMVC.Models
         public QuestionType QuestionType { get; set; }
         public bool Optional { get; set; }
         public string QuestionText { get; set; }
+        public List<string> Options { get; set; }
     }
 }

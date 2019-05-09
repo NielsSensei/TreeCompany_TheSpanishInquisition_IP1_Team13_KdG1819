@@ -8,12 +8,16 @@
 @{
     Project project = (Project)ViewData["Project"];
     Questionnaire questionnaire = (Questionnaire)ViewData["Questionnaire"];
-    CreateQuestionnaireQuestionModel cqqm = (CreateQuestionnaireQuestionModel) ViewData["Cqqm"];
+    CreateQuestionnaireQuestionModel cqqm = (CreateQuestionnaireQuestionModel)ViewData["Cqqm"];
 
 }
 
-@section Scripts{ 
-    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+@section Scripts{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer>
+    </script>
+
+    <script type="module" src="~/js/addQuestionnaireQuestion.js" defer>
+    </script>
 }
 
 <h1>Vragenlijst beheren</h1>
@@ -44,13 +48,15 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" label-for="OnGoing">Publiek</label>
 
-        @if(questionnaire.Questions.Count() == 0)
+        @if (questionnaire.Questions.Count() == 0)
         {
-        <label class="form-check-label alert-danger">Het is aangeraden eerst enkele vragen toe te voegen voor je de vragenlijst publiek maakt</label>
-        } else{
-        <div class="col-sm-10">
-            <input class="form-check-input" type="checkbox" asp-for="OnGoing" checked="@questionnaire.OnGoing">
-        </div>
+            <label class="form-check-label alert-danger">Het is aangeraden eerst enkele vragen toe te voegen voor je de vragenlijst publiek maakt</label>
+        }
+        else
+        {
+            <div class="col-sm-10">
+                <input class="form-check-input" type="checkbox" asp-for="OnGoing" checked="@questionnaire.OnGoing">
+            </div>
         }
 
 
@@ -60,16 +66,16 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" label-for="Title">Welk authorisatielevel moet je hebben om deze questionnaire in te vullen?</label>
         <div class="col-sm-10">
-            @Html.DropDownListFor(m => m.VoteLevel, new SelectList(Enum.GetValues(typeof(Role))), "Huidige authorisatielevel: ", new { @class = "form-control"})
+            @Html.DropDownListFor(m => m.VoteLevel, new SelectList(Enum.GetValues(typeof(Role))), "Huidige authorisatielevel: ", new { @class = "form-control" })
         </div>
     </div>
 
-    <input type="submit" value="Wijzigingen opslaan" class="btn btn-primary"/>
+    <input type="submit" value="Wijzigingen opslaan" class="btn btn-primary" />
 
 
 </form>
 
-<h3 >Vragen voor deze vragenlijst</h3>
+<h3>Vragen voor deze vragenlijst</h3>
 
 @if (questionnaire.Questions.Count() == 0)
 {
@@ -126,7 +132,7 @@ else
 
 }
 
-    @Html.Partial("_AddQuestionnaireQuestionPartial")
+@Html.Partial("_AddQuestionnaireQuestionPartial")
 
 
 

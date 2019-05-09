@@ -9,13 +9,11 @@
     Questionnaire questionnaire = (Questionnaire)ViewData["Questionnaire"];
 }
 
-@section Scripts{ 
-    <script type="text/javascript" src="~/js/addQuestionnaireQuestion.js"></script>
-}
+
 
 
 <div class="modal fade" id="addQuestion" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="addQuestion">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -23,6 +21,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <form asp-action="AddQuestionnaireQuestion" asp-controller="Admin" method="post" asp-route-cqqm="@Model" asp-route-questionnaireid="@questionnaire.Id" class="addQQuestionForm">
                 <div class="modal-body addQQuestion">
 
@@ -48,19 +47,38 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
-                        <a class="btn btn-primary addOption">Optie toevoegen</a>
+                    <div class="addOptionsContainer hidden">
+
+                        <div class="form-group row">
+
+                            <label>Options</label>
+                            <hr class="addoptionsbar" />
+                            
+
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="optionsContainer">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row optionButton">
+                            <a class="btn btn-primary addOptionsButton">Optie toevoegen</a>
+                        </div>
+
+                    </div>
+                    
+                       
                     </div>
 
-
-
-
-                    </div>
+             
+                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <input type="submit" value="Vraag toevoegen" class="btn btn-outline-primary" />
                     </div>
-                    </form>
+                 </form>
 
         </div>
     </div>
