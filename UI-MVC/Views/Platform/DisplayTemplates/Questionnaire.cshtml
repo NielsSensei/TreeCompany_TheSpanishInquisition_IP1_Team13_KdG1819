@@ -1,19 +1,23 @@
 @model Domain.Projects.Questionnaire
 
-<div class="col-4" id="modulePart">
-    
-        <div>
-            <p class="font-weight-bold">@Model.Title</p>            
-        </div>
-        <div>   
-            @Html.Partial("_ReactionNumbersPartial", new LikeViewModel() { likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
-                    twitterLikeCount = Model.TwitterLikeCount ,iconStyle = 1 })
-        </div>
-        <div>
-            @* TODO Doe hier de linking Sachaboy *@
-            <input type="submit" class="btn btn-primary" value="Vul vragenlijst in!"/>
-            
-            <img alt="qIcon" src="https://image.flaticon.com/icons/svg/3/3711.svg" height="25" width="25"/>
-        </div>
-    
-</div>
+    <div class="card text-center">
+        <div class="card-header">
+                <img alt="qIcon" src="https://image.flaticon.com/icons/svg/3/3711.svg" height="25" width="25"/>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">@Model.Title</h4>
+                <hr>
+                <div class="card-text">
+                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+                    {
+                        likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
+                        twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
+                    })
+                </div>
+        
+            </div>
+            <div class="card-footer">
+                @* TODO Doe hier de linking Sachaboy *@
+                <a href="#" class="btn btn-primary">Vul vragenlijst in!</a>
+            </div>
+    </div>

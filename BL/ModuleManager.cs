@@ -5,6 +5,7 @@ using DAL;
 using Domain;
 using Domain.Projects;
 using Domain.UserInput;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace BL
 {
@@ -44,13 +45,12 @@ namespace BL
          * 
          */
         //Modified by NG
-        public Module GetModule(int moduleId, bool details, bool questionnaire)
+        public Questionnaire GetQuestionnaire(int moduleId, bool details)
         {
-            if (questionnaire)
-            {
-                return QuestionnaireRepo.Read(moduleId, details);
-            } 
+             return QuestionnaireRepo.Read(moduleId, details);
+        } 
 
+        public Ideation GetIdeation(int moduleId){
             return IdeationRepo.ReadWithModule(moduleId);            
         }
 
@@ -61,23 +61,14 @@ namespace BL
          * Indien hij daar ook een exception geeft weten we dat de fase 'vrij' is. -NVZ
          * 
          */
-        public Module GetModule(int phaseId, int projectID)
+        public Questionnaire GetQuestionnaire(int phaseId, int projectID)
         {
-            try
-            {      
-                return QuestionnaireRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);;
-            }
-            catch (InvalidOperationException exceptionnbr1)
-            {
-                try
-                {
-                    return IdeationRepo.ReadAll(projectID).First(m => m.ParentPhase.Id == phaseId);
-                }
-                catch (InvalidOperationException exceptionnbr2)
-                {
-                    return null;
-                }
-            }           
+            return QuestionnaireRepo.ReadAll(projectID).FirstOrDefault(m => m.ParentPhase.Id == phaseId);
+        }
+
+        public Ideation GetIdeation(int phaseId, int projectID)
+        {
+            return IdeationRepo.ReadAll(projectID).FirstOrDefault(m => m.ParentPhase.Id == phaseId);
         }
 
         // Added by NVZ       
@@ -120,30 +111,24 @@ namespace BL
         }
         
         //Added by NG
-        public void EditModule(Module module)
+        public void EditIdeation(Ideation ideation)
         {
-            if (module.GetType() == typeof(Questionnaire))
-            {
-                QuestionnaireRepo.Update((Questionnaire)module);
-            }
-            else
-            {
-                IdeationRepo.Update((Ideation)module);
-            }             
+            IdeationRepo.Update(ideation); 
         }
 
+        public void EditQuestionnaire(Questionnaire questionnaire)
+        {
+            QuestionnaireRepo.Update(questionnaire);
+        }
+        
         public void RemoveModule(int moduleId, int projectId, bool questionnaire)
         {
             if (questionnaire)
             {
-                var removedQuestionnaire = QuestionnaireRepo.Read(moduleId, true);
-                ProjectMan.GetProject(projectId, false).Modules.Remove(removedQuestionnaire);
                 QuestionnaireRepo.Delete(moduleId);    
             }
             else
             {
-                var removedIdeation = IdeationRepo.Read(moduleId, true);
-                ProjectMan.GetProject(projectId, false).Modules.Remove(removedIdeation);
                 IdeationRepo.Delete(moduleId);
             }
         }
