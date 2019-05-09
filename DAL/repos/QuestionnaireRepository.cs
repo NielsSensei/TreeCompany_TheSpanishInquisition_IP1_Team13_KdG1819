@@ -64,8 +64,9 @@ namespace DAL
         }
         
         private int FindNextAvailableQuestionnaireId()
-        {               
-            int newId = ReadAll().Max(q => q.Id)+1;
+        {
+            if (!ctx.Modules.Any()) return 1;
+            int newId = ctx.Modules.Max(q => q.ModuleID) + 1;
             return newId;
         }
         #endregion
@@ -116,6 +117,11 @@ namespace DAL
                 foundModule.ShareCount = newModule.ShareCount;
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
+            }
+
+            if (newModule.PhaseID != foundModule.PhaseID)
+            {
+                foundModule.PhaseID = newModule.PhaseID;
             }
 
             ctx.SaveChanges();

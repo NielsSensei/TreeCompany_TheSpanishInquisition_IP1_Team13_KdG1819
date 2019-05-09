@@ -128,12 +128,14 @@ namespace DAL
         
         private int FindNextAvailableQQuestionId()
         {               
+            if (!ctx.QuestionnaireQuestions.Any()) return 1;
             int newId = ReadAll().Max(qq => qq.Id)+1;
             return newId;
         }
         
         private int FindNextAvailableAnswerId()
         {               
+            if (!ctx.Answers.Any()) return 1;
             int newId = ReadAll().Max(answer => answer.Id)+1;
             return newId;
         }
@@ -206,7 +208,7 @@ namespace DAL
 
         public IEnumerable<QuestionnaireQuestion> ReadAllByQuestionnaireId(int questionnaireId)
         {
-            return ReadAll().Where(c => c.Questionnaire.Id == questionnaireId);
+            return ReadAll().Where(c => c.Module.Id == questionnaireId);
         }
         #endregion       
         

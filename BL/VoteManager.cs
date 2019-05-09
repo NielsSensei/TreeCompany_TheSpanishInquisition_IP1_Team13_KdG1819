@@ -59,8 +59,14 @@ namespace BL
 //            // arbitrary numbers
 //            if (deltaX < 10 && deltaY < 10) { return true; }
 //            return false;
-            throw new NotImplementedException("Sorry, not implemented yet!");
-        } */
+            //throw new NotImplementedException("Sorry, not implemented yet!");
+            return false;
+        }
+*/
+        public void RemoveVotes(int ideaID)
+        {
+            VoteRepo.DeleteVotes(ideaID);
+        }
         #endregion
     }
 }

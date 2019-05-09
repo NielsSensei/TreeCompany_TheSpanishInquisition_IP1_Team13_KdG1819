@@ -31,11 +31,21 @@
                 @* TODO Zorgt voor een eventPagina *@
                 <p>Deze ideation is georganiseerd dankzij dit evenement</p> 
             }
-            <p>Tags: @Html.Partial("_TagsPartial", Model.Tags)</p>
-            @* TODO zet hier ne rolecheck op *@
-            <a class="btn btn-primary" type=submit asp-controller="Moderation" asp-action="AddTag"
-                    formmethod="get" asp-route-ideation="@Model.Id">Voeg een Tag Toe </a>
-            <br/><br/>
+            <section>
+                <h6 class="font-weight-bold">Tags:</h6>
+
+                <div class="row justify-content-start">
+                    @Html.Partial("_TagsPartial", Model.Tags)
+                    @* TODO zet hier ne rolecheck op *@
+                    <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
+                       formmethod="get" asp-route-ideation="@Model.Id">
+                        @*TODO hier met een menuke*@
+                        Nieuwe Tag
+                    </a>
+                </div>
+            </section>
+        </div>
+        <div class="col-7">
             @* TODO vervang images door Media *@
             <img alt="IdeationMedia" src="https://via.placeholder.com/250"/>
         </div>
@@ -74,6 +84,33 @@
                 <a asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
                 <hr/>
             }
+        </section>
+    </section>
+</section>
+<hr/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
+                    asp-route-id="@Model.Id">Pas deze ideation aan.</a> 
+        </div>
+        <div class="col-md-6">
+            <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
+        </div>  
+    </div>
+</div>
+<div id="menu">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="row">
+              <h1>Verwijderen van een ideation</h1>
+              <p>Ben je zeker?</p>  
+            </div>
+            <div class="row">
+                <a asp-controller="Moderation" asp-action="DestroyIdeation" asp-route-id="@Model.Id"
+                        type="button" class="btn btn-primary">Bevestig</a>
+                <button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
+            </div>
         </div>
     </div>
 </div>
