@@ -227,20 +227,13 @@ namespace UIMVC.Controllers
                 ExtraInfo = Request.Form["ExtraInfo"].ToString()
             };
 
-            if (!Request.Form["ParentPhase"].ToString().Equals(null))
+            if (Request.Form["ParentPhase"].ToString() != null)
             {
-                try
-                {
-                    i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
-                    _moduleMgr.EditIdeation(i);
-                }
-                catch (FormatException e)
-                {
-                    _moduleMgr.EditIdeation(i);
-                }
-                
+                i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
             }
-
+            
+            _moduleMgr.EditIdeation(i);
+            
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
         
