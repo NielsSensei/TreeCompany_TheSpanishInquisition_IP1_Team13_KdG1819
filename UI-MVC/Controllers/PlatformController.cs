@@ -109,6 +109,7 @@ namespace UIMVC.Controllers
             IdeationQuestion iq = _iqMgr.GetQuestion(id, false);
 
             ViewData["Message"] = message;
+            ViewData["IdeationQuestion"] = iq;
             
             return View(iq);
         }
