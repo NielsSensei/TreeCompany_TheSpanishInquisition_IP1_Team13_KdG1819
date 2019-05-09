@@ -77,7 +77,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in allPhases)
             {
-                if (_moduleMgr.GetModule(phase.Id, project) == null)
+                if (_moduleMgr.GetIdeation(phase.Id, project) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -176,10 +176,74 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
+        //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [HttpGet]
+        public IActionResult ChangeIdeation(int id)
+        {
+            Ideation i = _moduleMgr.GetIdeation(id);
+
+            ViewData["Project"] = i.Project.Id;
+
+            List<Phase> allPhases = (List<Phase>) _projMgr.GetAllPhases(i.Project.Id);
+            List<Phase> availablePhases = new List<Phase>();
+
+            foreach (Phase phase in allPhases)
+            {
+                if (_moduleMgr.GetIdeation(phase.Id, i.Project.Id) == null)
+                {
+                    availablePhases.Add(phase);
+                }
+            }
+
+            ViewData["Phases"] = availablePhases;
+            ViewData["PhaseCount"] = availablePhases.Count;
+
+            ViewData["Ideation"] = id;
+            AlterIdeationModel aim = new AlterIdeationModel()
+            {
+                Title = i.Title,
+                ExtraInfo = i.ExtraInfo,
+                ParentPhase = _projMgr.GetPhase(i.ParentPhase.Id)
+            };
+
+            return View(aim);
+        }
+
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
+        [HttpPost]
+        public IActionResult ConfirmChangeIdeation(int ideation)
+        {
+            Ideation i = new Ideation()
+            {
+                Id = ideation,
+                Title = Request.Form["Title"].ToString(),
+                ExtraInfo = Request.Form["ExtraInfo"].ToString()
+            };
+
+            if (!Request.Form["ParentPhase"].ToString().Equals(null))
+            {
+                try
+                {
+                    i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+                    _moduleMgr.EditIdeation(i);
+                }
+                catch (FormatException e)
+                {
+                    _moduleMgr.EditIdeation(i);
+                }
+
+            }
+
+            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
+        }
+
+        //TODO add rolecheck hero we need to be admin yeet *@
+        [Authorize]
         public IActionResult DestroyIdeation(int id)
         {
-            Ideation i = (Ideation) _moduleMgr.GetModule(id, false, false);
+            Ideation i = _moduleMgr.GetIdeation(id);
 
             List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
             foreach (IdeationQuestion iq in iqs)
@@ -189,6 +253,7 @@ namespace UIMVC.Controllers
                 {
                     _ideaMgr.RemoveFields(idea.Id);
                     _ideaMgr.RemoveReports(idea.Id);
+                    _ideaMgr.RemoveVotes(idea.Id);
                     _ideaMgr.RemoveIdea(idea.Id);
                 }
 
@@ -215,7 +280,7 @@ namespace UIMVC.Controllers
 
             return View(ideas);
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectIdea(int id)
@@ -351,7 +416,7 @@ namespace UIMVC.Controllers
 
             if (userFound == null) return RedirectToAction("CollectAllUsers");
             if (await _roleService.IsSameRoleOrHigher(HttpContext.User, userFound)) return RedirectToAction("CollectAllUsers");
-            
+
             userFound.Banned = !userFound.Banned;
             _userManager.SetLockoutEnabledAsync(userFound, userFound.Banned);
             if (userFound.Banned)
@@ -359,13 +424,13 @@ namespace UIMVC.Controllers
                 _userManager.SetLockoutEndDateAsync(userFound, DateTime.MaxValue);
             }
             var result = await _userManager.UpdateAsync(userFound);
-            
-            
+
+
 
             return RedirectToAction("CollectAllUsers");
             // This part is still borked.
         }
-        
+
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public async Task<IActionResult> SetRole(AssignRoleModel arm, string userId)
         {

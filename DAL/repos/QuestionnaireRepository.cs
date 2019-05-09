@@ -65,6 +65,7 @@ namespace DAL
         
         private int FindNextAvailableQuestionnaireId()
         {
+            if (!ctx.Modules.Any()) return 1;
             int newId = ctx.Modules.Max(q => q.ModuleID) + 1;
             return newId;
         }
@@ -118,6 +119,11 @@ namespace DAL
                 foundModule.ShareCount = newModule.ShareCount;
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
+            }
+
+            if (newModule.PhaseID != foundModule.PhaseID)
+            {
+                foundModule.PhaseID = newModule.PhaseID;
             }
 
             ctx.SaveChanges();

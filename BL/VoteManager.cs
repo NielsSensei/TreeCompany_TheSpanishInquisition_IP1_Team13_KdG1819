@@ -76,7 +76,12 @@ namespace BL
 //            return false;
             //throw new NotImplementedException("Sorry, not implemented yet!");
             return false;
-        } 
+        }
+
+        public void RemoveVotes(int ideaID)
+        {
+            VoteRepo.DeleteVotes(ideaID);
+        }
         #endregion
     }
 }
