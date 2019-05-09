@@ -64,9 +64,8 @@ namespace DAL
         }
         
         private int FindNextAvailableQuestionnaireId()
-        {
-            if (!ctx.Modules.Any()) return 1;
-            int newId = ctx.Modules.Max(q => q.ModuleID) + 1;
+        {               
+            int newId = ReadAll().Max(q => q.Id)+1;
             return newId;
         }
         #endregion
@@ -88,8 +87,6 @@ namespace DAL
             }
 
             obj.Id = FindNextAvailableQuestionnaireId();
-            ModulesDTO newModule = ConvertToDTO(obj);
-           
             ctx.Modules.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -121,11 +118,6 @@ namespace DAL
                 foundModule.Tags = newModule.Tags;
             }
 
-            if (newModule.PhaseID != foundModule.PhaseID)
-            {
-                foundModule.PhaseID = newModule.PhaseID;
-            }
-
             ctx.SaveChanges();
         }
 
@@ -155,35 +147,6 @@ namespace DAL
         public IEnumerable<Questionnaire> ReadAll(int projectID)
         {
             return ReadAll().ToList().FindAll(q => q.Project.Id == projectID);
-        }
-
-        private ModulesDTO GrabModuleInformationDTO(Questionnaire obj)
-        {
-            ModulesDTO DTO = new ModulesDTO
-            {
-                ModuleID = obj.Id,
-                OnGoing = obj.OnGoing,
-                Title = obj.Title,
-                LikeCount = obj.LikeCount,
-                FbLikeCount = obj.FbLikeCount,
-                TwitterLikeCount = obj.TwitterLikeCount,
-                ShareCount = obj.ShareCount,
-                RetweetCount = obj.RetweetCount,
-                Tags = ExtensionMethods.ListToString(obj.Tags),
-                IsQuestionnaire = obj.type == ModuleType.Questionnaire
-            };
-
-            if (obj.Project != null)
-            {
-                DTO.ProjectID = obj.Project.Id;
-            }
-
-            if (obj.ParentPhase != null)
-            {
-                DTO.PhaseID = obj.ParentPhase.Id;
-            }
-
-            return DTO;
         }
         #endregion   
 

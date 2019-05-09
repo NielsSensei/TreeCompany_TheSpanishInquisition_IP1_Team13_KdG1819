@@ -74,7 +74,7 @@ namespace UIMVC.Controllers
         {
             Project project = _projectMgr.GetProject(id, false);
 
-            if (project.Visible && project.Id != 0)
+            if (project.Visible && project != null)
             {
                 List<Phase> phases = (List<Phase>) _projectMgr.GetAllPhases(id);
 
@@ -99,35 +99,17 @@ namespace UIMVC.Controllers
         #region Ideation
         public IActionResult CollectIdeation(int id)
         {
-            Ideation ideation = _projectMgr.ModuleMan.GetIdeation(id);
+            Ideation ideation = (Ideation) _projectMgr.ModuleMan.GetModule(id, false, false);
             
             return View(ideation);            
         }
 
-        public IActionResult CollectIdeationThread(int id, string message)
+        public IActionResult CollectIdeationThread(int id)
         {
             IdeationQuestion iq = _iqMgr.GetQuestion(id, false);
-
-            ViewData["Message"] = message;
-            ViewData["IdeationQuestion"] = iq;
             
             return View(iq);
         }
-        
-        #region Idea
-        [Authorize]
-        public IActionResult AddVote(int idea, string user, int thread)
-        {
-            if (_iqMgr.MakeVote(idea, user))
-            {
-                return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                    { id = thread, message = "Stem gelukt, dankjewel!" }); 
-            }
-            
-            return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                { id = thread, message = "Al gestemd op dit idee!" });
-        }
-        #endregion
         #endregion
     }
 }

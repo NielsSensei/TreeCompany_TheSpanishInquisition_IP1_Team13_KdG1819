@@ -7,9 +7,7 @@ module.exports = {
         site: "./wwwroot/js/site.js",
         bootstrap_js: "./wwwroot/js/bootstrap_js.js",
         validation: "./wwwroot/js/validation.js",
-        index: "./wwwroot/js/index.js",
-        showmenu: "./wwwroot/js/showmenu.js",
-        confirmemail: "./wwwroot/js/confirmemail.js"
+        index: "./wwwroot/js/index.js"
     },
     output: {
         filename: "[name].entry.js",
