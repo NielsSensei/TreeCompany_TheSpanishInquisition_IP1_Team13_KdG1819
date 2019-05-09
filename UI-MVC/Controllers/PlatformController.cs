@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BL;
 using Domain.Identity;
@@ -141,26 +142,30 @@ namespace UIMVC.Controllers
                 Reportee = new UIMVCUser() {Id = ToReport.User.Id},
                 Status = ReportStatus.STATUS_NOTVIEWED
             };
-
-            if (Request.Form["Reason"].ToString() != null)
+            
+            if (!Request.Form["Reason"].ToString().Equals(""))
             {
                 Report alreadyReport = _iqMgr.GetAllReportsByIdea(idea).FirstOrDefault(
                     r => r.Flagger.Id.Equals(flagger));
 
                 if (alreadyReport == null)
                 {
+                    report.Reason = Request.Form["Reason"].ToString();
                     _iqMgr.MakeReport(report);
-                    
+
+                    ToReport.Reported = true;
+                    _iqMgr.EditIdea(ToReport);
+
                     return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                        { id = thread, message = "Idee geraporteerd!" });
+                        {id = thread, message = "Idee geraporteerd!"});
                 }
-                
+
                 return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                    { id = thread, message = "Je oude rapport is nog in de behandeling" });
+                    {id = thread, message = "Je oude rapport is nog in de behandeling"});
             }
             
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                { id = thread, message = "Je hebt geen reden opgegeven voor je rapport!" });
+                               { id = thread, message = "Je hebt geen reden opgegeven voor je rapport!" });
         }
         #endregion
         #endregion
