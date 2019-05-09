@@ -24,12 +24,12 @@ namespace UIMVC.Services
             _configuration = configuration;
             
             CreateRoles();
-            CreateTestUser();
+            CreateTestUsers();
         }
 
         #region TestUser
 
-        private async void CreateTestUser()
+        private async void CreateTestUsers()
         {
             if (_userManager.FindByEmailAsync(_configuration["SuperAdmin:Email"]) != null)
             {
@@ -45,6 +45,36 @@ namespace UIMVC.Services
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
                 AssignToRole(userFound, Role.SUPERADMIN);
+            }
+            if (_userManager.FindByEmailAsync(_configuration["Admin:Email"]) != null)
+            {
+                UIMVCUser user = new UIMVCUser
+                {
+                    Name = _configuration["Admin:AccountName"],
+                    Email = _configuration["Admin:Email"],
+                    UserName = _configuration["Admin:Email"],
+                    EmailConfirmed = true
+                };
+
+                _userManager.CreateAsync(user, _configuration["Admin:Secret"]);
+                
+                var userFound = await _userManager.FindByEmailAsync(user.UserName);
+                AssignToRole(userFound, Role.ADMIN);
+            }
+            if (_userManager.FindByEmailAsync(_configuration["Moderator:Email"]) != null)
+            {
+                UIMVCUser user = new UIMVCUser
+                {
+                    Name = _configuration["Moderator:AccountName"],
+                    Email = _configuration["Moderator:Email"],
+                    UserName = _configuration["Moderator:Email"],
+                    EmailConfirmed = true
+                };
+
+                _userManager.CreateAsync(user, _configuration["SuperAdmin:Secret"]);
+                
+                var userFound = await _userManager.FindByEmailAsync(user.UserName);
+                AssignToRole(userFound, Role.MODERATOR);
             }
         }
 
@@ -181,6 +211,32 @@ namespace UIMVC.Services
         }
 
         #endregion
-        
+
+        #region Auhorization
+
+        public async Task<bool> IsSameRoleOrLower(ClaimsPrincipal userClaim, Role roleCheck)
+        {
+            UIMVCUser user = await _userManager.GetUserAsync(userClaim);
+            
+            IEnumerable<string> userCompareRolesString = await _userManager.GetRolesAsync(user);
+            List<Role> userCompareRoles = new List<Role>();
+            
+            foreach (string roleString in userCompareRolesString)
+            {
+                Role roleUser = (Role) Enum.Parse(typeof(Role), roleString);
+                userCompareRoles.Add(roleUser);
+            }
+
+            if (userCompareRoles.Any())
+            {
+                int userCompareRoleHighest = (int) userCompareRoles.Max(role => role);
+                int roleCheckNumber = (int) roleCheck;
+                return userCompareRoleHighest < roleCheckNumber;
+            }
+
+            return false;
+        }
+
+        #endregion
     }
 }

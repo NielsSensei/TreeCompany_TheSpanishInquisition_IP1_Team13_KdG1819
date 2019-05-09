@@ -71,14 +71,10 @@
                 }
             </td>
             <td>
-                @if (await RoleService.IsSameRoleOrHigher(User, user))
-                {
-                    <p>Zelfde roles</p>
-                }
-                else
-                {
-                    @Html.Partial("ModerationTemplates/AssignRolePartial", new AssignRoleModel() {UserId = user.Id}) 
-                }
+
+
+                @Html.Partial("ModerationTemplates/AssignRolePartial", new AssignRoleModel() {UserId = user.Id})
+
             </td>
         </tr>
     }

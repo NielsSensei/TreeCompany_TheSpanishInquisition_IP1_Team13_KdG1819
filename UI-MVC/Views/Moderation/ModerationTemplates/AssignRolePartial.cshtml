@@ -1,12 +1,12 @@
 @using Domain.Users
 @model AssignRoleModel
 
-<form asp-action="SetRole" asp-controller="Moderation" asp-route-arm="@Model" method="get">
-    <label asp-for="Role" for="Role">@Model.UserId</label>
-    <select id="Role" asp-for="Role" asp-items="Html.GetEnumSelectList<Role>()">
-        <option selected="selected" value="">Kies een rol</option>
-    </select>
-    <div>
-        <button class="btn btn-primary" type="submit">Bevestig</button>
+<form class="row" asp-action="SetRole" asp-controller="Moderation" asp-route-arm="@Model" asp-route-userId="@Model.UserId">
+    <div class="col-10 m-0">
+            @Html.DropDownListFor(model => model.Role, new SelectList(Enum.GetValues(typeof(Role))), "Selecteer een rol", new {@class = "form-control"})
+
+    </div>
+    <div class="col-2 m-0">
+        <button class="btn btn-primary" type="submit">+</button>
     </div>
 </form>

@@ -367,18 +367,29 @@ namespace UIMVC.Controllers
         }
         
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
-        public async Task<IActionResult> SetRole(AssignRoleModel arm)
+        public async Task<IActionResult> SetRole(AssignRoleModel arm, string userId)
         {
-            var user = await _userManager.FindByIdAsync(arm.UserId);
-            _roleService.AssignToRole(user, arm.Role);
-            return RedirectToAction("CollectAllUsers", "Moderation");
-        }
+            var user = await _userManager.FindByIdAsync(userId);
+            var roletext = Request.Form["Role"];
+//            if (!roletext.Any()) return RedirectToAction("CollectAllUsers", "Moderation");
+//            var role = (Role) Enum.Parse(typeof(Role), roletext);
+            Object roleParse = null;
+            if (!Enum.TryParse(typeof(Role), roletext, out roleParse)) return RedirectToAction("CollectAllUsers", "Moderation");
+            var role = (Role) roleParse;
 
-        [HttpGet]
-        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
-        public IActionResult VerifyUser(string userId)
-        {
-            throw new NotImplementedException("Roles need to be implemented");
+            // TODO Send a message to the user stating that the role could not be added
+            if (!await _roleService.IsSameRoleOrLower(User, role))
+            {
+                if (await _userManager.IsInRoleAsync(user, Enum.GetName(typeof(Role), role)))
+                {
+                    _userManager.RemoveFromRoleAsync(user, roletext);
+                }
+                else
+                {
+                    _roleService.AssignToRole(user, role);
+                }
+            }
+            return RedirectToAction("CollectAllUsers", "Moderation");
         }
         #endregion
     }
