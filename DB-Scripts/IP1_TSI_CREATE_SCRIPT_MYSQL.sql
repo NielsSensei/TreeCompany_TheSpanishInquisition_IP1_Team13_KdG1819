@@ -17,13 +17,11 @@ CREATE TABLE OrganisationEvents(
 	UserID NVARCHAR(255) NOT NULL,
 	Name NVARCHAR(100) NOT NULL,
 	Description NVARCHAR(255) NOT NULL,
-	StartDate DATE NOT NULL,
-	EndDate DATE NOT NULL,
+	StartDate DATE NOT NULL CHECK (StartDate <= Enddate),
+	EndDate DATE NOT NULL CHECK (EndDate >= StartDate),
 
 	/*Constraints*/
-	CONSTRAINT pk_OrganisationEvents PRIMARY KEY(EventID),
-	CONSTRAINT chk_OrganisationEvents_StartDate CHECK (StartDate <= Enddate),
-	CONSTRAINT chk_OrganisationEvents_EndDate CHECK (EndDate >= StartDate)
+	CONSTRAINT pk_OrganisationEvents PRIMARY KEY(EventID)
 )
 
 CREATE TABLE Projects(
@@ -33,7 +31,7 @@ CREATE TABLE Projects(
 	PlatformID INT NOT NULL,
 	Title NVARCHAR(50) NOT NULL,
 	Goal NVARCHAR(255) NOT NULL,
-	Status VARCHAR(25) NOT NULL,
+	Status VARCHAR(25) NOT NULL CHECK (Status = UPPER(Status)),
 	StartDate DATE,
 	EndDate DATE,
 	Visible BOOL NOT NULL,
@@ -44,22 +42,19 @@ CREATE TABLE Projects(
 	LikeVisibility TINYINT NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID),
-	CONSTRAINT ck_Projects_Status CHECK (Status = UPPER(Status))
+	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID)
 )
 
 CREATE TABLE Phases(
 	PhaseID INT AUTO_INCREMENT,
 	ProjectID INT NOT NULL,
 	Description NVARCHAR(255) NOT NULL,
-	StartDate DATE NOT NULL,
-	EndDate DATE NOT NULL,
+	StartDate DATE NOT NULL CHECK (StartDate <= EndDate),
+	EndDate DATE NOT NULL CHECK (EndDate >= StartDate),
 	IsCurrent BOOL NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT pk_Phases PRIMARY KEY(PhaseID),
-	CONSTRAINT chk_Phases_StartDate CHECK (StartDate <= EndDate),
-	CONSTRAINT chk_Phases_EndDate CHECK (EndDate >= StartDate)
+	CONSTRAINT pk_Phases PRIMARY KEY(PhaseID)
 )
 
 CREATE TABLE Modules(
