@@ -176,7 +176,7 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
-        
+
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult ChangeIdeation(int id)
@@ -210,7 +210,7 @@ namespace UIMVC.Controllers
             return View(aim);
         }
 
-        
+
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult ConfirmChangeIdeation(int ideation)
@@ -239,7 +239,7 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
-        
+
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult DestroyIdeation(int id)
         {
@@ -352,14 +352,26 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
-        public IActionResult DestroyIdea(int idea)
+        public IActionResult DestroyIdea(int idea, string from, int thread)
         {
             Idea toDelete = _ideaMgr.GetIdea(idea);
             toDelete.IsDeleted = true;
 
             _ideaMgr.EditIdea(toDelete);
 
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+            if (from.Equals("ModerationPanel"))
+            {
+                return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+            }
+
+
+            if (from.Equals("IdeationThread") && thread > 0)
+            {
+                return RedirectToAction("CollectIdeationThread", "Platform",
+                    new {Id = thread});
+            }
+
+            return RedirectToAction("HandleErrorCode", "Errors", 404);
         }
 
 

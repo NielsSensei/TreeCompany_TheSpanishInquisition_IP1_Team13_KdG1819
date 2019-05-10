@@ -59,7 +59,7 @@
     </div>
 </div>
 <hr/>
-@if (RoleService.IsAdmin(User).Result)
+@if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
 {
     <section class="container">
         <div class="row justify-content-around">
