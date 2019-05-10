@@ -30,10 +30,6 @@
                 shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
             })
             <p>@Model.ExtraInfo</p>
-            @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
-            {
-                <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
-            }
             @if (Model.Event.Id != 0)
             {
                 @* TODO Zorgt voor een eventPagina *@
