@@ -177,7 +177,7 @@ namespace UIMVC.Controllers
             Ideation i = _moduleMgr.GetIdeation(id);
 
             ViewData["Project"] = i.Project.Id;
-
+            
             List<Phase> allPhases = (List<Phase>) _projMgr.GetAllPhases(i.Project.Id);
             List<Phase> availablePhases = new List<Phase>();
 
