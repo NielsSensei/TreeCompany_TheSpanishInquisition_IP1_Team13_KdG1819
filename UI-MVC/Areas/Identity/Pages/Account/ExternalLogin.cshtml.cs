@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using UIMVC.Areas.Identity.Data;
+using UIMVC.Services;
 using UIMVCUser = Domain.Identity.UIMVCUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
@@ -20,15 +21,18 @@ namespace UIMVC.Areas.Identity.Pages.Account
         private readonly SignInManager<UIMVCUser> _signInManager;
         private readonly UserManager<UIMVCUser> _userManager;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly RoleService _roleService;
 
         public ExternalLoginModel(
             SignInManager<UIMVCUser> signInManager,
             UserManager<UIMVCUser> userManager,
-            ILogger<ExternalLoginModel> logger)
+            ILogger<ExternalLoginModel> logger,
+            RoleService roleService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
+            _roleService = roleService;
         }
 
         [BindProperty]
@@ -125,6 +129,10 @@ namespace UIMVC.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                        
+                        var userFound = await _userManager.FindByEmailAsync(user.UserName);
+                        _roleService.AssignToRole(userFound, Domain.Users.Role.LOGGEDIN);
+                        
                         return LocalRedirect(returnUrl);
                     }
                 }

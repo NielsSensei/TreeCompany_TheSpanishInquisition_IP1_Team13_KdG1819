@@ -78,8 +78,8 @@ likeVisbility
 5 = fblikecount & twitterlikecount
 6 = alle 3
 */
-INSERT INTO Projects(ProjectID,CurrentPhaseID,UserID,PlatformID,Title,Goal,Status,Visible,LikeVisibility,ReactionCount,LikeCount,FbLikeCount,TwitterLikeCOunt)
-VALUES(1,1,7,1,'GROENplaats','De Antwerpse Groenplaats terug groen maken','NIET GESTART',1,6,0,0,0,0)
+INSERT INTO Projects(ProjectID,CurrentPhaseID,UserID,PlatformID,Title,Goal,Status,Visible,LikeVisibility,ReactionCount,LikeCount,FbLikeCount,TwitterLikeCOunt, StartDate,
+EndDate) VALUES(1,1,7,1,'GROENplaats','De Antwerpse Groenplaats terug groen maken','NIET GESTART',1,6,0,0,0,0,'2019-03-10','2019-07-31')
 
 /* Phases */
 INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)

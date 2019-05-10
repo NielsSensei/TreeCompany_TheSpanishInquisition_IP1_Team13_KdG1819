@@ -153,6 +153,11 @@ namespace BL
         {
             IdeationQuestionRepo.Update(obj);
         }
+
+        public void MakeReport(Report obj)
+        {
+            IdeationQuestionRepo.Create(obj);
+        }
         
         public IEnumerable<Report> GetAllReportsByIdea(int ideaID)
         {

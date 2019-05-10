@@ -1,8 +1,11 @@
+@using Domain.Identity
 @using Domain.Projects
+@using Microsoft.AspNetCore.Identity
 @using UIMVC.Services
 @model Domain.Projects.Project
 @inject ProjectService ProjectService
-
+@inject RoleService RoleService
+@inject UserManager<UIMVCUser> UserManager
 @{
     ViewData["Title"] = Model.Title;
     Layout = "_Layout";
@@ -37,6 +40,23 @@
     </div>
 </div>
 <hr/>
+@if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+{
+    <section class="container">
+        <div class="row justify-content-around">
+            <a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" asp-route-project="@Model.Id">
+                Maak een nieuwe ideation
+            </a>
+
+            <a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
+                Nieuwe vragenlijst maken
+            </a>
+        </div>
+
+    </section>
+    <hr>
+}
+
 @if (ViewData["Questionnaires"] != null || ViewData["Ideations"] != null)
 {
     <div class="container">

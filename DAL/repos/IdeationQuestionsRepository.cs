@@ -54,18 +54,19 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
-                ParentID = obj.ParentIdea.Id,
-                DeviceID = obj.Device.Id
+                IsDeleted = obj.IsDeleted,
+                ParentID = 0,
+                DeviceID = 0
             };
 
-            if (obj.ParentIdea == null)
+            if (obj.ParentIdea != null)
             {
-                DTO.ParentID = 0;
+                DTO.ParentID = obj.ParentIdea.Id;
             }
 
-            if (obj.Device == null)
+            if (obj.Device != null)
             {
-                DTO.DeviceID = 0;
+                DTO.DeviceID = obj.Device.Id;
             }
             
             return DTO;
@@ -353,7 +354,7 @@ namespace DAL.repos
 
             foreach (Idea i in ideas)
             {
-                if(ExtensionMethods.HasMatchingWords(i.Title, idea.Title) > 0)
+                if(i.Title == idea.Title && !i.IsDeleted)
                 {
                     throw new DuplicateNameException("Idea(ID=" + idea.Id + ") met titel " + idea.Title + " heeft een gelijkaardige titel aan Idea(ID=" +
                         i.Id + " met titel " + i.Title + ".");
