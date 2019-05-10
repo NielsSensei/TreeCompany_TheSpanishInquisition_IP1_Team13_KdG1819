@@ -272,7 +272,7 @@ create table AspNetRoleClaims
 	ClaimType TEXT,
 	ClaimValue TEXT,
 
-	constraint PK_AspNetRoleClaims primary key(Id),
+	CONSTRAINT PK_AspNetRoleClaims primary key(Id),
 	CONSTRAINT FK_AspNetRoleClaims_AspNetRoles_RoleId FOREIGN KEY (RoleId)
 		REFERENCES AspNetRoles(Id) ON DELETE CASCADE
 )
@@ -326,8 +326,7 @@ create table AspNetUserClaims
 
 	constraint PK_AspNetUserClaims primary key(Id),
 	constraint FK_AspNetUserClaims_AspNetUsers_UserId FOREIGN KEY (UserId)
-		references AspNetUsers(Id)
-			on delete cascade
+		references AspNetUsers(Id) on delete cascade
 )
 ;
 
@@ -338,7 +337,7 @@ create index IX_AspNetUserClaims_UserId
 create table AspNetUserLogins
 (
 	LoginProvider VARCHAR(255) not null,
-	ProviderKey TEXT not null,
+	ProviderKey VARCHAR(255) not null,
 	ProviderDisplayName TEXT,
 	UserId VARCHAR(55) not null,
 	constraint FK_AspNetUserLogins_AspNetUsers_UserId FOREIGN KEY (UserId)
@@ -376,7 +375,7 @@ create index IX_AspNetUserRoles_RoleId
 create table AspNetUserTokens
 (
 	UserId VARCHAR(55) not null,
-	LoginProvider TEXT not null,
+	LoginProvider VARCHAR(255) not null,
 	Name TEXT not null,
 	Value TEXT,
 
