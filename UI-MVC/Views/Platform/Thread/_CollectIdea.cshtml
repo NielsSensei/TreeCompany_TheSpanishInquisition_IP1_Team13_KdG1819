@@ -9,10 +9,26 @@
 
 @if (Model.ToView.IsDeleted)
 {
-    <div class="row">
-        <h4>[Verwijderd]</h4>
-    </div>
-    <hr/>
+    <section class="card">
+        <div class="card-title">
+            <div class="row justify-content-center-between m-auto">
+                <h4>[Verwijderd]</h4> 
+            </div>
+            <div class="row justify-content-center-between m-auto">
+                @if (Model.IdeaLevel < 3)
+                {
+                    <div class="card-footer">
+                        @foreach (Idea child in ProjectService.CollectThreadIdeas(
+                            Model.ToView.IdeaQuestion).Where(i => i.ParentIdea.Id == Model.ToView.Id))
+                        {
+                            @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = child, 
+                                IdeaLevel = (byte)(Model.IdeaLevel+1) })
+                        }
+                    </div>
+                }        
+            </div>
+        </div> 
+    </section>
 }
 else
 {
@@ -87,6 +103,12 @@ else
                             Stemmen
                         </a>
                     }
+                    
+                    @if(UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && !Model.ToView.IsDeleted){
+                        <button type="button" class="btn btn-primary" data-toggle="modal" 
+                                data-target="#deleteIdeaModal@(Model.ToView.Id)">Idee Verwijderen
+                        </button> 
+                    }
                 </div>
             </section>
         </div>
@@ -121,6 +143,23 @@ else
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
+    </div>
+</section>
 
+<section class="modal fade" id="deleteIdeaModal@(Model.ToView.Id)" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Ben je zeker dat je je idee wil verwijderen?</h5>
+            </div>
+            <div class="modal-body">
+                <a type="button" class="btn btn-primary" asp-controller="Moderation"
+                        asp-action="DestroyIdea" asp-route-idea="@Model.ToView.Id"
+                        asp-route-from="IdeationThread" 
+                        asp-route-thread="@Model.ToView.IdeaQuestion.Id">Bevestig
+                </a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </section>
