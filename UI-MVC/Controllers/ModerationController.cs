@@ -351,17 +351,28 @@ namespace UIMVC.Controllers
 
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas" , routeValues: "report");
         }
-
-        [HttpPost]
+        
         [Authorize]
-        public IActionResult DestroyIdea(int idea)
+        public IActionResult DestroyIdea(int idea, string from, int thread)
         {
             Idea toDelete = _ideaMgr.GetIdea(idea);
             toDelete.IsDeleted = true;
 
             _ideaMgr.EditIdea(toDelete);
 
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+            if (from.Equals("ModerationPanel"))
+            {
+                return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");  
+            }
+
+
+            if (from.Equals("IdeationThread") && thread > 0)
+            {
+                return RedirectToAction("CollectIdeationThread", "Platform",
+                    new {Id = thread});
+            }
+
+            return RedirectToAction("HandleErrorCode", "Errors", 404);
         }
 
 
