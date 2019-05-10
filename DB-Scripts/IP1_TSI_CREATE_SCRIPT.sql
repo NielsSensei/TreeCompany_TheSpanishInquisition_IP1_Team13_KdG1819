@@ -4,7 +4,6 @@ DROP TABLE IF EXISTS Ideations
 DROP TABLE IF EXISTS Answers
 DROP TABLE IF EXISTS Ideationquestions
 DROP TABLE IF EXISTS Ideas
-/*DROP TABLE IF EXISTS UserDetails*/
 DROP TABLE IF EXISTS Projectimages
 DROP TABLE IF EXISTS Modules
 DROP TABLE IF EXISTS Questionnairequestions
@@ -20,7 +19,6 @@ DROP TABLE IF EXISTS Reports
 DROP TABLE IF EXISTS Phases
 DROP TABLE IF EXISTS Projects
 
-/*DROP TABLE IF EXISTS Users*/
 DROP TABLE IF EXISTS Platforms
 
 /*TABELLEN AANMAKEN*/
@@ -34,34 +32,6 @@ CREATE TABLE Platforms(
 	/*Constraints*/
 	CONSTRAINT pk_Plaftorms PRIMARY KEY(PlatformID)
 )
-
-/*CREATE TABLE Users(
-	UserID INT IDENTITY,
-	Name NVARCHAR(100),
-	Email NVARCHAR(100),
-	Password BINARY(25),
-	Role TINYINT NOT NULL,
-	PlatformID INT NOT NULL,
-
-	/*Constraints*/
-	CONSTRAINT pk_Users PRIMARY KEY(UserID),
-	CONSTRAINT fk_Users_Platforms FOREIGN KEY (PlatformID) references Platforms(PlatformID) ON DELETE CASCADE ON UPDATE CASCADE
-)
-
-CREATE TABLE UserDetails(
-	UserID INT,
-	Zipcode VARCHAR(16) NOT NULL,
-	Banned BIT NOT NULL,
-	Gender TINYINT,
-	Active BIT NOT NULL,
-	BirthDate DATE,
-	OrgName NVARCHAR(100),
-	Description NVARCHAR(255),
-
-	/*Constraints*/
-	CONSTRAINT pk_UserDetails PRIMARY KEY(UserID),
-	CONSTRAINT fk_UserDetails_Users FOREIGN KEY (UserID) references Users(UserID) ON DELETE CASCADE ON UPDATE CASCADE	
-)*/
 
 CREATE TABLE OrganisationEvents(
 	EventID INT IDENTITY,
