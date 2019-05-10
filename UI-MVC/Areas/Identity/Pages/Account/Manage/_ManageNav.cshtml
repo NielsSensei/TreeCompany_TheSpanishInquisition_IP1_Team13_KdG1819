@@ -1,11 +1,8 @@
-﻿@using UIMVC.Services
-@using UIMVCUser = Domain.Identity.UIMVCUser
+﻿@using UIMVCUser = Domain.Identity.UIMVCUser
 @inject SignInManager<UIMVCUser> SignInManager
-@inject RoleService RoleService
-@inject UserManager<UIMVCUser> UserManager
 
 @{
-    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any(); 
 }
 <ul class="nav nav-pills flex-column">
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profiel</a></li>
@@ -17,27 +14,11 @@
     <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authenticatie</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Persoonlijke Data</a></li>
 
-    @if (RoleService.IsModerator(User).Result)
-    {
-        <li class="nav-item">
-            <bold>Moderation Panel</bold>
-        </li>
+    <!-- TODO: Maak hiervan een Role Check Van!!! -->
+    <li class="nav-item"><bold>Moderation Paneel</bold></li>
 
-        <li class="nav-item">
-            <a class="nav-link" asp-controller="Moderation" asp-action="CollectAllUsers">Toon alle gebruikers</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-controller="Moderation" asp-action="CollectAllIdeas">Toon alle ideeën</a>
-        </li>
-
-        @if (RoleService.IsSuperAdmin(User).Result)
-         {
-             <li class="nav-item">
-                 <a class="nav-link" asp-controller="Moderation" asp-action="AddPlatform">Platform Management</a>
-             </li>
-         }
-    }
-
-
+    <li class="nav-item"><a class="nav-link" asp-controller="Moderation" asp-action="CollectAllUsers">Toon alle gebruikers</a></li>
+    <li class="nav-item"><a class="nav-link" asp-controller="Moderation" asp-action="CollectAllIdeas">Toon alle ideeën</a></li>
+    <li class="nav-item"><a class="nav-link" asp-controller="Moderation" asp-action="AddPlatform">Platform Management</a></li>
 
 </ul>

@@ -2,14 +2,12 @@ using System.Linq;
 using BL;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 
 namespace UIMVC.Services
 {
     public class UserService
     {
         private readonly UserManager<UIMVCUser> _usrMgr;
-        
 
         public UserService(UserManager<UIMVCUser> userManager)
         {
@@ -23,7 +21,6 @@ namespace UIMVC.Services
             {
                 return "NOTFOUND";
             }
-
             return foundUser.Name;
         }
     }
