@@ -1,31 +1,6 @@
 // START LoRa includes
-#include <RadioHead.h>
-#include <RHCRC.h>
-#include <RHDatagram.h>
-#include <RHEncryptedDriver.h>
-#include <RHGenericDriver.h>
-#include <RHGenericSPI.h>
-#include <RHHardwareSPI.h>
-#include <RHMesh.h>
-#include <RHNRFSPIDriver.h>
-#include <RHReliableDatagram.h>
-#include <RHRouter.h>
-#include <RHSoftwareSPI.h>
-#include <RHSPIDriver.h>
-#include <RHTcpProtocol.h>
-#include <RH_ASK.h>
-#include <RH_CC110.h>
-#include <RH_E32.h>
-#include <RH_MRF89.h>
-#include <RH_NRF24.h>
-#include <RH_NRF51.h>
-#include <RH_NRF905.h>
-#include <RH_RF22.h>
-#include <RH_RF24.h>
-#include <RH_RF69.h>
-#include <RH_RF95.h>
-#include <RH_Serial.h>
-#include <RH_TCP.h>
+#include <LoRa.h>
+#include <SPI.h>
 // END LoRa includes
 
 // START pin-mapping
@@ -34,6 +9,8 @@
 #define RedButton 3
 #define RedLED 4
 // END pin-mapping
+
+#define DEVICE_ID "KdG"
 
 // VARIABLES
 int greenButtonState;             // the current reading from the input pin
@@ -44,15 +21,32 @@ int lastRedButtonState = LOW;   // the previous reading from the input pin
 int positive = LOW; // trigger for LoRa communication
 int negative = LOW; // trigger for LoRa communication
 
+int count = 0;
+
 unsigned long lastGreenDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long lastRedDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 
 void sendPositive() {
-  Serial.println("Green");
-  digitalWrite(GreenLED, HIGH);
-  delay(200);
-  digitalWrite(GreenLED, LOW);
+  Serial.print("Sending packet ");
+  Serial.print(count);
+  Serial.println("... ");
+
+  int status = LoRa.beginPacket();
+  if (status) {
+    LoRa.print("<");
+    LoRa.print(DEVICE_ID);
+    LoRa.print(">");
+    unsigned long m = millis();
+    LoRa.print(m);
+    LoRa.print(",");
+    LoRa.print(count++);
+    LoRa.endPacket();
+    Serial.println("Packet sent");
+  } else {
+    Serial.println("Error sending packet");
+  }
+  
 }
 
 void sendNegative() {
@@ -63,22 +57,30 @@ void sendNegative() {
 }
 
 void setup() {
+  Serial.begin(9600);
+  Serial.println("Setup LoRa shield...");
+  if (!LoRa.begin(868100000)) {
+    Serial.println("Starting LoRa failed!");
+    while(1);
+  }
+  LoRa.setSyncWord(0x34);
+  Serial.println("LoRa shield initialized");
+  
   // put your setup code here, to run once:
   pinMode(GreenButton, INPUT);
   pinMode(GreenLED, OUTPUT);
   pinMode(RedButton, INPUT);
   pinMode(RedLED, OUTPUT);
 
-  digitalWrite(GreenLED, LOW);
-  digitalWrite(RedLED, LOW);
-  delay(20);
-  digitalWrite(GreenLED, HIGH);
-  digitalWrite(RedLED, HIGH);
-  delay(20);
-  digitalWrite(GreenLED, LOW);
-  digitalWrite(RedLED, LOW);
-
-  Serial.begin(9600);
+  for(int i=0; i<3; i++){
+    digitalWrite(GreenLED, HIGH);
+    digitalWrite(RedLED, HIGH);
+    delay(400);
+    digitalWrite(GreenLED, LOW);
+    digitalWrite(RedLED, LOW);
+    delay(400);
+  }  
+  Serial.println("Ready!");
 }
 
 void loop() {
