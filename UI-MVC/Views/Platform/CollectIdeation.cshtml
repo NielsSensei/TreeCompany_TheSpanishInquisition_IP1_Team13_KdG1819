@@ -110,19 +110,21 @@
     </section>
 </section>
 <hr/>
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
+@if(RoleService.IsAdmin(User)){
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
                     asp-route-id="@Model.Id">Pas deze ideation aan.</a>
-        </div>
-        <div class="col-md-6">
-            <button type="button" class="btn btn-primary" data-toggle="modal" 
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary" data-toggle="modal" 
                     data-target="#deleteIdeationModal">Verwijder deze ideation.
-            </button>
+                </button>
+            </div>
         </div>
     </div>
-</div>
+}
 
 <div class="modal fade" id="deleteIdeationModal" tabindex="-1" role="dialog" 
      aria-labelledby="deleteIdeationModalLabel" aria-hidden="true">

@@ -440,7 +440,7 @@ namespace UIMVC.Controllers
         public async Task<IActionResult> SetRole(AssignRoleModel arm, string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            var roletext = Request.Form["Role"];
+            string roletext = Request.Form["Role"];
 //            if (!roletext.Any()) return RedirectToAction("CollectAllUsers", "Moderation");
 //            var role = (Role) Enum.Parse(typeof(Role), roletext);
             Object roleParse = null;
@@ -450,9 +450,9 @@ namespace UIMVC.Controllers
             // TODO Send a message to the user stating that the role could not be added
             if (!await _roleService.IsSameRoleOrLower(User, role))
             {
-                if (await _userManager.IsInRoleAsync(user, Enum.GetName(typeof(Role), role)))
+                if (await _userManager.IsInRoleAsync(user, roletext))
                 {
-                    _userManager.RemoveFromRoleAsync(user, roletext);
+                    await _userManager.RemoveFromRoleAsync(user, roletext);
                 }
                 else
                 {
