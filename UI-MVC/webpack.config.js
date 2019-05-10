@@ -8,6 +8,7 @@ module.exports = {
         bootstrap_js: "./wwwroot/js/bootstrap_js.js",
         validation: "./wwwroot/js/validation.js",
         index: "./wwwroot/js/index.js",
+        showmenu: "./wwwroot/js/showmenu.js",
         confirmemail: "./wwwroot/js/confirmemail.js"
     },
     output: {

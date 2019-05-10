@@ -64,6 +64,7 @@ namespace UIMVC
             services.AddTransient<ProjectService>();
             services.AddTransient<QuestionService>();
             services.AddTransient<UserService>();
+            services.AddTransient<RoleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,6 +95,17 @@ namespace UIMVC
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+        
+        private async void CreateRoles(RoleManager<IdentityRole> roleManager)
+        {
+            foreach (string role in Enum.GetValues(typeof(Domain.Users.Role)))
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
         }
     }
 }
