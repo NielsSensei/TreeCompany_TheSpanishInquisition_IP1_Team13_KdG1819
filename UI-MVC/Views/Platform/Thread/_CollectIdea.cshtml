@@ -102,6 +102,11 @@ else
                            asp-route-thread="@Model.ToView.IdeaQuestion.Id">
                             Stemmen
                         </a>
+                        
+                        <a data-toggle="modal" data-target="#makeReportModal@(Model.ToView.Id)">
+                            <img alt="reportflag" src="https://image.flaticon.com/icons/svg/148/148882.svg"
+                                 title="Rapporteer dit idee!" width="25px" height="25px"/>
+                        </a>
                     }
                     
                     @if(UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && !Model.ToView.IsDeleted){
@@ -140,7 +145,7 @@ else
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
             </div>
         </div>
     </div>
@@ -160,6 +165,31 @@ else
                 </a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
+        </div>
+    </div>
+</section>
+
+<section class="modal fade" id="makeReportModal@(Model.ToView.Id)" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form asp-controller="Platform" asp-action="AddReport" type="button" 
+                  asp-route-flagger="@UserManager.GetUserId(User)" asp-route-thread="@Model.ToView.IdeaQuestion.Id" 
+                  asp-route-idea="@Model.ToView.Id">
+                <div class="modal-body m-auto">
+                    <label>Reden van de rapportering:</label>
+                    @Html.TextBox("Reason", "", new {@class = "form-control"})
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary">Rapporteer</button>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </section>
