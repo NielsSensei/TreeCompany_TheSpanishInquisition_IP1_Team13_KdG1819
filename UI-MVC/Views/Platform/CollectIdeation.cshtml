@@ -110,7 +110,7 @@
     </section>
 </section>
 <hr/>
-@if(RoleService.IsAdmin(User)){
+@if(await RoleService.IsAdmin(User)){
     <div class="container">
         <div class="row">
             <div class="col-md-6">
