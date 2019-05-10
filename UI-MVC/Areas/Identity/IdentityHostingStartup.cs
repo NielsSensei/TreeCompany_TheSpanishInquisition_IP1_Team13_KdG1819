@@ -23,7 +23,7 @@ namespace UIMVC.Areas.Identity
                     options.UseSqlite(
                         context.Configuration.GetConnectionString("UIMVCContextConnection")));
 
-                
+                //TODO: Implement roles
                 services.AddDefaultIdentity<UIMVCUser>(
                     config => { config.SignIn.RequireConfirmedEmail = true; })
                     .AddRoles<IdentityRole>()

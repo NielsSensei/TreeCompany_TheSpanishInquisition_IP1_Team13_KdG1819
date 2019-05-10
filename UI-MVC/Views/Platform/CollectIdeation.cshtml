@@ -1,22 +1,17 @@
-@using Domain.Identity
 @using Domain.UserInput
-@using Domain.Users
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.EntityFrameworkCore
 @using UIMVC.Services
 @model Domain.Projects.Ideation
 @inject UserService Userservice
 @inject QuestionService Questionservice
-@inject RoleService RoleService
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = Model.Title;
 }
 
-@section Tags
+@section Scripts
 {
-    <script type="module" src="~/dist/showmenu.entry.js" defer></script>
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
 }
 
 <section class="container">
@@ -30,10 +25,6 @@
                 shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
             })
             <p>@Model.ExtraInfo</p>
-            @if (RoleService.IsAdmin(User).Result)
-            {
-                <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
-            }
             @if (Model.Event.Id != 0)
             {
                 @* TODO Zorgt voor een eventPagina *@
@@ -43,24 +34,11 @@
                 <h6 class="font-weight-bold">Tags:</h6>
 
                 <div class="row justify-content-start">
-                    @if (Model.Tags.Any())
-                    {
-                        @Html.Partial("_TagsPartial", Model.Tags)
-                    }
-                    else
-                    {
-                        <p>Geen tags gevonden</p>
-                    }
-
-                    @if (RoleService.IsAdmin(User).Result)
-                    {
-                        <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
-                           formmethod="get" asp-route-ideation="@Model.Id">
-                            @*TODO hier met een menuke*@
-                            nieuwe tag
-                        </a>
-                    }
-
+                    @Html.Partial("_TagsPartial", Model.Tags)
+                    @* TODO zet hier ne rolecheck op *@
+                    <a class="btn btn-primary mx-1 m-0" data-toggle="modal" data-target="#addTagModal">
+                        Nieuwe Tag
+                    </a>
                 </div>
             </section>
         </div>
@@ -73,6 +51,7 @@
     <section class="container">
         <div class="row justify-content-between">
             <div>
+                @* TODO zet hier ne rolecheck op *@
                 @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
                 {
                     <h1>Geen centrale vragen gesteld, wat jammer.</h1>
@@ -88,13 +67,10 @@
                     <h1>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</h1>
                 }
             </div>
-            @if (RoleService.IsAdmin(User).Result)
-            {
-                <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
-                   asp-route-ideation="@Model.Id">
-                    Stel een nieuwe centrale vraag
-                </a>
-            }
+            <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
+               asp-route-ideation="@Model.Id">
+                Stel een nieuwe centrale vraag
+            </a>
         </div>
         <section class="card-columns">
             @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))
@@ -111,7 +87,7 @@
                     <div class="card-footer text-center">
                         <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
                     </div>
-                </div>
+                </div>     
             }
         </section>
     </section>
@@ -121,26 +97,52 @@
     <div class="row">
         <div class="col-md-6">
             <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
-                    asp-route-id="@Model.Id">Pas deze ideation aan.</a>
+               asp-route-id="@Model.Id">Pas deze ideation aan.</a> 
         </div>
         <div class="col-md-6">
-            <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteIdeationModal">
+                Verwijder deze ideation.
+            </button>
+        </div>  
+    </div>
+</div>
+
+<div class="modal fade" id="deleteIdeationModal" tabindex="-1" role="dialog" 
+     aria-labelledby="deleteIdeationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Ben je zeker dat je deze ideation wil verwijderen?</h5>
+            </div>
+            <div class=modal-body>
+                <a type="button" class="btn btn-primary" asp-controller="Moderation"
+                        asp-action="DestroyIdeation" asp-route-id="@Model.Id">Bevestig</a>  
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>  
+            </div>
         </div>
     </div>
 </div>
-<div id="menu">
-    <div class="row">
-        <div class="col-md-10">
-            <div class="row">
-                <h1>Verwijderen van een ideation</h1>
-                <p>Ben je zeker?</p>
-            </div>
-            <div class="row">
-                <a asp-controller="Moderation" asp-action="DestroyIdeation" asp-route-id="@Model.Id"
-                   type="button" class="btn btn-primary">
-                    Bevestig
-                </a>
-                <button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
+
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" 
+     aria-labelledby="addTagModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class=modal-body>
+                <form asp-controller="Moderation" asp-action="AddTag" asp-route-ideation="@Model.Id">
+                    <div class="form-group">
+                        <label>IdeationID</label>
+                        <input disabled value="@Model.Id" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Vul hier de tag in:</label>
+                        @Html.TextBox("GetMeATag","", 
+                            new { @class="form-control"})
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Bevestig</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
+                    </div>
+                </form>  
             </div>
         </div>
     </div>
