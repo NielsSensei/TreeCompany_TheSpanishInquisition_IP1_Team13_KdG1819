@@ -1,8 +1,13 @@
+@using Domain.Identity
 @using Domain.UserInput
+@using Domain.Users
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @using UIMVC.Services
 @model Domain.Projects.Ideation
 @inject UserService Userservice
 @inject QuestionService Questionservice
+@inject RoleService RoleService
 
 @{
     Layout = "_Layout";
@@ -25,6 +30,10 @@
                 shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
             })
             <p>@Model.ExtraInfo</p>
+            @if (RoleService.IsAdmin(User).Result)
+            {
+                <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
+            }
             @if (Model.Event.Id != 0)
             {
                 @* TODO Zorgt voor een eventPagina *@
@@ -34,11 +43,22 @@
                 <h6 class="font-weight-bold">Tags:</h6>
 
                 <div class="row justify-content-start">
-                    @Html.Partial("_TagsPartial", Model.Tags)
-                    @* TODO zet hier ne rolecheck op *@
+                    @if (Model.Tags.Any())
+                    {
+                        @Html.Partial("_TagsPartial", Model.Tags)
+                    }
+                    else
+                    {
+                        <p>Geen tags gevonden</p>
+                    }
+
+                    @if (RoleService.IsAdmin(User).Result)
+                    {
                     <a class="btn btn-primary mx-1 m-0" data-toggle="modal" data-target="#addTagModal">
                         Nieuwe Tag
                     </a>
+                    }
+
                 </div>
             </section>
         </div>
@@ -51,7 +71,6 @@
     <section class="container">
         <div class="row justify-content-between">
             <div>
-                @* TODO zet hier ne rolecheck op *@
                 @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
                 {
                     <h1>Geen centrale vragen gesteld, wat jammer.</h1>
@@ -67,10 +86,13 @@
                     <h1>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</h1>
                 }
             </div>
-            <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
-               asp-route-ideation="@Model.Id">
-                Stel een nieuwe centrale vraag
-            </a>
+            @if (RoleService.IsAdmin(User).Result)
+            {
+                <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
+                   asp-route-ideation="@Model.Id">
+                    Stel een nieuwe centrale vraag
+                </a>
+            }
         </div>
         <section class="card-columns">
             @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))
@@ -87,7 +109,7 @@
                     <div class="card-footer text-center">
                         <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
                     </div>
-                </div>     
+                </div>
             }
         </section>
     </section>
@@ -97,17 +119,17 @@
     <div class="row">
         <div class="col-md-6">
             <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
-               asp-route-id="@Model.Id">Pas deze ideation aan.</a> 
+               asp-route-id="@Model.Id">Pas deze ideation aan.</a>
         </div>
         <div class="col-md-6">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteIdeationModal">
                 Verwijder deze ideation.
             </button>
-        </div>  
+        </div>
     </div>
 </div>
 
-<div class="modal fade" id="deleteIdeationModal" tabindex="-1" role="dialog" 
+<div class="modal fade" id="deleteIdeationModal" tabindex="-1" role="dialog"
      aria-labelledby="deleteIdeationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -116,14 +138,14 @@
             </div>
             <div class=modal-body>
                 <a type="button" class="btn btn-primary" asp-controller="Moderation"
-                        asp-action="DestroyIdeation" asp-route-id="@Model.Id">Bevestig</a>  
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>  
+                        asp-action="DestroyIdeation" asp-route-id="@Model.Id">Bevestig</a>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" 
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog"
      aria-labelledby="addTagModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -135,14 +157,14 @@
                     </div>
                     <div class="form-group">
                         <label>Vul hier de tag in:</label>
-                        @Html.TextBox("GetMeATag","", 
+                        @Html.TextBox("GetMeATag","",
                             new { @class="form-control"})
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" type="submit">Bevestig</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
-                </form>  
+                </form>
             </div>
         </div>
     </div>
