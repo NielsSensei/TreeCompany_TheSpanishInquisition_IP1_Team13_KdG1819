@@ -1,38 +1,19 @@
-/*         CREATE SCRIPT IP1 VERSIE 5          */
-/*TABLES DROPPEN*/
-DROP TABLE IF EXISTS Ideations
-DROP TABLE IF EXISTS Answers
-DROP TABLE IF EXISTS Ideationquestions
-DROP TABLE IF EXISTS Ideas
-DROP TABLE IF EXISTS Projectimages
-DROP TABLE IF EXISTS Modules
-DROP TABLE IF EXISTS Questionnairequestions
-DROP TABLE IF EXISTS Choices
-DROP TABLE IF EXISTS Options
-DROP TABLE IF EXISTS Ideafields
-DROP TABLE IF EXISTS Organisationevents
-DROP TABLE IF EXISTS Useractivities
-DROP TABLE IF EXISTS Devices
-DROP TABLE IF EXISTS Votes
-DROP TABLE IF EXISTS Reports
-DROP TABLE IF EXISTS Phases
-DROP TABLE IF EXISTS Projects
-DROP TABLE IF EXISTS Platforms
+/*         CREATE SCRIPT IP1 VERSIE 1.MySQL          */
 
 /*TABELLEN AANMAKEN*/
 
 CREATE TABLE Platforms(
-	PlatformID INT IDENTITY,
+	PlatformID INT AUTO_INCREMENT,
 	Name NVARCHAR(100) NOT NULL,
 	SiteUrl VARCHAR(50) NOT NULL,
-	IconImage BINARY(255),
+	IconImage VARBINARY(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_Plaftorms PRIMARY KEY(PlatformID)
 )
 
 CREATE TABLE OrganisationEvents(
-	EventID INT IDENTITY,
+	EventID INT AUTO_INCREMENT,
 	UserID NVARCHAR(255) NOT NULL,
 	Name NVARCHAR(100) NOT NULL,
 	Description NVARCHAR(255) NOT NULL,
@@ -46,7 +27,7 @@ CREATE TABLE OrganisationEvents(
 )
 
 CREATE TABLE Projects(
-	ProjectID INT IDENTITY,
+	ProjectID INT AUTO_INCREMENT,
 	CurrentPhaseID INT NOT NULL,
 	UserID NVARCHAR(255) NOT NULL,
 	PlatformID INT NOT NULL,
@@ -55,7 +36,7 @@ CREATE TABLE Projects(
 	Status VARCHAR(25) NOT NULL,
 	StartDate DATE,
 	EndDate DATE,
-	Visible BIT NOT NULL,
+	Visible BOOL NOT NULL,
 	ReactionCount INT,
 	LikeCount INT,
 	FbLikeCount INT, 
@@ -68,12 +49,12 @@ CREATE TABLE Projects(
 )
 
 CREATE TABLE Phases(
-	PhaseID INT IDENTITY,
+	PhaseID INT AUTO_INCREMENT,
 	ProjectID INT NOT NULL,
 	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
-	IsCurrent BIT NOT NULL,
+	IsCurrent BOOL NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Phases PRIMARY KEY(PhaseID),
@@ -82,10 +63,10 @@ CREATE TABLE Phases(
 )
 
 CREATE TABLE Modules(
-	ModuleID INT IDENTITY,
+	ModuleID INT AUTO_INCREMENT,
 	ProjectID INT NOT NULL,
 	PhaseID INT NOT NULL,
-	OnGoing BIT NOT NULL,
+	OnGoing BOOL NOT NULL,
 	Title NVARCHAR(100),
 	LikeCount INT,
 	FbLikeCount INT, 
@@ -93,7 +74,7 @@ CREATE TABLE Modules(
 	ShareCount INT,
 	RetweetCount INT,
 	Tags VARCHAR(255),
-	IsQuestionnaire BIT NOT NULL,
+	IsQuestionnaire BOOL NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Modules PRIMARY KEY(ModuleID)
@@ -101,15 +82,15 @@ CREATE TABLE Modules(
 
 CREATE TABLE Projectimages(
 	ProjectID INT NOT NULL,
-	ImageID TINYINT IDENTITY,
-	ProjectImage BINARY(255),
+	ImageID TINYINT AUTO_INCREMENT,
+	ProjectImage VARBINARY(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_ProjectImages PRIMARY KEY(ProjectID, ImageID)
 )
 
 CREATE TABLE Devices(
-	DeviceID INT IDENTITY,
+	DeviceID INT AUTO_INCREMENT,
 	LocationX FLOAT,
 	LocationY FLOAT,
 
@@ -118,7 +99,7 @@ CREATE TABLE Devices(
 )
 
 CREATE TABLE IdeationQuestions(
-	IQuestionID INT IDENTITY,
+	IQuestionID INT AUTO_INCREMENT,
 	ModuleID INT NOT NULL,
 	QuestionTitle NVARCHAR(50) NOT NULL,
 	Description NVARCHAR(255) NOT NULL,
@@ -129,19 +110,19 @@ CREATE TABLE IdeationQuestions(
 )
 
 CREATE TABLE Ideas(
-	IdeaID INT IDENTITY,
+	IdeaID INT AUTO_INCREMENT,
 	IQuestionID INT NOT NULL,
 	UserID NVARCHAR(255) NOT NULL,
-	Reported BIT NOT NULL,
-	ReviewByAdmin BIT NOT NULL,
-	Visible BIT NOT NULL,
+	Reported BOOL NOT NULL,
+	ReviewByAdmin BOOL NOT NULL,
+	Visible BOOL NOT NULL,
 	VoteCount INT,
 	RetweetCount INT,
 	ShareCount INT,
 	Title NVARCHAR(100) NOT NULL,
 	Status VARCHAR(100),
-	VerifiedUser BIT NOT NULL,
-	IsDeleted BIT NOT NULL,
+	VerifiedUser BOOL NOT NULL,
+	IsDeleted BOOL NOT NULL,
 	ParentID INT,
 	DeviceID INT,
 
@@ -153,9 +134,9 @@ CREATE TABLE Ideas(
 CREATE TABLE Ideations (
 	ModuleID INT NOT NULL,
 	UserID NVARCHAR(255) NOT NULL,
-	Organisation BIT NOT NULL,
+	Organisation BOOL NOT NULL,
 	EventID INT,
-	UserIdea BIT NOT NULL,
+	UserIdea BOOL NOT NULL,
 	MediaFile BINARY(255),
 	RequiredFields tinyint NOT NULL,
 	ExtraInfo NVARCHAR(100),
@@ -165,18 +146,18 @@ CREATE TABLE Ideations (
 )
 
 CREATE TABLE QuestionnaireQuestions(
-	QQuestionID INT IDENTITY,
+	QQuestionID INT AUTO_INCREMENT,
 	ModuleID INT NOT NULL,
 	QuestionText NVARCHAR(100) NOT NULL,
-	QType BIT NOT NULL,
-	Required BIT NOT NULL,
+	QType BOOL NOT NULL,
+	Required BOOL NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_QuestionnaireQuestions PRIMARY KEY(QQuestionID)
 )
 
 CREATE TABLE Answers(
-	AnswerID INT IDENTITY,
+	AnswerID INT AUTO_INCREMENT
 	QQuestionID INT NOT NULL,
 	UserID NVARCHAR(255),
 	AnswerText NVARCHAR(255),
@@ -186,7 +167,7 @@ CREATE TABLE Answers(
 )
 
 CREATE TABLE Options(
-	OptionID INT IDENTITY,
+	OptionID INT AUTO_INCREMENT,
 	OptionText NVARCHAR(150) NOT NULL,
 	QQuestionID INT NOT NULL,
 
@@ -195,7 +176,7 @@ CREATE TABLE Options(
 )
 
 CREATE TABLE Choices(
-	ChoiceID INT IDENTITY,
+	ChoiceID INT AUTO_INCREMENT,
 	AnswerID INT NOT NULL,
 	OptionID INT NOT NULL,
 
@@ -205,7 +186,7 @@ CREATE TABLE Choices(
 
 
 CREATE TABLE IdeaFields(
-	FieldID INT IDENTITY,
+	FieldID INT AUTO_INCREMENT,
 	IdeaID INT NOT NULL,
 	FieldText NVARCHAR(255),
 	FieldStrings NVARCHAR(800),
@@ -221,7 +202,7 @@ CREATE TABLE IdeaFields(
 
 
 CREATE TABLE Votes(
-	VoteID INT IDENTITY,
+	VoteID INT AUTO_INCREMENT,
 	DeviceID INT,
 	InputID INT NOT NULL,
 	UserID NVARCHAR(255) NOT NULL,
@@ -236,7 +217,7 @@ CREATE TABLE Votes(
 )
 
 CREATE TABLE UserActivities(
-	ActivityID INT IDENTITY,
+	ActivityID INT AUTO_INCREMENT,
 	UserID NVARCHAR(255) NOT NULL,
 	PlatformID INT NOT NULL,
 	EventID INT,
@@ -252,7 +233,7 @@ CREATE TABLE UserActivities(
 )
 
 CREATE TABLE Reports(
-	ReportID       INT IDENTITY,
+	ReportID       INT AUTO_INCREMENT,
 	IdeaID         INT NOT NULL,
 	FlaggerID      NVARCHAR(255) NOT NULL,
 	ReporteeID     NVARCHAR(255) NOT NULL,
