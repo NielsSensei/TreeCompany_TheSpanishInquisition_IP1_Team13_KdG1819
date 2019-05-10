@@ -122,20 +122,12 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
-
+        
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
-        [HttpGet]
         public IActionResult AddTag(int ideation)
         {
-            ViewData["Ideation"] = ideation;
-
-            return View();
-        }
-
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
-        [HttpPost]
-        public IActionResult AddTag(string tag, int ideation)
-        {
+            string tag = Request.Form["GetMeATag"].ToString();
+            
             if (tag == null)
             {
                 return BadRequest("Tag can't be null");
@@ -143,7 +135,8 @@ namespace UIMVC.Controllers
 
             _moduleMgr.MakeTag(tag, ideation, false);
 
-            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
+            return RedirectToAction("CollectIdeation", "Platform", 
+                new {Id = ideation});
         }
 
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
