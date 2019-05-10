@@ -5,6 +5,7 @@ using Domain.Identity;
 using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Services;
 

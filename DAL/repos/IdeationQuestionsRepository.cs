@@ -40,7 +40,7 @@ namespace DAL.repos
 
         private IdeasDTO ConvertToDTO(Idea obj)
         {
-            IdeasDTO DTO =  new IdeasDTO()
+            return new IdeasDTO()
             {
                 IdeaID = obj.Id,
                 IQuestionID = obj.IdeaQuestion.Id,
@@ -55,21 +55,9 @@ namespace DAL.repos
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
                 IsDeleted = obj.IsDeleted,
-                ParentID = 0,
-                DeviceID = 0
+                ParentID = obj.ParentIdea.Id,
+                DeviceID = obj.Device.Id
             };
-
-            if (obj.ParentIdea != null)
-            {
-                DTO.ParentID = obj.ParentIdea.Id;
-            }
-
-            if (obj.Device != null)
-            {
-                DTO.DeviceID = obj.Device.Id;
-            }
-            
-            return DTO;
         }
 
         private IdeaFieldsDTO ConvertToDTO(Field obj)

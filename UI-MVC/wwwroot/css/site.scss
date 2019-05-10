@@ -7,7 +7,7 @@
   font-weight: bold;
 }
 
-#menu, #Reportmenu {
+#menu {
   display: none;
   position: fixed;
   justify-content: center;
@@ -170,6 +170,8 @@
 #ReportHandlerButton {
   margin: 1rem;
 }
+
+
 
 /* Module.cshtml */
 #modulePart {
