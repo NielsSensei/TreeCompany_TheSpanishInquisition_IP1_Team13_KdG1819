@@ -96,10 +96,7 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid, CreateQuestionnaireQuestionModel cqqm)
         {
-            foreach (var item in cqqm.Options)
-            {
-                Console.WriteLine(item);
-            }
+           
 
             Questionnaire toAdd = (Questionnaire) modMgr.GetModule(questionnaireid, false, true);
 
@@ -113,9 +110,19 @@ namespace UIMVC.Controllers
                 Optional = cqqm.Optional,
                 Answers = new List<Answer>()
 
-
-
             };
+
+
+
+            if (cqqm.QuestionType.Equals(QuestionType.DROP) || cqqm.QuestionType.Equals(QuestionType.MULTI) || cqqm.QuestionType.Equals(QuestionType.SINGLE) )
+            {
+                foreach (string options in cqqm.Options)
+                {
+                    
+                }
+            }
+
+           
 
            
             qqMgr.MakeQuestion(newQuestion, toAdd.Id);
@@ -207,6 +214,14 @@ namespace UIMVC.Controllers
         public IActionResult DeleteQuestionnaire(EditQuestionnaireModel eqm, int projectid)
         {
             return RedirectToAction("");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteQuestionnaireQuestion(int questionid)
+        {
+            QuestionnaireQuestion toDelete = qqMgr.GetQuestion(questionid, true);
+            qqMgr.RemoveQuestion(questionid);
+            return RedirectToAction("EditQuestionnaire", new { questionnaireid = toDelete.Module.Id });
         }
 
 

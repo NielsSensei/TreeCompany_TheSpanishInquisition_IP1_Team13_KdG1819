@@ -119,8 +119,8 @@ else
 
                 <td>@qQ.Answers.Count() Antwoorden</td>
                 <td>
-                    <button class="btn btn-danger">Verwijderen</button>
-                    <button class="btn btn-primary">Bewerken</button>
+                    <a class="btn btn-danger" asp-action="DeleteQuestionnaireQuestion" asp-controller="Admin" asp-route-questionid="@qQ.Id" method="post">Verwijderen</a>
+                    <a class="btn btn-primary">Bewerken</a>
                 </td>
             </tr>
         }
