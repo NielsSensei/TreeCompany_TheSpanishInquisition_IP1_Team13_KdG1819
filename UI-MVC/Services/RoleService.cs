@@ -31,7 +31,7 @@ namespace UIMVC.Services
 
         private async void CreateTestUsers()
         {
-            if (_userManager.FindByEmailAsync(_configuration["SuperAdmin:Email"]) != null)
+            if (await _userManager.FindByEmailAsync(_configuration["SuperAdmin:Email"]) == null)
             {
                 UIMVCUser user = new UIMVCUser
                 {
@@ -46,7 +46,7 @@ namespace UIMVC.Services
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
                 AssignToRole(userFound, Role.SUPERADMIN);
             }
-            if (_userManager.FindByEmailAsync(_configuration["Admin:Email"]) != null)
+            if (await _userManager.FindByEmailAsync(_configuration["Admin:Email"]) == null)
             {
                 UIMVCUser user = new UIMVCUser
                 {
@@ -61,7 +61,7 @@ namespace UIMVC.Services
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
                 AssignToRole(userFound, Role.ADMIN);
             }
-            if (_userManager.FindByEmailAsync(_configuration["Moderator:Email"]) != null)
+            if (await _userManager.FindByEmailAsync(_configuration["Moderator:Email"]) == null)
             {
                 UIMVCUser user = new UIMVCUser
                 {
@@ -76,7 +76,7 @@ namespace UIMVC.Services
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
                 AssignToRole(userFound, Role.MODERATOR);
             }
-            if (_userManager.FindByEmailAsync(_configuration["LoggedInOrg:Email"]) != null)
+            if (await _userManager.FindByEmailAsync(_configuration["LoggedInOrg:Email"]) == null)
             {
                 UIMVCUser user = new UIMVCUser
                 {
@@ -89,9 +89,9 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedInOrg:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.MODERATOR);
+                AssignToRole(userFound, Role.LOGGEDINORG);
             }
-            if (_userManager.FindByEmailAsync(_configuration["LoggedInVerified:Email"]) != null)
+            if (await _userManager.FindByEmailAsync(_configuration["LoggedInVerified:Email"]) == null)
             {
                 UIMVCUser user = new UIMVCUser
                 {
@@ -104,9 +104,9 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedInVerified:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.MODERATOR);
+                AssignToRole(userFound, Role.LOGGEDINVERIFIED);
             }
-            if (_userManager.FindByEmailAsync(_configuration["LoggedIn:Email"]) != null)
+            if (await _userManager.FindByEmailAsync(_configuration["LoggedIn:Email"]) == null)
             {
                 UIMVCUser user = new UIMVCUser
                 {
@@ -119,9 +119,9 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedIn:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.MODERATOR);
+                AssignToRole(userFound, Role.LOGGEDIN);
             }
-            if (_userManager.FindByEmailAsync(_configuration["Anonymous:Email"]) != null)
+            if (await _userManager.FindByEmailAsync(_configuration["Anonymous:Email"]) == null)
             {
                 UIMVCUser user = new UIMVCUser
                 {
@@ -134,7 +134,7 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["Anonymous:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.MODERATOR);
+                AssignToRole(userFound, Role.ANONYMOUS);
             }
         }
 
