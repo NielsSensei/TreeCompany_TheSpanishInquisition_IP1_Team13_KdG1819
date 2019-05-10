@@ -267,14 +267,14 @@ create table AspNetRoles
 
 create table AspNetRoleClaims
 (
-	Id INTEGER not null AUTO_INCREMENT ON delete cascade,
+	Id INTEGER not null AUTO_INCREMENT,
 	RoleId VARCHAR(55) not null,
 	ClaimType TEXT,
 	ClaimValue TEXT,
 
 	CONSTRAINT PK_AspNetRoleClaims primary key(Id),
 	CONSTRAINT FK_AspNetRoleClaims_AspNetRoles_RoleId FOREIGN KEY (RoleId)
-		REFERENCES AspNetRoles(Id)
+		REFERENCES AspNetRoles(Id) ON DELETE CASCADE
 )
 ;
 
@@ -322,11 +322,11 @@ create table AspNetUserClaims
 	Id INTEGER not null AUTO_INCREMENT,
 	UserId VARCHAR(55) not null,
 	ClaimType TEXT,
-	ClaimValue TEXT
+	ClaimValue TEXT,
 
 	constraint PK_AspNetUserClaims primary key(Id),
 	constraint FK_AspNetUserClaims_AspNetUsers_UserId FOREIGN KEY (UserId)
-		references AspNetUsers(Id) on delete cascade
+		references AspNetUsers(Id) ON DELETE CASCADE
 )
 ;
 
