@@ -256,7 +256,7 @@ CREATE TABLE Reports(
 
 create table AspNetRoles
 (
-	Id TEXT not null,
+	Id VARCHAR(55) not null,
 	Name TEXT,
 	NormalizedName TEXT,
 	ConcurrencyStamp TEXT,
@@ -268,7 +268,7 @@ create table AspNetRoles
 create table AspNetRoleClaims
 (
 	Id INTEGER not null AUTO_INCREMENT,
-	RoleId TEXT not null,
+	RoleId VARCHAR(55) not null,
 	ClaimType TEXT,
 	ClaimValue TEXT,
 
@@ -288,7 +288,7 @@ create unique index RoleNameIndex
 
 create table AspNetUsers
 (
-	Id TEXT not null,
+	Id VARCHAR(55) not null,
 	UserName TEXT,
 	NormalizedUserName TEXT,
 	Email TEXT,
@@ -320,7 +320,7 @@ create table AspNetUsers
 create table AspNetUserClaims
 (
 	Id INTEGER not null AUTO_INCREMENT,
-	UserId TEXT not null,
+	UserId VARCHAR(55) not null,
 	ClaimType TEXT,
 	ClaimValue TEXT
 
@@ -356,8 +356,8 @@ create index IX_AspNetUserLogins_UserId
 
 create table AspNetUserRoles
 (
-	UserId TEXT not null,
-	RoleId TEXT not null,
+	UserId VARCHAR(55) not null,
+	RoleId VARCHAR(55) not null,
 
 	constraint FK_AspNetUserRoles_AspNetUsers_UserId FOREIGN KEY (UserId)
 			references AspNetUsers(Id)
@@ -376,7 +376,7 @@ create index IX_AspNetUserRoles_RoleId
 
 create table AspNetUserTokens
 (
-	UserId TEXT not null,
+	UserId VARCHAR(55) not null,
 	LoginProvider TEXT not null,
 	Name TEXT not null,
 	Value TEXT,
