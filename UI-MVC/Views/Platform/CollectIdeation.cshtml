@@ -30,7 +30,7 @@
                 shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
             })
             <p>@Model.ExtraInfo</p>
-            @if (RoleService.IsAdmin(User).Result)
+            @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
             {
                 <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
             }
@@ -52,7 +52,7 @@
                         <p>Geen tags gevonden</p>
                     }
 
-                    @if (RoleService.IsAdmin(User).Result)
+                    @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
                     {
                         <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
                            formmethod="get" asp-route-ideation="@Model.Id">
@@ -88,7 +88,7 @@
                     <h1>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</h1>
                 }
             </div>
-            @if (RoleService.IsAdmin(User).Result)
+            @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
             {
                 <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
                    asp-route-ideation="@Model.Id">
