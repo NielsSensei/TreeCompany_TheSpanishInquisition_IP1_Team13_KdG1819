@@ -117,17 +117,23 @@
     </section>
 </section>
 <hr/>
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
-                    asp-route-id="@Model.Id">Pas deze ideation aan.</a>
-        </div>
-        <div class="col-md-6">
-            <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
+@if (User.Identity.IsAuthenticated && await RoleService.IsAdmin(User))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
+                   asp-route-id="@Model.Id">
+                    Pas deze ideation aan.
+                </a>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
+            </div>
         </div>
     </div>
-</div>
+}
+
 <div id="menu">
     <div class="row">
         <div class="col-md-10">
