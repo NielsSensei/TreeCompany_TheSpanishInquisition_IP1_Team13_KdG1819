@@ -96,6 +96,11 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid, CreateQuestionnaireQuestionModel cqqm)
         {
+            foreach (var item in cqqm.Options)
+            {
+                Console.WriteLine(item);
+            }
+
             Questionnaire toAdd = (Questionnaire) modMgr.GetModule(questionnaireid, false, true);
 
             QuestionnaireQuestion newQuestion = new QuestionnaireQuestion

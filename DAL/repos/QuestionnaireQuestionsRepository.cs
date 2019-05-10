@@ -315,7 +315,7 @@ namespace DAL
         // Added by NVZ
         // Options CRUD
         #region
-        public string Create(int questionID, string obj)
+        public string CreateOption(int questionID, string obj)
         {
             IEnumerable<string> options = ReadAllOptions(questionID);
             int newID = options.Count() + 1;

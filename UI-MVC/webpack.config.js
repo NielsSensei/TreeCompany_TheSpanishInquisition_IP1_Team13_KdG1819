@@ -10,7 +10,7 @@ module.exports = {
         index: "./wwwroot/js/index.js",
         showmenu: "./wwwroot/js/showmenu.js",
         confirmemail: "./wwwroot/js/confirmemail.js",
-        addQuestion: "./wwwroot/js/addQuestionnaireQuestion.js"
+        addQuestionnaireQuestion: "./wwwroot/js/addQuestionnaireQuestion.js"
     },
     output: {
         filename: "[name].entry.js",

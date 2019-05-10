@@ -142,6 +142,26 @@ namespace BL
         }
         #endregion
 
+        public void MakeOption(int questionId, string optionText)
+        {
+            QuestionnaireQuestionRepo.CreateOption(questionId, optionText);
+        }
+
+        public String GetOption(int optionId, int questionId)
+        {
+            return QuestionnaireQuestionRepo.ReadOption(optionId, questionId);
+        }
+
+        public int GetOptionId(string optionText, int questionId)
+        {
+            return QuestionnaireQuestionRepo.ReadOptionID(optionText, questionId);
+        }
+
+        public void DestroyOption(int optionId)
+        {
+            QuestionnaireQuestionRepo.DeleteOption(optionId);
+        }
+
 
 
 
