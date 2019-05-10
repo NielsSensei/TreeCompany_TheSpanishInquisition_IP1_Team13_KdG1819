@@ -258,7 +258,7 @@ create table AspNetRoles
 (
 	Id VARCHAR(55) not null,
 	Name TEXT,
-	NormalizedName TEXT,
+	NormalizedName VARCHAR(255),
 	ConcurrencyStamp TEXT,
 
 	CONSTRAINT PK_AspNetRoles PRIMARY KEY(Id)
@@ -290,9 +290,9 @@ create table AspNetUsers
 (
 	Id VARCHAR(55) not null,
 	UserName TEXT,
-	NormalizedUserName TEXT,
+	NormalizedUserName VARCHAR(55),
 	Email TEXT,
-	NormalizedEmail TEXT,
+	NormalizedEmail VARCHAR(255),
 	EmailConfirmed INTEGER not null,
 	PasswordHash TEXT,
 	SecurityStamp TEXT,
@@ -324,8 +324,7 @@ create table AspNetUserClaims
 	ClaimType TEXT,
 	ClaimValue TEXT
 
-	constraint PK_AspNetUserClaims
-		primary key(Id),
+	constraint PK_AspNetUserClaims primary key(Id),
 	constraint FK_AspNetUserClaims_AspNetUsers_UserId FOREIGN KEY (UserId)
 		references AspNetUsers(Id)
 			on delete cascade
@@ -338,10 +337,10 @@ create index IX_AspNetUserClaims_UserId
 
 create table AspNetUserLogins
 (
-	LoginProvider TEXT not null,
+	LoginProvider VARCHAR(255) not null,
 	ProviderKey TEXT not null,
 	ProviderDisplayName TEXT,
-	UserId TEXT not null,
+	UserId VARCHAR(55) not null,
 	constraint FK_AspNetUserLogins_AspNetUsers_UserId FOREIGN KEY (UserId)
 		references AspNetUsers(Id)
 			on delete cascade,
