@@ -11,6 +11,7 @@ CREATE TABLE Platforms(
 	/*Constraints*/
 	CONSTRAINT pk_Plaftorms PRIMARY KEY(PlatformID)
 )
+;
 
 CREATE TABLE OrganisationEvents(
 	EventID INT AUTO_INCREMENT,
@@ -23,6 +24,7 @@ CREATE TABLE OrganisationEvents(
 	/*Constraints*/
 	CONSTRAINT pk_OrganisationEvents PRIMARY KEY(EventID)
 )
+;
 
 CREATE TABLE Projects(
 	ProjectID INT AUTO_INCREMENT,
@@ -44,6 +46,7 @@ CREATE TABLE Projects(
 	/*Constraints*/
 	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID)
 )
+;
 
 CREATE TABLE Phases(
 	PhaseID INT AUTO_INCREMENT,
@@ -56,6 +59,7 @@ CREATE TABLE Phases(
 	/*Constraints*/
 	CONSTRAINT pk_Phases PRIMARY KEY(PhaseID)
 )
+;
 
 CREATE TABLE Modules(
 	ModuleID INT AUTO_INCREMENT,
@@ -74,6 +78,7 @@ CREATE TABLE Modules(
 	/*Constraints*/
 	CONSTRAINT pk_Modules PRIMARY KEY(ModuleID)
 )
+;
 
 CREATE TABLE Projectimages(
 	ProjectID INT NOT NULL,
@@ -83,6 +88,7 @@ CREATE TABLE Projectimages(
 	/*Constraints*/
 	CONSTRAINT pk_ProjectImages PRIMARY KEY(ProjectID, ImageID)
 )
+;
 
 CREATE TABLE Devices(
 	DeviceID INT AUTO_INCREMENT,
@@ -92,6 +98,7 @@ CREATE TABLE Devices(
 	/*Constraints*/
 	CONSTRAINT pk_Devices PRIMARY KEY(DeviceID)
 )
+;
 
 CREATE TABLE IdeationQuestions(
 	IQuestionID INT AUTO_INCREMENT,
@@ -103,6 +110,7 @@ CREATE TABLE IdeationQuestions(
 	/*Constraints*/
 	CONSTRAINT pk_IdeationQuestions PRIMARY KEY(IQuestionID)
 )
+;
 
 CREATE TABLE Ideas(
 	IdeaID INT AUTO_INCREMENT,
@@ -124,6 +132,7 @@ CREATE TABLE Ideas(
 	/*Constraints*/
 	CONSTRAINT pk_Ideas PRIMARY KEY(IdeaID)
 )
+;
 
 
 CREATE TABLE Ideations (
@@ -138,7 +147,7 @@ CREATE TABLE Ideations (
 
 	/*Constraints*/
 	CONSTRAINT pk_Ideations PRIMARY KEY(ModuleID)
-)
+);
 
 CREATE TABLE QuestionnaireQuestions(
 	QQuestionID INT AUTO_INCREMENT,
@@ -150,6 +159,7 @@ CREATE TABLE QuestionnaireQuestions(
 	/*Constraints*/
 	CONSTRAINT pk_QuestionnaireQuestions PRIMARY KEY(QQuestionID)
 )
+;
 
 CREATE TABLE Answers(
 	AnswerID INT AUTO_INCREMENT
@@ -159,7 +169,7 @@ CREATE TABLE Answers(
 
 	/*Constraints*/
 	CONSTRAINT pk_Answers PRIMARY KEY(AnswerID)
-)
+);
 
 CREATE TABLE Options(
 	OptionID INT AUTO_INCREMENT,
@@ -168,7 +178,7 @@ CREATE TABLE Options(
 
 	/*Constraints*/
 	CONSTRAINT pk_Options PRIMARY KEY(OptionID)
-)
+);
 
 CREATE TABLE Choices(
 	ChoiceID INT AUTO_INCREMENT,
@@ -178,6 +188,7 @@ CREATE TABLE Choices(
 	/*Constraints*/
 	CONSTRAINT pk_Choices PRIMARY KEY(ChoiceID, AnswerID, OptionID)
 )
+;
 
 
 CREATE TABLE IdeaFields(
@@ -194,6 +205,7 @@ CREATE TABLE IdeaFields(
 	/*Constraints*/
 	CONSTRAINT pk_IdeaFields PRIMARY KEY(FieldID,IdeaID)
 )
+;
 
 
 CREATE TABLE Votes(
@@ -210,6 +222,7 @@ CREATE TABLE Votes(
 	/*Constraints*/
 	CONSTRAINT pk_Votes PRIMARY KEY(VoteID)
 )
+;
 
 CREATE TABLE UserActivities(
 	ActivityID INT AUTO_INCREMENT,
@@ -226,6 +239,7 @@ CREATE TABLE UserActivities(
 	/*Constraints*/
 	CONSTRAINT pk_UserAcivities PRIMARY KEY(ActivityID)
 )
+;
 
 CREATE TABLE Reports(
 	ReportID       INT AUTO_INCREMENT,
@@ -238,6 +252,7 @@ CREATE TABLE Reports(
 	/*Constraints*/
 	CONSTRAINT pk_Reports PRIMARY KEY(ReportID)
 )
+;
 
 create table AspNetRoles
 (
