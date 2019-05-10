@@ -10,7 +10,7 @@
 #define RedLED 4
 // END pin-mapping
 
-#define DEVICE_ID "KdG"
+#define DEVICE_ID "KdG-TSI"
 
 // VARIABLES
 int greenButtonState;             // the current reading from the input pin
@@ -27,7 +27,7 @@ unsigned long lastGreenDebounceTime = 0;  // the last time the output pin was to
 unsigned long lastRedDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 
-void sendPositive() {
+void sendClick(char button){
   Serial.print("Sending packet ");
   Serial.print(count);
   Serial.println("... ");
@@ -40,21 +40,23 @@ void sendPositive() {
     unsigned long m = millis();
     LoRa.print(m);
     LoRa.print(",");
+    LoRa.print(button);
     LoRa.print(count++);
     LoRa.endPacket();
     Serial.println("Packet sent");
   } else {
     Serial.println("Error sending packet");
   }
-  
+}
+
+void sendPositive() {
+  sendClick('g');
 }
 
 void sendNegative() {
-  Serial.println("Red");
-  digitalWrite(RedLED, HIGH);
-  delay(200);
-  digitalWrite(RedLED, LOW);
+  sendClick('r');
 }
+
 
 void setup() {
   Serial.begin(9600);
