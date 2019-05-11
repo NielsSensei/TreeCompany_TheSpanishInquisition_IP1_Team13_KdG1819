@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace UIMVC.Services
+﻿namespace UIMVC.Services
 {
     public class AuthMessageSenderOptions
     {

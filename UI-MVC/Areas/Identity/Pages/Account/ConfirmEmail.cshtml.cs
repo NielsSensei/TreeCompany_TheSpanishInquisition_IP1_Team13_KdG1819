@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using UIMVC.Areas.Identity.Data;
-using UIMVCUser = Domain.Identity.UIMVCUser;
+using UimvcUser = Domain.Identity.UimvcUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly UserManager<UimvcUser> _userManager;
 
-        public ConfirmEmailModel(UserManager<UIMVCUser> userManager)
+        public ConfirmEmailModel(UserManager<UimvcUser> userManager)
         {
             _userManager = userManager;
         }

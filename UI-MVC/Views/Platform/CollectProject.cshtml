@@ -5,7 +5,7 @@
 @model Domain.Projects.Project
 @inject ProjectService ProjectService
 @inject RoleService RoleService
-@inject UserManager<UIMVCUser> UserManager
+@inject UserManager<UimvcUser> UserManager
 @{
     ViewData["Title"] = Model.Title;
     Layout = "_Layout";
@@ -20,8 +20,8 @@
             <h2>@Model.Title</h2>
             @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
             {
-                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
-                twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
+                LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount,
+                TwitterLikeCount = Model.TwitterLikeCount, IconStyle = 1
             })
             <p>@Model.Goal</p>
         </div>
@@ -30,21 +30,20 @@
             <img alt="projectImage" src="https://via.placeholder.com/700x350"/>
         </div>
     </div>
-    <hr>
+    <hr />
     <h2>Alle fases</h2>
     <div class="row">
         <div class="col-4">
-
             <h3>Huidige fase:</h3>
-            @Html.DisplayFor(m => Model.CurrentPhase)
+            @Html.DisplayFor(m => Model.CurrentPhase)  
         </div>
         <div class="col-8">
             <h3>Andere fases:</h3>
             <table class="table">
                 <thead>
-                <th>Omschrijving</th>
-                <th>van</th>
-                <th>tot</th>
+                    <th>Omschrijving</th>
+                    <th>Van</th>
+                    <th>Tot</th>
                 </thead>
                 @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
                 {
@@ -86,12 +85,12 @@
                 @Html.DisplayFor(m => questionnaire)
             }
         }
-
+        
         @if (ViewData["Ideations"] != null)
         {
             foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
             {
-                @Html.DisplayFor(m => ideation)
+                    @Html.DisplayFor(m => ideation)
             }
         }
     </div>

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIMVC", "UI-MVC\UIMVC.csproj", "{7D5EB7EB-2C0B-4534-B68E-68AA9AF98926}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BL", "BL\BL.csproj", "{E10AB2DE-08E6-45BC-8BC4-C1F83ED1F709}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "BL\BL.csproj", "{E10AB2DE-08E6-45BC-8BC4-C1F83ED1F709}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

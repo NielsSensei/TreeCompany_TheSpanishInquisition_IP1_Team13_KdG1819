@@ -67,7 +67,7 @@
                     <p><span style="font-weight: bold">Status:</span> @r.Status</p>
                                                                                
                     <h2>Actions</h2>
-                    if (r.Status == ReportStatus.STATUS_NOTVIEWED)
+                    if (r.Status == ReportStatus.StatusNotViewed)
                     {                       
                         <form asp-controller="Moderation" asp-action="ReviewByAdmin" asp-route-idea="@Model.Id" 
                               asp-route-report="@r.Id" method="post">
@@ -76,7 +76,7 @@
                                              
                     }
 
-                    if (r.Status == ReportStatus.STATUS_NEEDADMIN || r.Status == ReportStatus.STATUS_NOTVIEWED)
+                    if (r.Status == ReportStatus.StatusNeedAdmin || r.Status == ReportStatus.StatusNotViewed)
                     {
                         <div class="container">
                             <div class="row">
@@ -94,12 +94,12 @@
                         </div>
                     }
 
-                    if (r.Status == ReportStatus.STATUS_APPROVED)
+                    if (r.Status == ReportStatus.StatusApproved)
                     {
                         <p>Rapportering is opgelost, geen acties beschikbaar.</p>
                     }
 
-                    if (r.Status == ReportStatus.STATUS_DENIED)
+                    if (r.Status == ReportStatus.StatusDenied)
                     {
                         <form asp-controller="Moderation" asp-action="DestroyReport" asp-route-report="@r.Id" method="post"
                               asp-route-idea="@Model.Id">

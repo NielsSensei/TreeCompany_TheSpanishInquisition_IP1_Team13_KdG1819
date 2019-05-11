@@ -1,5 +1,5 @@
 @inject UserService UserService
-@inject UserManager<UIMVCUser> UserManager
+@inject UserManager<UimvcUser> UserManager
 @using Domain.Identity
 @using Domain.UserInput
 @using Microsoft.AspNetCore.Identity
@@ -140,8 +140,8 @@ else
             </div>
 
             <div class="modal-body m-auto">
-                @Html.Partial("Thread/_AddIdea", new AddIdeaModel() {IdeationQuestionID = Model.ToView.IdeaQuestion.Id, 
-                    ParentID = Model.ToView.Id})
+                @Html.Partial("Thread/_AddIdea", new AddIdeaModel() {IdeationQuestionId = Model.ToView.IdeaQuestion.Id, 
+                    ParentId = Model.ToView.Id})
             </div>
 
             <div class="modal-footer">

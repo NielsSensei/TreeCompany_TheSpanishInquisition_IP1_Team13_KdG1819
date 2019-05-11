@@ -61,11 +61,4 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Home\HomeTemplates\PlatformCarousel.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Home\HomeTemplates\PlatformList.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\HomeTemplates\PlatformCarousel.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\HomeTemplates\PlatformList.cshtml" />
-  </ItemGroup>
-
 </Project>

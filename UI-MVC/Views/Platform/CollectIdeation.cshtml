@@ -26,14 +26,15 @@
             <p>door @Userservice.CollectUserName(Model.User.Id)</p>
             @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
             {
-                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount, twitterLikeCount = Model.TwitterLikeCount,
-                shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
+                LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount, TwitterLikeCount = Model.TwitterLikeCount, 
+                ShareCount = Model.ShareCount, RetweetCount = Model.RetweetCount, IconStyle = 3
             })
+            <br/>
             <p>@Model.ExtraInfo</p>
             @if (Model.Event.Id != 0)
             {
                 @* TODO Zorgt voor een eventPagina *@
-                <p>Deze ideation is georganiseerd dankzij dit evenement</p>
+                <p>Deze ideation is georganiseerd dankzij dit evenement</p> 
             }
             <section>
                 <h6 class="font-weight-bold">Tags:</h6>
@@ -96,9 +97,9 @@
                     <div class="card-body">
                         <h5 class="card-title">@iq.QuestionTitle</h5>
                         <p class="card-text">@iq.Description</p>
-                        @if (iq.SiteURL != null)
+                        @if (iq.SiteUrl != null)
                         {
-                            <p>Meer info: <a href="">@iq.SiteURL</a></p>
+                            <p>Meer info: <a href="">@iq.SiteUrl</a></p>
                         }
                     </div>
                     <div class="card-footer text-center">
@@ -110,7 +111,7 @@
     </section>
 </section>
 <hr/>
-@if(await RoleService.IsAdmin(User)){
+@if(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result){
     <div class="container">
         <div class="row">
             <div class="col-md-6">
