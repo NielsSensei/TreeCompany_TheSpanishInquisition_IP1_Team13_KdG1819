@@ -1,6 +1,6 @@
 ﻿/* Platform */
-INSERT INTO Platforms(PlatformID,Name,SiteUrl) 
-VALUES(1,'Stad Antwerpen','www.cityofideas.be')
+INSERT INTO Platforms(PlatformID,Name,SiteUrl, IconImagePath, CarouselImagePath, FrontPageImagePath) 
+VALUES(1,'Stad Antwerpen','www.cityofideas.be','/images/Icon_Stad_Antwerpen.jpg', '/images/Carousel_Stad_Antwerpen.jpg', '/images/FrontPage_Stad_Antwerpen.jpg')
 
 /* Organisationevents */
 INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate)

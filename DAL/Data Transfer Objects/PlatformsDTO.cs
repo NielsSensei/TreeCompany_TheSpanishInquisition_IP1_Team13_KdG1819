@@ -9,6 +9,8 @@ namespace DAL.Data_Transfer_Objects
         public int PlatformID { get; set; }
         public string Name { get; set; }
         public string SiteUrl { get; set; }
-        public byte[] IconImage { get; set; }
+        public string IconImagePath { get; set; }
+        public string CarouselImagePath { get; set; }
+        public string FrontPageImagePath { get; set; }
     }
 }

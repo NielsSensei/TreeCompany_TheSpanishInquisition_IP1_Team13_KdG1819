@@ -57,7 +57,7 @@
      aria-labelledby="makePlatformModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form asp-controller="Moderation" asp-action="AddPlatform" method="post">
+            <form asp-controller="Moderation" asp-action="AddPlatform" method="post" enctype="multipart/form-data">
                 <div class="modal-body m-auto">
                     <div class="form-group">
                         <label asp-for="Name">Naam van het platform</label>
@@ -66,7 +66,23 @@
                     <div class="form-group">
                         <label asp-for="Url">Een verkorte URL</label>
                         <input asp-for="Url" class="form-control"/>
-                    </div>            
+                    </div>  
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <p>Geef hier het icoontje</p>
+                            <input type="file" name="files" asp-for="IconImage" class="form-control-file">
+                            <hr/>
+                        </div>
+                        <div class="col-md-10">
+                            <p>Geef hier de foto voor de voorpagina</p>
+                            <input type="file" name="files" asp-for="IconImage" class="form-control-file">
+                            <hr/>
+                        </div>
+                        <div class="col-md-10">
+                            <p>Geef hier de foto voor de startpagina van de website</p>
+                            <input type="file" name="files" asp-for="IconImage" class="form-control-file">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary" value="Maak dit platform aan"/>    

@@ -25,7 +25,9 @@ CREATE TABLE Platforms(
 	PlatformID INT IDENTITY,
 	Name NVARCHAR(100) NOT NULL,
 	SiteUrl VARCHAR(50) NOT NULL,
-	IconImage BINARY(255),
+	IconImagePath VARCHAR(255),
+	CarouselImagePath VARCHAR(255),
+	FrontPageImagePath VARCHAR(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_Plaftorms PRIMARY KEY(PlatformID)
@@ -73,7 +75,6 @@ CREATE TABLE Phases(
 	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
-	IsCurrent BIT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Phases PRIMARY KEY(PhaseID),

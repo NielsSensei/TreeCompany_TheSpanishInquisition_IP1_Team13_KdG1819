@@ -30,9 +30,13 @@ namespace DAL
             {
                 PlatformID = p.Id,
                 Name = p.Name,
-                SiteUrl = p.Url
+                SiteUrl = p.Url,
+                IconImagePath = p.IconImagePath,
+                CarouselImagePath = p.CarouselPageImagePath,
+                FrontPageImagePath = p.FrontPageImagePath
+                
                 // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image
+                
             };
         }
 
@@ -42,9 +46,12 @@ namespace DAL
             {
                 Id = DTO.PlatformID,
                 Name = DTO.Name,
-                Url = DTO.SiteUrl
+                Url = DTO.SiteUrl,
+                IconImagePath = DTO.IconImagePath,
+                CarouselPageImagePath = DTO.CarouselImagePath,
+                FrontPageImagePath = DTO.FrontPageImagePath
                 // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image
+               
             };
         }
 
@@ -84,8 +91,7 @@ namespace DAL
 
         public Platform Read(int id, bool details)
         {
-            PlatformsDTO platformDTO = null;
-            platformDTO = details ? ctx.Platforms.AsNoTracking().First(p => p.PlatformID == id) : ctx.Platforms.First(p => p.PlatformID == id);
+            PlatformsDTO platformDTO = details ? ctx.Platforms.AsNoTracking().First(p => p.PlatformID == id) : ctx.Platforms.First(p => p.PlatformID == id);
             ExtensionMethods.CheckForNotFound(platformDTO, "Platform", id);
 
             return ConvertToDomain(platformDTO);
@@ -101,7 +107,9 @@ namespace DAL
             {
                 foundPlatform.Name = newPlatform.Name;
                 foundPlatform.SiteUrl = newPlatform.SiteUrl;
-                foundPlatform.IconImage = newPlatform.IconImage;
+                foundPlatform.IconImagePath = newPlatform.IconImagePath;
+                foundPlatform.CarouselImagePath = newPlatform.CarouselImagePath;
+                foundPlatform.FrontPageImagePath = newPlatform.FrontPageImagePath;
                 ctx.Platforms.Update(foundPlatform);
             }
 

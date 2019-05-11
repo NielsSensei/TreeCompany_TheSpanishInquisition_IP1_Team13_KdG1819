@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UIMVC.Areas.Identity.Data;
@@ -80,9 +81,10 @@ namespace UIMVC
                 // app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            
             // See UIMVC/Areas/Identity/IdentityHostingStartup for configuration
             app.UseAuthentication();
             app.UseCookiePolicy();
