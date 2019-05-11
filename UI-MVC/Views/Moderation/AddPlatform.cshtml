@@ -70,17 +70,20 @@
                     <div class="form-group">
                         <div class="col-md-10">
                             <p>Geef hier het icoontje</p>
-                            <input type="file" name="files" asp-for="IconImage" class="form-control-file">
+                            @Html.TextBoxFor(m => m.IconImage, new { type = "file" })
+                            @Html.ValidationMessageFor(m => m.IconImage)
                             <hr/>
                         </div>
                         <div class="col-md-10">
-                            <p>Geef hier de foto voor de voorpagina</p>
-                            <input type="file" name="files" asp-for="IconImage" class="form-control-file">
+                            <p>Geef hier de foto voor de voorpagina van het platform</p>
+                            @Html.TextBoxFor(m => m.FrontPageImage, new { type = "file" })
+                            @Html.ValidationMessageFor(m => m.FrontPageImage)
                             <hr/>
                         </div>
                         <div class="col-md-10">
                             <p>Geef hier de foto voor de startpagina van de website</p>
-                            <input type="file" name="files" asp-for="IconImage" class="form-control-file">
+                            @Html.TextBoxFor(m => m.CarouselImage, new { type = "file" })
+                            @Html.ValidationMessageFor(m => m.CarouselImage)
                         </div>
                     </div>
                 </div>

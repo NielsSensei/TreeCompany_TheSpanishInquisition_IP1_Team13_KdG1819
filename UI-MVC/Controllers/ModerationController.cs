@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BL;
@@ -8,6 +9,8 @@ using Domain.Identity;
 using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
@@ -31,7 +34,7 @@ namespace UIMVC.Controllers
             _moduleMgr = new ModuleManager();
             _projMgr = new ProjectManager();
             _userManager = userManager;
-            _roleService = roleService;
+            _roleService = roleService; 
         }
 
         #region AddPlatform
@@ -52,6 +55,7 @@ namespace UIMVC.Controllers
             {
                 return BadRequest("Platform cannot be null");
             }
+            
             Platform platform = new Platform()
             {
                 Name = cpm.Name,
@@ -60,9 +64,51 @@ namespace UIMVC.Controllers
                 Users = new List<UIMVCUser>()
             };
 
+            var iconPath = UploadPlatformFile(cpm.IconImage, cpm.Name, "Icon").Result;
+            var carouselPath = UploadPlatformFile(cpm.CarouselImage, cpm.Name, "Carousel").Result;
+            var fpPath = UploadPlatformFile(cpm.FrontPageImage, cpm.Name, "FrontPage").Result;
+            
+            if(iconPath == null)
+            {
+                return BadRequest("Icon Image mag niet null zijn");
+            }
+
+            if(carouselPath == null)
+            {
+                return BadRequest("Carousel Image mag niet null zijn");
+            }
+            
+            if(fpPath == null)
+            {
+                return BadRequest("Front Page Image mag niet null zijn");
+            }
+            
+            platform.IconImagePath = iconPath;
+            platform.CarouselPageImagePath = carouselPath;
+            platform.FrontPageImagePath = fpPath;
+
             var newPlatform = _platformMgr.MakePlatform(platform);
 
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
+        }
+
+        private async Task<string> UploadPlatformFile(IFormFile file, string platformName, string type)
+        {
+            var path = "/images/" + type + "_" + platformName.Replace(" ", "_");
+            
+            var fullpath = Path.Combine("/wwwroot", path);
+            
+            if (file == null || file.Length == 0)
+            {
+                return null;
+            }
+            
+            using (var stream = new FileStream(fullpath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+
+                return fullpath;
+            }
         }
         #endregion
 
