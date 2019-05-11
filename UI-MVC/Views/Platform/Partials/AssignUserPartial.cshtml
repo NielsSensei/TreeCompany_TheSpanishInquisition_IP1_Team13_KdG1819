@@ -1,0 +1,17 @@
+@model AssignUserModel
+
+@using (Html.BeginForm("AssignUserToPlatform", "Moderation", FormMethod.Post))
+{
+     <div class="form-group">
+         @Html.HiddenFor(m => m.PlatformId, "PlatformId")
+     </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserMail)
+        @Html.TextBoxFor(m => m.UserMail)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Role)
+        <select asp-for="Role" asp-items="Html.GetEnumSelectList<AssignUserRole>()" ></select>
+    </div>
+     <input type="submit" class="btn btn-primary" value="Admin toevoegen"/>
+}

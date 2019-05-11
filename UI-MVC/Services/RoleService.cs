@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Domain.Identity;
 using Domain.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace UIMVC.Services
@@ -310,6 +312,39 @@ namespace UIMVC.Services
             }
 
             return false;
+        }
+
+        #endregion
+
+        #region Users
+
+        [HttpGet]
+        public async Task<IEnumerable<UIMVCUser>> GetAllAdmins(int platformId)
+        {
+            List<UIMVCUser> users = new List<UIMVCUser>();
+            foreach (UIMVCUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
+            {
+                if (await _userManager.IsInRoleAsync(user, "ADMIN"))
+                {
+                    users.Add(user);
+                }
+            }
+
+            return users;
+        }
+
+        public async Task<IEnumerable<UIMVCUser>> GetAllModerators(int platformId)
+        {
+            List<UIMVCUser> users = new List<UIMVCUser>();
+            foreach (UIMVCUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
+            {
+                if (await _userManager.IsInRoleAsync(user, "MODERATOR"))
+                {
+                    users.Add(user);
+                }
+            }
+
+            return users;
         }
 
         #endregion

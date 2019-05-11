@@ -64,6 +64,49 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
         }
+
+        [HttpPost]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        public async Task<IActionResult> AssignUserToPlatform(AssignUserModel aum)
+        {
+            if (aum == null)
+            {
+                return BadRequest("Cannot be null");
+            }
+
+
+            UIMVCUser user = await _userManager.FindByEmailAsync(aum.UserMail);
+            if (user == null) return BadRequest("Wrong user mail");
+            user.PlatformDetails = aum.PlatformId;
+            _userManager.AddToRoleAsync(user, Enum.GetName(typeof(AssignUserRole), aum.Role));
+            
+            await _userManager.UpdateAsync(user);
+            
+            return RedirectToAction("ChangePlatform", "Platform", new {Id = aum.PlatformId} );
+        }
+        
+        [HttpPost]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        public async Task<IActionResult> RemoveUserFromPlatform(AssignUserModel aum)
+        {
+            if (aum == null)
+            {
+                return BadRequest("Cannot be null");
+            }
+
+
+            UIMVCUser user = await _userManager.FindByEmailAsync(aum.UserMail);
+            if (user == null) return BadRequest("Wrong user mail");
+            user.PlatformDetails = 0;
+            if (await _userManager.IsInRoleAsync(user, "ADMIN") || await _userManager.IsInRoleAsync(user, "MODERATOR"))
+            {
+                _userManager.RemoveFromRolesAsync(user, new[] {"MODERATOR", "ADMIN"});
+            }
+            
+            await _userManager.UpdateAsync(user);
+            
+            return RedirectToAction("ChangePlatform", "Platform", new {Id = aum.PlatformId} );
+        }
         #endregion
 
         #region Ideation

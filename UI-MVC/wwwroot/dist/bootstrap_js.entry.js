@@ -17770,7 +17770,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bootstrap__WEBPACK_IMPORTED_MODULE_0__);
 ﻿
 
-console.log('Bootstrap bundle has been loaded')
+console.log('Bootstrap bundle has been loaded');
 
 /***/ })
 
