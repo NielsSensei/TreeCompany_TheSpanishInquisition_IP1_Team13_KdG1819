@@ -5,42 +5,35 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
-    //Created by SB on 26/04/2019
     public class AdminController : Controller
     {
-        //Managers (possibly) needed
-        private ModuleManager modMgr { get; set; }
-        private ProjectManager projMgr { get; set; }
-        private QuestionnaireQuestionManager qqMgr { get; set; }
+        private ModuleManager ModMgr { get; }
+        private ProjectManager ProjMgr { get; }
+        private QuestionnaireQuestionManager QqMgr { get; }
 
         public AdminController()
         {
-            modMgr = new ModuleManager();
-            projMgr = new ProjectManager();
-            qqMgr = new QuestionnaireQuestionManager();
+            ModMgr = new ModuleManager();
+            ProjMgr = new ProjectManager();
+            QqMgr = new QuestionnaireQuestionManager();
         }
-
-
-
-
-        //Listing some basic methods that map to the functionalities described in YouTrack
+        
         [HttpGet]
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaire(int projectId)
         {
-            Project toAddQuestionnaireTo = projMgr.GetProject(projectId, true);
+            Project toAddQuestionnaireTo = ProjMgr.GetProject(projectId, true);
 
             List<Phase> availablePhases = new List<Phase>();
 
-            foreach (Phase phase in projMgr.GetAllPhases(projectId).ToList())
+            foreach (Phase phase in ProjMgr.GetAllPhases(projectId).ToList())
             {
-                if(modMgr.GetQuestionnaire(phase.Id, projectId) == null)
+                if(ModMgr.GetQuestionnaire(phase.Id, projectId) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -64,11 +57,9 @@ namespace UIMVC.Controllers
                 return BadRequest("Questionnaire cannot be NULL!");
             }
 
-            Project questionnaireProject = projMgr.GetProject(projectId, false);
-            Phase parentPhase = projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
-
-
-
+            Project questionnaireProject = ProjMgr.GetProject(projectId, false);
+            Phase parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+            
             Questionnaire newQuestionnaire = new Questionnaire
             {
                 Project = questionnaireProject,
@@ -79,8 +70,8 @@ namespace UIMVC.Controllers
                 FbLikeCount = 0,
                 TwitterLikeCount = 0,
                 ShareCount = 0,
-                VoteLevel = Domain.Users.Role.ANONYMOUS,
-                type = ModuleType.Questionnaire,
+                VoteLevel = Domain.Users.Role.Anonymous,
+                ModuleType = ModuleType.Questionnaire,
                 Phases = new List<Phase>(),
                 Tags = new List<string>(),
                 UserCount = 0,
@@ -88,7 +79,7 @@ namespace UIMVC.Controllers
             };
 
             newQuestionnaire.Phases.Add(parentPhase);
-            modMgr.MakeQuestionnaire(newQuestionnaire);
+            ModMgr.MakeQuestionnaire(newQuestionnaire);
 
             return RedirectToAction("EditQuestionnaire",new { questionnaireId = newQuestionnaire.Id});
         }
@@ -97,7 +88,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid)
         {
-            ViewData["Questionnaire"] = modMgr.GetQuestionnaire(questionnaireid, false);
+            ViewData["Questionnaire"] = ModMgr.GetQuestionnaire(questionnaireid, false);
             return View(new QuestionnaireQuestion());
         }
         
@@ -105,7 +96,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
         {
-            Questionnaire toAdd = modMgr.GetQuestionnaire(questionnaireId, false);
+            Questionnaire toAdd = ModMgr.GetQuestionnaire(questionnaireId, false);
             QuestionnaireQuestion newQuestion = new QuestionnaireQuestion
             {
 
@@ -115,20 +106,13 @@ namespace UIMVC.Controllers
                 Questionnaire = toAdd,
                 Optional = qQ.Optional,
                 Answers = new List<Answer>()
-
-
-
             };
 
             toAdd.Questions.Add(qQ);
-            qqMgr.MakeQuestion(newQuestion, toAdd.Id);
-            modMgr.EditQuestionnaire(toAdd);
+            QqMgr.MakeQuestion(newQuestion, toAdd.Id);
+            ModMgr.EditQuestionnaire(toAdd);
 
             return RedirectToAction("AddQuestionnaire", toAdd.Id);
-
-            
-
-            
         }
 
         [HttpGet]
@@ -142,21 +126,19 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
-            Questionnaire q = modMgr.GetQuestionnaire(questionnaireId, false);
+            Questionnaire q = ModMgr.GetQuestionnaire(questionnaireId, false);
 
             List<Phase> availablePhases = new List<Phase>();
-            Phase parentPhase = projMgr.GetPhase(q.ParentPhase.Id);
-            List<QuestionnaireQuestion> questions = qqMgr.GetAllByModuleId(questionnaireId).ToList();
+            Phase parentPhase = ProjMgr.GetPhase(q.ParentPhase.Id);
+            List<QuestionnaireQuestion> questions = QqMgr.GetAllByModuleId(questionnaireId).ToList();
             foreach (QuestionnaireQuestion question in questions)
             {
-                question.Answers = qqMgr.GetAnswers(question.Id);
+                question.Answers = QqMgr.GetAnswers(question.Id);
             }
 
-
-
-            foreach (Phase phase in projMgr.GetAllPhases(q.Project.Id).ToList())
+            foreach (Phase phase in ProjMgr.GetAllPhases(q.Project.Id).ToList())
             {
-                if (modMgr.GetQuestionnaire(phase.Id, q.Project.Id) == null)
+                if (ModMgr.GetQuestionnaire(phase.Id, q.Project.Id) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -174,24 +156,22 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult EditQuestionnaire(EditQuestionnaireModel eqm, int questionnaireid)
         {
-            Questionnaire toBeUpdated = modMgr.GetQuestionnaire(questionnaireid, false);
+            Questionnaire toBeUpdated = ModMgr.GetQuestionnaire(questionnaireid, false);
 
             Phase parentPhase = new Phase();
             String parentPhaseContent = Request.Form["ParentPhase"];
 
             if (!parentPhaseContent.Equals(""))
             {
-                parentPhase = projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+                parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
                 parentPhase.Module = toBeUpdated;
 
-
-
-                Phase previousParent = projMgr.GetPhase(toBeUpdated.ParentPhase.Id);
+                Phase previousParent = ProjMgr.GetPhase(toBeUpdated.ParentPhase.Id);
                 previousParent.Module = null;
 
                 
                 toBeUpdated.ParentPhase = parentPhase;
-                projMgr.EditPhase(previousParent);
+                ProjMgr.EditPhase(previousParent);
 
             }
             else
@@ -208,11 +188,9 @@ namespace UIMVC.Controllers
             toBeUpdated.Title = eqm.Title;
             
             
-            modMgr.EditQuestionnaire(toBeUpdated);
+            ModMgr.EditQuestionnaire(toBeUpdated);
 
             return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});
         }
-
-
     }
 }

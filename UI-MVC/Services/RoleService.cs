@@ -14,10 +14,10 @@ namespace UIMVC.Services
     public class RoleService
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly UserManager<UimvcUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public RoleService(RoleManager<IdentityRole> roleManager, UserManager<UIMVCUser> userManager, IConfiguration configuration)
+        public RoleService(RoleManager<IdentityRole> roleManager, UserManager<UimvcUser> userManager, IConfiguration configuration)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -33,7 +33,7 @@ namespace UIMVC.Services
         {
             if (await _userManager.FindByEmailAsync(_configuration["SuperAdmin:Email"]) == null)
             {
-                UIMVCUser user = new UIMVCUser
+                UimvcUser user = new UimvcUser
                 {
                     Name = _configuration["SuperAdmin:AccountName"],
                     Email = _configuration["SuperAdmin:Email"],
@@ -44,11 +44,11 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["SuperAdmin:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.SUPERADMIN);
+                AssignToRole(userFound, Role.SuperAdmin);
             }
             if (await _userManager.FindByEmailAsync(_configuration["Admin:Email"]) == null)
             {
-                UIMVCUser user = new UIMVCUser
+                UimvcUser user = new UimvcUser
                 {
                     Name = _configuration["Admin:AccountName"],
                     Email = _configuration["Admin:Email"],
@@ -59,11 +59,11 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["Admin:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.ADMIN);
+                AssignToRole(userFound, Role.Admin);
             }
             if (await _userManager.FindByEmailAsync(_configuration["Moderator:Email"]) == null)
             {
-                UIMVCUser user = new UIMVCUser
+                UimvcUser user = new UimvcUser
                 {
                     Name = _configuration["Moderator:AccountName"],
                     Email = _configuration["Moderator:Email"],
@@ -74,11 +74,11 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["Moderator:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.MODERATOR);
+                AssignToRole(userFound, Role.Moderator);
             }
             if (await _userManager.FindByEmailAsync(_configuration["LoggedInOrg:Email"]) == null)
             {
-                UIMVCUser user = new UIMVCUser
+                UimvcUser user = new UimvcUser
                 {
                     Name = _configuration["LoggedInOrg:AccountName"],
                     Email = _configuration["LoggedInOrg:Email"],
@@ -89,11 +89,11 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedInOrg:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.LOGGEDINORG);
+                AssignToRole(userFound, Role.LoggedInOrg);
             }
             if (await _userManager.FindByEmailAsync(_configuration["LoggedInVerified:Email"]) == null)
             {
-                UIMVCUser user = new UIMVCUser
+                UimvcUser user = new UimvcUser
                 {
                     Name = _configuration["LoggedInVerified:AccountName"],
                     Email = _configuration["LoggedInVerified:Email"],
@@ -104,11 +104,11 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedInVerified:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.LOGGEDINVERIFIED);
+                AssignToRole(userFound, Role.LoggedInVerified);
             }
             if (await _userManager.FindByEmailAsync(_configuration["LoggedIn:Email"]) == null)
             {
-                UIMVCUser user = new UIMVCUser
+                UimvcUser user = new UimvcUser
                 {
                     Name = _configuration["LoggedIn:AccountName"],
                     Email = _configuration["LoggedIn:Email"],
@@ -119,11 +119,11 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedIn:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.LOGGEDIN);
+                AssignToRole(userFound, Role.LoggedIn);
             }
             if (await _userManager.FindByEmailAsync(_configuration["Anonymous:Email"]) == null)
             {
-                UIMVCUser user = new UIMVCUser
+                UimvcUser user = new UimvcUser
                 {
                     Name = _configuration["Anonymous:AccountName"],
                     Email = _configuration["Anonymous:Email"],
@@ -134,15 +134,13 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["Anonymous:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.ANONYMOUS);
+                AssignToRole(userFound, Role.Anonymous);
             }
         }
 
         #endregion
 
         #region CreateRoles
-
-        // Check if the roles exist, if not, create them
         private async void CreateRoles()
         {
             foreach (Role role in Enum.GetValues(typeof(Role)))
@@ -153,12 +151,11 @@ namespace UIMVC.Services
                 }
             }
         }
-
         #endregion
 
         #region AddRole
 
-        public async void  AssignToRole(UIMVCUser user, Role role)
+        public async void  AssignToRole(UimvcUser user, Role role)
         {
             if (!await _roleManager.RoleExistsAsync(role.ToString())) return;
             if (await _userManager.FindByIdAsync(user.Id) == null) return;
@@ -169,8 +166,7 @@ namespace UIMVC.Services
         #endregion
 
         #region GetRolesUser
-
-        public async Task<IEnumerable<string>> GetRolesForUser(UIMVCUser user)
+        public async Task<IEnumerable<string>> GetRolesForUser(UimvcUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
             return roles;
@@ -178,8 +174,7 @@ namespace UIMVC.Services
  
         #endregion
 
-        #region AuthorizationHTML
-        
+        #region Authorization
         public async Task<bool> IsVerified(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "LOGGEDINVERIFIED") ||
@@ -194,7 +189,6 @@ namespace UIMVC.Services
             
         }
         
-        // Check if it's this type of user OR higher
         public async Task<bool> IsModerator(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "MODERATOR") ||
@@ -208,7 +202,6 @@ namespace UIMVC.Services
             
         }
         
-        // XV
         public async Task<bool> IsAdmin(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "ADMIN") ||
@@ -220,7 +213,6 @@ namespace UIMVC.Services
             return false;
         }
         
-        // XV
         public async Task<bool> IsSuperAdmin(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
@@ -231,17 +223,11 @@ namespace UIMVC.Services
             return false;
         }
 
-        // XV
-        public async Task<bool> IsSameRoleOrHigher(ClaimsPrincipal appUserClaim, UIMVCUser userCompare)
+        public async Task<bool> IsSameRoleOrHigher(ClaimsPrincipal appUserClaim, UimvcUser userCompare)
         {
-            // Find the user using its claim
-            UIMVCUser appUser = await _userManager.GetUserAsync(appUserClaim);
-            // Get all of the user's roles
+            UimvcUser appUser = await _userManager.GetUserAsync(appUserClaim);
             IEnumerable<string> appUserRolesString = await _userManager.GetRolesAsync(appUser);
-            // Create a new list
             List<Role> appUserRoles = new List<Role>();
-            // Populate the list with the transformed roles (string -> Domain.Users.Role)
-            //appUserRolesString.ToList().ForEach(s => appUserRoles.Append((Role) Enum.Parse(typeof(Role), s)));
             foreach (string roleString in appUserRolesString)
             {
                 Role role = (Role) Enum.Parse(typeof(Role), roleString);
@@ -250,7 +236,6 @@ namespace UIMVC.Services
             
             IEnumerable<string> userCompareRolesString = await _userManager.GetRolesAsync(userCompare);
             List<Role> userCompareRoles = new List<Role>();
-            //userCompareRolesString.ToList().ForEach(s => userCompareRoles.Add((Role) Enum.Parse(typeof(Role), s)));
             foreach (string roleString in userCompareRolesString)
             {
                 Role role = (Role) Enum.Parse(typeof(Role), roleString);
@@ -258,10 +243,8 @@ namespace UIMVC.Services
             }
             
             
-            // Check if both lists have roles
             if (appUserRoles.Any() && userCompareRoles.Any())
             {
-                // return a boolean based on the highest role (based on the Enum Typecode)
                 int appUserRoleHighest = (int) appUserRoles.Max(role => role);
                 int userCompareRoleHighest = (int) userCompareRoles.Max(role => role);
                 return appUserRoleHighest <= userCompareRoleHighest;
@@ -284,14 +267,12 @@ namespace UIMVC.Services
             
             throw new Exception("You shouldn't be able to get here");
         }
-
         #endregion
 
         #region Auhorization
-
         public async Task<bool> IsSameRoleOrLower(ClaimsPrincipal userClaim, Role roleCheck)
         {
-            UIMVCUser user = await _userManager.GetUserAsync(userClaim);
+            UimvcUser user = await _userManager.GetUserAsync(userClaim);
             
             IEnumerable<string> userCompareRolesString = await _userManager.GetRolesAsync(user);
             List<Role> userCompareRoles = new List<Role>();
@@ -311,7 +292,6 @@ namespace UIMVC.Services
 
             return false;
         }
-
         #endregion
     }
 }

@@ -21,10 +21,10 @@ namespace UIMVC.Controllers
         private readonly IdeationQuestionManager _ideaMgr;
         private readonly ModuleManager _moduleMgr;
         private readonly ProjectManager _projMgr;
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly UserManager<UimvcUser> _userManager;
         private readonly RoleService _roleService;
 
-        public ModerationController(UserManager<UIMVCUser> userManager, RoleService roleService)
+        public ModerationController(UserManager<UimvcUser> userManager, RoleService roleService)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
@@ -35,7 +35,6 @@ namespace UIMVC.Controllers
         }
 
         #region AddPlatform
-
         [HttpGet]
         [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform()
@@ -56,8 +55,8 @@ namespace UIMVC.Controllers
             {
                 Name = cpm.Name,
                 Url = cpm.Url,
-                Owners = new List<UIMVCUser>(),
-                Users = new List<UIMVCUser>()
+                Owners = new List<UimvcUser>(),
+                Users = new List<UimvcUser>()
             };
 
             var newPlatform = _platformMgr.MakePlatform(platform);
@@ -107,8 +106,8 @@ namespace UIMVC.Controllers
             {
                 Project = new Project() {Id = project},
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
-                User = new UIMVCUser(){Id = user},
-                type = ModuleType.Ideation,
+                User = new UimvcUser(){Id = user},
+                ModuleType = ModuleType.Ideation,
                 Title = cim.Title,
                 OnGoing = true
             };
@@ -159,7 +158,7 @@ namespace UIMVC.Controllers
             IdeationQuestion iq = new IdeationQuestion()
             {
                Description = ciqm.Description,
-               SiteURL = ciqm.SiteURL,
+               SiteUrl = ciqm.SiteUrl,
                QuestionTitle = ciqm.QuestionTitle,
                Ideation = new Ideation(){ Id = ideation }
             };
@@ -253,7 +252,7 @@ namespace UIMVC.Controllers
                 _ideaMgr.RemoveQuestion(iq.Id);
             }
 
-            _moduleMgr.RemoveModule(id, i.Project.Id, false);
+            _moduleMgr.RemoveModule(id, false);
 
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
         }
@@ -298,7 +297,7 @@ namespace UIMVC.Controllers
             Report foundReport = _ideaMgr.GetReport(report);
 
             foundIdea.ReviewByAdmin = true;
-            foundReport.Status = ReportStatus.STATUS_NEEDADMIN;
+            foundReport.Status = ReportStatus.StatusNeedAdmin;
 
             _ideaMgr.EditIdea(foundIdea);
             _ideaMgr.EditReport(foundReport);
@@ -312,7 +311,7 @@ namespace UIMVC.Controllers
         {
             Report foundReport = _ideaMgr.GetReport(report);
 
-            foundReport.Status = ReportStatus.STATUS_APPROVED;
+            foundReport.Status = ReportStatus.StatusApproved;
 
             _ideaMgr.EditReport(foundReport);
 
@@ -324,7 +323,7 @@ namespace UIMVC.Controllers
         public IActionResult DenyReport(int report, int idea)
         {
             Report foundReport = _ideaMgr.GetReport(report);
-            foundReport.Status = ReportStatus.STATUS_DENIED;
+            foundReport.Status = ReportStatus.StatusDenied;
             _ideaMgr.EditReport(foundReport);
 
             HandleRemainingReports(idea);
@@ -390,7 +389,7 @@ namespace UIMVC.Controllers
         {
 
             ViewData["CurrentFilter"] = searchString;
-            var users = (IEnumerable<UIMVCUser>)_userManager.Users;
+            var users = (IEnumerable<UimvcUser>)_userManager.Users;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -417,7 +416,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public async Task<IActionResult> ToggleBanUser(string userId)
         {
-            UIMVCUser userFound = await _userManager.FindByIdAsync(userId);
+            UimvcUser userFound = await _userManager.FindByIdAsync(userId);
 
             if (userFound == null) return RedirectToAction("CollectAllUsers");
             if (await _roleService.IsSameRoleOrHigher(HttpContext.User, userFound)) return RedirectToAction("CollectAllUsers");

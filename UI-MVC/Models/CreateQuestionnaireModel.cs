@@ -1,14 +1,10 @@
-﻿using Domain.Projects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Domain.Projects;
 
 namespace UIMVC.Models
 {
     public class CreateQuestionnaireModel
     {
-        public String Title { get; set; }
-        public Phase ParentPhase { get; set; }
+        public string Title { get; set; }
+        public Phase ParentPhase { get; set;}
     }
 }

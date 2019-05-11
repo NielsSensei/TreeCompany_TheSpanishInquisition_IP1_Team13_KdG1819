@@ -3,11 +3,12 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using UIMVC.Areas.Identity.Data;
 using UIMVC.Models;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(UIMVCContext))]
+    [DbContext(typeof(UimvcContext))]
     partial class UIMVCContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DAL.Data_Transfer_Objects
+﻿namespace DAL.Data_Access_Objects
 {
-    public class ModulesDTO
+    public class ModulesDao
     {
-        public int ModuleID { get; set; }
-        public int ProjectID { get; set; }
-        public int PhaseID { get; set; }
+        public int ModuleId { get; set; }
+        public int ProjectId { get; set; }
+        public int PhaseId { get; set; }
         public bool OnGoing { get; set; }
         public string Title { get; set; }
         public int LikeCount { get; set; }

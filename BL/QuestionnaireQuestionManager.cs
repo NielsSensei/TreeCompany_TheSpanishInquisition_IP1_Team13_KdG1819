@@ -1,48 +1,30 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using DAL;
+using DAL.repos;
 using Domain.UserInput;
 
 namespace BL
 {
     public class QuestionnaireQuestionManager : IQuestionManager<QuestionnaireQuestion>
     {
-        // Added by NVZ
-        private QuestionnaireQuestionsRepository QuestionnaireQuestionRepo { get; set; }
+        private QuestionnaireQuestionsRepository QuestionnaireQuestionRepo { get; }
         
-        // Added by NVZ
         public QuestionnaireQuestionManager()
         {
             QuestionnaireQuestionRepo = new QuestionnaireQuestionsRepository();
         }
         
-        // Added by NVZ
-        // QuestionnaireQuestion
-        #region 
-        /*
-        * Setter method, we might need this for certain properties but
-        * certainly not all of them. Please make a difference between
-        * properties you need and the ones you do not. - NVZ
-        * 
-        */
+        #region QuestionnaireQuestion
         public void EditQuestion(QuestionnaireQuestion question)
         {
             QuestionnaireQuestionRepo.Update(question);
         }
         
-        /*
-         * A getter that probably is very useful. - NVZ
-         * 
-         */
         public QuestionnaireQuestion GetQuestion(int questionId, bool details)
         {
             return QuestionnaireQuestionRepo.Read(questionId, details);
         }
         
-        /*
-         * This is going to be useful for initialisation. - NVZ
-         */
         public void MakeQuestion(QuestionnaireQuestion question, int moduleId)
         {
             QuestionnaireQuestionRepo.Create(question);
@@ -57,99 +39,18 @@ namespace BL
         {
             return QuestionnaireQuestionRepo.ReadAll().ToList();
         }
-
         #endregion
         
-        // Added by NVZ
-        // Answer
-        #region 
-        /*
-        * Setter method, we might need this for certain properties but
-        * certainly not all of them. Please make a difference between
-        * properties you need and the ones you do not. - NVZ
-        * 
-        * UPDATE 20/4 see @QQRepo voor editen van antwoorden.
-        * 
-        *
-        */
-        
-        public void EditAnswer(string propName, int answerId, int questionId)
-        {
-            throw new NotImplementedException("I might need this!");
-        } 
-       
-        
-         /* This getter is good to show the result. - NVZ */
-            
+        #region Answer
         public List<Answer> GetAnswers(int questionId)
         {
             return QuestionnaireQuestionRepo.ReadAll(questionId).ToList();
         }  
         
-        /*
-         * Unfortunately I realised that we did not include this in the
-         * moduling process but it is needed. - NVZ
-         * 
-         
-        public void MakeAnswer(Answer answer, int moduleId, int questionId)
-        {
-            throw new NotImplementedException("I need this!");
-        } 
-        #endregion
-           
-        // Added by NVZ
-        // Other Methods
-        #region
-        /*
-         * This is to define the enum type of this question. - NVZ
-         */
-        public void DefineQuestionType()
-        {
-            //throw new NotImplementedException("I might need this!");
-        }  
-        
-        /*
-         * This might be to fill in the question and to verify if it has been
-         * done correctly, not sure. Other uses are welcome. - NVZ
-         * 
-         */
-        public bool VerifyQuestion(int questionId)
-        {
-            //throw new NotImplementedException("I might need this!");
-            return false;
-        } 
-        
-        /*
-         * We have two options with this method:
-         * 
-         * 1. Either any call to this class is via this method.
-         * 2. Either only calls outside of the QuestionnaireController are for
-         * this method so that it can delegate to the voteManager
-         * if it can't solve the problem.
-         *
-         * This method is conceived to be modular towards microservices,
-         * if we have the time I'll explain why. - NVZ
-         * 
-        */ 
-        public void HandleQuestionAction(int questionId, string actionName)
-        {
-            //throw new NotImplementedException("I might need this!");
-        } 
-
         public List<QuestionnaireQuestion> GetAllByModuleId(int questionnaireId)
         {
             return QuestionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId).ToList();
         }
         #endregion
-
-
-
-
-
-
-
-
-
-
     }
 }

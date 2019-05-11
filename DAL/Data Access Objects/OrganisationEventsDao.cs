@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DAL.Data_Transfer_Objects
+namespace DAL.Data_Access_Objects
 {
-    public class OrganisationEventsDTO
+    public class OrganisationEventsDao
     {
-        public int EventID { get; set; }
-        public int UserID { get; set; }
+        public int EventId { get; set; }
+        public int UserId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime StartDate { get; set; }

@@ -28,12 +28,12 @@ namespace UIMVC.Controllers
             {
                 IsDeleted = false,
                 IdeaQuestion = _iqMgr.GetQuestion(ideationQuestion, false),
-                User = new UIMVCUser(){ Id = user},
+                User = new UimvcUser(){ Id = user},
                 Reported = false,
                 ReviewByAdmin = false,
                 Visible = true,
                 Status = "NIET GESELECTEERD",
-                Device = new IOT_Device(){ Id = 0 },
+                Device = new IotDevice(){ Id = 0 },
                 ParentIdea =  new Idea() { Id = 0 }
             };
 
@@ -41,8 +41,7 @@ namespace UIMVC.Controllers
             {
                 idea.ParentIdea = new Idea(){ Id = parent};
             }
-
-            // Check if the user is verified
+            
             idea.VerifiedUser = await _roleService.IsVerified(User);
             
             if (!Request.Form["newIdeaTitle"].ToString().Equals(null))
