@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using UIMVC.Areas.Identity.Data;
 using UIMVC.Models;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(UIMVCContext))]
+    [DbContext(typeof(UimvcContext))]
     [Migration("20190401140142_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {

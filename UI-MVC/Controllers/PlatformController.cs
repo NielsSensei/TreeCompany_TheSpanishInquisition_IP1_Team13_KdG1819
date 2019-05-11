@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BL;
 using Domain.Identity;
@@ -8,11 +7,9 @@ using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
-    
     public class PlatformController : Controller
     {
         private readonly PlatformManager _platformMgr;
@@ -77,7 +74,7 @@ namespace UIMVC.Controllers
         {
             Project project = _projectMgr.GetProject(id, false);
 
-            if (project.Visible && project != null)
+            if (project.Visible && project.Id != 0)
             {
                 List<Phase> phases = (List<Phase>) _projectMgr.GetAllPhases(id);
 
@@ -107,7 +104,7 @@ namespace UIMVC.Controllers
             return View(ideation);            
         }
 
-        public IActionResult CollectIdeationThread(int id)
+        public IActionResult CollectIdeationThread(int id, string message)
         {
             IdeationQuestion iq = _iqMgr.GetQuestion(id, false);
 
@@ -139,9 +136,9 @@ namespace UIMVC.Controllers
             Report report = new Report()
             {
                 Idea = ToReport,
-                Flagger = new UIMVCUser() {Id = flagger},
-                Reportee = new UIMVCUser() {Id = ToReport.User.Id},
-                Status = ReportStatus.STATUS_NOTVIEWED
+                Flagger = new UimvcUser() {Id = flagger},
+                Reportee = new UimvcUser() {Id = ToReport.User.Id},
+                Status = ReportStatus.StatusNotViewed
             };
             
             if (!Request.Form["Reason"].ToString().Equals(""))

@@ -1,80 +1,75 @@
 @model LikeViewModel
 
-<section>  
-    @if (Model.iconStyle == 1)
+<section class="text-center">  
+    @if (Model.IconStyle == 1)
     {
         <div class="container">
             <div class="row">
                 <div class="col-sm-4 align-items-end">
                     <img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/>
-                    <p>@Model.likeCount</p>
+                    <p>@Model.LikeCount</p>
                 </div>
                 <div class="col-sm-4 align-items-end">
                     <img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/>
-                    <p>@Model.fbLikeCount</p>
+                    <p>@Model.FbLikeCount</p>
                 </div>
                 <div class="col-sm-4 align-items-end">
                     <img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/>
-                    <p>@Model.twitterLikeCount</p>
+                    <p>@Model.TwitterLikeCount</p>
                 </div>
             </div>
         </div>
     }
     
-    @if (Model.iconStyle == 2)
+    @if (Model.IconStyle == 2)
     {
-        <table>
-            <tr>
-                <td><img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="25" width="25"/></td>
-                <td>&nbsp;</td>
-                <td>@Model.likeCount</td>
-            </tr>
-        </table>
+        <img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="25" width="25"/>
+        <p>@Model.LikeCount</p>
     }
 
-    @if (Model.iconStyle == 3)
+    @if (Model.IconStyle == 3)
     {
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-sm-2 align-items-end">
                     <img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/>
-                    <p>@Model.likeCount</p>
+                    <p>@Model.LikeCount</p>
                 </div>
                 <div class="col-sm-2 align-items-end">
                     <img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/>
-                    <p>@Model.fbLikeCount</p>
+                    <p>@Model.FbLikeCount</p>
                 </div>
                 <div class="col-sm-2 align-items-end">
                     <img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/>
-                    <p>@Model.twitterLikeCount</p>
+                    <p>@Model.TwitterLikeCount</p>
                 </div>
                 <div class="col-sm-2 align-items-end">
                     <img alt="shareCount" src="https://image.flaticon.com/icons/svg/1051/1051309.svg" height="50" width="50"/>
-                    <p>@Model.shareCount</p>
+                    <p>@Model.ShareCount</p>
                 </div>
                 <div class="col-sm-2 align-items-end">
                     <img alt="retweetCount" src="https://image.flaticon.com/icons/svg/9/9148.svg" height="50" width="50"/>
-                    <p>@Model.retweetCount</p>
+                    <p>@Model.RetweetCount</p>
                 </div>
             </div>
         </div>
     }
 
-    @if (Model.iconStyle == 4)
+    @if (Model.IconStyle == 4)
     {
         <p>Gepost door: @Model.Username</p>
         <img alt="user" src="https://image.flaticon.com/icons/svg/74/74472.svg" height="25" width="25"/>
-        <p>Aantal stemmen: @Model.likeCount |</p>
-        <p>Aantal shares: @Model.shareCount |</p>
-        <p>Aantal retweets: @Model.retweetCount</p>
+        <p>Aantal stemmen: @Model.LikeCount |</p>
+        <p>Aantal shares: @Model.ShareCount |</p>
+        <p>Aantal retweets: @Model.RetweetCount</p>
     }
 
-    @if (Model.iconStyle == 5)
+    @if (Model.IconStyle == 5)
     {
         <p>Gepost door: @Model.Username</p>
         <img alt="verified" src="https://image.flaticon.com/icons/svg/148/148839.svg" height="25" width="25"/>
-        <p>Aantal stemmen: @Model.likeCount |</p>
-        <p>Aantal shares: @Model.shareCount |</p>
-        <p>Aantal retweets: @Model.retweetCount</p>
+        <p>Aantal stemmen: @Model.LikeCount |</p>
+        <p>Aantal shares: @Model.ShareCount |</p>
+        <p>Aantal retweets: @Model.RetweetCount</p>
     }
 </section>

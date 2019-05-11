@@ -1,62 +1,54 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Domain;
+using DAL.Contexts;
+using DAL.Data_Access_Objects;
 using Domain.Common;
 using Domain.Projects;
-using DAL.Contexts;
-using DAL.Data_Transfer_Objects;
 using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Users;
 
-namespace DAL
+namespace DAL.repos
 {
     public class ProjectRepository : IRepository<Project>
     {
-        // Added by DM
-        // Modified by NVZ
-        private readonly CityOfIdeasDbContext ctx;
-
-        // Added by DM
-        // Modified by NVZ & XV
+        private readonly CityOfIdeasDbContext _ctx;
+        
         public ProjectRepository()
         {
-            ctx = new CityOfIdeasDbContext();
+            _ctx = new CityOfIdeasDbContext();
         }
-
-        // Added by NVZ
-        // Standard Methods
-        #region
-        private Project ConvertToDomain(ProjectsDTO DTO)
+        
+        #region Conversion Methods
+        private Project ConvertToDomain(ProjectsDao dao)
         {
             return new Project()
             {
-                Id = DTO.ProjectID,
-                CurrentPhase = new Phase() { Id = DTO.CurrentPhaseID },
-                User = new UIMVCUser() { Id = DTO.UserID },
-                Platform = new Platform() { Id = DTO.PlatformID },
-                Title = DTO.Title,
-                Goal = DTO.Goal,
-                Status = DTO.Status,
-                Visible = DTO.Visible,
-                LikeVisibility = DTO.LikeVisibility,
-                ReactionCount = DTO.ReactionCount,
-                LikeCount = DTO.LikeCount,
-                FbLikeCount = DTO.FbLikeCount,
-                TwitterLikeCount = DTO.TwitterLikeCount
+                Id = dao.ProjectId,
+                CurrentPhase = new Phase() { Id = dao.CurrentPhaseId },
+                User = new UimvcUser() { Id = dao.UserId },
+                Platform = new Platform() { Id = dao.PlatformId },
+                Title = dao.Title,
+                Goal = dao.Goal,
+                Status = dao.Status,
+                Visible = dao.Visible,
+                LikeVisibility = dao.LikeVisibility,
+                ReactionCount = dao.ReactionCount,
+                LikeCount = dao.LikeCount,
+                FbLikeCount = dao.FbLikeCount,
+                TwitterLikeCount = dao.TwitterLikeCount
             };
         }
 
-        private ProjectsDTO ConvertToDTO(Project project)
+        private ProjectsDao ConvertToDao(Project project)
         {
-            return new ProjectsDTO()
+            return new ProjectsDao()
             {
-                ProjectID = project.Id,
-                CurrentPhaseID = project.CurrentPhase.Id,
-                UserID = project.User.Id,
-                PlatformID = project.Platform.Id,
+                ProjectId = project.Id,
+                CurrentPhaseId = project.CurrentPhase.Id,
+                UserId = project.User.Id,
+                PlatformId = project.Platform.Id,
                 Title = project.Title,
                 Goal = project.Goal,
                 Status = project.Status,
@@ -69,60 +61,51 @@ namespace DAL
             };
         }
 
-        private Phase ConvertToDomain(PhasesDTO DTO)
+        private Phase ConvertToDomain(PhasesDao dao)
         {
             return new Phase
             {
-                Id = DTO.PhaseID,
-                Project = new Project { Id = DTO.ProjectID },
-                Description = DTO.Description,
-                StartDate = DTO.StartDate,
-                EndDate = DTO.EndDate
+                Id = dao.PhaseId,
+                Project = new Project { Id = dao.ProjectId },
+                Description = dao.Description,
+                StartDate = dao.StartDate,
+                EndDate = dao.EndDate
             };
         }
 
-        private PhasesDTO ConvertToDTO(Phase phase)
+        private PhasesDao ConvertToDao(Phase phase)
         {
-            return new PhasesDTO
+            return new PhasesDao
             {
-                PhaseID = phase.Id,
-                ProjectID = phase.Project.Id,
+                PhaseId = phase.Id,
+                ProjectId = phase.Project.Id,
                 Description = phase.Description,
                 StartDate = phase.StartDate,
                 EndDate = phase.EndDate
             };
         }
+        #endregion
         
+        #region Id generation
         private int FindNextAvailableProjectId()
         {               
-            if (!ctx.Projects.Any()) return 1;
+            if (!_ctx.Projects.Any()) return 1;
             int newId = ReadAll().Max(platform => platform.Id)+1;
             return newId;
         }
         
         private int FindNextAvailablePhaseId()
         {               
-            if (!ctx.Phases.Any()) return 1;
+            if (!_ctx.Phases.Any()) return 1;
             int newId = ReadAllPhases().Max(platform => platform.Id)+1;
             return newId;
         }
         #endregion
 
-        // Added by NVZ
-        // Project CRUD
-        #region
-        /* 
-         * Binnen deze methode vergelijkt hij de titels van heel het platform met de titel van het nieuwe project. Als hij een gelijkenis gevonden heeft
-         * dan gooit hij de Exception. Hij doet de vergelijking op basis van een extensionmethod die zeer uitbreidbaar is.
-         * 
-         * @author Niels Van Zandbergen
-         * @see Extensionmethods.HasMatchingWords(string left, string right);
-         * @return Het aangemaakte object.
-         * 
-         */
-            public Project Create(Project obj)
-            {
-            IEnumerable<Project> projects = ReadAll(obj.Platform.Id);
+        #region Project CRUD
+        public Project Create(Project obj)
+        {
+            IEnumerable<Project> projects = ReadAllForPlatform(obj.Platform.Id);
 
             foreach(Project p in projects){
                 if(ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
@@ -133,34 +116,24 @@ namespace DAL
             }
 
             obj.Id = FindNextAvailableProjectId();
-            ctx.Projects.Add(ConvertToDTO(obj));
-            ctx.SaveChanges();
+            _ctx.Projects.Add(ConvertToDao(obj));
+            _ctx.SaveChanges();
 
             return obj; 
-            }
-
-        /*
-         *Hij haalt het project op, hij kijkt of het null is en gooit anders een exception als het zo is. De exception wordt hier gegooid binnen
-         *de extensionmethod zelf.
-         * 
-         *@author Niels Van Zandbergen
-         *@see ExtensionMethods.CheckForNotFound(Object obj, string datatype, int id)
-         *@return Het gevonden project.
-         * 
-         */
+        }
+        
         public Project Read(int id, bool details)
         {
-            ProjectsDTO projectsDTO = null;
-            projectsDTO = details ? ctx.Projects.AsNoTracking().First(p => p.ProjectID == id) : ctx.Projects.First(p => p.ProjectID == id);
-            ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
+            ProjectsDao projectsDao = details ? _ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectId == id) : _ctx.Projects.FirstOrDefault(p => p.ProjectId == id);
+            ExtensionMethods.CheckForNotFound(projectsDao, "Project", id);
             
-            return ConvertToDomain(projectsDTO);
+            return ConvertToDomain(projectsDao);
         }
 
         public void Update(Project obj)
         {
-            ProjectsDTO newProj = ConvertToDTO(obj);
-            ProjectsDTO foundProj = ctx.Projects.First(p => p.ProjectID == obj.Id);
+            ProjectsDao newProj = ConvertToDao(obj);
+            ProjectsDao foundProj = _ctx.Projects.First(p => p.ProjectId == obj.Id);
             if (foundProj != null)
             {
                 foundProj.Title = newProj.Title;
@@ -174,37 +147,35 @@ namespace DAL
                 foundProj.LikeVisibility = newProj.LikeVisibility;
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            ProjectsDTO toDelete = ctx.Projects.First(p => p.ProjectID == id);
-            ctx.Projects.Remove(toDelete);
-            ctx.SaveChanges();
+            ProjectsDao toDelete = _ctx.Projects.First(p => p.ProjectId == id);
+            _ctx.Projects.Remove(toDelete);
+            _ctx.SaveChanges();
         }
         
         public IEnumerable<Project> ReadAll()
         {
             List<Project> myQuery = new List<Project>();
 
-            foreach(ProjectsDTO DTO in ctx.Projects)
+            foreach(ProjectsDao dao in _ctx.Projects)
             {
-                myQuery.Add(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;
         }
 
-        public IEnumerable<Project> ReadAll(int platformID)
+        public IEnumerable<Project> ReadAllForPlatform(int platformId)
         {
-            return ReadAll().ToList().FindAll(p => p.Platform.Id == platformID);
+            return ReadAll().ToList().FindAll(p => p.Platform.Id == platformId);
         }
         #endregion        
         
-        // Added by NVZ
-        // Phase CRUD
-        #region
+        #region Phase CRUD
         public Phase Create(Phase obj)
         {
             IEnumerable<Phase> phases = ReadAllPhases(obj.Project.Id);
@@ -219,25 +190,24 @@ namespace DAL
             }
 
             obj.Id = FindNextAvailablePhaseId();
-            ctx.Phases.Add(ConvertToDTO(obj));
-            ctx.SaveChanges();
+            _ctx.Phases.Add(ConvertToDao(obj));
+            _ctx.SaveChanges();
             
             return obj;
         }
 
-        public Phase ReadPhase(int phaseID, bool details)
+        public Phase ReadPhase(int phaseId, bool details)
         {
-            PhasesDTO phasesDTO = null;
-            phasesDTO = details ? ctx.Phases.AsNoTracking().First(p => p.PhaseID == phaseID) : ctx.Phases.First(p => p.PhaseID == phaseID);
-            ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phaseID);
+            PhasesDao phasesDao = details ? _ctx.Phases.AsNoTracking().First(p => p.PhaseId == phaseId) : _ctx.Phases.First(p => p.PhaseId == phaseId);
+            ExtensionMethods.CheckForNotFound(phasesDao, "Phase", phaseId);
 
-            return ConvertToDomain(phasesDTO);
+            return ConvertToDomain(phasesDao);
         }
 
         public void Update(Phase obj)
         {
-            PhasesDTO newPhase = ConvertToDTO(obj);
-            PhasesDTO foundPhase = ctx.Phases.First(p => p.PhaseID == obj.Id);
+            PhasesDao newPhase = ConvertToDao(obj);
+            PhasesDao foundPhase = _ctx.Phases.First(p => p.PhaseId == obj.Id);
             if (foundPhase != null)
             {
                 foundPhase.Description = newPhase.Description;
@@ -245,40 +215,36 @@ namespace DAL
                 foundPhase.EndDate = newPhase.EndDate;
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
-        public void DeletePhase(int phaseID)
+        public void DeletePhase(int phaseId)
         {
-            PhasesDTO toDelete = ctx.Phases.First(p => p.PhaseID == phaseID);
-            ctx.Phases.Remove(toDelete);
-            ctx.SaveChanges();
+            PhasesDao toDelete = _ctx.Phases.First(p => p.PhaseId == phaseId);
+            _ctx.Phases.Remove(toDelete);
+            _ctx.SaveChanges();
         }
 
         public IEnumerable<Phase> ReadAllPhases()
         {
             List<Phase> myQuery = new List<Phase>();
 
-            foreach (PhasesDTO DTO in ctx.Phases)
+            foreach (PhasesDao dao in _ctx.Phases)
             {
-                myQuery.Add(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;
         }
         
-        public IEnumerable<Phase> ReadAllPhases(int projectID)
+        public IEnumerable<Phase> ReadAllPhases(int projectId)
         {
-            return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectID);
+            return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectId);
         }
-
-        
         #endregion
         
-        // Added by NVZ
-        // Images CRUD
+        #region Images CRUD
         // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
-        #region
         public Image Create(Image obj)
         {
             /* if (!images.Contains(obj))

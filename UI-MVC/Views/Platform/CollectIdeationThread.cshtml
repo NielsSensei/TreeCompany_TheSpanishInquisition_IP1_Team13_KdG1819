@@ -18,9 +18,9 @@
             <h1>Ideation Thread</h1>
             <p class="font-weight-bold">@Model.QuestionTitle</p>
             <p>@Model.Description</p>
-            @if (Model.SiteURL != null)
+            @if (Model.SiteUrl != null)
             {
-                <p>Lees meer: <a href="">@Model.SiteURL</a></p>
+                <p>Lees meer: <a href="">@Model.SiteUrl</a></p>
             }
             <br/>
             <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectIdeation"
@@ -29,7 +29,7 @@
     </div>
     <hr/>
     <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
-    @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionID = Model.Id, ParentID = 0})
+    @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionId = Model.Id, ParentId = 0})
     <br/>
     <p>@ViewData["Message"]</p>
     <hr/>

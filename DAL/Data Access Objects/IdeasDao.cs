@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DAL.Data_Transfer_Objects
+﻿namespace DAL.Data_Access_Objects
 {
-    public class IdeasDTO
+    public class IdeasDao
     {
-        public int IdeaID { get; set; }
-        public int IQuestionID { get; set; }
-        public string UserID { get; set; }
+        public int IdeaId { get; set; }
+        public int IquestionId { get; set; }
+        public string UserId { get; set; }
         public string Title { get; set; }
         public bool Reported { get; set; }
         public bool ReviewByAdmin { get; set; }
@@ -18,7 +14,8 @@ namespace DAL.Data_Transfer_Objects
         public int ShareCount { get; set; }
         public string Status { get; set; }
         public bool VerifiedUser { get; set; }
-        public int ParentID { get; set; }
-        public int DeviceID { get; set; }
+        public bool IsDeleted { get; set; }
+        public int ParentId { get; set; }
+        public int DeviceId { get; set; }
     }
 }

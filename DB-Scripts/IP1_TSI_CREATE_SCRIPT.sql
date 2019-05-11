@@ -66,7 +66,6 @@ CREATE TABLE Projects(
 
 	/*Constraints*/
 	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID),
-	CONSTRAINT fk_Projects_Platforms FOREIGN KEY (PlatformID) references Platforms(PlatformID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT ck_Projects_Status CHECK (Status = UPPER(Status))
 
 )
@@ -77,11 +76,9 @@ CREATE TABLE Phases(
 	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
-	IsCurrent BIT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Phases PRIMARY KEY(PhaseID),
-	CONSTRAINT fk_Phases_Projects FOREIGN KEY (ProjectID) references Projects(ProjectID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT chk_Phases_StartDate CHECK (StartDate <= EndDate),
 	CONSTRAINT chk_Phases_EndDate CHECK (EndDate >= StartDate)
 )
@@ -101,9 +98,7 @@ CREATE TABLE Modules(
 	IsQuestionnaire BIT NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT pk_Modules PRIMARY KEY(ModuleID),
-	CONSTRAINT fk_Modules_Projects FOREIGN KEY (ProjectID) references Projects(ProjectID) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_Modules_Phases FOREIGN KEY (PhaseID) references Phases(PhaseID) ON DELETE NO ACTION ON UPDATE NO ACTION
+	CONSTRAINT pk_Modules PRIMARY KEY(ModuleID)
 )
 
 CREATE TABLE Projectimages(
@@ -112,8 +107,7 @@ CREATE TABLE Projectimages(
 	ProjectImage BINARY(255),
 
 	/*Constraints*/
-	CONSTRAINT pk_ProjectImages PRIMARY KEY(ProjectID, ImageID),
-	CONSTRAINT fk_Projectimages_Projects FOREIGN KEY (ProjectID) references Projects(ProjectID) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT pk_ProjectImages PRIMARY KEY(ProjectID, ImageID)
 )
 
 CREATE TABLE Devices(
@@ -149,12 +143,12 @@ CREATE TABLE Ideas(
 	Title NVARCHAR(100) NOT NULL,
 	Status VARCHAR(100),
 	VerifiedUser BIT NOT NULL,
+	IsDeleted BIT NOT NULL,
 	ParentID INT,
 	DeviceID INT,
 
 	/*Constraints*/
-	CONSTRAINT pk_Ideas PRIMARY KEY(IdeaID),
-	CONSTRAINT fk_Ideas_Ideationquestions FOREIGN KEY (IQuestionID) references IdeationQuestions(IQuestionID) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT pk_Ideas PRIMARY KEY(IdeaID)
 )
 
 
@@ -180,8 +174,7 @@ CREATE TABLE QuestionnaireQuestions(
 	Required BIT NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT pk_QuestionnaireQuestions PRIMARY KEY(QQuestionID),
-	CONSTRAINT fk_QuestionnaireQuestions_Modules FOREIGN KEY (ModuleID) references Modules(ModuleID) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT pk_QuestionnaireQuestions PRIMARY KEY(QQuestionID)
 )
 
 CREATE TABLE Answers(
@@ -191,8 +184,7 @@ CREATE TABLE Answers(
 	AnswerText NVARCHAR(255),
 
 	/*Constraints*/
-	CONSTRAINT pk_Answers PRIMARY KEY(AnswerID),
-	CONSTRAINT fk_Answers_QuestionnaireQuestions FOREIGN KEY (QQuestionID) references QuestionnaireQuestions(QQuestionID) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT pk_Answers PRIMARY KEY(AnswerID)
 )
 
 CREATE TABLE Options(
@@ -201,8 +193,7 @@ CREATE TABLE Options(
 	QQuestionID INT NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT pk_Options PRIMARY KEY(OptionID),
-	CONSTRAINT fk_Options_QuestionnaireQuestions FOREIGN KEY (QQuestionID) references QuestionnaireQuestions(QQuestionID)
+	CONSTRAINT pk_Options PRIMARY KEY(OptionID)
 )
 
 CREATE TABLE Choices(
@@ -211,9 +202,7 @@ CREATE TABLE Choices(
 	OptionID INT NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT pk_Choices PRIMARY KEY(ChoiceID, AnswerID, OptionID),
-	CONSTRAINT fk_Choices_Answers FOREIGN KEY (AnswerID) references Answers(AnswerID) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_Choices_Options FOREIGN KEY (OptionID) references Options(OptionID) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT pk_Choices PRIMARY KEY(ChoiceID, AnswerID, OptionID)
 )
 
 
@@ -229,8 +218,7 @@ CREATE TABLE IdeaFields(
 	UploadedMedia VARBINARY(255),
 
 	/*Constraints*/
-	CONSTRAINT pk_IdeaFields PRIMARY KEY(FieldID,IdeaID),
-	CONSTRAINT fk_IdeaFields_Ideas FOREIGN KEY (IdeaID) references Ideas(IdeaID) 
+	CONSTRAINT pk_IdeaFields PRIMARY KEY(FieldID,IdeaID)
 )
 
 
@@ -246,8 +234,7 @@ CREATE TABLE Votes(
 	Choices NVARCHAR(255),
 
 	/*Constraints*/
-	CONSTRAINT pk_Votes PRIMARY KEY(VoteID),
-	CONSTRAINT fk_Votes_Devices FOREIGN KEY (DeviceID) references Devices(DeviceID)
+	CONSTRAINT pk_Votes PRIMARY KEY(VoteID)
 )
 
 CREATE TABLE UserActivities(
@@ -263,14 +250,7 @@ CREATE TABLE UserActivities(
 	ActionDescription VARCHAR(150),
 
 	/*Constraints*/
-	CONSTRAINT pk_UserAcivities PRIMARY KEY(ActivityID),
-	CONSTRAINT fk_UserActivities_Platforms FOREIGN KEY (PlatformID) references Platforms(PlatformID),
-	CONSTRAINT fk_UserActivities_Projects FOREIGN KEY (ProjectID) references Projects(ProjectID),
-	CONSTRAINT fk_UserActivities_Modules FOREIGN KEY (ModuleID) references Modules(ModuleID),
-	CONSTRAINT fk_UserActivities_IdeationQuestions FOREIGN KEY (IQuestionID) references IdeationQuestions(IQuestionID),
-	CONSTRAINT fk_UserActivities_Ideas FOREIGN KEY (IdeaID) references Ideas(IdeaID),
-	CONSTRAINT fk_UserActivities_Votes FOREIGN KEY (VoteID) references Votes(VoteID),
-	CONSTRAINT fk_UserActivities_Events FOREIGN KEY (EventID) references OrganisationEvents(EventID)
+	CONSTRAINT pk_UserAcivities PRIMARY KEY(ActivityID)
 )
 
 CREATE TABLE Reports(
@@ -282,6 +262,148 @@ CREATE TABLE Reports(
 	ReportApproved TINYINT NOT NULL,
 
 	/*Constraints*/
-	CONSTRAINT pk_Reports PRIMARY KEY(ReportID),
-	CONSTRAINT fk_Reports_Ideas FOREIGN KEY (IdeaID) references Ideas(IdeaID)
+	CONSTRAINT pk_Reports PRIMARY KEY(ReportID)
 )
+
+create table AspNetRoles	
+(	
+	Id TEXT not null	
+		constraint PK_AspNetRoles	
+			primary key,	
+	Name TEXT,	
+	NormalizedName TEXT,	
+	ConcurrencyStamp TEXT	
+)	
+;	
+
+ create table AspNetRoleClaims	
+(	
+	Id INTEGER not null	
+		constraint PK_AspNetRoleClaims	
+			primary key	
+			 autoincrement,	
+	RoleId TEXT not null	
+		constraint FK_AspNetRoleClaims_AspNetRoles_RoleId	
+			references AspNetRoles	
+				on delete cascade,	
+	ClaimType TEXT,	
+	ClaimValue TEXT	
+)	
+;	
+
+ create index IX_AspNetRoleClaims_RoleId	
+	on AspNetRoleClaims (RoleId)	
+;	
+
+ create unique index RoleNameIndex	
+	on AspNetRoles (NormalizedName)	
+;	
+
+ create table AspNetUsers	
+(	
+	Id TEXT not null	
+		constraint PK_AspNetUsers	
+			primary key,	
+	UserName TEXT,	
+	NormalizedUserName TEXT,	
+	Email TEXT,	
+	NormalizedEmail TEXT,	
+	EmailConfirmed INTEGER not null,	
+	PasswordHash TEXT,	
+	SecurityStamp TEXT,	
+	ConcurrencyStamp TEXT,	
+	PhoneNumber TEXT,	
+	PhoneNumberConfirmed INTEGER not null,	
+	TwoFactorEnabled INTEGER not null,	
+	LockoutEnd TEXT,	
+	LockoutEnabled INTEGER not null,	
+	AccessFailedCount INTEGER not null,	
+	Name TEXT,	
+	Zipcode TEXT,	
+	Gender INTEGER not null,	
+	DateOfBirth TEXT not null,	
+	PlatformDetails INTEGER not null,	
+	OrgName TEXT,	
+	Description TEXT,	
+	Banned INTEGER not null,	
+	Active INTEGER not null	
+)	)
+;	
+
+ create table AspNetUserClaims	
+(	
+	Id INTEGER not null	
+		constraint PK_AspNetUserClaims	
+			primary key	
+			 autoincrement,	
+	UserId TEXT not null	
+		constraint FK_AspNetUserClaims_AspNetUsers_UserId	
+			references AspNetUsers	
+				on delete cascade,	
+	ClaimType TEXT,	
+	ClaimValue TEXT	
+)	
+;	
+
+ create index IX_AspNetUserClaims_UserId	
+	on AspNetUserClaims (UserId)	
+;	
+
+ create table AspNetUserLogins	
+(	
+	LoginProvider TEXT not null,	
+	ProviderKey TEXT not null,	
+	ProviderDisplayName TEXT,	
+	UserId TEXT not null	
+		constraint FK_AspNetUserLogins_AspNetUsers_UserId	
+			references AspNetUsers	
+				on delete cascade,	
+	constraint PK_AspNetUserLogins	
+		primary key (LoginProvider, ProviderKey)	
+)	
+;	
+
+ create index IX_AspNetUserLogins_UserId	
+	on AspNetUserLogins (UserId)	
+;	
+
+ create table AspNetUserRoles	
+(	
+	UserId TEXT not null	
+		constraint FK_AspNetUserRoles_AspNetUsers_UserId	
+			references AspNetUsers	
+				on delete cascade,	
+	RoleId TEXT not null	
+		constraint FK_AspNetUserRoles_AspNetRoles_RoleId	
+			references AspNetRoles	
+				on delete cascade,	
+	constraint PK_AspNetUserRoles	
+		primary key (UserId, RoleId)	
+)	
+;	
+
+ create index IX_AspNetUserRoles_RoleId	
+	on AspNetUserRoles (RoleId)	
+;	
+
+ create table AspNetUserTokens	
+(	
+	UserId TEXT not null	
+		constraint FK_AspNetUserTokens_AspNetUsers_UserId	
+			references AspNetUsers	
+				on delete cascade,	
+	LoginProvider TEXT not null,	
+	Name TEXT not null,	
+	Value TEXT,	
+	constraint PK_AspNetUserTokens	
+		primary key (UserId, LoginProvider, Name)	
+)	
+;	
+
+ create index EmailIndex	
+	on AspNetUsers (NormalizedEmail)	
+;	
+
+ create unique index UserNameIndex	
+	on AspNetUsers (NormalizedUserName)	
+;

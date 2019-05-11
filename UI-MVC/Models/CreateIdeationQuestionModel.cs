@@ -4,6 +4,6 @@ namespace UIMVC.Models
     {
         public string QuestionTitle { get; set; }
         public string Description { get; set; }
-        public string SiteURL { get; set; }
+        public string SiteUrl { get; set; }
     }
 }

@@ -1,71 +1,64 @@
-using System;
-using System.Collections.Generic;
-using DAL;
+using System.Linq;
+using DAL.repos;
+using Domain.Identity;
 using Domain.UserInput;
 
 namespace BL
 {
     public class VoteManager
     {
-        // Added by NVZ
-        private IdeationVoteRepository VoteRepo { get; set; }
-
-        // Added by NVZ
+        private IdeationVoteRepository VoteRepo { get; }
+        
         public VoteManager()
         {
             VoteRepo = new IdeationVoteRepository();
         }
         
-        // Added By NVZ
-        // Edited by NG
-        // Methods
-        #region
-        /*
-         * This is needed for the voting feature. - NVZ
-         */
-        public bool HandleVotingOnFeedback(int feedbackId, int userId, int? deviceId, double? x, double? y)
+        #region Voting
+        public bool VerifyVotingOnFeedback(int feedbackId, string userId, int? deviceId, double? x, double? y)
         {
-//            if (deviceID.HasValue)
-//            {
-//                int dID = (int) deviceID;
-//                
-//                if (!locationCheck(dID, x, y)) { return false; }
-//                voteRepo.Create(new Interaction() {UserId = userID, DeviceId = dID});
-//            }
-//            Vote obj = new Vote();
-//            obj.Id = feedbackID;
-//            
-//            List<float> coordinates = new List<float>();
-//            coordinates.Add((float) x);
-//            coordinates.Add((float) y);
-//            obj.SetLocation(coordinates);
-//
-//            voteRepo.Create(obj);
-//            return true;
-            //throw new NotImplementedException("Sorry, not implemented yet!");
-            return false;
-        } 
+            if (deviceId.HasValue)
+            {
+                if (!LocationCheck((int) deviceId, x, y))
+                {
+                    return false;
+                }
 
-        /*
+                return true;
+            } 
+
+            Vote checkIfVoted = VoteRepo.ReadAll().FirstOrDefault(v => v.User.Id.Equals(userId) && v.Idea.Id == feedbackId);
+            if (checkIfVoted != null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
         public bool LocationCheck(int deviceId, double? x, double? y)
         {
-//            IOT_Device device = voteRepo.ReadDevice(deviceId);
-//            // deltas squared to make positive
-//            double? deltaX = device.LocationX - x;
-//            deltaX *= deltaX;
-//            double? deltaY = device.LocationY - y;
-//            deltaY *= deltaY;
-//
-//            // arbitrary numbers
-//            if (deltaX < 10 && deltaY < 10) { return true; }
-//            return false;
-            //throw new NotImplementedException("Sorry, not implemented yet!");
             return false;
         }
-*/
-        public void RemoveVotes(int ideaID)
+
+        public void RemoveVotes(int ideaId)
         {
-            VoteRepo.DeleteVotes(ideaID);
+            VoteRepo.DeleteVotes(ideaId);
+        }
+
+        public void MakeVote(int feedbackId, string userId, int? deviceId, float? x, float? y, bool site)
+        {
+            if (site)
+            {
+                Vote v = new Vote()
+                {
+                    User = new UimvcUser(){ Id = userId },
+                    Idea = new Idea(){ Id = feedbackId },
+                    Positive = true
+                };
+
+                VoteRepo.Create(v);
+            }
         }
         #endregion
     }

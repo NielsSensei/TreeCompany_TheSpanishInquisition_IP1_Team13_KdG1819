@@ -1,7 +1,7 @@
 @using Domain.Identity
 @using Domain.Users
 @using UIMVC.Services
-@model IEnumerable<UIMVCUser>
+@model IEnumerable<UimvcUser>
 @inject RoleService RoleService
 @{
     ViewData["Title"] = "Overzicht van Users";
@@ -42,7 +42,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (UIMVCUser user in Model)
+    @foreach (UimvcUser user in Model)
     {
         <tr>
             <td>@user.Id.Substring(0, 5)...</td>
