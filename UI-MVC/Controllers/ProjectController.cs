@@ -34,7 +34,7 @@ namespace UIMVC.Controllers
 
         #region Add
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult AddProject(int platform)
         {
@@ -42,7 +42,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public IActionResult AddProject(CreateProjectModel pvm, int platform)
         {
@@ -78,7 +78,7 @@ namespace UIMVC.Controllers
 
         #region ChangeProject
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult ChangeProject(int id)
         {
@@ -93,7 +93,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
@@ -116,7 +116,7 @@ namespace UIMVC.Controllers
 
         #region DeleteProject
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult DestroyProject(int id)
         {
@@ -161,7 +161,7 @@ namespace UIMVC.Controllers
 
         #region AddPhase
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
 
         [HttpGet]
         public IActionResult AddPhase(int projectId)
@@ -172,7 +172,7 @@ namespace UIMVC.Controllers
         }
 
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public IActionResult AddPhase(PhaseModel pm, int projectId)
         {
@@ -199,7 +199,7 @@ namespace UIMVC.Controllers
 
         #region ChangePhase
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
@@ -215,7 +215,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public IActionResult ChangePhase(PhaseModel pm, int phaseId)
         {
@@ -233,7 +233,7 @@ namespace UIMVC.Controllers
 
 
         
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult SetCurrentPhase(int projectId, int phaseId)
         {
@@ -251,7 +251,7 @@ namespace UIMVC.Controllers
         #region DestroyPhase
 
         
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult DestroyPhase(int phaseId, int projectId)
         {
