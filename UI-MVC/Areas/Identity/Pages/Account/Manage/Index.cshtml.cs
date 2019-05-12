@@ -4,24 +4,25 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using UIMVC.Areas.Identity.Data;
-using UIMVCUser = Domain.Identity.UIMVCUser;
+using UimvcUser = Domain.Identity.UimvcUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<UIMVCUser> _userManager;
-        private readonly SignInManager<UIMVCUser> _signInManager;
+        private readonly UserManager<UimvcUser> _userManager;
+        private readonly SignInManager<UimvcUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public IndexModel(
-            UserManager<UIMVCUser> userManager,
-            SignInManager<UIMVCUser> signInManager,
+            UserManager<UimvcUser> userManager,
+            SignInManager<UimvcUser> signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;

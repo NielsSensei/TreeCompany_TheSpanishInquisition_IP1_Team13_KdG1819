@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace UIMVC.Areas.Identity.Data
+namespace Domain.Identity
 {
-    // Add profile data for application users by adding properties to the UIMVCUser class
-    public class UIMVCUser : IdentityUser
+    public class UimvcUser : IdentityUser
     {
-
+        
         [PersonalData]
         public string Name { get; set; }
 
@@ -21,6 +17,15 @@ namespace UIMVC.Areas.Identity.Data
 
         [PersonalData]
         public DateTime DateOfBirth { get; set; }
+        
+        [PersonalData]
+        public int PlatformDetails { get; set; }
+        
+        [PersonalData]
+        public string OrgName { get; set; }
+        
+        [PersonalData]
+        public string Description { get; set; }
 
         public bool Banned { get; set; }
 

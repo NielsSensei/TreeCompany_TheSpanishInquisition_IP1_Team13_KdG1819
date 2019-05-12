@@ -26,7 +26,6 @@
   width: 320px;
   height: 400px;
 }
-
 .platformCar {
   h1 {
     text-align: center;
@@ -38,7 +37,6 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-
   input {
     text-align: center;
   }
@@ -102,7 +100,6 @@
 
   form {
     width: 75%;
-
     * {
       margin: 5px;
     }
@@ -191,6 +188,7 @@ Used in Platform/CollectProject.cshtml
 }
 
 
+
 /* Module.cshtml */
 #modulePart {
   display: flex;
@@ -213,9 +211,8 @@ Used in Platform/CollectProject.cshtml
   padding: 1em 1em 0 1em;
   bottom: 0;
   margin: 0;
-  border-top: gainsboro solid thin;
+  border-top: gainsboro solid thin ;
   background-color: ghostwhite;
-
   ul {
     list-style-type: none;
   }
@@ -230,6 +227,5 @@ html {
 /* about page */
 .textScript {
   background-color: ghostwhite;
-  border: gainsboro solid thin;
+  border: gainsboro solid thin ;
 }
-

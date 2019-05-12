@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DAL.Data_Transfer_Objects
+﻿namespace DAL.Data_Access_Objects
 {
-    public class IdeaFieldsDTO
+    public class IdeaFieldsDao
     {
-        public int FieldID { get; set; }
-        public int IdeaID { get; set; }
+        public int FieldId { get; set; }
+        public int IdeaId { get; set; }
         public string FieldText { get; set; }
         public string FieldStrings { get; set; }
         public float LocationX { get; set; }

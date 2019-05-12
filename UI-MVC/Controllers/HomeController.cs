@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using BL;
-using Microsoft.AspNetCore.Http;
+﻿using BL;
 using Microsoft.AspNetCore.Mvc;
-using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {

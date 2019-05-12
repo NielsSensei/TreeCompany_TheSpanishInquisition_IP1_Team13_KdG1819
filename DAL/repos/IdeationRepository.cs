@@ -2,36 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using DAL.Contexts;
+using DAL.Data_Access_Objects;
 using Domain.Common;
 using Domain.Projects;
-using DAL.Contexts;
-using DAL.Data_Transfer_Objects;
 using Domain.Identity;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL
+namespace DAL.repos
 {
     public class IdeationRepository : IRepository<Ideation>
     {
-        // Added by DM
-        // Modified by NVZ & XV
-        private CityOfIdeasDbContext ctx;
-
-        // Added by NVZ
+        private readonly CityOfIdeasDbContext _ctx;
+        
         public IdeationRepository()
         {
-            ctx = new CityOfIdeasDbContext();
+            _ctx = new CityOfIdeasDbContext();
         }
-
-        // Added by NVZ
-        // Standard Methods
-        #region
-        private ModulesDTO GrabModuleInformationDTO(Ideation obj)
+        
+        #region Conversion Methods
+        private ModulesDao GrabModuleInformationDao(Ideation obj)
         {
-            ModulesDTO DTO = new ModulesDTO
+            ModulesDao dao = new ModulesDao
             {
-                ModuleID = obj.Id,
+                ModuleId = obj.Id,
                 OnGoing = obj.OnGoing,
                 Title = obj.Title,
                 LikeCount = obj.LikeCount,
@@ -39,103 +34,103 @@ namespace DAL
                 TwitterLikeCount = obj.TwitterLikeCount,
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
-                IsQuestionnaire = obj.type == ModuleType.Questionnaire
+                IsQuestionnaire = obj.ModuleType == ModuleType.Questionnaire
             };
 
             if (obj.Tags != null)
             {
-                DTO.Tags = ExtensionMethods.ListToString(obj.Tags);
+                dao.Tags = ExtensionMethods.ListToString(obj.Tags);
             }
             
             if (obj.Project != null)
             {
-                DTO.ProjectID = obj.Project.Id;
+                dao.ProjectId = obj.Project.Id;
             }
 
             if (obj.ParentPhase != null)
             {
-                DTO.PhaseID = obj.ParentPhase.Id;
+                dao.PhaseId = obj.ParentPhase.Id;
             }
             
-            return DTO;
+            return dao;
         }
 
         // XV: TODO Create a check for organisation accounts
-        private IdeationsDTO ConvertToDTO(Ideation obj)
+        private IdeationsDao ConvertToDao(Ideation obj)
         {
             //bool Org = obj.User.Role == Role.LOGGEDINORG;
-            IdeationsDTO DTO = new IdeationsDTO()
+            IdeationsDao dao = new IdeationsDao()
             {
-                    ModuleID = obj.Id,
+                    ModuleId = obj.Id,
                     ExtraInfo = obj.ExtraInfo
                     //MediaFile = obj.Media,
             };
 
             if (obj.User != null)
             {
-                DTO.UserID = obj.User.Id;
+                dao.UserId = obj.User.Id;
             }
             
             if (obj.RequiredFields > 0)
             {
-                DTO.RequiredFields = (byte) obj.RequiredFields;
+                dao.RequiredFields = (byte) obj.RequiredFields;
             }
             
             if (obj.Event != null)
             {
-                DTO.EventID = obj.Event.Id;
-                DTO.UserIdea = obj.UserIdea;
+                dao.EventId = obj.Event.Id;
+                dao.UserIdea = obj.UserIdea;
                 //DTO.Organisation = Org;
             }
 
-            return DTO;
+            return dao;
         }
 
-        private Ideation ConvertToDomain(IdeationsDTO DTO)
+        private Ideation ConvertToDomain(IdeationsDao dao)
         {
             return new Ideation
             {
-                Id = DTO.ModuleID,
-                User = new UIMVCUser { Id = DTO.UserID },
-                UserIdea = DTO.UserIdea,
-                Event = new Event { Id = DTO.EventID },
+                Id = dao.ModuleId,
+                User = new UimvcUser { Id = dao.UserId },
+                UserIdea = dao.UserIdea,
+                Event = new Event { Id = dao.EventId },
                 //Media = DTO.MediaFile,
-                ExtraInfo = DTO.ExtraInfo,
-                RequiredFields = DTO.RequiredFields
+                ExtraInfo = dao.ExtraInfo,
+                RequiredFields = dao.RequiredFields
             };
         }
 
-        private Ideation IdeationWithModules(Ideation ideation , ModulesDTO DTO)
+        private Ideation IdeationWithModules(Ideation ideation , ModulesDao dao)
         {
-            ideation.Project = new Project { Id = DTO.ProjectID };
-            ideation.ParentPhase = new Phase { Id = DTO.PhaseID };
-            ideation.Title = DTO.Title;
-            ideation.OnGoing = DTO.OnGoing;
-            ideation.LikeCount = DTO.LikeCount;
-            ideation.FbLikeCount = DTO.FbLikeCount;
-            ideation.TwitterLikeCount = DTO.TwitterLikeCount;
-            ideation.ShareCount = DTO.ShareCount;
-            ideation.RetweetCount = DTO.RetweetCount;
+            ideation.Project = new Project { Id = dao.ProjectId };
+            ideation.ParentPhase = new Phase { Id = dao.PhaseId };
+            ideation.Title = dao.Title;
+            ideation.OnGoing = dao.OnGoing;
+            ideation.LikeCount = dao.LikeCount;
+            ideation.FbLikeCount = dao.FbLikeCount;
+            ideation.TwitterLikeCount = dao.TwitterLikeCount;
+            ideation.ShareCount = dao.ShareCount;
+            ideation.RetweetCount = dao.RetweetCount;
             ideation.Tags = new List<string>();
             
-            if (DTO.Tags != null)
+            if (dao.Tags != null)
             {
-                ideation.Tags = ExtensionMethods.StringToList(DTO.Tags); 
+                ideation.Tags = ExtensionMethods.StringToList(dao.Tags); 
             }
             return ideation;
         }
+        #endregion
         
+        #region Id generation
         private int FindNextAvailableIdeationId()
         {               
-            if (!ctx.Ideations.Any()) return 1;
-            int newId = ctx.Modules.Max(q => q.ModuleID) + 1;
+            if (!_ctx.Ideations.Any()) return 1;
+            int newId = _ctx.Modules.Max(q => q.ModuleId) + 1;
             return newId;
         }
         #endregion
-
-        // Added by NVZ
-        // Ideation CRUD
-        #region
+        
+        #region Ideation CRUD
         public Ideation Create(Ideation obj)
         {
             IEnumerable<Ideation> ideations = ReadAll(obj.Project.Id);
@@ -150,39 +145,38 @@ namespace DAL
             }
 
             obj.Id = FindNextAvailableIdeationId();
-            ModulesDTO newModule = GrabModuleInformationDTO(obj);
-            IdeationsDTO newIdeation = ConvertToDTO(obj);
+            ModulesDao newModule = GrabModuleInformationDao(obj);
+            IdeationsDao newIdeation = ConvertToDao(obj);
             
-            ctx.Modules.Add(newModule);
-            ctx.Ideations.Add(newIdeation);
-            ctx.SaveChanges();
+            _ctx.Modules.Add(newModule);
+            _ctx.Ideations.Add(newIdeation);
+            _ctx.SaveChanges();
 
             return obj;
         }
 
         public Ideation Read(int id, bool details)
         {
-            IdeationsDTO ideationDTO = null;
-            ideationDTO = details ? ctx.Ideations.AsNoTracking().First(m => m.ModuleID == id) : ctx.Ideations.First(m => m.ModuleID == id);
-            ExtensionMethods.CheckForNotFound(ideationDTO, "Ideation", id);
+            IdeationsDao ideationDao = details ? _ctx.Ideations.AsNoTracking().First(m => m.ModuleId == id) : _ctx.Ideations.First(m => m.ModuleId == id);
+            ExtensionMethods.CheckForNotFound(ideationDao, "Ideation", id);
 
-            return ConvertToDomain(ideationDTO);
+            return ConvertToDomain(ideationDao);
         }
 
         public Ideation ReadWithModule(int id)
         {
             Ideation ideation = Read(id, true);
-            ModulesDTO DTO = ctx.Modules.First(m => m.ModuleID == id);
+            ModulesDao dao = _ctx.Modules.First(m => m.ModuleId == id);
 
-            ideation = IdeationWithModules(ideation, DTO);
+            ideation = IdeationWithModules(ideation, dao);
 
             return ideation;
         }
 
         public void Update(Ideation obj)
         {
-            IdeationsDTO newIdeation = ConvertToDTO(obj);
-            IdeationsDTO foundIdeation = ctx.Ideations.FirstOrDefault(dto => dto.ModuleID == newIdeation.ModuleID);
+            IdeationsDao newIdeation = ConvertToDao(obj);
+            IdeationsDao foundIdeation = _ctx.Ideations.FirstOrDefault(dto => dto.ModuleId == newIdeation.ModuleId);
             if (foundIdeation != null)
             {
                 foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
@@ -190,8 +184,8 @@ namespace DAL
                 foundIdeation.RequiredFields = newIdeation.RequiredFields;
             }
             
-            ModulesDTO newModule = GrabModuleInformationDTO(obj);
-            ModulesDTO foundModule = ctx.Modules.FirstOrDefault(dto => dto.ModuleID == newModule.ModuleID);
+            ModulesDao newModule = GrabModuleInformationDao(obj);
+            ModulesDao foundModule = _ctx.Modules.FirstOrDefault(dto => dto.ModuleId == newModule.ModuleId);
             if (foundModule != null)
             {
                 foundModule.OnGoing = newModule.OnGoing;
@@ -204,47 +198,44 @@ namespace DAL
                 foundModule.Tags = newModule.Tags;
             }
             
-            if (newModule.PhaseID != foundModule.PhaseID)
+            if (newModule.PhaseId != foundModule.PhaseId)
             {
-                foundModule.PhaseID = newModule.PhaseID;
+                foundModule.PhaseId = newModule.PhaseId;
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {            
-            IdeationsDTO toDelete = ctx.Ideations.First(r => r.ModuleID == id);
-            ctx.Ideations.Remove(toDelete);
-            ModulesDTO toDeleteModule = ctx.Modules.First(r => r.ModuleID == id);
-            ctx.Modules.Remove(toDeleteModule);
-            ctx.SaveChanges();
+            IdeationsDao toDelete = _ctx.Ideations.First(r => r.ModuleId == id);
+            _ctx.Ideations.Remove(toDelete);
+            ModulesDao toDeleteModule = _ctx.Modules.First(r => r.ModuleId == id);
+            _ctx.Modules.Remove(toDeleteModule);
+            _ctx.SaveChanges();
         }
         
         public IEnumerable<Ideation> ReadAll()
         {
             List<Ideation> myQuery = new List<Ideation>();
 
-            foreach (IdeationsDTO DTO in ctx.Ideations)
+            foreach (IdeationsDao dao in _ctx.Ideations)
             {
-                Ideation toAdd = ReadWithModule(DTO.ModuleID);
+                Ideation toAdd = ReadWithModule(dao.ModuleId);
                 myQuery.Add(toAdd);
             }
 
             return myQuery;
         }
 
-        public IEnumerable<Ideation> ReadAll(int projectID)
+        public IEnumerable<Ideation> ReadAll(int projectId)
         {
-            return ReadAll().ToList().FindAll(i => i.Project.Id == projectID);
+            return ReadAll().ToList().FindAll(i => i.Project.Id == projectId);
         }
         #endregion
-
-        // Added by NVZ
-        // Media CRUD     
+        
+        #region Media CRUD
         // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
-        #region
-
         public Media Create(Media obj)
         {
             //if (!mediafiles.Contains(obj))
@@ -254,7 +245,7 @@ namespace DAL
             throw new DuplicateNameException("This MediaFile already exist!");
         }
 
-        public Media ReadMedia(int ideationID)
+        public Media ReadMedia(int ideationId)
         {
             //Media m = Read(ideationID).Media;
             //if (m != null)
@@ -264,7 +255,7 @@ namespace DAL
             throw new KeyNotFoundException("This Media can't be found!");
         }
 
-        public void DeleteMedia(int ideationID)
+        public void DeleteMedia(int ideationId)
         {
             //Media m = ReadMedia(ideationID);
             //if (m != null)
@@ -273,13 +264,11 @@ namespace DAL
             //}
         }
         #endregion
-
-        // Added by NVZ
-        // Tag CRUD
-        #region
-        public string CreateTag(string obj, int moduleID)
+        
+        #region Tag CRUD
+        public string CreateTag(string obj, int moduleId)
         {
-            Ideation ideationWTags = ReadWithModule(moduleID);
+            Ideation ideationWTags = ReadWithModule(moduleId);
             string oldTags = ExtensionMethods.ListToString(ideationWTags.Tags);
             oldTags += "," + obj;
 
@@ -289,20 +278,19 @@ namespace DAL
             return obj;
         }
 
-        public void DeleteTag(int moduleID, int tagID)
+        public void DeleteTag(int moduleId, int tagId)
         {
-            List<String> keptTags = new List<string>();
-            Ideation ideationWTags = Read(moduleID, false);
-            ModulesDTO module = GrabModuleInformationDTO(ideationWTags);
-            keptTags = ExtensionMethods.StringToList(module.Tags);
-            keptTags.RemoveAt(tagID - 1);
+            Ideation ideationWTags = Read(moduleId, false);
+            ModulesDao module = GrabModuleInformationDao(ideationWTags);
+            List<String> keptTags = ExtensionMethods.StringToList(module.Tags);
+            keptTags.RemoveAt(tagId - 1);
             module.Tags = ExtensionMethods.ListToString(keptTags);
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
-        public IEnumerable<String> ReadAllTags(int moduleID)
+        public IEnumerable<String> ReadAllTags(int moduleId)
         {
-            return Read(moduleID,true).Tags;
+            return Read(moduleId,true).Tags;
         }
         #endregion
     }

@@ -1,5 +1,4 @@
 ﻿@using Domain.Projects
-@using Domain.Users
 @using UIMVC.Services
 @model Domain.Users.Platform
 @inject ProjectService ProjectService
@@ -15,7 +14,6 @@
     <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject" asp-route-platform="@Model.Id">Maak nieuw project aan</a>
     <hr/>
     <div class="row">
-
         @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())
         {
             <h4>Er zijn geen projecten voor dit platform</h4>
@@ -23,13 +21,14 @@
         else
         {
             foreach (Project project in ProjectService.CollectPlatformProjects(Model))
-            {
-                <div class="col-md-3">
-                    @Html.DisplayFor(m => project)
-                </div>
-            }
+             {
+                 if (project.Visible)
+                 {
+                     <div class="col-md-4">
+                         @Html.DisplayFor(m => project)
+                     </div>  
+                 }
+             }
         }
     </div>
-
-
 </section>

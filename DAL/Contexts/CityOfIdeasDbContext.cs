@@ -1,13 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using DAL.Data_Transfer_Objects;
+﻿using DAL.Data_Access_Objects;
+using Microsoft.EntityFrameworkCore;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace DAL.Contexts
 {
-    public class CityOfIdeasDbContext : IdentityDbContext<UIMVCUser>
-//DbContext
+    public class CityOfIdeasDbContext : IdentityDbContext<UimvcUser>
     {
             
         /*
@@ -36,44 +35,44 @@ namespace DAL.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AnswersDTO>().HasKey(a => a.AnswerID);
-            modelBuilder.Entity<ChoicesDTO>().HasKey(c => c.ChoiceID);
-            modelBuilder.Entity<DevicesDTO>().HasKey(d => d.DeviceID);
-            modelBuilder.Entity<IdeaFieldsDTO>().HasKey(f => f.FieldID);
-            modelBuilder.Entity<IdeasDTO>().HasKey(i => i.IdeaID);
-            modelBuilder.Entity<IdeationQuestionsDTO>().HasKey(i => i.IQuestionID);
-            modelBuilder.Entity<IdeationsDTO>().HasKey(i => i.ModuleID);
-            modelBuilder.Entity<ModulesDTO>().HasKey(m => m.ModuleID);
-            modelBuilder.Entity<OptionsDTO>().HasKey(o => o.OptionID);
-            modelBuilder.Entity<OrganisationEventsDTO>().HasKey(o => o.EventID);
-            modelBuilder.Entity<PhasesDTO>().HasKey(p => p.PhaseID);
-            modelBuilder.Entity<PlatformsDTO>().HasKey(p => p.PlatformID);
-            modelBuilder.Entity<ProjectImagesDTO>().HasKey(p => p.ImageID);
-            modelBuilder.Entity<ProjectsDTO>().HasKey(p => p.ProjectID);
-            modelBuilder.Entity<QuestionnaireQuestionsDTO>().HasKey(q => q.QQuestionID);
-            modelBuilder.Entity<UserActivitiesDTO>().HasKey(u => u.ActivityID);
-            modelBuilder.Entity<VotesDTO>().HasKey(v => v.VoteID);
-            modelBuilder.Entity<ReportsDTO>().HasKey(r => r.ReportID);
+            modelBuilder.Entity<AnswersDao>().HasKey(a => a.AnswerId);
+            modelBuilder.Entity<ChoicesDao>().HasKey(c => c.ChoiceId);
+            modelBuilder.Entity<DevicesDao>().HasKey(d => d.DeviceId);
+            modelBuilder.Entity<IdeaFieldsDao>().HasKey(f => f.FieldId);
+            modelBuilder.Entity<IdeasDao>().HasKey(i => i.IdeaId);
+            modelBuilder.Entity<IdeationQuestionsDao>().HasKey(i => i.IquestionId);
+            modelBuilder.Entity<IdeationsDao>().HasKey(i => i.ModuleId);
+            modelBuilder.Entity<ModulesDao>().HasKey(m => m.ModuleId);
+            modelBuilder.Entity<OptionsDao>().HasKey(o => o.OptionId);
+            modelBuilder.Entity<OrganisationEventsDao>().HasKey(o => o.EventId);
+            modelBuilder.Entity<PhasesDao>().HasKey(p => p.PhaseId);
+            modelBuilder.Entity<PlatformsDao>().HasKey(p => p.PlatformId);
+            modelBuilder.Entity<ProjectImagesDao>().HasKey(p => p.ImageId);
+            modelBuilder.Entity<ProjectsDao>().HasKey(p => p.ProjectId);
+            modelBuilder.Entity<QuestionnaireQuestionsDao>().HasKey(q => q.QquestionId);
+            modelBuilder.Entity<UserActivitiesDao>().HasKey(u => u.ActivityId);
+            modelBuilder.Entity<VotesDao>().HasKey(v => v.VoteId);
+            modelBuilder.Entity<ReportsDao>().HasKey(r => r.ReportId);
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<AnswersDTO> Answers { get; set; }
-        public DbSet<ChoicesDTO> Choices { get; set; }
-        public DbSet<DevicesDTO> Devices { get; set; }
-        public DbSet<IdeaFieldsDTO> IdeaFields { get; set; }
-        public DbSet<IdeasDTO> Ideas { get; set; }        
-        public DbSet<IdeationQuestionsDTO> IdeationQuestions { get; set; }
-        public DbSet<IdeationsDTO> Ideations { get; set; }
-        public DbSet<ModulesDTO> Modules { get; set; }
-        public DbSet<OptionsDTO> Options { get; set; }
-        public DbSet<OrganisationEventsDTO> OrganisationEvents { get; set; }
-        public DbSet<PhasesDTO> Phases { get; set; }
-        public DbSet<PlatformsDTO> Platforms { get; set; }
-        public DbSet<ProjectImagesDTO> ProjectImages { get; set; }
-        public DbSet<ProjectsDTO> Projects { get; set; }
-        public DbSet<QuestionnaireQuestionsDTO> QuestionnaireQuestions { get; set; }
-        public DbSet<UserActivitiesDTO> UserActivities { get; set; }
-        public DbSet<VotesDTO> Votes { get; set; }
-        public DbSet<ReportsDTO> Reports { get; set; }
+        public DbSet<AnswersDao> Answers { get; set;  }
+        public DbSet<ChoicesDao> Choices { get; set; }
+        public DbSet<DevicesDao> Devices { get; set; }
+        public DbSet<IdeaFieldsDao> IdeaFields { get; set; }
+        public DbSet<IdeasDao> Ideas { get; set; }        
+        public DbSet<IdeationQuestionsDao> IdeationQuestions { get; set; }
+        public DbSet<IdeationsDao> Ideations { get; set; }
+        public DbSet<ModulesDao> Modules { get; set; }
+        public DbSet<OptionsDao> Options { get; set; }
+        public DbSet<OrganisationEventsDao> OrganisationEvents { get; set; }
+        public DbSet<PhasesDao> Phases { get; set; }
+        public DbSet<PlatformsDao> Platforms { get; set; }
+        public DbSet<ProjectImagesDao> ProjectImages { get; set; }
+        public DbSet<ProjectsDao> Projects { get; set; }
+        public DbSet<QuestionnaireQuestionsDao> QuestionnaireQuestions { get; set; }
+        public DbSet<UserActivitiesDao> UserActivities { get; set; }
+        public DbSet<VotesDao> Votes { get; set; }
+        public DbSet<ReportsDao> Reports { get; set; }
     }
 }

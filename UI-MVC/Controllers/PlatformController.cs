@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BL;
+using Domain.Identity;
 using Domain.Projects;
 using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
+    
     public class PlatformController : Controller
     {
         private readonly PlatformManager _platformMgr;
@@ -31,7 +32,6 @@ namespace UIMVC.Controllers
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
             }
-
             return View(platform);
         }
 
@@ -47,8 +47,9 @@ namespace UIMVC.Controllers
         #endregion
 
         #region Change
-
-        [Authorize]
+        
+        [HttpGet]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult ChangePlatform(int id)
         {
             Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
@@ -56,12 +57,11 @@ namespace UIMVC.Controllers
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
             }
-
             return View(platform);
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult ChangePlatform(Platform platform)
         {
             _platformMgr.EditPlatform(platform);
@@ -75,11 +75,6 @@ namespace UIMVC.Controllers
         public IActionResult CollectProject(int id)
         {
             Project project = _projectMgr.GetProject(id, false);
-
-            if (!project.Visible)
-            {
-                return RedirectToAction("Index", "Platform", new {id = project.Platform.Id});
-            }
 
             if (project.Visible && project.Id != 0)
             {
@@ -128,11 +123,49 @@ namespace UIMVC.Controllers
             if (_iqMgr.MakeVote(idea, user))
             {
                 return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                    {id = thread, message = "Stem gelukt, dankjewel!"});
+                    { id = thread, message = "Stem gelukt, dankjewel!" }); 
             }
-
+            
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                {id = thread, message = "Al gestemd op dit idee!"});
+                { id = thread, message = "Al gestemd op dit idee!" });
+        }
+
+        [Authorize]
+        public IActionResult AddReport(int idea, string flagger, int thread)
+        {
+            Idea ToReport = _iqMgr.GetIdea(idea);
+
+            Report report = new Report()
+            {
+                Idea = ToReport,
+                Flagger = new UimvcUser() {Id = flagger},
+                Reportee = new UimvcUser() {Id = ToReport.User.Id},
+                Status = ReportStatus.StatusNotViewed
+            };
+            
+            if (!Request.Form["Reason"].ToString().Equals(""))
+            {
+                Report alreadyReport = _iqMgr.GetAllReportsByIdea(idea).FirstOrDefault(
+                    r => r.Flagger.Id.Equals(flagger));
+
+                if (alreadyReport == null)
+                {
+                    report.Reason = Request.Form["Reason"].ToString();
+                    _iqMgr.MakeReport(report);
+
+                    ToReport.Reported = true;
+                    _iqMgr.EditIdea(ToReport);
+
+                    return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                        {id = thread, message = "Idee geraporteerd!"});
+                }
+
+                return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                    {id = thread, message = "Je oude rapport is nog in de behandeling"});
+            }
+            
+            return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
+                               { id = thread, message = "Je hebt geen reden opgegeven voor je rapport!" });
         }
         #endregion
         #endregion

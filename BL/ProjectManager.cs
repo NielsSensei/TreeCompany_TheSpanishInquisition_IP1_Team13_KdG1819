@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using DAL;
-using Domain;
+using DAL.repos;
 using Domain.Projects;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -11,13 +9,9 @@ namespace BL
 {
     public class ProjectManager
     {
-        // Added by NG
-        // Modified by NVZ
-        private ProjectRepository ProjectRepo { get; set; }
+        private ProjectRepository ProjectRepo { get; }
         public ModuleManager ModuleMan { get; }
-
-        // Added by NG
-        // Modified by NVZ
+        
         public ProjectManager()
         {
             ProjectRepo = new ProjectRepository();
@@ -60,16 +54,13 @@ namespace BL
             return GetProject(newProject.Id, false);
         }
 
+        
+        #region Project
         public void EditProject(Project project)
         {
             ProjectRepo.Update(project);
         }
-
-        /*
-         * Simple getter to get information about our Project. - NVZ
-         */
-
-
+        
         public Project GetProject(int projectId, bool details)
         {
             Project project = ProjectRepo.Read(projectId, details);
@@ -82,9 +73,6 @@ namespace BL
             return project;
         }
 
-        /*
-         * Might need this for initialisation. - NVZ
-         */
 
         public void RemoveProject(int projectId)
         {
@@ -97,28 +85,13 @@ namespace BL
         }
 
         #endregion
-
-        // Added by NG
-        // Modified by NVZ
-        //Phase 
-
-        #region
-
-        /*
-        * Setter method, we might need this for certain properties but
-        * certainly not all of them. Please make a difference between
-        * properties you need and the ones you do not. - NVZ
-        * 
-        */
+        
+        #region Phase
         public void EditPhase(Phase phase)
         {
             ProjectRepo.Update(phase);
         }
-
-        /*
-         * Might need this for initialisation - NVZ
-         * 
-         */
+        
         public IEnumerable<Phase> GetAllPhases(int projectId)
         {
             return ProjectRepo.ReadAllPhases(projectId);

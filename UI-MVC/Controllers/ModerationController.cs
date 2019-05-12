@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
+using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
@@ -20,31 +21,30 @@ namespace UIMVC.Controllers
         private readonly IdeationQuestionManager _ideaMgr;
         private readonly ModuleManager _moduleMgr;
         private readonly ProjectManager _projMgr;
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly UserManager<UimvcUser> _userManager;
+        private readonly RoleService _roleService;
 
-        public ModerationController(UserManager<UIMVCUser> userManager)
+        public ModerationController(UserManager<UimvcUser> userManager, RoleService roleService)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
             _moduleMgr = new ModuleManager();
             _projMgr = new ProjectManager();
             _userManager = userManager;
+            _roleService = roleService;
         }
 
         #region AddPlatform
-
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform()
         {
             ViewData["platforms"] = _platformMgr.ReadAllPlatforms();
             return View();
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform(CreatePlatformModel cpm)
         {
             if (cpm == null)
@@ -55,8 +55,8 @@ namespace UIMVC.Controllers
             {
                 Name = cpm.Name,
                 Url = cpm.Url,
-                Owners = new List<UIMVCUser>(),
-                Users = new List<UIMVCUser>()
+                Owners = new List<UimvcUser>(),
+                Users = new List<UimvcUser>()
             };
 
             var newPlatform = _platformMgr.MakePlatform(platform);
@@ -66,9 +66,8 @@ namespace UIMVC.Controllers
         #endregion
 
         #region Ideation
-        //TODO add rolecheck hero we need to be admin yeet *@
         //TODO sprint2 eens dat edwin klaar is met ze ding kunnen we ooit iets doen met events
-        [Authorize]
+        [Authorize(Roles = "SUPERADMIN, MODERATOR, ADMIN")]
         [HttpGet]
         public IActionResult AddIdeation(int project)
         {
@@ -90,12 +89,11 @@ namespace UIMVC.Controllers
 
             ViewData["Phases"] = availablePhases;
             ViewData["Project"] = project;
-           
+
             return View();
         }
-        
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddIdeation(CreateIdeationModel cim, int project, string user)
         {
@@ -104,53 +102,43 @@ namespace UIMVC.Controllers
                 return BadRequest("Ideation can't be null");
             }
 
-            Ideation i = new Ideation() 
+            Ideation i = new Ideation()
             {
                 Project = new Project() {Id = project},
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
-                User = new UIMVCUser(){Id = user},
-                type = ModuleType.Ideation,
+                User = new UimvcUser(){Id = user},
+                ModuleType = ModuleType.Ideation,
                 Title = cim.Title,
                 OnGoing = true
             };
-            
+
             if (cim.ExtraInfo != null)
             {
-                i.ExtraInfo = cim.ExtraInfo;  
+                i.ExtraInfo = cim.ExtraInfo;
             }
-            
+
             _moduleMgr.MakeIdeation(i);
-            
+
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
         
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
-        [HttpGet]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddTag(int ideation)
         {
-            ViewData["Ideation"] = ideation;
-
-            return View();
-        }
-        
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
-        [HttpPost]
-        public IActionResult AddTag(string tag, int ideation)
-        {
+            string tag = Request.Form["GetMeATag"].ToString();
+            
             if (tag == null)
             {
                 return BadRequest("Tag can't be null");
             }
-            
+
             _moduleMgr.MakeTag(tag, ideation, false);
-            
-            return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
+
+            return RedirectToAction("CollectIdeation", "Platform", 
+                new {Id = ideation});
         }
-        
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddCentralQuestion(int ideation)
         {
@@ -158,8 +146,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddCentralQuestion(CreateIdeationQuestionModel ciqm, int ideation)
         {
@@ -171,7 +158,7 @@ namespace UIMVC.Controllers
             IdeationQuestion iq = new IdeationQuestion()
             {
                Description = ciqm.Description,
-               SiteURL = ciqm.SiteURL,
+               SiteUrl = ciqm.SiteUrl,
                QuestionTitle = ciqm.QuestionTitle,
                Ideation = new Ideation(){ Id = ideation }
             };
@@ -181,8 +168,8 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult ChangeIdeation(int id)
         {
@@ -200,10 +187,10 @@ namespace UIMVC.Controllers
                     availablePhases.Add(phase);
                 }
             }
-            
+
             ViewData["Phases"] = availablePhases;
             ViewData["PhaseCount"] = availablePhases.Count;
-            
+
             ViewData["Ideation"] = id;
             AlterIdeationModel aim = new AlterIdeationModel()
             {
@@ -211,12 +198,12 @@ namespace UIMVC.Controllers
                 ExtraInfo = i.ExtraInfo,
                 ParentPhase = _projMgr.GetPhase(i.ParentPhase.Id)
             };
-            
+
             return View(aim);
         }
 
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult ConfirmChangeIdeation(int ideation)
         {
@@ -227,22 +214,29 @@ namespace UIMVC.Controllers
                 ExtraInfo = Request.Form["ExtraInfo"].ToString()
             };
 
-            if (Request.Form["ParentPhase"].ToString() != null)
+            if (!Request.Form["ParentPhase"].ToString().Equals(null))
             {
-                i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+                try
+                {
+                    i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+                    _moduleMgr.EditIdeation(i);
+                }
+                catch (FormatException e)
+                {
+                    _moduleMgr.EditIdeation(i);
+                }
+
             }
-            
-            _moduleMgr.EditIdeation(i);
-            
+
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
-        
-        //TODO add rolecheck hero we need to be admin yeet *@
-        [Authorize]
+
+
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult DestroyIdeation(int id)
         {
             Ideation i = _moduleMgr.GetIdeation(id);
-            
+
             List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
             foreach (IdeationQuestion iq in iqs)
             {
@@ -258,14 +252,13 @@ namespace UIMVC.Controllers
                 _ideaMgr.RemoveQuestion(iq.Id);
             }
 
-            _moduleMgr.RemoveModule(id, i.Project.Id, false);
+            _moduleMgr.RemoveModule(id, false);
 
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
         }
         #region Ideas
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectAllIdeas(string filter = "all")
         {
             List<Idea> ideas = new List<Idea>();
@@ -280,9 +273,8 @@ namespace UIMVC.Controllers
             return View(ideas);
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectIdea(int id)
         {
             Idea idea = _ideaMgr.GetIdea(id);
@@ -297,16 +289,15 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Errors", actionName: "HandleErrorCode", routeValues: id);
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult ReviewByAdmin(int idea, int  report)
         {
             Idea foundIdea = _ideaMgr.GetIdea(idea);
             Report foundReport = _ideaMgr.GetReport(report);
 
             foundIdea.ReviewByAdmin = true;
-            foundReport.Status = ReportStatus.STATUS_NEEDADMIN;
+            foundReport.Status = ReportStatus.StatusNeedAdmin;
 
             _ideaMgr.EditIdea(foundIdea);
             _ideaMgr.EditReport(foundReport);
@@ -314,27 +305,25 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "admin");
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult ApproveReport(int report)
         {
             Report foundReport = _ideaMgr.GetReport(report);
 
-            foundReport.Status = ReportStatus.STATUS_APPROVED;
+            foundReport.Status = ReportStatus.StatusApproved;
 
             _ideaMgr.EditReport(foundReport);
 
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "report");
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DenyReport(int report, int idea)
         {
             Report foundReport = _ideaMgr.GetReport(report);
-            foundReport.Status = ReportStatus.STATUS_DENIED;
+            foundReport.Status = ReportStatus.StatusDenied;
             _ideaMgr.EditReport(foundReport);
 
             HandleRemainingReports(idea);
@@ -342,9 +331,8 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas", routeValues: "report");
         }
 
-        //TODO: Voeg hier een ROLE toe zodat je niet via de link hier geraakt!
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DestroyReport(int report, int idea)
         {
             _ideaMgr.RemoveReport(report);
@@ -355,15 +343,27 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public IActionResult DestroyIdea(int idea)
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
+        public IActionResult DestroyIdea(int idea, string from, int thread)
         {
             Idea toDelete = _ideaMgr.GetIdea(idea);
             toDelete.IsDeleted = true;
-            
+
             _ideaMgr.EditIdea(toDelete);
-            
-            return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+
+            if (from.Equals("ModerationPanel"))
+            {
+                return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
+            }
+
+
+            if (from.Equals("IdeationThread") && thread > 0)
+            {
+                return RedirectToAction("CollectIdeationThread", "Platform",
+                    new {Id = thread});
+            }
+
+            return RedirectToAction("HandleErrorCode", "Errors", 404);
         }
 
 
@@ -384,12 +384,12 @@ namespace UIMVC.Controllers
 
         #region UIMVCUser
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectAllUsers(string sortOrder, string searchString)
         {
 
             ViewData["CurrentFilter"] = searchString;
-            var users = (IEnumerable<UIMVCUser>)_userManager.Users;
+            var users = (IEnumerable<UimvcUser>)_userManager.Users;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -413,25 +413,52 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public async Task<IActionResult> ToggleBanUser(string userId)
         {
-            UIMVCUser userFound = await _userManager.FindByIdAsync(userId);
+            UimvcUser userFound = await _userManager.FindByIdAsync(userId);
 
             if (userFound == null) return RedirectToAction("CollectAllUsers");
+            if (await _roleService.IsSameRoleOrHigher(HttpContext.User, userFound)) return RedirectToAction("CollectAllUsers");
 
             userFound.Banned = !userFound.Banned;
+            _userManager.SetLockoutEnabledAsync(userFound, userFound.Banned);
+            if (userFound.Banned)
+            {
+                _userManager.SetLockoutEndDateAsync(userFound, DateTime.MaxValue);
+            }
             var result = await _userManager.UpdateAsync(userFound);
+
+
 
             return RedirectToAction("CollectAllUsers");
             // This part is still borked.
         }
 
-        [HttpGet]
-        [Authorize]
-        public IActionResult VerifyUser(string userId)
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        public async Task<IActionResult> SetRole(AssignRoleModel arm, string userId)
         {
-            throw new NotImplementedException("Roles need to be implemented");
+            var user = await _userManager.FindByIdAsync(userId);
+            string roletext = Request.Form["Role"];
+//            if (!roletext.Any()) return RedirectToAction("CollectAllUsers", "Moderation");
+//            var role = (Role) Enum.Parse(typeof(Role), roletext);
+            Object roleParse = null;
+            if (!Enum.TryParse(typeof(Role), roletext, out roleParse)) return RedirectToAction("CollectAllUsers", "Moderation");
+            var role = (Role) roleParse;
+
+            // TODO Send a message to the user stating that the role could not be added
+            if (!await _roleService.IsSameRoleOrLower(User, role))
+            {
+                if (await _userManager.IsInRoleAsync(user, roletext))
+                {
+                    await _userManager.RemoveFromRoleAsync(user, roletext);
+                }
+                else
+                {
+                    _roleService.AssignToRole(user, role);
+                }
+            }
+            return RedirectToAction("CollectAllUsers", "Moderation");
         }
         #endregion
     }

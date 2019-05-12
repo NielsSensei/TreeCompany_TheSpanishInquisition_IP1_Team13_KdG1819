@@ -15,8 +15,10 @@ DROP TABLE IF EXISTS Useractivities
 DROP TABLE IF EXISTS Devices
 DROP TABLE IF EXISTS Votes
 DROP TABLE IF EXISTS Reports
+
 DROP TABLE IF EXISTS Phases
 DROP TABLE IF EXISTS Projects
+
 DROP TABLE IF EXISTS Platforms
 
 /*TABELLEN AANMAKEN*/
@@ -53,6 +55,8 @@ CREATE TABLE Projects(
 	Title NVARCHAR(50) NOT NULL,
 	Goal NVARCHAR(255) NOT NULL,
 	Status VARCHAR(25) NOT NULL,
+	StartDate DATE,
+	EndDate DATE,
 	Visible BIT NOT NULL,
 	ReactionCount INT,
 	LikeCount INT,
@@ -63,6 +67,7 @@ CREATE TABLE Projects(
 	/*Constraints*/
 	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID),
 	CONSTRAINT ck_Projects_Status CHECK (Status = UPPER(Status))
+
 )
 
 CREATE TABLE Phases(
@@ -71,7 +76,6 @@ CREATE TABLE Phases(
 	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
-	IsCurrent BIT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Phases PRIMARY KEY(PhaseID),
@@ -261,145 +265,145 @@ CREATE TABLE Reports(
 	CONSTRAINT pk_Reports PRIMARY KEY(ReportID)
 )
 
-create table AspNetRoles
-(
-	Id TEXT not null
-		constraint PK_AspNetRoles
-			primary key,
-	Name TEXT,
-	NormalizedName TEXT,
-	ConcurrencyStamp TEXT
-)
-;
+create table AspNetRoles	
+(	
+	Id TEXT not null	
+		constraint PK_AspNetRoles	
+			primary key,	
+	Name TEXT,	
+	NormalizedName TEXT,	
+	ConcurrencyStamp TEXT	
+)	
+;	
 
-create table AspNetRoleClaims
-(
-	Id INTEGER not null
-		constraint PK_AspNetRoleClaims
-			primary key
-			 autoincrement,
-	RoleId TEXT not null
-		constraint FK_AspNetRoleClaims_AspNetRoles_RoleId
-			references AspNetRoles
-				on delete cascade,
-	ClaimType TEXT,
-	ClaimValue TEXT
-)
-;
+ create table AspNetRoleClaims	
+(	
+	Id INTEGER not null	
+		constraint PK_AspNetRoleClaims	
+			primary key	
+			 autoincrement,	
+	RoleId TEXT not null	
+		constraint FK_AspNetRoleClaims_AspNetRoles_RoleId	
+			references AspNetRoles	
+				on delete cascade,	
+	ClaimType TEXT,	
+	ClaimValue TEXT	
+)	
+;	
 
-create index IX_AspNetRoleClaims_RoleId
-	on AspNetRoleClaims (RoleId)
-;
+ create index IX_AspNetRoleClaims_RoleId	
+	on AspNetRoleClaims (RoleId)	
+;	
 
-create unique index RoleNameIndex
-	on AspNetRoles (NormalizedName)
-;
+ create unique index RoleNameIndex	
+	on AspNetRoles (NormalizedName)	
+;	
 
-create table AspNetUsers
-(
-	Id TEXT not null
-		constraint PK_AspNetUsers
-			primary key,
-	UserName TEXT,
-	NormalizedUserName TEXT,
-	Email TEXT,
-	NormalizedEmail TEXT,
-	EmailConfirmed INTEGER not null,
-	PasswordHash TEXT,
-	SecurityStamp TEXT,
-	ConcurrencyStamp TEXT,
-	PhoneNumber TEXT,
-	PhoneNumberConfirmed INTEGER not null,
-	TwoFactorEnabled INTEGER not null,
-	LockoutEnd TEXT,
-	LockoutEnabled INTEGER not null,
-	AccessFailedCount INTEGER not null,
-	Name TEXT,
-	Zipcode TEXT,
-	Gender INTEGER not null,
-	DateOfBirth TEXT not null,
-	PlatformDetails INTEGER not null,
-	OrgName TEXT,
-	Description TEXT,
-	Banned INTEGER not null,
-	Active INTEGER not null
-)
-;
+ create table AspNetUsers	
+(	
+	Id TEXT not null	
+		constraint PK_AspNetUsers	
+			primary key,	
+	UserName TEXT,	
+	NormalizedUserName TEXT,	
+	Email TEXT,	
+	NormalizedEmail TEXT,	
+	EmailConfirmed INTEGER not null,	
+	PasswordHash TEXT,	
+	SecurityStamp TEXT,	
+	ConcurrencyStamp TEXT,	
+	PhoneNumber TEXT,	
+	PhoneNumberConfirmed INTEGER not null,	
+	TwoFactorEnabled INTEGER not null,	
+	LockoutEnd TEXT,	
+	LockoutEnabled INTEGER not null,	
+	AccessFailedCount INTEGER not null,	
+	Name TEXT,	
+	Zipcode TEXT,	
+	Gender INTEGER not null,	
+	DateOfBirth TEXT not null,	
+	PlatformDetails INTEGER not null,	
+	OrgName TEXT,	
+	Description TEXT,	
+	Banned INTEGER not null,	
+	Active INTEGER not null	
+)	)
+;	
 
-create table AspNetUserClaims
-(
-	Id INTEGER not null
-		constraint PK_AspNetUserClaims
-			primary key
-			 autoincrement,
-	UserId TEXT not null
-		constraint FK_AspNetUserClaims_AspNetUsers_UserId
-			references AspNetUsers
-				on delete cascade,
-	ClaimType TEXT,
-	ClaimValue TEXT
-)
-;
+ create table AspNetUserClaims	
+(	
+	Id INTEGER not null	
+		constraint PK_AspNetUserClaims	
+			primary key	
+			 autoincrement,	
+	UserId TEXT not null	
+		constraint FK_AspNetUserClaims_AspNetUsers_UserId	
+			references AspNetUsers	
+				on delete cascade,	
+	ClaimType TEXT,	
+	ClaimValue TEXT	
+)	
+;	
 
-create index IX_AspNetUserClaims_UserId
-	on AspNetUserClaims (UserId)
-;
+ create index IX_AspNetUserClaims_UserId	
+	on AspNetUserClaims (UserId)	
+;	
 
-create table AspNetUserLogins
-(
-	LoginProvider TEXT not null,
-	ProviderKey TEXT not null,
-	ProviderDisplayName TEXT,
-	UserId TEXT not null
-		constraint FK_AspNetUserLogins_AspNetUsers_UserId
-			references AspNetUsers
-				on delete cascade,
-	constraint PK_AspNetUserLogins
-		primary key (LoginProvider, ProviderKey)
-)
-;
+ create table AspNetUserLogins	
+(	
+	LoginProvider TEXT not null,	
+	ProviderKey TEXT not null,	
+	ProviderDisplayName TEXT,	
+	UserId TEXT not null	
+		constraint FK_AspNetUserLogins_AspNetUsers_UserId	
+			references AspNetUsers	
+				on delete cascade,	
+	constraint PK_AspNetUserLogins	
+		primary key (LoginProvider, ProviderKey)	
+)	
+;	
 
-create index IX_AspNetUserLogins_UserId
-	on AspNetUserLogins (UserId)
-;
+ create index IX_AspNetUserLogins_UserId	
+	on AspNetUserLogins (UserId)	
+;	
 
-create table AspNetUserRoles
-(
-	UserId TEXT not null
-		constraint FK_AspNetUserRoles_AspNetUsers_UserId
-			references AspNetUsers
-				on delete cascade,
-	RoleId TEXT not null
-		constraint FK_AspNetUserRoles_AspNetRoles_RoleId
-			references AspNetRoles
-				on delete cascade,
-	constraint PK_AspNetUserRoles
-		primary key (UserId, RoleId)
-)
-;
+ create table AspNetUserRoles	
+(	
+	UserId TEXT not null	
+		constraint FK_AspNetUserRoles_AspNetUsers_UserId	
+			references AspNetUsers	
+				on delete cascade,	
+	RoleId TEXT not null	
+		constraint FK_AspNetUserRoles_AspNetRoles_RoleId	
+			references AspNetRoles	
+				on delete cascade,	
+	constraint PK_AspNetUserRoles	
+		primary key (UserId, RoleId)	
+)	
+;	
 
-create index IX_AspNetUserRoles_RoleId
-	on AspNetUserRoles (RoleId)
-;
+ create index IX_AspNetUserRoles_RoleId	
+	on AspNetUserRoles (RoleId)	
+;	
 
-create table AspNetUserTokens
-(
-	UserId TEXT not null
-		constraint FK_AspNetUserTokens_AspNetUsers_UserId
-			references AspNetUsers
-				on delete cascade,
-	LoginProvider TEXT not null,
-	Name TEXT not null,
-	Value TEXT,
-	constraint PK_AspNetUserTokens
-		primary key (UserId, LoginProvider, Name)
-)
-;
+ create table AspNetUserTokens	
+(	
+	UserId TEXT not null	
+		constraint FK_AspNetUserTokens_AspNetUsers_UserId	
+			references AspNetUsers	
+				on delete cascade,	
+	LoginProvider TEXT not null,	
+	Name TEXT not null,	
+	Value TEXT,	
+	constraint PK_AspNetUserTokens	
+		primary key (UserId, LoginProvider, Name)	
+)	
+;	
 
-create index EmailIndex
-	on AspNetUsers (NormalizedEmail)
-;
+ create index EmailIndex	
+	on AspNetUsers (NormalizedEmail)	
+;	
 
-create unique index UserNameIndex
-	on AspNetUsers (NormalizedUserName)
+ create unique index UserNameIndex	
+	on AspNetUsers (NormalizedUserName)	
 ;

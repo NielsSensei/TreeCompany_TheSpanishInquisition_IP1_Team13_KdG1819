@@ -1,35 +1,32 @@
 using System.Collections.Generic;
 using Domain.UserInput;
-using DAL.Contexts;
 using System.Data;
-using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using DAL.Contexts;
+using DAL.Data_Access_Objects;
 using Domain.Identity;
 
-namespace DAL
+namespace DAL.repos
 {
     public class IdeationVoteRepository : IRepository<Vote>
     {
-        // Added by NVZ
-        private CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext _ctx;
 
         public IdeationVoteRepository()
         {
-            ctx = new CityOfIdeasDbContext();
+            _ctx = new CityOfIdeasDbContext();
         }
 
-        // Added by NVZ
-        // Standard Methods
-        #region
-        private VotesDTO ConvertToDTO(Vote obj)
+        #region Conversion Methods
+        private VotesDao ConvertToDao(Vote obj)
         {
-            VotesDTO v = new VotesDTO
+            VotesDao v = new VotesDao
             {
-                VoteID = obj.Id,
-                InputID = obj.Idea.Id,
+                VoteId = obj.Id,
+                DeviceId = obj.Device.Id,
+                InputId = obj.Idea.Id,
                 InputType = 2, //Voorlopig Idee
-                UserID = obj.User.Id,
                 UserMail = obj.UserMail,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY,
@@ -38,71 +35,71 @@ namespace DAL
 
             if (obj.Device != null)
             {
-                v.DeviceID = obj.Device.Id;
-            }
-
-            return v;
-        }    
-
-        private Vote ConvertToDomain(VotesDTO DTO)
-        {
-            Vote v = new Vote()
-            {
-                Id = DTO.VoteID,
-                User = new UIMVCUser() { Id = DTO.UserID},
-                Idea = new Idea { Id = DTO.InputID },
-                UserMail = DTO.UserMail,
-                LocationX = DTO.LocationX,
-                LocationY = DTO.LocationY,
-                Choices = ExtensionMethods.StringToList(DTO.Choices)
-            };
-
-            if (DTO.DeviceID != 0)
-            {
-                v.Device = new IOT_Device(){ Id = DTO.DeviceID };
+                v.DeviceId = obj.Device.Id;
             }
             
             return v;
+        }    
+
+        private Vote ConvertToDomain(VotesDao dao)
+        {
+            Vote v = new Vote
+            {
+                Id = dao.VoteId,
+                User = new UimvcUser() { Id = dao.UserId},
+                Idea = new Idea { Id = dao.InputId },
+                UserMail = dao.UserMail,
+                LocationX = dao.LocationX,
+                LocationY = dao.LocationY,
+                Choices = ExtensionMethods.StringToList(dao.Choices)
+            };
+
+            if (dao.DeviceId != 0)
+            {
+                v.Device = new IotDevice(){ Id = dao.DeviceId};
+            }
+
+            return v;
         }
 
-        private DevicesDTO ConvertToDTO(IOT_Device obj)
+        private DevicesDao ConvertToDao(IotDevice obj)
         {
-            return new DevicesDTO
+            return new DevicesDao
             {
-                DeviceID = obj.Id,
+                DeviceId = obj.Id,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY
             };
         }
 
-        private IOT_Device ConvertToDomain(DevicesDTO DTO)
+        private IotDevice ConvertToDomain(DevicesDao dao)
         {
-            return new IOT_Device
+            return new IotDevice
             {
-                Id = DTO.DeviceID,
-                LocationX = DTO.LocationX,
-                LocationY = DTO.LocationY
+                Id = dao.DeviceId,
+                LocationX = dao.LocationX,
+                LocationY = dao.LocationY
             };
         }
+        #endregion
         
+        #region Id generation
         private int FindNextAvailableVoteId()
         {               
-            if (!ctx.Votes.Any()) return 1;
+            if (!_ctx.Votes.Any()) return 1;
             int newId = ReadAll().Max(vote => vote.Id) + 1;
             return newId;
         }
         
         private int FindNextAvailableDeviceId()
         {          
-            if (!ctx.Devices.Any()) return 1;
+            if (!_ctx.Devices.Any()) return 1;
             int newId = ReadAllDevices().Max(device => device.Id)+1;
             return newId;
         }
         #endregion
-
-        // Added by NVZ
-        // Vote CRUD
-        #region
+        
+        #region Vote CRUD
         public Vote Create(Vote obj)
         {
             if (obj.Device != null)
@@ -116,29 +113,28 @@ namespace DAL
                         throw new DuplicateNameException("Vote(ID=" + obj.Id + ") en Vote(ID=" + v.Id + ") hebben dezelfde email en Device(ID=" + 
                                                          obj.Device.Id + "), dit is absoluut niet toegestaan!");
                     }
-                }  
+                } 
             }
             
             obj.Id = FindNextAvailableVoteId();
-            ctx.Votes.Add(ConvertToDTO(obj));
-            ctx.SaveChanges();
+            _ctx.Votes.Add(ConvertToDao(obj));
+            _ctx.SaveChanges();
 
             return obj;
         }
         
         public Vote Read(int id, bool details)
         {
-            VotesDTO voteDTO = null;
-            voteDTO = details ? ctx.Votes.AsNoTracking().First(p => p.VoteID == id) : ctx.Votes.First(p => p.VoteID == id);
-            ExtensionMethods.CheckForNotFound(voteDTO, "Vote", id);
+            VotesDao voteDao = details ? _ctx.Votes.AsNoTracking().First(p => p.VoteId == id) : _ctx.Votes.First(p => p.VoteId == id);
+            ExtensionMethods.CheckForNotFound(voteDao, "Vote", id);
 
-            return ConvertToDomain(voteDTO);
+            return ConvertToDomain(voteDao);
         }
         
         public void Update(Vote obj)
         {
-            VotesDTO newVote = ConvertToDTO(obj);
-            VotesDTO foundVote = ctx.Votes.First(vote => vote.VoteID == obj.Id);
+            VotesDao newVote = ConvertToDao(obj);
+            VotesDao foundVote = _ctx.Votes.First(vote => vote.VoteId == obj.Id);
             if (foundVote != null)
             {
                 foundVote.UserMail = newVote.UserMail;
@@ -146,14 +142,14 @@ namespace DAL
                 foundVote.LocationY = newVote.LocationY;
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
         
         public void Delete(int id)
         {
-            VotesDTO toDelete = ctx.Votes.First(v => v.VoteID == id);
-            ctx.Votes.Remove(toDelete);
-            ctx.SaveChanges();
+            VotesDao toDelete = _ctx.Votes.First(v => v.VoteId == id);
+            _ctx.Votes.Remove(toDelete);
+            _ctx.SaveChanges();
         }
 
         public void DeleteVotes(int id)
@@ -170,34 +166,31 @@ namespace DAL
         {
             List<Vote> myQuery = new List<Vote>();
 
-            foreach (VotesDTO DTO in ctx.Votes)
+            foreach (VotesDao dao in _ctx.Votes)
             {
-                myQuery.Add(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;
         }
 
-        public IEnumerable<Vote> ReadAll(int deviceID)
+        public IEnumerable<Vote> ReadAll(int deviceId)
         {
-            return ReadAll().ToList().FindAll(vote => vote.Device.Id == deviceID);
+            return ReadAll().ToList().FindAll(vote => vote.Device.Id == deviceId);
         }
 
-        public IEnumerable<Vote> ReadAllByIdea(int ideaID)
+        public IEnumerable<Vote> ReadAllByIdea(int ideaId)
         {
-            return ReadAll().ToList().FindAll(vote => vote.Idea.Id == ideaID);
+            return ReadAll().ToList().FindAll(vote => vote.Idea.Id == ideaId);
         }
         #endregion
-               
         
-        // Added by NVZ
-        // Devices CRUD
-        #region
-        public IOT_Device Create(IOT_Device obj)
+        #region Devices CRUD
+        public IotDevice Create(IotDevice obj)
         {
-            IEnumerable<IOT_Device> devices = ReadAllDevices();
+            IEnumerable<IotDevice> devices = ReadAllDevices();
 
-            foreach (IOT_Device iot in devices)
+            foreach (IotDevice iot in devices)
             {
                 if (iot.LocationX == obj.LocationX && iot.LocationY == obj.LocationY)
                 {
@@ -207,48 +200,47 @@ namespace DAL
             }
 
             obj.Id = FindNextAvailableDeviceId();
-            ctx.Devices.Add(ConvertToDTO(obj));
-            ctx.SaveChanges();
+            _ctx.Devices.Add(ConvertToDao(obj));
+            _ctx.SaveChanges();
 
             return obj;
         }
 
-        public IOT_Device ReadDevice(int deviceID, bool details)
+        public IotDevice ReadDevice(int deviceId, bool details)
         {
-            DevicesDTO deviceDTO = null;
-            deviceDTO = details ? ctx.Devices.AsNoTracking().First(d => d.DeviceID == deviceID) : ctx.Devices.First(d => d.DeviceID == deviceID);
-            ExtensionMethods.CheckForNotFound(deviceDTO, "IOT_Device", deviceID);
+            DevicesDao deviceDao = details ? _ctx.Devices.AsNoTracking().First(d => d.DeviceId == deviceId) : _ctx.Devices.First(d => d.DeviceId == deviceId);
+            ExtensionMethods.CheckForNotFound(deviceDao, "IOT_Device", deviceId);
 
-            return ConvertToDomain(deviceDTO);
+            return ConvertToDomain(deviceDao);
         }
 
-        public void Update(IOT_Device obj)
+        public void Update(IotDevice obj)
         {
-            DevicesDTO newDevice = ConvertToDTO(obj);
-            DevicesDTO foundDevice = ctx.Devices.First(d => d.DeviceID == obj.Id);
+            DevicesDao newDevice = ConvertToDao(obj);
+            DevicesDao foundDevice = _ctx.Devices.First(d => d.DeviceId == obj.Id);
             if(foundDevice != null)
             {
                 foundDevice.LocationX = newDevice.LocationX;
                 foundDevice.LocationY = newDevice.LocationY;
             }
             
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
         public void DeleteDevice(int id)
         {
-            DevicesDTO toDelete = ctx.Devices.First(d => d.DeviceID == id);
-            ctx.Devices.Remove(toDelete);
-            ctx.SaveChanges();
+            DevicesDao toDelete = _ctx.Devices.First(d => d.DeviceId == id);
+            _ctx.Devices.Remove(toDelete);
+            _ctx.SaveChanges();
         }
 
-        public IEnumerable<IOT_Device> ReadAllDevices()
+        public IEnumerable<IotDevice> ReadAllDevices()
         {
-            List<IOT_Device> myQuery = new List<IOT_Device>();
+            List<IotDevice> myQuery = new List<IotDevice>();
 
-            foreach (DevicesDTO DTO in ctx.Devices)
+            foreach (DevicesDao dao in _ctx.Devices)
             {
-                myQuery.Add(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;

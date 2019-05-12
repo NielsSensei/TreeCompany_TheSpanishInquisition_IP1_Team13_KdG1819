@@ -1,50 +1,44 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Domain.UserInput;
 using DAL.Contexts;
-using DAL.Data_Transfer_Objects;
+using DAL.Data_Access_Objects;
+using Domain.UserInput;
 using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
-using Domain.Users;
 
 namespace DAL.repos
 {
     public class IdeationQuestionsRepository : IRepository<IdeationQuestion>
     {
-        // Added by DM
-        // Modified by NVZ
-        private readonly CityOfIdeasDbContext ctx;
-
-        // Added by NVZ
+        private readonly CityOfIdeasDbContext _ctx;
+        
         public IdeationQuestionsRepository()
         {
-            ctx = new CityOfIdeasDbContext();
+            _ctx = new CityOfIdeasDbContext();
         }
-
-        // Added by NVZ
-        // Standard Methods
-        #region
-        private IdeationQuestionsDTO ConvertToDTO(IdeationQuestion obj)
+        
+        #region Conversion Methods
+        private IdeationQuestionsDao ConvertToDao(IdeationQuestion obj)
         {
-            return new IdeationQuestionsDTO
+            return new IdeationQuestionsDao
             {
-                IQuestionID = obj.Id,
-                ModuleID = obj.Ideation.Id,
+                IquestionId = obj.Id,
+                ModuleId = obj.Ideation.Id,
                 QuestionTitle = obj.QuestionTitle,
                 Description = obj.Description,
-                WebsiteLink = obj.SiteURL              
+                WebsiteLink = obj.SiteUrl              
             };
         }
 
-        private IdeasDTO ConvertToDTO(Idea obj)
+        private IdeasDao ConvertToDao(Idea obj)
         {
-            IdeasDTO DTO =  new IdeasDTO()
+            IdeasDao dao =  new IdeasDao()
             {
-                IdeaID = obj.Id,
-                IQuestionID = obj.IdeaQuestion.Id,
-                UserID = obj.User.Id,
+                IdeaId = obj.Id,
+                IquestionId = obj.IdeaQuestion.Id,
+                UserId = obj.User.Id,
                 Reported = obj.Reported,
                 ReviewByAdmin = obj.ReviewByAdmin,
                 Title = obj.Title,
@@ -55,224 +49,224 @@ namespace DAL.repos
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
                 IsDeleted = obj.IsDeleted,
-                ParentID = obj.ParentIdea.Id,
-                DeviceID = obj.Device.Id
+                ParentId = 0,
+                DeviceId = 0
             };
 
-            if (obj.ParentIdea == null)
+            if (obj.ParentIdea != null)
             {
-                DTO.ParentID = 0;
+                dao.ParentId = obj.ParentIdea.Id;
             }
 
-            if (obj.Device == null)
+            if (obj.Device != null)
             {
-                DTO.DeviceID = 0;
+                dao.DeviceId = obj.Device.Id;
             }
             
-            return DTO;
+            return dao;
         }
 
-        private IdeaFieldsDTO ConvertToDTO(Field obj)
+        private IdeaFieldsDao ConvertToDao(Field obj)
         {
-            return new IdeaFieldsDTO
+            return new IdeaFieldsDao
             {
-                FieldID = obj.Id,
-                IdeaID = obj.Idea.Id,
+                FieldId = obj.Id,
+                IdeaId = obj.Idea.Id,
                 FieldText = obj.Text
             };
         }
 
-        private IdeaFieldsDTO ConvertToDTO(ClosedField obj)
+        private IdeaFieldsDao ConvertToDao(ClosedField obj)
         {
-            return new IdeaFieldsDTO
+            return new IdeaFieldsDao
             {
-                FieldID = obj.Id,
-                IdeaID = obj.Idea.Id,
+                FieldId = obj.Id,
+                IdeaId = obj.Idea.Id,
                 FieldText = obj.Text,
                 FieldStrings = ExtensionMethods.ListToString(obj.Options)
             };
         }
 
-        private IdeaFieldsDTO ConvertToDTO(ImageField obj)
+        private IdeaFieldsDao ConvertToDao(ImageField obj)
         {
-            return new IdeaFieldsDTO
+            return new IdeaFieldsDao
             {
-                FieldID = obj.Id,
-                IdeaID = obj.Idea.Id,
+                FieldId = obj.Id,
+                IdeaId = obj.Idea.Id,
                 FieldText = obj.Text,
                 Url = obj.Url
                 //UploadedImage = obj.UploadedImage,
             };
         }
 
-        private IdeaFieldsDTO ConvertToDTO(VideoField obj)
+        private IdeaFieldsDao ConvertToDao(VideoField obj)
         {
-            return new IdeaFieldsDTO
+            return new IdeaFieldsDao
             {
-                FieldID = obj.Id,
-                IdeaID = obj.Idea.Id,
+                FieldId = obj.Id,
+                IdeaId = obj.Idea.Id,
                 FieldText = obj.Text,
                 Url = obj.Url
                 //UploadedVideo
             };
         }
 
-        private IdeaFieldsDTO ConvertToDTO(MapField obj)
+        private IdeaFieldsDao ConvertToDao(MapField obj)
         {
-            return new IdeaFieldsDTO
+            return new IdeaFieldsDao
             {
-                FieldID = obj.Id,
-                IdeaID = obj.Idea.Id,
+                FieldId = obj.Id,
+                IdeaId = obj.Idea.Id,
                 FieldText = obj.Text,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY
             };
         }
 
-        private IdeationQuestion ConvertToDomain(IdeationQuestionsDTO DTO)
+        private IdeationQuestion ConvertToDomain(IdeationQuestionsDao dao)
         {
             return new IdeationQuestion
             {
-                Id = DTO.IQuestionID,
-                Description = DTO.Description,
-                SiteURL = DTO.WebsiteLink,
-                QuestionTitle = DTO.QuestionTitle,
-                Ideation = new Ideation { Id = DTO.ModuleID }
+                Id = dao.IquestionId,
+                Description = dao.Description,
+                SiteUrl = dao.WebsiteLink,
+                QuestionTitle = dao.QuestionTitle,
+                Ideation = new Ideation { Id = dao.ModuleId }
             };
         }
 
-        private Idea ConvertToDomain(IdeasDTO DTO)
+        private Idea ConvertToDomain(IdeasDao dao)
         {
             return new Idea
             {
-                Id = DTO.IdeaID,
-                IdeaQuestion = new IdeationQuestion { Id = DTO.IQuestionID },
-                User = new UIMVCUser() { Id = DTO.UserID },
-                Reported = DTO.Reported,
-                ReviewByAdmin = DTO.ReviewByAdmin,
-                Title = DTO.Title,
-                Visible = DTO.Visible,
-                VoteCount = DTO.VoteCount,
-                RetweetCount = DTO.RetweetCount,
-                ShareCount= DTO.ShareCount,
-                Status = DTO.Status,
-                VerifiedUser = DTO.VerifiedUser,
-                IsDeleted = DTO.IsDeleted,
-                ParentIdea = new Idea { Id = DTO.ParentID },
-                Device = new IOT_Device { Id = DTO.DeviceID }
+                Id = dao.IdeaId,
+                IdeaQuestion = new IdeationQuestion { Id = dao.IquestionId },
+                User = new UimvcUser() { Id = dao.UserId },
+                Reported = dao.Reported,
+                ReviewByAdmin = dao.ReviewByAdmin,
+                Title = dao.Title,
+                Visible = dao.Visible,
+                VoteCount = dao.VoteCount,
+                RetweetCount = dao.RetweetCount,
+                ShareCount= dao.ShareCount,
+                Status = dao.Status,
+                VerifiedUser = dao.VerifiedUser,
+                IsDeleted = dao.IsDeleted,
+                ParentIdea = new Idea { Id = dao.ParentId },
+                Device = new IotDevice { Id = dao.DeviceId }
             };
         }
 
-        private Report ConvertToDomain(ReportsDTO DTO)
+        private Report ConvertToDomain(ReportsDao dao)
         {
             return new Report()
             {
-                Id = DTO.ReportID,
-                Idea = new Idea { Id = DTO.IdeaID },
-                Flagger = new UIMVCUser() { Id = DTO.FlaggerID },
-                Reportee = new UIMVCUser() { Id = DTO.ReporteeID },
-                Reason = DTO.Reason,
-                Status = (ReportStatus) DTO.ReportApproved
+                Id = dao.ReportId,
+                Idea = new Idea { Id = dao.IdeaId },
+                Flagger = new UimvcUser() { Id = dao.FlaggerId },
+                Reportee = new UimvcUser() { Id = dao.ReporteeId },
+                Reason = dao.Reason,
+                Status = (ReportStatus) dao.ReportApproved
             };
         }
         
-        private Field ConvertFieldToDomain(IdeaFieldsDTO DTO)
+        private Field ConvertFieldToDomain(IdeaFieldsDao dao)
         {
             return new Field {
-                Id = DTO.FieldID,
-                Idea = new Idea { Id = DTO.IdeaID },
-                Text = DTO.FieldText
+                Id = dao.FieldId,
+                Idea = new Idea { Id = dao.IdeaId },
+                Text = dao.FieldText
             };
         }
 
-        private ClosedField ConvertClosedFieldToDomain(IdeaFieldsDTO DTO)
+        private ClosedField ConvertClosedFieldToDomain(IdeaFieldsDao dao)
         {
             return new ClosedField
             {
-                Id = DTO.FieldID,
-                Idea = new Idea { Id = DTO.IdeaID },
-                Options = ExtensionMethods.StringToList(DTO.FieldStrings)
+                Id = dao.FieldId,
+                Idea = new Idea { Id = dao.IdeaId },
+                Options = ExtensionMethods.StringToList(dao.FieldStrings)
             };
         }
 
-        private MapField ConvertMapFieldToDomain(IdeaFieldsDTO DTO)
+        private MapField ConvertMapFieldToDomain(IdeaFieldsDao dao)
         {
             return new MapField
             {
-                Id = DTO.FieldID,
-                Idea = new Idea { Id = DTO.IdeaID },
-                LocationX = DTO.LocationX,
-                LocationY = DTO.LocationY
+                Id = dao.FieldId,
+                Idea = new Idea { Id = dao.IdeaId },
+                LocationX = dao.LocationX,
+                LocationY = dao.LocationY
             };
         }
 
-        private ImageField ConvertImageFieldToDomain(IdeaFieldsDTO DTO)
+        private ImageField ConvertImageFieldToDomain(IdeaFieldsDao dao)
         {
             return new ImageField
             {
-                Id = DTO.FieldID,
-                Idea = new Idea { Id = DTO.IdeaID },
-                Url = DTO.Url
+                Id = dao.FieldId,
+                Idea = new Idea { Id = dao.IdeaId },
+                Url = dao.Url
                 //UploadedVideo= DTO.UploadedVideo
             };
         }
 
-        private VideoField ConvertVideoFieldToDomain(IdeaFieldsDTO DTO)
+        private VideoField ConvertVideoFieldToDomain(IdeaFieldsDao dao)
         {
             return new VideoField
             {
-                Id = DTO.FieldID,
-                Idea = new Idea { Id = DTO.IdeaID },
-                Url = DTO.Url
+                Id = dao.FieldId,
+                Idea = new Idea { Id = dao.IdeaId },
+                Url = dao.Url
                 //UploadedImage = DTO.UploadedImage
             };
         }
 
-        private ReportsDTO ConvertToDTO(Report obj)
+        private ReportsDao ConvertToDao(Report obj)
         {
-            return new ReportsDTO()
+            return new ReportsDao()
             {
-                ReportID   = obj.Id,
-                IdeaID = obj.Idea.Id,
-                FlaggerID = obj.Flagger.Id,
-                ReporteeID = obj.Reportee.Id,
+                ReportId   = obj.Id,
+                IdeaId = obj.Idea.Id,
+                FlaggerId = obj.Flagger.Id,
+                ReporteeId = obj.Reportee.Id,
                 Reason = obj.Reason,
                 ReportApproved = (byte) obj.Status
             };
         }
+        #endregion
         
+        #region Id Generation
         private int FindNextAvailableIQuestionId()
         {
-            if (!ctx.IdeationQuestions.Any()) return 1;
-            int newId = ReadAll().Max(IQuestion => IQuestion.Id)+1;
+            if (!_ctx.IdeationQuestions.Any()) return 1;
+            int newId = ReadAll().Max(iquestion => iquestion.Id)+1;
             return newId;
         }
 
         private int FindNextAvailableIdeaId()
         {
-            if (!ctx.Ideas.Any()) return 1;
+            if (!_ctx.Ideas.Any()) return 1;
             int newId = ReadAllIdeas().Max(idea => idea.Id)+1;
             return newId;
         }
                 
         private int FindNextAvailableReportId()
         {
-            if (!ctx.Reports.Any()) return 1;
+            if (!_ctx.Reports.Any()) return 1;
             int newId = ReadAllReports().Max(report => report.Id)+1;
             return newId;
         }
 
         private int FindNextAvailableFieldId()
         {
-            if (!ctx.IdeaFields.Any()) return 1;
+            if (!_ctx.IdeaFields.Any()) return 1;
             int newId = ReadAllFields().Max(field => field.Id)+1;
             return newId;
         }
         #endregion
-
-        // Added by NVZ
-        // IdeationQuestion CRUD
-        #region
+        
+        #region IdeationQuestion CRUD
         public IdeationQuestion Create(IdeationQuestion obj)
         {
             IEnumerable<IdeationQuestion> iqs = ReadAll(obj.Ideation.Id);
@@ -287,25 +281,24 @@ namespace DAL.repos
             }
 
             obj.Id = FindNextAvailableIQuestionId();
-            ctx.IdeationQuestions.Add(ConvertToDTO(obj));           
-            ctx.SaveChanges();
+            _ctx.IdeationQuestions.Add(ConvertToDao(obj));           
+            _ctx.SaveChanges();
 
             return obj;
         }
         
         public IdeationQuestion Read(int id, bool details)
         {
-            IdeationQuestionsDTO ideationQuestionDTO = null;
-            ideationQuestionDTO = details ? ctx.IdeationQuestions.AsNoTracking().First(i => i.IQuestionID == id) : ctx.IdeationQuestions.First(i => i.IQuestionID == id);
-            ExtensionMethods.CheckForNotFound(ideationQuestionDTO, "IdeationQuestion", id);
+            IdeationQuestionsDao ideationQuestionDao = details ? _ctx.IdeationQuestions.AsNoTracking().First(i => i.IquestionId == id) : _ctx.IdeationQuestions.First(i => i.IquestionId == id);
+            ExtensionMethods.CheckForNotFound(ideationQuestionDao, "IdeationQuestion", id);
 
-            return ConvertToDomain(ideationQuestionDTO);
+            return ConvertToDomain(ideationQuestionDao);
         }
 
         public void Update(IdeationQuestion obj)
         {
-            IdeationQuestionsDTO newIdeationQuestion = ConvertToDTO(obj);
-            IdeationQuestionsDTO foundIdeationQuestion  = ctx.IdeationQuestions.First(i => i.IQuestionID == obj.Id);
+            IdeationQuestionsDao newIdeationQuestion = ConvertToDao(obj);
+            IdeationQuestionsDao foundIdeationQuestion  = _ctx.IdeationQuestions.First(i => i.IquestionId == obj.Id);
 
             if (foundIdeationQuestion != null)
             {
@@ -314,44 +307,42 @@ namespace DAL.repos
                 foundIdeationQuestion.WebsiteLink = newIdeationQuestion.WebsiteLink;
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
         
         public void Delete(int id)
         {
-            IdeationQuestionsDTO dto = ctx.IdeationQuestions.First(d => d.IQuestionID == id);
-            ctx.IdeationQuestions.Remove(dto);
-            ctx.SaveChanges();
+            IdeationQuestionsDao dao = _ctx.IdeationQuestions.First(d => d.IquestionId == id);
+            _ctx.IdeationQuestions.Remove(dao);
+            _ctx.SaveChanges();
         }
 
         public IEnumerable<IdeationQuestion> ReadAll()
         {
             List<IdeationQuestion> myQuery = new List<IdeationQuestion>();
 
-            foreach (IdeationQuestionsDTO DTO in ctx.IdeationQuestions)
+            foreach (IdeationQuestionsDao dao in _ctx.IdeationQuestions)
             {
-                myQuery.Add(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;
         }
 
-        public IEnumerable<IdeationQuestion> ReadAll(int ideationID)
+        public IEnumerable<IdeationQuestion> ReadAll(int ideationId)
         {
-            return ReadAll().ToList().FindAll(i => i.Ideation.Id == ideationID);
+            return ReadAll().ToList().FindAll(i => i.Ideation.Id == ideationId);
         }
         #endregion
-
-        // Added by NVZ
-        // Idea CRUD
-        #region
+        
+        #region Idea CRUD
         public Idea Create(Idea idea)
         {
             IEnumerable<Idea> ideas = ReadAllIdeasByQuestion(idea.IdeaQuestion.Id);
 
             foreach (Idea i in ideas)
             {
-                if(ExtensionMethods.HasMatchingWords(i.Title, idea.Title) > 0)
+                if(i.Title == idea.Title && !i.IsDeleted)
                 {
                     throw new DuplicateNameException("Idea(ID=" + idea.Id + ") met titel " + idea.Title + " heeft een gelijkaardige titel aan Idea(ID=" +
                         i.Id + " met titel " + i.Title + ".");
@@ -360,56 +351,55 @@ namespace DAL.repos
             
             idea.Id = FindNextAvailableIdeaId();
            
-            ctx.Ideas.Add(ConvertToDTO(idea));
+            _ctx.Ideas.Add(ConvertToDao(idea));
 
             if (idea.Field != null)
             {
                 idea.Field.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Field));   
+                _ctx.IdeaFields.Add(ConvertToDao(idea.Field));   
             }
 
             if (idea.Cfield != null)
             {
                 idea.Cfield.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Cfield)); 
+                _ctx.IdeaFields.Add(ConvertToDao(idea.Cfield)); 
             }
             
             if (idea.Ifield != null)
             {
                 idea.Ifield.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Ifield));
+                _ctx.IdeaFields.Add(ConvertToDao(idea.Ifield));
             }
             
             if (idea.Vfield != null)
             {
                 idea.Vfield.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Vfield));
+                _ctx.IdeaFields.Add(ConvertToDao(idea.Vfield));
             }
             
             if (idea.Mfield != null)
             {
                 idea.Mfield.Id = FindNextAvailableFieldId();
-                ctx.IdeaFields.Add(ConvertToDTO(idea.Mfield));
+                _ctx.IdeaFields.Add(ConvertToDao(idea.Mfield));
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
 
             return idea;
         }
 
-        public Idea ReadIdea(int ideaID, bool details)
+        public Idea ReadIdea(int ideaId, bool details)
         {
-            IdeasDTO ideasDTO = null;
-            ideasDTO = details ? ctx.Ideas.AsNoTracking().First(i => i.IdeaID == ideaID) : ctx.Ideas.First(i => i.IdeaID == ideaID);          
-            ExtensionMethods.CheckForNotFound(ideasDTO, "Idea", ideaID);
+            IdeasDao ideasDao = details ? _ctx.Ideas.AsNoTracking().First(i => i.IdeaId == ideaId) : _ctx.Ideas.First(i => i.IdeaId == ideaId);          
+            ExtensionMethods.CheckForNotFound(ideasDao, "Idea", ideaId);
 
-            return ConvertToDomain(ideasDTO);
+            return ConvertToDomain(ideasDao);
         }
         
         public Idea ReadWithFields(int id)
         {
             Idea idea = ReadIdea(id, true); 
-            List<IdeaFieldsDTO> fields = ctx.IdeaFields.ToList().FindAll(i => i.IdeaID == id);
+            List<IdeaFieldsDao> fields = _ctx.IdeaFields.ToList().FindAll(i => i.IdeaId == id);
            
             for (int i = 0; i < fields.Count; i++)
             {
@@ -444,8 +434,8 @@ namespace DAL.repos
 
         public void Update(Idea obj)
         {
-            IdeasDTO newIdea = ConvertToDTO(obj);
-            IdeasDTO foundIdea = ctx.Ideas.First(i => i.IdeaID == obj.Id);
+            IdeasDao newIdea = ConvertToDao(obj);
+            IdeasDao foundIdea = _ctx.Ideas.First(i => i.IdeaId == obj.Id);
             if (foundIdea != null)
             {
                 foundIdea.Title = newIdea.Title;
@@ -457,160 +447,154 @@ namespace DAL.repos
                 foundIdea.ShareCount = newIdea.ShareCount;
                 foundIdea.Status = newIdea.Status;
                 foundIdea.VerifiedUser = newIdea.VerifiedUser;
-                foundIdea.DeviceID = newIdea.DeviceID;
+                foundIdea.DeviceId = newIdea.DeviceId;
                 foundIdea.IsDeleted = newIdea.IsDeleted;
-                ctx.Ideas.Update(foundIdea);
+                _ctx.Ideas.Update(foundIdea);
             }
            
             if (obj.Field != null)
             {
-                IdeaFieldsDTO newTextField = ConvertToDTO(obj.Field);
-                IdeaFieldsDTO foundTextField = ctx.IdeaFields.First(f => f.FieldID == obj.Field.Id);
+                IdeaFieldsDao newTextField = ConvertToDao(obj.Field);
+                IdeaFieldsDao foundTextField = _ctx.IdeaFields.First(f => f.FieldId == obj.Field.Id);
                 if (foundTextField != null)
                 {
                     foundTextField.FieldText = newTextField.FieldText;
-                    ctx.IdeaFields.Update(foundTextField);
+                    _ctx.IdeaFields.Update(foundTextField);
                 }
             }
 
             if (obj.Cfield != null)
             {
-                IdeaFieldsDTO newCField = ConvertToDTO(obj.Cfield);
-                IdeaFieldsDTO foundCField = ctx.IdeaFields.First(f => f.FieldID == obj.Cfield.Id);
+                IdeaFieldsDao newCField = ConvertToDao(obj.Cfield);
+                IdeaFieldsDao foundCField = _ctx.IdeaFields.First(f => f.FieldId == obj.Cfield.Id);
                 if (foundCField != null)
                 {
                     foundCField.FieldStrings = newCField.FieldStrings;
-                    ctx.IdeaFields.Update(foundCField);
+                    _ctx.IdeaFields.Update(foundCField);
                 }
             }
             
             if (obj.Mfield != null)
             {
-                IdeaFieldsDTO newMField = ConvertToDTO(obj.Mfield);
-                IdeaFieldsDTO foundMField = ctx.IdeaFields.First(f => f.FieldID == obj.Mfield.Id);
+                IdeaFieldsDao newMField = ConvertToDao(obj.Mfield);
+                IdeaFieldsDao foundMField = _ctx.IdeaFields.First(f => f.FieldId == obj.Mfield.Id);
                 if (foundMField != null)
                 {
                     foundMField.LocationX = newMField.LocationX;
                     foundMField.LocationY = newMField.LocationY;
                     foundMField.Url = newMField.Url;
-                    ctx.IdeaFields.Update(foundMField);
+                    _ctx.IdeaFields.Update(foundMField);
                 }
             }
             
             if (obj.Ifield != null)
             {
-                IdeaFieldsDTO newIField = ConvertToDTO(obj.Ifield);
-                IdeaFieldsDTO foundIField = ctx.IdeaFields.First(f => f.FieldID == obj.Ifield.Id);
+                IdeaFieldsDao newIField = ConvertToDao(obj.Ifield);
+                IdeaFieldsDao foundIField = _ctx.IdeaFields.First(f => f.FieldId == obj.Ifield.Id);
                 if (foundIField != null)
                 {
                     foundIField.Url = newIField.Url;
                     foundIField.UploadedImage = newIField.UploadedImage;
-                    ctx.IdeaFields.Update(foundIField);
+                    _ctx.IdeaFields.Update(foundIField);
                 }                               
             }
             
             if (obj.Vfield != null)
             {
-                IdeaFieldsDTO newVField = ConvertToDTO(obj.Vfield);
-                IdeaFieldsDTO foundVField = ctx.IdeaFields.First(f => f.FieldID == obj.Vfield.Id);
+                IdeaFieldsDao newVField = ConvertToDao(obj.Vfield);
+                IdeaFieldsDao foundVField = _ctx.IdeaFields.First(f => f.FieldId == obj.Vfield.Id);
                 if (foundVField != null)
                 {
                     foundVField.Url = newVField.Url;
                     foundVField.UploadedMedia = newVField.UploadedMedia;
-                    ctx.IdeaFields.Update(foundVField);
+                    _ctx.IdeaFields.Update(foundVField);
                 }
             }
 
-            ctx.SaveChanges();
-        }
-
-        public void DeleteField(int id)
-        {
-            IdeaFieldsDTO i = ctx.IdeaFields.First(f => f.FieldID == id);
-            ctx.IdeaFields.Remove(i);
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
         
-        public void DeleteFields(int ideaID)
+        public void DeleteIdea(int ideaId)
         {
-            List<Field> fields = (List<Field>) ReadAllFields(ideaID);
-
-            foreach (Field field in fields)
-            {
-                DeleteField(field.Id);
-            }
+            IdeasDao i = _ctx.Ideas.First(d => d.IdeaId == ideaId);
+            _ctx.Ideas.Remove(i);
+            _ctx.SaveChanges();
         }
- 
-        public void DeleteIdea(int ideaID)
-        {
-            IdeasDTO i = ctx.Ideas.First(byeIdea => byeIdea.IdeaID == ideaID);
-            ctx.Ideas.Remove(i);
-            ctx.SaveChanges();
-        }
-
+        
         public IEnumerable<Idea> ReadAllIdeas()
         {
             List<Idea> myQuery = new List<Idea>();
 
-            foreach (IdeasDTO DTO in ctx.Ideas)
+            foreach (IdeasDao dao in _ctx.Ideas)
             {
-                Idea idea = ReadWithFields(DTO.IdeaID);
+                Idea idea = ReadWithFields(dao.IdeaId);
                 myQuery.Add(idea);
             }
 
             return myQuery;
         }
-
-        public IEnumerable<Idea> ReadAllIdeasByQuestion(int questionID)
+        
+        public IEnumerable<Idea> ReadAllIdeasByQuestion(int questionId)
         {
-            return ReadAllIdeas().ToList().FindAll(i => i.IdeaQuestion.Id == questionID);
+            return ReadAllIdeas().ToList().FindAll(i => i.IdeaQuestion.Id == questionId);
         }
-
-        public IEnumerable<Idea> ReadAllChilds(int parentId)
+        
+        #region Field CRUD
+        public void DeleteField(int id)
         {
-            return ReadAllIdeas().ToList().FindAll(idea => idea.ParentIdea.Id == parentId);
+            IdeaFieldsDao i = _ctx.IdeaFields.First(d => d.FieldId == id);
+            _ctx.IdeaFields.Remove(i);
+            _ctx.SaveChanges();
         }
-
+        
+        public void DeleteFields(int ideaId)
+        {
+            List<Field> fields = (List<Field>) ReadAllFields(ideaId);
+            foreach (Field field in fields)
+            {
+                DeleteField(field.Id);
+            }
+        }
+        
         public IEnumerable<Field> ReadAllFields()
         {
             List<Field> myQuery = new List<Field>();
 
-            foreach (IdeaFieldsDTO DTO in ctx.IdeaFields)
+            foreach (IdeaFieldsDao dao in _ctx.IdeaFields)
             {
-                if (DTO.FieldText != null)
+                if (dao.FieldText != null)
                 {
-                    myQuery.Add(ConvertFieldToDomain(DTO));
+                    myQuery.Add(ConvertFieldToDomain(dao));
                 }
-                else if (DTO.FieldStrings != null)
+                else if (dao.FieldStrings != null)
                 {
-                    myQuery.Add(ConvertClosedFieldToDomain(DTO));
+                    myQuery.Add(ConvertClosedFieldToDomain(dao));
                 }
-                else if (DTO.LocationX > 0)
+                else if (dao.LocationX > 0)
                 {
-                    myQuery.Add(ConvertMapFieldToDomain(DTO));
+                    myQuery.Add(ConvertMapFieldToDomain(dao));
                 }
-                else if (DTO.UploadedImage != null)
+                else if (dao.UploadedImage != null)
                 {
-                    myQuery.Add(ConvertImageFieldToDomain(DTO));
+                    myQuery.Add(ConvertImageFieldToDomain(dao));
                 }
-                else if (DTO.UploadedMedia != null)
+                else if (dao.UploadedMedia != null)
                 {
-                    myQuery.Add(ConvertVideoFieldToDomain(DTO));
+                    myQuery.Add(ConvertVideoFieldToDomain(dao));
                 }
             }
 
             return myQuery;
         }
-
-        public IEnumerable<Field> ReadAllFields(int ideaID)
+        
+        public IEnumerable<Field> ReadAllFields(int ideaId)
         {
-            return ReadAllFields().ToList().FindAll(idea => idea.Idea.Id == ideaID);
+            return ReadAllFields().ToList().FindAll(idea => idea.Idea.Id == ideaId);
         }
+        #endregion
         #endregion 
         
-        // Added by NVZ
-        // Report CRUD
-        #region
+        #region Report CRUD
         public Report Create(Report obj)
         {
             IEnumerable<Report> rs = ReadAllReportsByIdea(obj.Idea.Id);
@@ -625,71 +609,70 @@ namespace DAL.repos
             }
 
             obj.Id = FindNextAvailableReportId();
-            ctx.Reports.Add(ConvertToDTO(obj));
-            ctx.SaveChanges();
+            _ctx.Reports.Add(ConvertToDao(obj));
+            _ctx.SaveChanges();
 
             return obj;
         }
 
         public Report ReadReport(int id, bool details)
         {
-            ReportsDTO reportsDTO = null;
-            reportsDTO = details ? ctx.Reports.AsNoTracking().First(i => i.ReportID == id) : ctx.Reports.First(i => i.ReportID == id);         
-            ExtensionMethods.CheckForNotFound(reportsDTO, "Report", id);
+            ReportsDao reportsDao = details ? _ctx.Reports.AsNoTracking().First(i => i.ReportId == id) : _ctx.Reports.First(i => i.ReportId == id);         
+            ExtensionMethods.CheckForNotFound(reportsDao, "Report", id);
 
-            return ConvertToDomain(reportsDTO);
+            return ConvertToDomain(reportsDao);
         }
 
         public void Update(Report obj)
         {
-            ReportsDTO newReport = ConvertToDTO(obj);
-            ReportsDTO foundReport = ctx.Reports.First(r => r.ReportID == obj.Id);
+            ReportsDao newReport = ConvertToDao(obj);
+            ReportsDao foundReport = _ctx.Reports.First(r => r.ReportId == obj.Id);
             if (foundReport != null)
             {
                 foundReport.Reason = newReport.Reason;
                 foundReport.ReportApproved = newReport.ReportApproved;
-                ctx.Reports.Update(foundReport);
+                _ctx.Reports.Update(foundReport);
             }
             
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
         public void DeleteReport(int id)
         {
-            ReportsDTO toDelete = ctx.Reports.First(r => r.ReportID == id);
-            ctx.Reports.Remove(toDelete);
-            ctx.SaveChanges();
+            ReportsDao toDelete = _ctx.Reports.First(r => r.ReportId == id);
+            _ctx.Reports.Remove(toDelete);
+            _ctx.SaveChanges();
         }
 
-        public void DeleteReports(int ideaID)
+        public void DeleteReports(int ideaId)
         {
-            List<Report> reports = (List<Report>) ReadAllReportsByIdea(ideaID);
-
+            List<Report> reports = (List<Report>) ReadAllReportsByIdea(ideaId);
             foreach (Report report in reports)
             {
-               DeleteReport(report.Id);
+                DeleteReport(report.Id);
             }
         }
+
         public IEnumerable<Report> ReadAllReports()
         {
             List<Report> myQuery = new List<Report>();
 
-            foreach (ReportsDTO DTO in ctx.Reports)
+            foreach (ReportsDao dao in _ctx.Reports)
             {
-                myQuery.Add(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;
         }
 
-        public IEnumerable<Report> ReadAllReportsByIdea(int IdeaID)
+        public IEnumerable<Report> ReadAllReportsByIdea(int ideaId)
         {
-            return ReadAllReports().ToList().FindAll(r => r.Idea.Id == IdeaID);
+            return ReadAllReports().ToList().FindAll(r => r.Idea.Id == ideaId);
         }
 
-        public IEnumerable<Report> ReadAllReportsByUser(string UserID)
+        public IEnumerable<Report> ReadAllReportsByUser(string userId)
         {
-            return ReadAllReports().ToList().FindAll(r => r.Reportee.Id == UserID);;
+            return ReadAllReports().ToList().FindAll(r => r.Reportee.Id == userId);;
         }
         #endregion
     }
