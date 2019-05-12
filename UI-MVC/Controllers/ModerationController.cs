@@ -77,7 +77,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in allPhases)
             {
-                if (_moduleMgr.GetModule(phase.Id, project) == null)
+                if (_moduleMgr.GetIdeation(phase.Id, project) == null)
                 {
                     availablePhases.Add(phase);
                 }
