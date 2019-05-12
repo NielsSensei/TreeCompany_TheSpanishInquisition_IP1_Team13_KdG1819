@@ -23,7 +23,24 @@ namespace Domain.Projects
         public int TwitterLikeCount { get; set; }
         public int LikeVisibility { get; set; }
         public Phase CurrentPhase { get; set; }
-        public List<Phase> Phases { get; set; }
+
+        private List<Phase> _phases;
+
+        public List<Phase> Phases
+        {
+            get
+            {
+                if (Phases == null)
+                {
+                    _phases = new List<Phase>();
+                    return _phases;
+                }
+
+                return _phases;
+            }
+            set { _phases = value; }
+        }
+
         public List<Image> PreviewImages { get; set; }
         public List<Module> Modules { get; set; }
     }
