@@ -2,12 +2,18 @@
 using DAL.Data_Transfer_Objects;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace DAL.Contexts
 {
     public class CityOfIdeasDbContext : IdentityDbContext<UIMVCUser>
 //DbContext
     {
+        
+        public static readonly LoggerFactory LoggerFactory = 
+            new LoggerFactory(new[] {new ConsoleLoggerProvider((_, __) => true, true)});
+        
         /*
          * Naar deployment toe is dit wel nuttig. Options wordt wel vaak gebruikt voor de connectionstring mee te geven als deze in een aparte
          * file zit. Je hebt de optie om ou db te linken via de onconfiguring de .usedataprovider (in ons geval .usesqlserver) te gebruiken. Of
@@ -30,7 +36,8 @@ namespace DAL.Contexts
                 optionsBuilder.UseSqlite("Data Source=TheSpanishDatabase.db");
                 optionsBuilder.EnableSensitiveDataLogging();
             }
-            
+            optionsBuilder.UseLoggerFactory(LoggerFactory);
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

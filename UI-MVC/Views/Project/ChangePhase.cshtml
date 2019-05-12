@@ -9,6 +9,10 @@
     ViewBag.Title = "Pas: " + phase.Description + " aan";
 }
 
+@section Scripts {
+    <script type="module" src="~/dist/validation.entry.js" defer></script>
+} 
+
 <h2>Aanpassen van @phase.Description</h2>
 
 <form asp-controller="Project" asp-action="ChangePhase" method="post" asp-route-pm="@Model" asp-route-phaseId="@phase.Id">
@@ -20,17 +24,19 @@
         </div>
         <div class="form-group col-md-6">
             <label asp-for="StartDate">Start datum</label>
-            <input type="date" asp-for="StartDate" class="form-control" value="@phase.StartDate"/>
+            <input id="StartDatePhase" type="date" asp-for="StartDate" class="form-control" value="@phase.StartDate"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="EndDate">Eind datum</label>
-            <input type="date"  asp-for="EndDate" class="form-control" value="@phase.EndDate"/>
+            <input id="EndDatePhase" type="date"  asp-for="EndDate" class="form-control" value="@phase.EndDate"/>
+            <div id="EndDateErrorPhase" class="text-danger"></div>
+
         </div>
 
         <div class="form-group col-md-5">
         <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@phase.Project.Id">Ga terug</a>
 
-        <input class="btn btn-primary" type="submit" value="Opslaan" class="btn"/>
+        <input id="Submit" class="btn btn-primary" type="submit" value="Opslaan" class="btn"/>
         </div>
     </div>
 </form>

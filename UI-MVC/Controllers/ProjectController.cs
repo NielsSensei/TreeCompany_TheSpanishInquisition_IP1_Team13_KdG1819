@@ -37,7 +37,7 @@ namespace UIMVC.Controllers
         [Authorize]
         [HttpGet]
         public IActionResult AddProject(int platform)
-        { 
+        {
             ViewData["platform"] = platform;
             return View();
         }
@@ -104,8 +104,8 @@ namespace UIMVC.Controllers
             updateProj.StartDate = epm.StartDate;
             updateProj.EndDate = epm.EndDate;
             updateProj.Visible = epm.Visible;
-            updateProj.Status= epm.Status.ToUpper();
-            
+            updateProj.Status = epm.Status.ToUpper();
+
 
             _projManager.EditProject(updateProj);
             return RedirectToAction("CollectProject", "Platform", new {id = updateProj.Id});
@@ -123,14 +123,25 @@ namespace UIMVC.Controllers
             Project project = _projManager.GetProject(id, false);
             int platformId = project.Platform.Id;
             project.Phases = (List<Phase>) _projManager.GetAllPhases(project.Id);
-            
-            /*if (project.Modules.Count != 0)
+
+            project.Modules = new List<Module>();
+
+            /*List<Module> modsIdeations = new List<Module>((_modManager.GetIdeations(project.Id)));
+            List<Module> modsQuestionnaire = new List<Module>((_modManager.GetIdeations(project.Id)));*/
+
+
+            if (project.Modules != null && project.Modules.Count != 0  )
             {
                 foreach (var module in project.Modules)
                 {
-                    _modManager.RemoveModule(module.Id, project.Id, true); //TODO() IsQuestionnaire toevoegen in Module?
+                    if (module.type == ModuleType.Questionnaire)
+                    {
+                        _modManager.RemoveModule(module.Id, module.Project.Id, true);
+                    }
+
+                    _modManager.RemoveModule(module.Id, module.Project.Id, false);
                 }
-            }*/
+            }
 
 
             if (project.Phases.Count != 0)
@@ -252,10 +263,7 @@ namespace UIMVC.Controllers
         }
 
         #endregion
-        
-        
+
         #endregion
-
-
     }
 }

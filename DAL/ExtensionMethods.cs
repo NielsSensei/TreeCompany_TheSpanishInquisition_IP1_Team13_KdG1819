@@ -16,11 +16,14 @@ namespace DAL
              * Het kan misschien nog zijn dat ik deze ga moeten uitbreiden wanneer gebruikers DE/HET/EEN ofzo gebruiken in hun titles door
              * een soort van ignoreLijst. -NVZ
             */
-            foreach(String leftString in leftSet){
-                if (rightSet.Contains(leftString)){
+            foreach (String leftString in leftSet)
+            {
+                if (rightSet.Contains(leftString))
+                {
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -36,13 +39,13 @@ namespace DAL
 
             if (myStrings != null)
             {
-                for(int i = 0; i < myStrings.Count; i++)
+                for (int i = 0; i < myStrings.Count; i++)
                 {
                     myString += myStrings[i];
                     if (i != myStrings.Count - 1) myString += ",";
                 }
             }
-            
+
             return myString;
         }
 
@@ -51,7 +54,7 @@ namespace DAL
             string[] myArray = myString.Split(",", StringSplitOptions.RemoveEmptyEntries);
             List<String> myList = new List<string>();
 
-            foreach(String s in myArray)
+            foreach (String s in myArray)
             {
                 myList.Add(s);
             }

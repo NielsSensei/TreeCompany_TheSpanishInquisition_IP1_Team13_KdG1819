@@ -3,8 +3,10 @@
     ViewBag.Title = "Create New Project";
     Layout = "_Layout";
 }
-
  
+@section Scripts {
+    <script type="module" src="~/dist/validation.entry.js" defer></script>
+} 
 
 <br>
 
@@ -17,13 +19,16 @@
             <label asp-for="Title">Naam</label>
             <input type="text" asp-for="Title" class="form-control"/>
         </div>
-        <div class="form-group col-md-6">
+        
+       <div class="form-group col-md-6">
             <label asp-for="StartDate">Start datum</label>
-            <input type="date" asp-for="StartDate" class="form-control" required />
+           <input id="StartDate" type="date" asp-for="StartDate" class="form-control" required/>
+           <div id="StartDateError"></div>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="EndDate">Eind datum</label>
-            <input type="date" asp-for="EndDate" class="form-control" required />
+            <input id="EndDate" type="date" asp-for="EndDate" class="form-control" required />
+            <div id="EndDateError" class="text-danger"></div>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="Goal">Doel</label>
@@ -36,7 +41,7 @@
 
         <div class="form-group col-md-12">
             <input type="checkbox" data-val="true" id="Visible" name="Visible" value="true">
-            <input name="Visible" type="hidden" value="false" >
+            <input name="Visible" type="hidden" value="false">
             <label asp-for="Visible">Zichtbaar</label>
 
         </div>
@@ -45,21 +50,20 @@
         <div class="form-group col-md-12">
             <h4>Huidige fase:</h4>
             <label asp-for="CurrentPhase.Description">Omschrijving</label>
-            <input   asp-for="CurrentPhase.Description" class="form-control" value="Test"/>
+            <input asp-for="CurrentPhase.Description" class="form-control" value="Test"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="CurrentPhase.StartDate">Start datum</label>
-            <input type="date" asp-for="CurrentPhase.StartDate" class="form-control" value="1/1/0001"/>
+            <input id="StartDatePhase" type="date" asp-for="CurrentPhase.StartDate" class="form-control"/>
         </div>
         <div class="form-group col-md-6">
             <label asp-for="CurrentPhase.EndDate">Eind datum</label>
-            <input type="date" asp-for="CurrentPhase.EndDate" class="form-control" value="1/1/0001"/>
+            <input id="EndDatePhase" type="date" asp-for="CurrentPhase.EndDate" class="form-control"/>
+            <div id="EndDateErrorPhase" class="text-danger"></div>
         </div>
     </div>
 
-    <input class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
+    <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
 </form>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}
+ 

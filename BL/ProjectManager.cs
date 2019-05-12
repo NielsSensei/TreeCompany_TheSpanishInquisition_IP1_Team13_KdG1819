@@ -43,7 +43,7 @@ namespace BL
 
             List<Phase> savedPhases = new List<Phase>();
 
-            foreach (var phase in project.Phases)
+            foreach (var phase in project.Phases) //TODO() newProject.Phases
             {
                 phase.Project = newProject;
                 Phase savedPhase = MakePhase(phase, newProject.Id);
@@ -145,20 +145,7 @@ namespace BL
             var removedPhase = ProjectRepo.ReadPhase(phaseId, false);
             var alteredProject = ProjectRepo.Read(projectId, false);
             alteredProject.Phases.Remove(removedPhase);
-        
-            if (removedPhase.Module != null)
-            {
-                var alteredModule = ModuleMan.GetQuestionnaire(removedPhase.Module.Id, false);
-                alteredModule.Phases.Remove(removedPhase);
-                //ModuleMan.EditModule(alteredModule);
-            }
-            else
-            {
-                ProjectRepo.DeletePhase(removedPhase.Id);
-            }
-
-            //TODO: Enkel de phase moet verwijdert worden project niet? 
-            // ProjectRepo.Delete(projectId);
+            ProjectRepo.DeletePhase(removedPhase.Id);
         }
 
         public Phase GetPhase(int phaseId)
