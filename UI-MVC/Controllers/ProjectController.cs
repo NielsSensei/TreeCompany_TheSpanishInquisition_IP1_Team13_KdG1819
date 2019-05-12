@@ -22,6 +22,7 @@ namespace UIMVC.Controllers
         private ModuleManager _modManager;
         private readonly UserManager<UIMVCUser> _userManager;
 
+
         public ProjectController(UserManager<UIMVCUser> userManager)
         {
             _modManager = new ModuleManager();
@@ -34,7 +35,7 @@ namespace UIMVC.Controllers
 
         #region Add
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public IActionResult AddProject(int platform)
         {
@@ -42,7 +43,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpPost]
         public IActionResult AddProject(CreateProjectModel pvm, int platform)
         {
@@ -78,7 +79,7 @@ namespace UIMVC.Controllers
 
         #region ChangeProject
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public IActionResult ChangeProject(int id)
         {
@@ -93,8 +94,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
             Project updateProj = _projManager.GetProject(id, false);
@@ -116,7 +116,7 @@ namespace UIMVC.Controllers
 
         #region DeleteProject
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public IActionResult DestroyProject(int id)
         {
@@ -126,11 +126,7 @@ namespace UIMVC.Controllers
 
             project.Modules = new List<Module>();
 
-            /*List<Module> modsIdeations = new List<Module>((_modManager.GetIdeations(project.Id)));
-            List<Module> modsQuestionnaire = new List<Module>((_modManager.GetIdeations(project.Id)));*/
-
-
-            if (project.Modules != null && project.Modules.Count != 0  )
+            if (project.Modules != null && project.Modules.Count != 0)
             {
                 foreach (var module in project.Modules)
                 {
@@ -142,7 +138,6 @@ namespace UIMVC.Controllers
                     _modManager.RemoveModule(module.Id, module.Project.Id, false);
                 }
             }
-
 
             if (project.Phases.Count != 0)
             {
@@ -166,7 +161,7 @@ namespace UIMVC.Controllers
 
         #region AddPhase
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public IActionResult AddPhase(int projectId)
         {
@@ -176,7 +171,7 @@ namespace UIMVC.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpPost]
         public IActionResult AddPhase(PhaseModel pm, int projectId)
         {
@@ -203,7 +198,7 @@ namespace UIMVC.Controllers
 
         #region ChangePhase
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
@@ -219,7 +214,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpPost]
         public IActionResult ChangePhase(PhaseModel pm, int phaseId)
         {
@@ -236,7 +231,7 @@ namespace UIMVC.Controllers
         #endregion
 
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public IActionResult SetCurrentPhase(int projectId, int phaseId)
         {
@@ -253,7 +248,7 @@ namespace UIMVC.Controllers
 
         #region DestroyPhase
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public IActionResult DestroyPhase(int phaseId, int projectId)
         {

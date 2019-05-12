@@ -14,8 +14,6 @@ namespace Domain.Projects
 
         public DateTime EndDate { get; set; }
 
-        public bool IsCurrent { get; set; }
-
         // Added by EKT
         // Modified by NVZ
         // Methods

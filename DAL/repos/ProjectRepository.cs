@@ -28,15 +28,17 @@ namespace DAL
 
         // Added by NVZ
         // Standard Methods
+
         #region
+
         private Project ConvertToDomain(ProjectsDTO DTO)
         {
             return new Project()
             {
                 Id = DTO.ProjectID,
-                CurrentPhase = new Phase() { Id = DTO.CurrentPhaseID },
-                User = new UIMVCUser() { Id = DTO.UserID },
-                Platform = new Platform() { Id = DTO.PlatformID },
+                CurrentPhase = new Phase() {Id = DTO.CurrentPhaseID},
+                User = new UIMVCUser() {Id = DTO.UserID},
+                Platform = new Platform() {Id = DTO.PlatformID},
                 Title = DTO.Title,
                 Goal = DTO.Goal,
                 Status = DTO.Status,
@@ -54,7 +56,6 @@ namespace DAL
             return new ProjectsDTO()
             {
                 ProjectID = project.Id,
-                CurrentPhaseID = project.CurrentPhase.Id,
                 UserID = project.User.Id,
                 PlatformID = project.Platform.Id,
                 Title = project.Title,
@@ -74,7 +75,7 @@ namespace DAL
             return new Phase
             {
                 Id = DTO.PhaseID,
-                Project = new Project { Id = DTO.ProjectID },
+                Project = new Project {Id = DTO.ProjectID},
                 Description = DTO.Description,
                 StartDate = DTO.StartDate,
                 EndDate = DTO.EndDate
@@ -92,25 +93,28 @@ namespace DAL
                 EndDate = phase.EndDate
             };
         }
-        
+
         private int FindNextAvailableProjectId()
-        {               
+        {
             if (!ctx.Projects.Any()) return 1;
-            int newId = ReadAll().Max(platform => platform.Id)+1;
+            int newId = ReadAll().Max(platform => platform.Id) + 1;
             return newId;
         }
-        
+
         private int FindNextAvailablePhaseId()
-        {               
+        {
             if (!ctx.Phases.Any()) return 1;
-            int newId = ReadAllPhases().Max(platform => platform.Id)+1;
+            int newId = ReadAllPhases().Max(platform => platform.Id) + 1;
             return newId;
         }
+
         #endregion
 
         // Added by NVZ
         // Project CRUD
+
         #region
+
         /* 
          * Binnen deze methode vergelijkt hij de titels van heel het platform met de titel van het nieuwe project. Als hij een gelijkenis gevonden heeft
          * dan gooit hij de Exception. Hij doet de vergelijking op basis van een extensionmethod die zeer uitbreidbaar is.
@@ -120,8 +124,8 @@ namespace DAL
          * @return Het aangemaakte object.
          * 
          */
-            public Project Create(Project obj)
-            {
+        public Project Create(Project obj)
+        {
             IEnumerable<Project> projects = ReadAllForPlatform(obj.Platform.Id);
 
             if (projects != null)
@@ -143,8 +147,8 @@ namespace DAL
             ctx.Projects.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
-            return obj; 
-            }
+            return obj;
+        }
 
         /*
          *Hij haalt het project op, hij kijkt of het null is en gooit anders een exception als het zo is. De exception wordt hier gegooid binnen
@@ -158,9 +162,11 @@ namespace DAL
         public Project Read(int id, bool details)
         {
             ProjectsDTO projectsDTO = null;
-            projectsDTO = details ? ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectID == id) : ctx.Projects.FirstOrDefault(p => p.ProjectID == id);
+            projectsDTO = details
+                ? ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectID == id)
+                : ctx.Projects.FirstOrDefault(p => p.ProjectID == id);
             ExtensionMethods.CheckForNotFound(projectsDTO, "Project", id);
-            
+
             return ConvertToDomain(projectsDTO);
         }
 
@@ -193,12 +199,12 @@ namespace DAL
             ctx.Projects.Remove(toDelete);
             ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Project> ReadAll()
         {
             List<Project> myQuery = new List<Project>();
 
-            foreach(ProjectsDTO DTO in ctx.Projects)
+            foreach (ProjectsDTO DTO in ctx.Projects)
             {
                 myQuery.Add(ConvertToDomain(DTO));
             }
@@ -210,35 +216,42 @@ namespace DAL
         {
             return ReadAll().ToList().FindAll(p => p.Platform.Id == platformID);
         }
-        #endregion        
-        
+
+        #endregion
+
         // Added by NVZ
         // Phase CRUD
+
         #region
+
         public Phase Create(Phase obj)
         {
             IEnumerable<Phase> phases = ReadAllPhases(obj.Project.Id);
 
-            foreach(Phase p in phases)
+            foreach (Phase p in phases)
             {
                 if (p.StartDate > obj.StartDate && p.EndDate < obj.EndDate)
                 {
-                    throw new DuplicateNameException("Deze phase met ID " + obj.Id + " (Start: " + obj.StartDate + ", Einde: " + obj.EndDate + ") overlapt" +
-                        " met een andere phase met ID " + p.Id + " (Start: " + p.StartDate + ", Einde: " + p.EndDate + ")");
+                    throw new DuplicateNameException("Deze phase met ID " + obj.Id + " (Start: " + obj.StartDate +
+                                                     ", Einde: " + obj.EndDate + ") overlapt" +
+                                                     " met een andere phase met ID " + p.Id + " (Start: " +
+                                                     p.StartDate + ", Einde: " + p.EndDate + ")");
                 }
             }
 
             obj.Id = FindNextAvailablePhaseId();
             ctx.Phases.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
-            
+
             return obj;
         }
 
         public Phase ReadPhase(int phaseID, bool details)
         {
             PhasesDTO phasesDTO = null;
-            phasesDTO = details ? ctx.Phases.AsNoTracking().First(p => p.PhaseID == phaseID) : ctx.Phases.First(p => p.PhaseID == phaseID);
+            phasesDTO = details
+                ? ctx.Phases.AsNoTracking().First(p => p.PhaseID == phaseID)
+                : ctx.Phases.First(p => p.PhaseID == phaseID);
             ExtensionMethods.CheckForNotFound(phasesDTO, "Phase", phaseID);
 
             return ConvertToDomain(phasesDTO);
@@ -276,17 +289,20 @@ namespace DAL
 
             return myQuery;
         }
-        
+
         public IEnumerable<Phase> ReadAllPhases(int projectID)
         {
             return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectID);
         }
+
         #endregion
-        
+
         // Added by NVZ
         // Images CRUD
         // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
+
         #region
+
         public Image Create(Image obj)
         {
             /* if (!images.Contains(obj))
@@ -316,6 +332,7 @@ namespace DAL
         {
             //images.Remove(obj);
         }
+
         #endregion
     }
 }

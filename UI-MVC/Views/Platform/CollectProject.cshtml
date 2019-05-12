@@ -10,6 +10,10 @@
     ViewData["Ideations"] = ProjectService.CollectProjectIdeations(Model);
 }
 
+@section Scripts{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
 @* Hoe gaan we de mobile layout doen? *@
 <div class="container">
     <div class="row">
@@ -24,13 +28,47 @@
 
             <div class="project-actions">
                 <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" asp-route-id="@Model.Id">
-                    @*<img src="https://img.icons8.com/metro/25/000000/edit.png">*@ Wijzig project
+                    Wijzig project
                 </a>
                 <br/>
 
-                <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">
-                    Wis project@*<img src="https://img.icons8.com/ios/25/000000/trash.png">*@
-                </a><br/>
+
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProject">
+                    Wis project
+                </button>
+
+            </div>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteProject" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Verwijder project</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5>
+                                <i>Bent u zeker dat u dit project wilt wissen?</i>
+                            </h5>
+                            <p>
+                                <b>@Model.Title</b>
+                            </p>
+                            <p>@Model.Goal</p>
+                            <p>Aantal fases: @Model.Phases.Count</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">
+                                Verwijder
+                            </a><br/>
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
@@ -48,7 +86,7 @@
             <h3>Huidige fase:</h3>
             @Html.DisplayFor(m => Model.CurrentPhase)<br/>
             <a class="btn btn-primary" asp-controller="Project" asp-action="AddPhase" asp-route-projectId="@Model.Id">
-                Voeg fase toe@*<img src="https://img.icons8.com/ios/25/000000/trash.png">*@
+                Voeg fase toe
             </a>
         </div>
         <div class="col-8">
@@ -80,9 +118,39 @@
                         </td>
 
                         <td>
-                            <a class="btn btn-danger" asp-controller="Project" asp-action="DestroyPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
+
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletePhase">
                                 <img src="https://img.icons8.com/ios/25/000000/trash.png">
-                            </a>
+                            </button>
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="deletePhase" tabindex="-1" role="dialog" aria-labelledby="modalLabelPhase" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalLabelPhase">Verwijder Fase</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>
+                                                <i>Bent u zeker dat u deze fase wilt wissen?</i>
+                                            </h5>
+                                            <p>@p.Description</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyPhase" asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
+                                                Verwijder
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </td>
 
                     </tr>
@@ -129,6 +197,5 @@
 else
 {
     <p>Geen modules voor dit project.</p>
-    
 }
 <hr/>

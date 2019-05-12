@@ -38,6 +38,8 @@ namespace BL
         */
         public Project MakeProject(Project project)
         {
+            
+            
             Project newProject = ProjectRepo.Create(project);
 
             List<Phase> savedPhases = new List<Phase>();

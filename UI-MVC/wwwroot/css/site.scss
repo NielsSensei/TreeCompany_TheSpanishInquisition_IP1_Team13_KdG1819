@@ -169,11 +169,13 @@ Used in Platform/CollectProject.cshtml
   position: absolute;
   display: flex;
   bottom: 0;
-  > a.btn.btn-danger{
-    margin-left: 10px;
 
+  > button {
+    margin-left: 20px
   }
 }
+
+
 
 /* Is used for to align a label with it's combobox (select) */
 /* Used in CollectAllIdeas.cshtml */
