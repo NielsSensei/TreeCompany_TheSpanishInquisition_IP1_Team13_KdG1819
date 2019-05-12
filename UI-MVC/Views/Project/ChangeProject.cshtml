@@ -25,9 +25,9 @@
             <label asp-for="Goal">Doel</label>
             <input asp-for="Goal" class="form-control" value="@project.Goal"/>
         </div>
-        <div class="form-group col-md-6">
+        @*<div class="form-group col-md-6">
             <label asp-for="StartDate">Start datum</label>
-            <input id="StartDate" type="date" asp-for="StartDate" class="form-control" value="@project.StartDate"/>
+            <input id="StartDate" type="date" asp-for="StartDate" class="form-control" value="@project.Star"/>
             <div id="StartDateError"></div>
 
         </div>
@@ -35,7 +35,7 @@
             <label asp-for="EndDate">Eind datum</label>
             <input id="EndDate" type="date" asp-for="EndDate" class="form-control" value="@project.EndDate"/>
             <div id="EndDateError" class="text-danger"></div>
-        </div>
+        </div>*@
         <div class="form-group col-md-12">
             <label asp-for="Status">Status</label>
             <input type="text" asp-for="Status" class="form-control" value="@project.Status"/>

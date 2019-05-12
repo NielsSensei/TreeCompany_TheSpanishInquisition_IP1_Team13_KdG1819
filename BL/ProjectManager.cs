@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DAL.repos;
 using Domain.Projects;
 using Domain.Users;
@@ -22,8 +23,7 @@ namespace BL
         // Modified by NVZ & XV
         //Project 
 
-        #region
-
+ 
         /*
         * Setter method, we might need this for certain properties but
         * certainly not all of them. Please make a difference between

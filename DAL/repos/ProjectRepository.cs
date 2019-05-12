@@ -139,7 +139,7 @@ namespace DAL.repos
         public void Update(Project obj)
         {
             ProjectsDao newProj = ConvertToDao(obj);
-            newProj.CurrentPhaseID = obj.CurrentPhase.Id;
+            newProj.CurrentPhaseId = obj.CurrentPhase.Id;
             
             ProjectsDao foundProj = _ctx.Projects.First(p => p.ProjectId == obj.Id);
             if (foundProj != null)
@@ -153,7 +153,7 @@ namespace DAL.repos
                 foundProj.FbLikeCount = newProj.FbLikeCount;
                 foundProj.TwitterLikeCount = newProj.TwitterLikeCount;
                 foundProj.LikeVisibility = newProj.LikeVisibility;
-                foundProj.CurrentPhaseID = newProj.CurrentPhaseID;
+                foundProj.CurrentPhaseId = newProj.CurrentPhaseId;
             }
 
             _ctx.SaveChanges();
@@ -205,7 +205,7 @@ namespace DAL.repos
             return obj;
         }
 
-        public Phase ReadPhase(int phaseID, bool details)
+        public Phase ReadPhase(int phaseId, bool details)
         {
             PhasesDao phasesDao = details ? _ctx.Phases.AsNoTracking().First(p => p.PhaseId == phaseId) : _ctx.Phases.First(p => p.PhaseId == phaseId);
             ExtensionMethods.CheckForNotFound(phasesDao, "Phase", phaseId);

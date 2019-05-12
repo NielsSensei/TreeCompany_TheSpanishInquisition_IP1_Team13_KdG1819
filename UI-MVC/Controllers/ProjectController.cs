@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using BL;
-using DAL.Data_Transfer_Objects;
 using Domain.Identity;
 using Domain.Projects;
 using Domain.Users;
@@ -20,10 +19,10 @@ namespace UIMVC.Controllers
     {
         private ProjectManager _projManager;
         private ModuleManager _modManager;
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly UserManager<UimvcUser> _userManager;
 
 
-        public ProjectController(UserManager<UIMVCUser> userManager)
+        public ProjectController(UserManager<UimvcUser> userManager)
         {
             _modManager = new ModuleManager();
             _projManager = new ProjectManager();
@@ -47,7 +46,7 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult AddProject(CreateProjectModel pvm, int platform)
         {
-            UIMVCUser projectUser = _userManager.GetUserAsync(HttpContext.User).Result;
+            UimvcUser projectUser = _userManager.GetUserAsync(HttpContext.User).Result;
             if (pvm == null)
             {
                 return BadRequest("Project cannot be null");
@@ -57,8 +56,8 @@ namespace UIMVC.Controllers
             {
                 User = projectUser,
                 CurrentPhase = pvm.CurrentPhase,
-                EndDate = pvm.EndDate,
-                StartDate = pvm.StartDate,
+                /*EndDate = pvm.EndDate,
+                StartDate = pvm.StartDate,*/
                 Title = pvm.Title,
                 Platform = new Platform() {Id = platform},
                 Status = pvm.Status.ToUpper(),
@@ -101,8 +100,8 @@ namespace UIMVC.Controllers
 
             updateProj.Title = epm.Title;
             updateProj.Goal = epm.Goal;
-            updateProj.StartDate = epm.StartDate;
-            updateProj.EndDate = epm.EndDate;
+            /*updateProj.StartDate = epm.StartDate;
+            updateProj.EndDate = epm.EndDate;*/
             updateProj.Visible = epm.Visible;
             updateProj.Status = epm.Status.ToUpper();
 
@@ -130,12 +129,12 @@ namespace UIMVC.Controllers
             {
                 foreach (var module in project.Modules)
                 {
-                    if (module.type == ModuleType.Questionnaire)
+                    if (module.ModuleType == ModuleType.Questionnaire)
                     {
-                        _modManager.RemoveModule(module.Id, module.Project.Id, true);
+                        _modManager.RemoveModule(module.Id, true);
                     }
 
-                    _modManager.RemoveModule(module.Id, module.Project.Id, false);
+                    _modManager.RemoveModule(module.Id, false);
                 }
             }
 
