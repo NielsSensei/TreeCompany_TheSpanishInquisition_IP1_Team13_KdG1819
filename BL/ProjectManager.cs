@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using DAL;
 using Domain;
 using Domain.Projects;
@@ -139,7 +137,6 @@ namespace BL
             return savedPhase;
         }
 
-
         public void RemovePhase(int projectId, int phaseId)
         {
             var removedPhase = ProjectRepo.ReadPhase(phaseId, false);
@@ -184,14 +181,14 @@ namespace BL
          *
          * This method is conceived to be modular towards microservices,
          * if we have the time I'll explain why. - NVZ
-         *
+         * 
         public void HandleProjectAction(int projectId, string actionName)
         {
             throw new NotImplementedException("I need this!");
         } */
 
         #endregion
-
+        
         // Added by XV
         // Methods for Platform
 

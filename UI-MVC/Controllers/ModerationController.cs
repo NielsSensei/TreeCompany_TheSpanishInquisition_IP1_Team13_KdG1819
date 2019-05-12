@@ -77,7 +77,7 @@ namespace UIMVC.Controllers
 
             foreach (Phase phase in allPhases)
             {
-                if (_moduleMgr.GetIdeation(phase.Id, project) == null)
+                if (_moduleMgr.GetModule(phase.Id, project) == null)
                 {
                     availablePhases.Add(phase);
                 }
@@ -90,10 +90,10 @@ namespace UIMVC.Controllers
 
             ViewData["Phases"] = availablePhases;
             ViewData["Project"] = project;
-
+           
             return View();
         }
-
+        
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
@@ -104,7 +104,7 @@ namespace UIMVC.Controllers
                 return BadRequest("Ideation can't be null");
             }
 
-            Ideation i = new Ideation()
+            Ideation i = new Ideation() 
             {
                 Project = new Project() {Id = project},
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
@@ -113,17 +113,17 @@ namespace UIMVC.Controllers
                 Title = cim.Title,
                 OnGoing = true
             };
-
+            
             if (cim.ExtraInfo != null)
             {
-                i.ExtraInfo = cim.ExtraInfo;
+                i.ExtraInfo = cim.ExtraInfo;  
             }
-
+            
             _moduleMgr.MakeIdeation(i);
-
+            
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
-
+        
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpGet]
@@ -133,7 +133,7 @@ namespace UIMVC.Controllers
 
             return View();
         }
-
+        
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpPost]
@@ -143,12 +143,12 @@ namespace UIMVC.Controllers
             {
                 return BadRequest("Tag can't be null");
             }
-
+            
             _moduleMgr.MakeTag(tag, ideation, false);
-
+            
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
-
+        
         //TODO add rolecheck hero we need to be admin yeet *@
         [Authorize]
         [HttpGet]
@@ -227,20 +227,13 @@ namespace UIMVC.Controllers
                 ExtraInfo = Request.Form["ExtraInfo"].ToString()
             };
 
-            if (!Request.Form["ParentPhase"].ToString().Equals(null))
+            if (Request.Form["ParentPhase"].ToString() != null)
             {
-                try
-                {
-                    i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
-                    _moduleMgr.EditIdeation(i);
-                }
-                catch (FormatException e)
-                {
-                    _moduleMgr.EditIdeation(i);
-                }
-                
+                i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
             }
-
+            
+            _moduleMgr.EditIdeation(i);
+            
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
         }
         
@@ -367,9 +360,9 @@ namespace UIMVC.Controllers
         {
             Idea toDelete = _ideaMgr.GetIdea(idea);
             toDelete.IsDeleted = true;
-
+            
             _ideaMgr.EditIdea(toDelete);
-
+            
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas");
         }
 
