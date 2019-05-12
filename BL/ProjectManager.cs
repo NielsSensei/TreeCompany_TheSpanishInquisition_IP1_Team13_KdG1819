@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DAL.repos;
 using Domain.Projects;
 using Domain.Users;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BL
 {
@@ -18,39 +16,16 @@ namespace BL
             ProjectRepo = new ProjectRepository();
             ModuleMan = new ModuleManager();
         }
-
-        // Added by NG
-        // Modified by NVZ & XV
-        //Project 
-
- 
-        /*
-        * Setter method, we might need this for certain properties but
-        * certainly not all of them. Please make a difference between
-        * properties you need and the ones you do not. - NVZ
-        * 
-        */
+        
         public Project MakeProject(Project project)
         {
             
-            
             Project newProject = ProjectRepo.Create(project);
 
-            List<Phase> savedPhases = new List<Phase>();
-
-            foreach (var phase in project.Phases) //TODO() newProject.Phases
-            {
-                phase.Project = newProject;
-                Phase savedPhase = MakePhase(phase, newProject.Id);
-                savedPhases.Add(savedPhase);
-                ProjectRepo.Update(newProject);
-            }
-
-            newProject.Phases = savedPhases;
-
-
-            // ProjectRepo.
-
+            project.Id = newProject.Id;
+            
+            ProjectRepo.Create(project.CurrentPhase);
+            
             return GetProject(newProject.Id, false);
         }
 

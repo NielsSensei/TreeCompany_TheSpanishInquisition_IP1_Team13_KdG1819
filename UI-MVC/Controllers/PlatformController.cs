@@ -49,7 +49,7 @@ namespace UIMVC.Controllers
         #region Change
         
         [HttpGet]
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult ChangePlatform(int id)
         {
             Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
@@ -61,7 +61,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult ChangePlatform(Platform platform)
         {
             _platformMgr.EditPlatform(platform);

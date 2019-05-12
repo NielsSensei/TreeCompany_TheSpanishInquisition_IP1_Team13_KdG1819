@@ -129,7 +129,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
                         
                         var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                        _roleService.AssignToRole(userFound, Domain.Users.Role.LoggedIn);
+                        _roleService.AssignToRole(userFound, Domain.Users.Role.LOGGEDIN);
                         
                         return LocalRedirect(returnUrl);
                     }

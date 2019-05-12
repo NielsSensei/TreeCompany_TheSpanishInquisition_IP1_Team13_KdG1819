@@ -107,7 +107,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
                     
                     
                     var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                    _roleService.AssignToRole(userFound, Role.LoggedIn);
+                    _roleService.AssignToRole(userFound, Role.LOGGEDIN);
 
                     // await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);

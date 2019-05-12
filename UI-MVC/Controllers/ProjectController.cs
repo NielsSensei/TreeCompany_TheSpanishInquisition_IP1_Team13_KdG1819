@@ -29,7 +29,7 @@ namespace UIMVC.Controllers
 
         #region Add
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddProject(int platform)
         {
@@ -37,11 +37,10 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpPost]
-        public IActionResult AddProject(CreateProjectModel pvm, int platform)
+        public IActionResult AddProject(CreateProjectModel pvm, int platform, string user)
         {
-            UimvcUser projectUser = _userManager.GetUserAsync(HttpContext.User).Result;
             if (pvm == null)
             {
                 return BadRequest("Project cannot be null");
@@ -49,10 +48,8 @@ namespace UIMVC.Controllers
 
             Project pr = new Project()
             {
-                User = projectUser,
+                User = new UimvcUser(){ Id = user },
                 CurrentPhase = pvm.CurrentPhase,
-                /*EndDate = pvm.EndDate,
-                StartDate = pvm.StartDate,*/
                 Title = pvm.Title,
                 Platform = new Platform() {Id = platform},
                 Status = pvm.Status.ToUpper(),
@@ -60,12 +57,10 @@ namespace UIMVC.Controllers
                 Goal = pvm.Goal,
                 Visible = pvm.Visible
             };
+            
+            _projManager.MakeProject(pr);
 
-            pr.Phases.Add(pr.CurrentPhase);
-
-            Project newProject = _projManager.MakeProject(pr);
-
-            return RedirectToAction("Index", "Platform", new {id = newProject.Platform.Id});
+            return RedirectToAction("Index", "Platform", new {id = platform });
         }
 
         #endregion
@@ -73,7 +68,7 @@ namespace UIMVC.Controllers
 
         #region ChangeProject
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult ChangeProject(int id)
         {
@@ -88,7 +83,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpPost]
         public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
@@ -111,7 +106,7 @@ namespace UIMVC.Controllers
 
         #region DeleteProject
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult DestroyProject(int id)
         {
@@ -156,7 +151,7 @@ namespace UIMVC.Controllers
 
         #region AddPhase
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
 
         [HttpGet]
         public IActionResult AddPhase(int projectId)
@@ -167,7 +162,7 @@ namespace UIMVC.Controllers
         }
 
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddPhase(PhaseModel pm, int projectId)
         {
@@ -194,7 +189,7 @@ namespace UIMVC.Controllers
 
         #region ChangePhase
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
@@ -210,7 +205,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult ChangePhase(PhaseModel pm, int phaseId)
         {
@@ -228,7 +223,7 @@ namespace UIMVC.Controllers
 
 
         
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult SetCurrentPhase(int projectId, int phaseId)
         {
@@ -246,7 +241,7 @@ namespace UIMVC.Controllers
         #region DestroyPhase
 
         
-        [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult DestroyPhase(int phaseId, int projectId)
         {

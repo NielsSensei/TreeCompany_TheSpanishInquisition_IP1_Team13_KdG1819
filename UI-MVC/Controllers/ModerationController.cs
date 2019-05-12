@@ -36,7 +36,7 @@ namespace UIMVC.Controllers
 
         #region AddPlatform
         [HttpGet]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform()
         {
             ViewData["platforms"] = _platformMgr.ReadAllPlatforms();
@@ -44,7 +44,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "SUPERADMIN")]
         public IActionResult AddPlatform(CreatePlatformModel cpm)
         {
             if (cpm == null)
@@ -67,7 +67,7 @@ namespace UIMVC.Controllers
 
         #region Ideation
         //TODO sprint2 eens dat edwin klaar is met ze ding kunnen we ooit iets doen met events
-        [Authorize(Roles = "SuperAdmin, Moderator, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddIdeation(int project)
         {
@@ -93,7 +93,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddIdeation(CreateIdeationModel cim, int project, string user)
         {
@@ -122,7 +122,7 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
         
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddTag(int ideation)
         {
             string tag = Request.Form["GetMeATag"].ToString();
@@ -138,7 +138,7 @@ namespace UIMVC.Controllers
                 new {Id = ideation});
         }
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddCentralQuestion(int ideation)
         {
@@ -146,7 +146,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult AddCentralQuestion(CreateIdeationQuestionModel ciqm, int ideation)
         {
@@ -169,7 +169,7 @@ namespace UIMVC.Controllers
         }
 
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult ChangeIdeation(int id)
         {
@@ -203,7 +203,7 @@ namespace UIMVC.Controllers
         }
 
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         [HttpPost]
         public IActionResult ConfirmChangeIdeation(int ideation)
         {
@@ -232,7 +232,7 @@ namespace UIMVC.Controllers
         }
 
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult DestroyIdeation(int id)
         {
             Ideation i = _moduleMgr.GetIdeation(id);
@@ -258,7 +258,7 @@ namespace UIMVC.Controllers
         }
         #region Ideas
         [HttpGet]
-        [Authorize(Roles = "Moderator, SuperAdmin, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectAllIdeas(string filter = "all")
         {
             List<Idea> ideas = new List<Idea>();
@@ -274,7 +274,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Moderator, SuperAdmin, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectIdea(int id)
         {
             Idea idea = _ideaMgr.GetIdea(id);
@@ -290,7 +290,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Moderator, SuperAdmin, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult ReviewByAdmin(int idea, int  report)
         {
             Idea foundIdea = _ideaMgr.GetIdea(idea);
@@ -306,7 +306,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult ApproveReport(int report)
         {
             Report foundReport = _ideaMgr.GetReport(report);
@@ -319,7 +319,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Moderator, SuperAdmin, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DenyReport(int report, int idea)
         {
             Report foundReport = _ideaMgr.GetReport(report);
@@ -332,7 +332,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Moderator, SuperAdmin, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DestroyReport(int report, int idea)
         {
             _ideaMgr.RemoveReport(report);
@@ -343,7 +343,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Moderator, SuperAdmin, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult DestroyIdea(int idea, string from, int thread)
         {
             Idea toDelete = _ideaMgr.GetIdea(idea);
@@ -384,7 +384,7 @@ namespace UIMVC.Controllers
 
         #region UIMVCUser
         [HttpGet]
-        [Authorize(Roles = "Moderator, SuperAdmin, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public IActionResult CollectAllUsers(string sortOrder, string searchString)
         {
 
@@ -413,7 +413,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Moderator, SuperAdmin, Admin")]
+        [Authorize(Roles = "MODERATOR, ADMIN, SUPERADMIN")]
         public async Task<IActionResult> ToggleBanUser(string userId)
         {
             UimvcUser userFound = await _userManager.FindByIdAsync(userId);
@@ -435,7 +435,7 @@ namespace UIMVC.Controllers
             // This part is still borked.
         }
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public async Task<IActionResult> SetRole(AssignRoleModel arm, string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);

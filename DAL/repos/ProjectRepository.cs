@@ -110,7 +110,6 @@ namespace DAL.repos
             {
                 foreach (Project p in projects)
                 {
-                    // TODO: 2 projecten Park Noord en Park Zuid geven een DuplicateNameException
                     if (ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
                     {
                         throw new DuplicateNameException(

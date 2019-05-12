@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -44,7 +43,7 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["SuperAdmin:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.SuperAdmin);
+                AssignToRole(userFound, Role.SUPERADMIN);
             }
             if (await _userManager.FindByEmailAsync(_configuration["Admin:Email"]) == null)
             {
@@ -59,7 +58,7 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["Admin:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.Admin);
+                AssignToRole(userFound, Role.ADMIN);
             }
             if (await _userManager.FindByEmailAsync(_configuration["Moderator:Email"]) == null)
             {
@@ -74,7 +73,7 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["Moderator:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.Moderator);
+                AssignToRole(userFound, Role.MODERATOR);
             }
             if (await _userManager.FindByEmailAsync(_configuration["LoggedInOrg:Email"]) == null)
             {
@@ -89,7 +88,7 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedInOrg:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.LoggedInOrg);
+                AssignToRole(userFound, Role.LOGGEDINORG);
             }
             if (await _userManager.FindByEmailAsync(_configuration["LoggedInVerified:Email"]) == null)
             {
@@ -104,7 +103,7 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedInVerified:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.LoggedInVerified);
+                AssignToRole(userFound, Role.LOGGEDINVERIFIED);
             }
             if (await _userManager.FindByEmailAsync(_configuration["LoggedIn:Email"]) == null)
             {
@@ -119,7 +118,7 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["LoggedIn:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.LoggedIn);
+                AssignToRole(userFound, Role.LOGGEDIN);
             }
             if (await _userManager.FindByEmailAsync(_configuration["Anonymous:Email"]) == null)
             {
@@ -134,7 +133,7 @@ namespace UIMVC.Services
                 _userManager.CreateAsync(user, _configuration["Anonymous:Secret"]);
                 
                 var userFound = await _userManager.FindByEmailAsync(user.UserName);
-                AssignToRole(userFound, Role.Anonymous);
+                AssignToRole(userFound, Role.ANONYMOUS);
             }
         }
 

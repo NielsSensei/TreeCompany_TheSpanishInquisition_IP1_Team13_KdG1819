@@ -1,4 +1,8 @@
+@using Domain.Identity
+@using Microsoft.AspNetCore.Identity
 @model UIMVC.Models.CreateProjectModel
+@inject UserManager<UimvcUser> UserManager
+
 @{
     ViewBag.Title = "Create New Project";
     Layout = "_Layout";
@@ -12,7 +16,8 @@
 
 <h2>Maak een nieuw project aan</h2>
 <br>
-<form id="ProjectForm" asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model", asp-route-platform="@ViewData["platform"]">
+<form id="ProjectForm" asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model" 
+      asp-route-platform="@ViewData["platform"]" asp-route-user="@UserManager.GetUserId(User)">
 
     <div class="form-row">
         <div class="form-group col-md-12">

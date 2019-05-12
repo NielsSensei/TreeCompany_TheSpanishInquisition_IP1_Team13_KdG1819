@@ -24,7 +24,7 @@ namespace UIMVC.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "Admin, SuperAdmin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaire(int projectId)
         {
             Project toAddQuestionnaireTo = ProjMgr.GetProject(projectId, true);
@@ -49,7 +49,7 @@ namespace UIMVC.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Admin, SuperAdmin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
         {
             if(cqm == null)
@@ -70,7 +70,7 @@ namespace UIMVC.Controllers
                 FbLikeCount = 0,
                 TwitterLikeCount = 0,
                 ShareCount = 0,
-                VoteLevel = Domain.Users.Role.Anonymous,
+                VoteLevel = Domain.Users.Role.ANONYMOUS,
                 ModuleType = ModuleType.Questionnaire,
                 Phases = new List<Phase>(),
                 Tags = new List<string>(),
@@ -85,7 +85,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, SuperAdmin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid)
         {
             ViewData["Questionnaire"] = ModMgr.GetQuestionnaire(questionnaireid, false);
@@ -93,7 +93,7 @@ namespace UIMVC.Controllers
         }
         
         [HttpPost]
-        [Authorize(Roles = "Admin, SuperAdmin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
         {
             Questionnaire toAdd = ModMgr.GetQuestionnaire(questionnaireId, false);
@@ -123,7 +123,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, SuperAdmin")]
+        [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
             Questionnaire q = ModMgr.GetQuestionnaire(questionnaireId, false);
