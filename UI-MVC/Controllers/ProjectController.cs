@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
 using BL;
 using Domain.Identity;
 using Domain.Projects;
@@ -9,8 +6,6 @@ using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using UIMVC.Models;
 
 namespace UIMVC.Controllers
@@ -34,7 +29,7 @@ namespace UIMVC.Controllers
 
         #region Add
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult AddProject(int platform)
         {
@@ -42,7 +37,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public IActionResult AddProject(CreateProjectModel pvm, int platform)
         {
@@ -78,7 +73,7 @@ namespace UIMVC.Controllers
 
         #region ChangeProject
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangeProject(int id)
         {
@@ -93,7 +88,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
@@ -116,7 +111,7 @@ namespace UIMVC.Controllers
 
         #region DeleteProject
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult DestroyProject(int id)
         {
@@ -161,7 +156,7 @@ namespace UIMVC.Controllers
 
         #region AddPhase
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
 
         [HttpGet]
         public IActionResult AddPhase(int projectId)
@@ -172,7 +167,7 @@ namespace UIMVC.Controllers
         }
 
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public IActionResult AddPhase(PhaseModel pm, int projectId)
         {
@@ -199,7 +194,7 @@ namespace UIMVC.Controllers
 
         #region ChangePhase
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
@@ -215,7 +210,7 @@ namespace UIMVC.Controllers
             return View();
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public IActionResult ChangePhase(PhaseModel pm, int phaseId)
         {
@@ -233,7 +228,7 @@ namespace UIMVC.Controllers
 
 
         
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult SetCurrentPhase(int projectId, int phaseId)
         {
@@ -251,7 +246,7 @@ namespace UIMVC.Controllers
         #region DestroyPhase
 
         
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult DestroyPhase(int phaseId, int projectId)
         {
