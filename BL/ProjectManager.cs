@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DAL.repos;
 using Domain.Projects;
 using Domain.Users;
@@ -24,12 +25,27 @@ namespace BL
         
         public Project GetProject(int projectId, bool details)
         {
-            return ProjectRepo.Read(projectId, details);
+            Project project = ProjectRepo.Read(projectId, details);
+
+            List<Phase> phases = new List<Phase>();
+            phases = ProjectRepo.ReadAllPhases(projectId).ToList();
+
+            project.Phases = phases;
+
+            return project;
         }
         
         public void MakeProject(Project project)
         {
-            ProjectRepo.Create(project);
+            Project newProject = ProjectRepo.Create(project);
+
+            newProject.CurrentPhase = project.CurrentPhase;
+            newProject.CurrentPhase.Project = newProject;
+
+            ProjectRepo.Create(newProject.CurrentPhase);
+            
+            ProjectRepo.Update(newProject);
+
         }
 
         public void RemoveProject(int projectId)
@@ -54,30 +70,14 @@ namespace BL
             return ProjectRepo.ReadPhase(phaseId, false);
         }
         
-        public void MakePhase(Phase newPhase, int projectId)
+        public void MakePhase(Phase newPhase)
         {
             ProjectRepo.Create(newPhase);
-            var alteredProject = ProjectRepo.Read(projectId, false);
-            alteredProject.Phases.Add(newPhase);
-            ProjectRepo.Update(alteredProject);
-            if (newPhase.Module != null)
-            {
-                var alteredModule = ModuleMan.GetQuestionnaire(newPhase.Module.Id, false);
-                alteredModule.Phases.Add(newPhase);
-            }
         }
         
-        public void RemovePhase(int projectId, int phaseId)
+        public void RemovePhase(int phaseId)
         {
-            var removedPhase = ProjectRepo.ReadPhase(phaseId, false);
-            var alteredProject = ProjectRepo.Read(projectId, false);
-            alteredProject.Phases.Remove(removedPhase);
-            if (removedPhase.Module != null)
-            {
-                var alteredModule = ModuleMan.GetQuestionnaire(removedPhase.Module.Id, false);
-                alteredModule.Phases.Remove(removedPhase);
-            }
-            ProjectRepo.Delete(phaseId);
+            ProjectRepo.DeletePhase(phaseId);
         }
         #endregion
         

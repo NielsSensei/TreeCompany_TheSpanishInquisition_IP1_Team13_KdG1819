@@ -2,6 +2,7 @@
 @using UIMVC.Services
 @model Domain.Users.Platform
 @inject ProjectService ProjectService
+@inject RoleService RoleService
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -10,6 +11,12 @@
     <h1>@Model.Name</h1>
     <hr/>
     <p>This is where I'd put an image if I (knew how I) could convert from BLOB</p>
+    @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+    {
+        <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject" asp-route-platform="@Model.Id">
+            Maak nieuw project aan
+        </a>
+    }
     <hr/>
     <div class="row">
         @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())

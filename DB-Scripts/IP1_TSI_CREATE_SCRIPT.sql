@@ -55,8 +55,6 @@ CREATE TABLE Projects(
 	Title NVARCHAR(50) NOT NULL,
 	Goal NVARCHAR(255) NOT NULL,
 	Status VARCHAR(25) NOT NULL,
-	StartDate DATE,
-	EndDate DATE,
 	Visible BIT NOT NULL,
 	ReactionCount INT,
 	LikeCount INT,

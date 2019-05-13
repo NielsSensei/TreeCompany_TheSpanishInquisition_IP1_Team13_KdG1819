@@ -207,11 +207,11 @@ namespace DAL.repos
         }
 
         public void Delete(int id)
-        {            
-            IdeationsDao toDelete = _ctx.Ideations.First(r => r.ModuleId == id);
-            _ctx.Ideations.Remove(toDelete);
+        {     
             ModulesDao toDeleteModule = _ctx.Modules.First(r => r.ModuleId == id);
             _ctx.Modules.Remove(toDeleteModule);
+            IdeationsDao toDelete = _ctx.Ideations.First(r => r.ModuleId == id);
+            _ctx.Ideations.Remove(toDelete);
             _ctx.SaveChanges();
         }
         

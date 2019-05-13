@@ -138,6 +138,7 @@ namespace DAL.repos
             {
                 foundProj.Title = newProj.Title;
                 foundProj.Goal = newProj.Goal;
+                foundProj.CurrentPhaseId = newProj.CurrentPhaseId;
                 foundProj.Status = newProj.Status;
                 foundProj.Visible = newProj.Visible;
                 foundProj.ReactionCount = newProj.ReactionCount;

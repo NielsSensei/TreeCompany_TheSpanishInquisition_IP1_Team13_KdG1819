@@ -1,0 +1,44 @@
+@using Domain.Projects
+@model PhaseModel
+
+@{
+    ViewBag.Title = "title";
+
+    Phase phase = (Phase) ViewData["Phase"];
+    Layout = "_Layout";
+    ViewBag.Title = "Pas: " + phase.Description + " aan";
+}
+
+@section Scripts {
+    <script type="module" src="~/dist/validation.entry.js" defer></script>
+} 
+
+<h2>Aanpassen van @phase.Description</h2>
+
+<form asp-controller="Project" asp-action="ChangePhase" method="post" asp-route-pm="@Model" asp-route-phaseId="@phase.Id">
+    <div class="form-row">
+
+        <div class="form-group col-md-12">
+            <label asp-for="Description">Omschrijving</label>
+            <input asp-for="Description" class="form-control" value="@phase.Description"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="StartDate">Start datum</label>
+            <input id="StartDatePhase" type="date" asp-for="StartDate" class="form-control" value="@phase.StartDate"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="EndDate">Eind datum</label>
+            <input id="EndDatePhase" type="date"  asp-for="EndDate" class="form-control" value="@phase.EndDate"/>
+            <div id="EndDateErrorPhase" class="text-danger"></div>
+
+        </div>
+
+        <div class="form-group col-md-5">
+            <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@phase.Project.Id">Ga terug</a>
+
+            <input id="Submit" class="btn btn-primary" type="submit" value="Opslaan" class="btn"/>
+        </div>
+    </div>
+</form>
+<div>
+</div>
