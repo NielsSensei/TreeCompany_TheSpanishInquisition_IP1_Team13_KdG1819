@@ -63,7 +63,7 @@ namespace UIMVC.Controllers
                 Users = new List<UimvcUser>()
             };
 
-            /*using (var memoryStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
                 await cpm.IconImage.CopyToAsync(memoryStream);
                 platform.IconImage = memoryStream.ToArray();
@@ -79,7 +79,7 @@ namespace UIMVC.Controllers
             {
                 await cpm.FrontPageImage.CopyToAsync(memoryStream);
                 platform.FrontPageImage = memoryStream.ToArray();
-            }*/
+            }
 
             var newPlatform = _platformMgr.MakePlatform(platform);
 

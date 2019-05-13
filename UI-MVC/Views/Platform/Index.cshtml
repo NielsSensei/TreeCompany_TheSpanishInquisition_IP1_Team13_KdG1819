@@ -19,17 +19,15 @@
                                <h1>@Model.Name</h1> 
                            </div>
                            <div class="col-4">
-                               <div style="background-image: url(data:image;base64,@System.Convert.ToBase64String(
-                                                                                       Model.IconImage)">
-                               </div>
+                               <img alt="Icon" width="100" height="100"
+                               src="data:image/png;base64, @System.Convert.ToBase64String(Model.IconImage)"/>
                            </div>
                        </div>
                    </div>
                </div>
                <div class="card-body">
-                   <div style="background-image: url(data:image;base64,@System.Convert.ToBase64String(
-                                                                           Model.FrontPageImage)">
-                   </div>
+                   <img alt="FrontPage"
+                   src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
                </div>
            </section>
        </div>
