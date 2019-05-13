@@ -5,7 +5,7 @@
 @model Domain.Projects.Project
 @inject ProjectService ProjectService
 @inject RoleService RoleService
-@inject UserManager<UIMVCUser> UserManager
+@inject UserManager<UimvcUser> UserManager
 @{
     ViewData["Title"] = Model.Title;
     Layout = "_Layout";
@@ -13,46 +13,120 @@
     ViewData["Ideations"] = ProjectService.CollectProjectIdeations(Model);
 }
 
-@* Hoe gaan we de mobile layout doen? *@
+@section Scripts{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
 <div class="container">
     <div class="row">
         <div class="col-4">
             <h2>@Model.Title</h2>
             @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
             {
-                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount,
-                twitterLikeCount = Model.TwitterLikeCount, iconStyle = 1
+                LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount,
+                TwitterLikeCount = Model.TwitterLikeCount, IconStyle = 1
             })
             <p>@Model.Goal</p>
+            @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+            {
+                <div class="project-actions">
+                    <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" asp-route-id="@Model.Id">
+                        Wijzig project
+                    </a>
+                    <br/>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProject">
+                        Wis project
+                    </button>
+                </div>  
+            }
         </div>
         <div class="col-8">
             @* TODO vervang images door projectImages *@
             <img alt="projectImage" src="https://via.placeholder.com/700x350"/>
         </div>
     </div>
-    <hr>
+    <hr />
     <h2>Alle fases</h2>
     <div class="row">
         <div class="col-4">
-
             <h3>Huidige fase:</h3>
-            @Html.DisplayFor(m => Model.CurrentPhase)
+            @Html.DisplayFor(m => Model.CurrentPhase)<br/>
+            @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+            {
+                <a class="btn btn-primary" asp-controller="Project" asp-action="AddPhase" asp-route-projectId="@Model.Id">
+                    Voeg fase toe
+                </a> 
+            }
         </div>
         <div class="col-8">
             <h3>Andere fases:</h3>
             <table class="table">
                 <thead>
-                <th>Omschrijving</th>
-                <th>van</th>
-                <th>tot</th>
+                    <th>Omschrijving</th>
+                    <th>Van</th>
+                    <th>Tot</th>
+                    @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+                    {
+                        <th>huidig</th>
+                        <th>pas aan</th>
+                        <th>wis</th>  
+                    }
                 </thead>
-                @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"])
-                {
-                    <tr>
+                @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"]){
+                    @if (p != Model.CurrentPhase)
+                     {
+                         <tr>
                         <td>@p.Description</td>
                         <td>@p.StartDate.ToShortDateString()</td>
                         <td>@p.EndDate.ToShortDateString()</td>
-                    </tr>
+                        @if(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result){
+                            <td>
+                            <a class="btn btn-light" asp-controller="Project" asp-action="SetCurrentPhase" 
+                                                              asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
+                                <img src="https://img.icons8.com/ios/25/000000/map-pin-filled.png" /> 
+                            </a>
+                        </td>
+                        <td>
+                            <a class="btn btn-light" asp-controller="Project" asp-action="ChangePhase" 
+                               asp-route-phaseId="@p.Id">
+                               <img src="https://img.icons8.com/metro/25/000000/edit.png" />
+                            </a>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletePhase">
+                            <img src="https://img.icons8.com/ios/25/000000/trash.png" />
+                        </button>
+                        
+                            <div class="modal fade" id="deletePhase" tabindex="-1" role="dialog" 
+                                 aria-labelledby="modalLabelPhase" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLabelPhase">Verwijder Fase</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h5>
+                                            <i>Bent u zeker dat u deze fase wilt wissen?</i>
+                                        </h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyPhase" 
+                                           asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
+                                            Verwijder
+                                        </a>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                                                        >Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </td>
+                        }
+                    </tr>  
+                     }
                 }
             </table>
         </div>
@@ -86,12 +160,12 @@
                 @Html.DisplayFor(m => questionnaire)
             }
         }
-
+        
         @if (ViewData["Ideations"] != null)
         {
             foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
             {
-                @Html.DisplayFor(m => ideation)
+                    @Html.DisplayFor(m => ideation)
             }
         }
     </div>
@@ -102,3 +176,34 @@ else
     
 }
 <hr/>
+
+<div class="modal fade" id="deleteProject" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Verwijder project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    <i>Bent u zeker dat u dit project wilt wissen?</i>
+                </h5>
+                <p>
+                    <b>@Model.Title</b>
+                </p>
+                <p>@Model.Goal</p>
+                <p>Aantal fases: @Model.Phases.Count</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">
+                    Verwijder
+                </a><br/>
+
+            </div>
+        </div>
+    </div>
+</div>
+

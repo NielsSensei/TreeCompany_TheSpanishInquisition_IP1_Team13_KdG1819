@@ -1,34 +1,28 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Domain.Users;
 using DAL.Contexts;
-using DAL.Data_Transfer_Objects;
+using DAL.Data_Access_Objects;
+using Domain.Users;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
-namespace DAL
+namespace DAL.repos
 {
     public class PlatformRepository : IRepository<Platform>
     {
-        // Added by DM
-        // Modified by NVZ
-        private CityOfIdeasDbContext ctx;
-
-        // Added by NVZ
+        private readonly CityOfIdeasDbContext _ctx;
+        
         public PlatformRepository()
         {
-            ctx = new CityOfIdeasDbContext();
+            _ctx = new CityOfIdeasDbContext();
         }
-
-        // Added by NVZ
-        // Standard Methods
-        #region
-        private PlatformsDTO ConvertToDTO(Platform p)
+        
+        #region Conversion Methods
+        private PlatformsDao ConvertToDao(Platform p)
         {
-            return new PlatformsDTO
+            return new PlatformsDao
             {
-                PlatformID = p.Id,
+                PlatformId = p.Id,
                 Name = p.Name,
                 SiteUrl = p.Url,
                 IconImagePath = p.IconImagePath,
@@ -40,35 +34,29 @@ namespace DAL
             };
         }
 
-        private Platform ConvertToDomain(PlatformsDTO DTO)
+        private Platform ConvertToDomain(PlatformsDao dao)
         {
             return new Platform
             {
-                Id = DTO.PlatformID,
-                Name = DTO.Name,
-                Url = DTO.SiteUrl,
-                IconImagePath = DTO.IconImagePath,
-                CarouselPageImagePath = DTO.CarouselImagePath,
-                FrontPageImagePath = DTO.FrontPageImagePath
+                Id = dao.PlatformId,
+                Name = dao.Name,
+                Url = dao.SiteUrl
                 // TODO: (SPRINT2?) Dit kunnen oplossen
                
             };
         }
-
-        // Added by XV
-        // Select the biggest current Id from the platforms and increment it by one -XV
+        #endregion
+        
+        #region Id generation
         private int FindNextAvailablePlatformId()
         {
-            if (!ctx.Platforms.Any()) return 1;
+            if (!_ctx.Platforms.Any()) return 1;
             int newId = ReadAll().Max(platform => platform.Id) + 1;
             return newId;
-
         }
         #endregion
-
-        // Added by NVZ
-        // Platform CRUD
-        #region
+        
+        #region Platform CRUD
         public Platform Create(Platform obj)
         {
             IEnumerable<Platform> platforms = ReadAll();
@@ -83,26 +71,24 @@ namespace DAL
             }
 
             obj.Id = FindNextAvailablePlatformId();
-            ctx.Platforms.Add(ConvertToDTO(obj));
-            ctx.SaveChanges();
+            _ctx.Platforms.Add(ConvertToDao(obj));
+            _ctx.SaveChanges();
 
             return obj;
         }
 
         public Platform Read(int id, bool details)
         {
-            PlatformsDTO platformDTO = details ? ctx.Platforms.AsNoTracking().First(p => p.PlatformID == id) : ctx.Platforms.First(p => p.PlatformID == id);
-            ExtensionMethods.CheckForNotFound(platformDTO, "Platform", id);
+            PlatformsDao platformDao = details ? _ctx.Platforms.AsNoTracking().First(p => p.PlatformId == id) : _ctx.Platforms.First(p => p.PlatformId == id);
+            ExtensionMethods.CheckForNotFound(platformDao, "Platform", id);
 
-            return ConvertToDomain(platformDTO);
+            return ConvertToDomain(platformDao);
         }
-
-
-        // Modified by XV & NVZ
+        
         public void Update(Platform obj)
         {
-            PlatformsDTO newPlatform = ConvertToDTO(obj);
-            PlatformsDTO foundPlatform = ctx.Platforms.FirstOrDefault(dto => dto.PlatformID == newPlatform.PlatformID);
+            PlatformsDao newPlatform = ConvertToDao(obj);
+            PlatformsDao foundPlatform = _ctx.Platforms.FirstOrDefault(dto => dto.PlatformId == newPlatform.PlatformId);
             if (foundPlatform != null)
             {
                 foundPlatform.Name = newPlatform.Name;
@@ -113,23 +99,23 @@ namespace DAL
                 ctx.Platforms.Update(foundPlatform);
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            PlatformsDTO toDelete = ctx.Platforms.First(r => r.PlatformID == id);
-            ctx.Platforms.Remove(toDelete);
-            ctx.SaveChanges();
+            PlatformsDao toDelete = _ctx.Platforms.First(r => r.PlatformId == id);
+            _ctx.Platforms.Remove(toDelete);
+            _ctx.SaveChanges();
         }
 
         public IEnumerable<Platform> ReadAll()
         {
             List<Platform> myQuery = new List<Platform>();
 
-            foreach (PlatformsDTO DTO in ctx.Platforms)
+            foreach (PlatformsDao dao in _ctx.Platforms)
             {
-                myQuery.Add(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;

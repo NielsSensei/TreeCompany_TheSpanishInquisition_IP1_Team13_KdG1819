@@ -1,5 +1,4 @@
 using System.Linq;
-using BL;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -8,10 +7,10 @@ namespace UIMVC.Services
 {
     public class UserService
     {
-        private readonly UserManager<UIMVCUser> _usrMgr;
+        private readonly UserManager<UimvcUser> _usrMgr;
         
 
-        public UserService(UserManager<UIMVCUser> userManager)
+        public UserService(UserManager<UimvcUser> userManager)
         {
             _usrMgr = userManager;
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,19 +8,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using UIMVC.Areas.Identity.Data;
-using UIMVCUser = Domain.Identity.UIMVCUser;
+using UimvcUser = Domain.Identity.UimvcUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<UIMVCUser> _signInManager;
+        private readonly SignInManager<UimvcUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly UserManager<UimvcUser> _userManager;
 
-        public LoginModel(SignInManager<UIMVCUser> signInManager, ILogger<LoginModel> logger, UserManager<UIMVCUser> userManager)
+        public LoginModel(SignInManager<UimvcUser> signInManager, ILogger<LoginModel> logger, UserManager<UimvcUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
@@ -30,11 +28,8 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
         [BindProperty]
         public InputModel Input { get; set; }
-
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
         public string ReturnUrl { get; set; }
-
         [TempData]
         public string ErrorMessage { get; set; }
 
@@ -43,11 +38,9 @@ namespace UIMVC.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
-
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
-
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
@@ -60,8 +53,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
             }
 
             returnUrl = returnUrl ?? Url.Content("~/");
-
-            // Clear the existing external cookie to ensure a clean login process
+            
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -75,8 +67,6 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
@@ -99,8 +89,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
                     return Page();
                 }
             }
-
-            // If we got this far, something failed, redisplay form
+            
             return Page();
         }
     }

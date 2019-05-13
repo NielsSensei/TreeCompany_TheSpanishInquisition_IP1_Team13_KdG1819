@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using BL;
 using Domain.Projects;
@@ -34,14 +35,14 @@ namespace UIMVC.Services
             return _moduleManager.GetIdeations(project.Id);
         }
 
-        public IEnumerable<Phase> CollectProjectPhases(Project project)
-        {
-            return _projectManager.GetAllPhases(project.Id);
-        }
         public IEnumerable<Idea> CollectThreadIdeas(IdeationQuestion ideationQuestion)
         {
             return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
         }
         
+        public IEnumerable<Phase> CollectProjectPhases(Project project)
+        {
+            return _projectManager.GetAllPhases(project.Id);
+        }
     }
 }

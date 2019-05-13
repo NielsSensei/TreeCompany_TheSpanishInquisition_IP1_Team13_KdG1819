@@ -8,11 +8,9 @@ using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
-    
     public class PlatformController : Controller
     {
         private readonly PlatformManager _platformMgr;
@@ -139,9 +137,9 @@ namespace UIMVC.Controllers
             Report report = new Report()
             {
                 Idea = ToReport,
-                Flagger = new UIMVCUser() {Id = flagger},
-                Reportee = new UIMVCUser() {Id = ToReport.User.Id},
-                Status = ReportStatus.STATUS_NOTVIEWED
+                Flagger = new UimvcUser() {Id = flagger},
+                Reportee = new UimvcUser() {Id = ToReport.User.Id},
+                Status = ReportStatus.StatusNotViewed
             };
             
             if (!Request.Form["Reason"].ToString().Equals(""))

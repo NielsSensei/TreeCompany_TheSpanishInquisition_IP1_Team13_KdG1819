@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using UIMVC.Models;
 
 namespace UIMVC.Controllers
@@ -36,8 +32,7 @@ namespace UIMVC.Controllers
 
             return View();
         }
-
-        // Redirect after registering an account
+        
         [Route("ConfirmAccount")]
         public IActionResult ConfirmAccount()
         {
