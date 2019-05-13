@@ -2,12 +2,12 @@ namespace Domain.Users
 {
     public enum Role
     {
-        Anonymous     = 1,
-        LoggedIn      = 2,
-        LoggedInVerified = 3,
-        LoggedInOrg   = 4,
-        Moderator     = 5,
-        Admin         = 6,
-        SuperAdmin    = 7
+        ANONYMOUS     = 1,
+        LOGGEDIN      = 2,
+        LOGGEDINVERIFIED = 3,
+        LOGGEDINORG   = 4,
+        MODERATOR     = 5,
+        ADMIN         = 6,
+        SUPERADMIN    = 7
     }
 }

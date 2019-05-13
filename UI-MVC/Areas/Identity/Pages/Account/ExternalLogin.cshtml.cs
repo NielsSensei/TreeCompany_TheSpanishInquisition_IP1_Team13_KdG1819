@@ -115,14 +115,10 @@ namespace UIMVC.Areas.Identity.Pages.Account
                 var user = new UimvcUser
                 {
                     UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
                     EmailConfirmed = true,
                     Name = Input.Name
                 };
                 var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);

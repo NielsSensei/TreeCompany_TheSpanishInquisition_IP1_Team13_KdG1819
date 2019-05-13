@@ -65,7 +65,6 @@ CREATE TABLE Projects(
 	/*Constraints*/
 	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID),
 	CONSTRAINT ck_Projects_Status CHECK (Status = UPPER(Status))
-
 )
 
 CREATE TABLE Phases(
