@@ -49,8 +49,8 @@ namespace DAL.repos
                 Status = obj.Status,
                 VerifiedUser = obj.VerifiedUser,
                 IsDeleted = obj.IsDeleted,
-                ParentID = 0,
-                DeviceID = 0
+                ParentId = 0,
+                DeviceId = 0
             };
 
             if (obj.ParentIdea != null)
