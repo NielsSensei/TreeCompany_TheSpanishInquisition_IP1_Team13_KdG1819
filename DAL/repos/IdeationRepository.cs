@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using DAL.Contexts;
 using DAL.Data_Access_Objects;
-using Domain.Common;
 using Domain.Projects;
 using Domain.Identity;
 using Domain.Users;
@@ -236,7 +235,7 @@ namespace DAL.repos
         
         #region Media CRUD
         // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
-        public Media Create(Media obj)
+        /*public Media Create(Media obj)
         {
             //if (!mediafiles.Contains(obj))
             //{
@@ -262,7 +261,7 @@ namespace DAL.repos
             //{
             //    mediafiles.Remove(m);
             //}
-        }
+        } */
         #endregion
         
         #region Tag CRUD

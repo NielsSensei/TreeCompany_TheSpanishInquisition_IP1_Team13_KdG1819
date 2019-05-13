@@ -24,10 +24,10 @@ namespace DAL.repos
             {
                 PlatformId = p.Id,
                 Name = p.Name,
-                SiteUrl = p.Url
-
-                // TODO: (SPRINT2?) Dit kunnen oplossen
-                
+                SiteUrl = p.Url,
+                CarouselImage =  p.CarouselImage,
+                IconImage = p.IconImage,
+                FrontPageImage = p.FrontPageImage
             };
         }
 
@@ -37,9 +37,10 @@ namespace DAL.repos
             {
                 Id = dao.PlatformId,
                 Name = dao.Name,
-                Url = dao.SiteUrl
-                // TODO: (SPRINT2?) Dit kunnen oplossen
-               
+                Url = dao.SiteUrl,
+                CarouselImage =  dao.CarouselImage,
+                IconImage = dao.IconImage,
+                FrontPageImage = dao.FrontPageImage
             };
         }
         #endregion
@@ -90,6 +91,10 @@ namespace DAL.repos
             {
                 foundPlatform.Name = newPlatform.Name;
                 foundPlatform.SiteUrl = newPlatform.SiteUrl;
+                foundPlatform.IconImage = newPlatform.IconImage;
+                foundPlatform.CarouselImage = newPlatform.CarouselImage;
+                foundPlatform.FrontPageImage = newPlatform.FrontPageImage;
+                
                 _ctx.Platforms.Update(foundPlatform);
             }
 

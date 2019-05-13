@@ -48,7 +48,7 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "SUPERADMIN")]
-        public IActionResult AddPlatform(CreatePlatformModel cpm)
+        public async Task<IActionResult> AddPlatform(CreatePlatformModel cpm)
         {
             if (cpm == null)
             {
@@ -63,6 +63,23 @@ namespace UIMVC.Controllers
                 Users = new List<UimvcUser>()
             };
 
+            /*using (var memoryStream = new MemoryStream())
+            {
+                await cpm.IconImage.CopyToAsync(memoryStream);
+                platform.IconImage = memoryStream.ToArray();
+            }
+            
+            using (var memoryStream = new MemoryStream())
+            {
+                await cpm.CarouselImage.CopyToAsync(memoryStream);
+                platform.CarouselImage = memoryStream.ToArray();
+            }
+            
+            using (var memoryStream = new MemoryStream())
+            {
+                await cpm.FrontPageImage.CopyToAsync(memoryStream);
+                platform.FrontPageImage = memoryStream.ToArray();
+            }*/
 
             var newPlatform = _platformMgr.MakePlatform(platform);
 

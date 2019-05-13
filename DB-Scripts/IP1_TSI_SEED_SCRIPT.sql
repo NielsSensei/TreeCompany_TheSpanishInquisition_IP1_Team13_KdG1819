@@ -1,8 +1,4 @@
-﻿/* Platform */
-INSERT INTO Platforms(PlatformID,Name,SiteUrl, IconImagePath, CarouselImagePath, FrontPageImagePath) 
-VALUES(1,'Stad Antwerpen','www.cityofideas.be','/images/Icon_Stad_Antwerpen.jpg', '/images/Carousel_Stad_Antwerpen.jpg', '/images/FrontPage_Stad_Antwerpen.jpg')
-
-/* Organisationevents */
+﻿/* Organisationevents */
 INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate)
 VALUES(1,5,'The Inquisition','Een conferentie over hoe we Antwerpen kunnen introduceren tot de Spaanse cultuur','2019-03-31','2019-04-1')
 

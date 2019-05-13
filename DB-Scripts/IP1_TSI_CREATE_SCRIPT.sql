@@ -27,9 +27,9 @@ CREATE TABLE Platforms(
 	PlatformID INT IDENTITY,
 	Name NVARCHAR(100) NOT NULL,
 	SiteUrl VARCHAR(50) NOT NULL,
-	IconImagePath VARCHAR(255),
-	CarouselImagePath VARCHAR(255),
-	FrontPageImagePath VARCHAR(255),
+	IconImage VARBINARY(255),
+	CarouselImage VARBINARY(255),
+	FrontPageImage VARBINARY(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_Plaftorms PRIMARY KEY(PlatformID)

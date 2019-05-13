@@ -10,5 +10,8 @@ namespace Domain.Users
         public string Url { get; set; }
         public List<UimvcUser> Owners { get; set; }
         public List<UimvcUser> Users { get; set; }
+        public byte[] IconImage { get; set; }
+        public byte[] CarouselImage { get; set; }
+        public byte[] FrontPageImage { get; set; }
     }
 }

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Domain.Common;
 using Domain.Identity;
 using Domain.Users;
 
@@ -22,7 +20,7 @@ namespace Domain.Projects
         public int LikeVisibility { get; set; }
         public Phase CurrentPhase { get; set; }
         public List<Phase> Phases { get; set; }
-        public List<Image> PreviewImages { get; set; }
+       //public List<Image> PreviewImages { get; set; }
         public List<Module> Modules { get; set; }
     }
 }

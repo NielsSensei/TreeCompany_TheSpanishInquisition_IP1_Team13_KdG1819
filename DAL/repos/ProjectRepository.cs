@@ -3,7 +3,6 @@ using System.Data;
 using System.Linq;
 using DAL.Contexts;
 using DAL.Data_Access_Objects;
-using Domain.Common;
 using Domain.Projects;
 using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -246,22 +245,23 @@ namespace DAL.repos
         
         #region Images CRUD
         // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
-        public Image Create(Image obj)
+       /* public Image Create(Image obj)
         {
             /* if (!images.Contains(obj))
             {
                 images.Add(obj);
-            } */
+            } 
             throw new DuplicateNameException("This Image already exists!");
-        }
+        } */
 
+       /*
         public Image Read(int projectID, int imageID)
         {
             /* Image i = Read(projectID).PreviewImages.ToList()[imageID - 1];
             if (i != null)
             {
                 return i;
-            } */
+            } 
             throw new KeyNotFoundException("This Image can't be found!");
         }
 
@@ -274,7 +274,7 @@ namespace DAL.repos
         public void DeleteImage(Image obj)
         {
             //images.Remove(obj);
-        }
+        } */
         #endregion
     }
 }

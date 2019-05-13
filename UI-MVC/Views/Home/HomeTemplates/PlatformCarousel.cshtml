@@ -24,11 +24,13 @@
                 {
                     <div class="carousel-item">
                         <a asp-controller="Platform" asp-action="Index" asp-route-id="@platform.Id">
-                            <img class="imageCarousel d-block w-100" src="@platform.CarouselPageImagePath" alt="First slide">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h3>@platform.Name</h3>
-                            <p>@platform.Url</p>
-                        </div>
+                            <div style="background-image: url(data:image;base64,@System.Convert.ToBase64String(
+                                platform.CarouselImage)" class="imageCarousel d-block w-100">
+                            </div>
+                            <div class="carousel-caption d-none d-md-block">
+                                <h3>@platform.Name</h3>
+                                <p>@platform.Url</p>
+                            </div>
                         </a>
                     </div>
                 }
