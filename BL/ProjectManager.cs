@@ -35,7 +35,7 @@ namespace BL
             return project;
         }
         
-        public void MakeProject(Project project)
+        public Project MakeProject(Project project)
         {
             Project newProject = ProjectRepo.Create(project);
 
@@ -46,11 +46,18 @@ namespace BL
             
             ProjectRepo.Update(newProject);
 
+            return newProject;
+
         }
 
         public void RemoveProject(int projectId)
         {
             ProjectRepo.Delete(projectId);
+        }
+
+        public void MakeProjectImage(byte[] img, int project)
+        {
+            ProjectRepo.Create(img, project);
         }
         #endregion
         

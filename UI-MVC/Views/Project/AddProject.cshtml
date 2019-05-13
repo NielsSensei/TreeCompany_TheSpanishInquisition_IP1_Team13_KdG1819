@@ -46,16 +46,20 @@
             <label asp-for="CurrentPhase.Description">Omschrijving</label>
             <input asp-for="CurrentPhase.Description" class="form-control" />
         </div>
-        <div class="form-group col-md-6">
-            <label asp-for="CurrentPhase.StartDate">Start datum</label>
-            <input id="StartDatePhase" type="date" asp-for="CurrentPhase.StartDate" class="form-control"/>
-        </div>
-        <div class="form-group col-md-6">
-            <label asp-for="CurrentPhase.EndDate">Eind datum</label>
-            <input id="EndDatePhase" type="date" asp-for="CurrentPhase.EndDate" class="form-control"/>
-            <div id="EndDateErrorPhase" class="text-danger"></div>
-        </div>
+         <div class="form-group col-md-6">
+             <label asp-for="CurrentPhase.StartDate">Start datum</label>
+             <input id="StartDatePhase" type="date" asp-for="CurrentPhase.StartDate" class="form-control"/>
+         </div>
+         <div class="form-group col-md-6">
+             <label asp-for="CurrentPhase.EndDate">Eind datum</label>
+             <input id="EndDatePhase" type="date" asp-for="CurrentPhase.EndDate" class="form-control"/>
+             <div id="EndDateErrorPhase" class="text-danger"></div>
+         </div>
+         <div class="form-group col-md-6">
+             <p>Geef hier meerdere foto's om te tonen op de projectpagina:</p>
+             @Html.TextBoxFor(m => Model.ProjectImages, new {  
+                 type = "file" , multiple = true })
+         </div>
     </div>
-
-     <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
+    <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" />
 </form>

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Domain.Projects;
+using Microsoft.AspNetCore.Http;
 
 namespace UIMVC.Models
 {
@@ -24,5 +26,7 @@ namespace UIMVC.Models
 
         [Required(ErrorMessage = "Vul de eerste fase in")]
         public Phase CurrentPhase { get; set; }
+        
+        public IFormCollection ProjectImages { get; set; }
     }
 }

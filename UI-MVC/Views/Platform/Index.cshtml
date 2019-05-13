@@ -27,7 +27,11 @@
                </div>
                <div class="card-body">
                    <img alt="FrontPage"
-                   src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
+                        src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
+               </div>
+               <div class="card-footer">
+                   <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject" 
+                      asp-route-platform="@Model.Id">Maak nieuw project aan</a>
                </div>
            </section>
        </div>

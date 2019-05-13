@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using BL;
 using Domain.Identity;
 using Domain.Projects;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
@@ -39,7 +42,7 @@ namespace UIMVC.Controllers
 
         [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpPost]
-        public IActionResult AddProject(CreateProjectModel pvm, int platform, string user)
+        public async Task<IActionResult> AddProject(CreateProjectModel pvm, int platform, string user)
         {
             if (pvm == null)
             {
@@ -58,7 +61,19 @@ namespace UIMVC.Controllers
                 Visible = pvm.Visible
             };
 
-             _projManager.MakeProject(pr);
+             Project newProj = _projManager.MakeProject(pr);
+
+             foreach (IFormFile file in pvm.ProjectImages)
+             {
+                 if (file.Length > 0)
+                 {
+                     using (var memoryStream = new MemoryStream())
+                     {
+                         await file.CopyToAsync(memoryStream);
+                         _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
+                     }
+                 }
+             }
 
              return RedirectToAction("Index", "Platform", new {id = platform });
         }

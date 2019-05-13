@@ -20,7 +20,7 @@ namespace Domain.Projects
         public int LikeVisibility { get; set; }
         public Phase CurrentPhase { get; set; }
         public List<Phase> Phases { get; set; }
-       //public List<Image> PreviewImages { get; set; }
+        public List<byte[]> PreviewImages { get; set; }
         public List<Module> Modules { get; set; }
     }
 }
