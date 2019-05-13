@@ -63,52 +63,12 @@ namespace UIMVC.Controllers
                 Users = new List<UimvcUser>()
             };
 
-            var iconPath = UploadPlatformFile(cpm.IconImage, cpm.Name, "Icon").Result;
-            var carouselPath = UploadPlatformFile(cpm.CarouselImage, cpm.Name, "Carousel").Result;
-            var fpPath = UploadPlatformFile(cpm.FrontPageImage, cpm.Name, "FrontPage").Result;
-            
-            if(iconPath == null)
-            {
-                return BadRequest("Icon Image mag niet null zijn");
-            }
-
-            if(carouselPath == null)
-            {
-                return BadRequest("Carousel Image mag niet null zijn");
-            }
-            
-            if(fpPath == null)
-            {
-                return BadRequest("Front Page Image mag niet null zijn");
-            }
-            
-            platform.IconImagePath = iconPath;
-            platform.CarouselPageImagePath = carouselPath;
-            platform.FrontPageImagePath = fpPath;
 
             var newPlatform = _platformMgr.MakePlatform(platform);
 
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
         }
-
-        private async Task<string> UploadPlatformFile(IFormFile file, string platformName, string type)
-        {
-            var path = "/images/" + type + "_" + platformName.Replace(" ", "_");
-            
-            var fullpath = Path.Combine("/wwwroot", path);
-            
-            if (file == null || file.Length == 0)
-            {
-                return null;
-            }
-            
-            using (var stream = new FileStream(fullpath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-
-                return fullpath;
-            }
-        }
+        
         #endregion
 
         #region Ideation

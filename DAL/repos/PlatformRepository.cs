@@ -24,11 +24,8 @@ namespace DAL.repos
             {
                 PlatformId = p.Id,
                 Name = p.Name,
-                SiteUrl = p.Url,
-                IconImagePath = p.IconImagePath,
-                CarouselImagePath = p.CarouselPageImagePath,
-                FrontPageImagePath = p.FrontPageImagePath
-                
+                SiteUrl = p.Url
+
                 // TODO: (SPRINT2?) Dit kunnen oplossen
                 
             };
@@ -93,10 +90,7 @@ namespace DAL.repos
             {
                 foundPlatform.Name = newPlatform.Name;
                 foundPlatform.SiteUrl = newPlatform.SiteUrl;
-                foundPlatform.IconImagePath = newPlatform.IconImagePath;
-                foundPlatform.CarouselImagePath = newPlatform.CarouselImagePath;
-                foundPlatform.FrontPageImagePath = newPlatform.FrontPageImagePath;
-                ctx.Platforms.Update(foundPlatform);
+                _ctx.Platforms.Update(foundPlatform);
             }
 
             _ctx.SaveChanges();
