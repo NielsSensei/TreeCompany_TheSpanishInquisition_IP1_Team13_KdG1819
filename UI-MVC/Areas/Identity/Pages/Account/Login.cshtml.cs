@@ -53,7 +53,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
             }
 
             returnUrl = returnUrl ?? Url.Content("~/");
-
+            
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -89,7 +89,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
                     return Page();
                 }
             }
-
+            
             return Page();
         }
     }

@@ -9,7 +9,7 @@ using DAL.Contexts;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(CityOfIdeasDbContext))]
+    [DbContext(typeof(UimvcContext))]
     [Migration("20190401140142_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {

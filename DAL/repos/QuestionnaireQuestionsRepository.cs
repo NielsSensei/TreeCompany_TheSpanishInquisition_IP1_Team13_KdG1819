@@ -129,13 +129,13 @@ namespace DAL.repos
         }
 
         private int FindNextAvailableAnswerId()
-        {
+        {               
             if (!_ctx.Answers.Any()) return 1;
             int newId = ReadAll().Max(answer => answer.Id)+1;
             return newId;
         }
         #endregion
-
+        
         #region QuestionnaireQuestion CRUD
         public QuestionnaireQuestion Create(QuestionnaireQuestion obj)
         {
@@ -202,14 +202,14 @@ namespace DAL.repos
         {
             return ReadAll().Where(c => c.Module.Id == questionnaireId);
         }
-        #endregion
-
+        #endregion       
+        
         #region Answer CRUD
         public Answer Create(Answer obj)
         {
             QuestionnaireQuestion qq = Read(obj.Question.Id, false);
             obj.Id = FindNextAvailableAnswerId();
-
+            
             if(qq.QuestionType == QuestionType.Open || qq.QuestionType == QuestionType.Mail)
             {
                 _ctx.Answers.Add(OpenConvertToDao((OpenAnswer) obj));
@@ -228,7 +228,6 @@ namespace DAL.repos
 
             return obj;
         }
-
 
         public OpenAnswer ReadOpenAnswer(int answerId, bool details)
         {
@@ -279,7 +278,7 @@ namespace DAL.repos
             return myQuery;
         }
         #endregion
-
+        
         #region Options CRUD
         public string Create(int questionId, string obj)
         {
@@ -290,7 +289,7 @@ namespace DAL.repos
             {
                 if (ExtensionMethods.HasMatchingWords(obj, options.ElementAt(i)) > 0)
                 {
-                    throw new DuplicateNameException("Deze Option(ID=" + newId + ") met Optiontekst: " + obj + " is gelijkaardig aan de Option(ID=" + i +
+                    throw new DuplicateNameException("Deze Option(ID=" + newId + ") met Optiontekst: " + obj + " is gelijkaardig aan de Option(ID=" + i + 
                         "). De Optiontekst is: " + options.ElementAt(i) + ".");
                 }
             }

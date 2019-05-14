@@ -32,7 +32,7 @@ namespace UIMVC.Controllers
 
             return View();
         }
-
+        
         [Route("ConfirmAccount")]
         public IActionResult ConfirmAccount()
         {

@@ -85,20 +85,20 @@ namespace DAL.repos
 
         #region Id generation
         private int FindNextAvailableVoteId()
-        {
+        {               
             if (!_ctx.Votes.Any()) return 1;
             int newId = ReadAll().Max(vote => vote.Id) + 1;
             return newId;
         }
 
         private int FindNextAvailableDeviceId()
-        {
+        {          
             if (!_ctx.Devices.Any()) return 1;
             int newId = ReadAllDevices().Max(device => device.Id)+1;
             return newId;
         }
         #endregion
-
+        
         #region Vote CRUD
         public Vote Create(Vote obj)
         {
@@ -113,7 +113,7 @@ namespace DAL.repos
                         throw new DuplicateNameException("Vote(ID=" + obj.Id + ") en Vote(ID=" + v.Id + ") hebben dezelfde email en Device(ID=" +
                                                          obj.Device.Id + "), dit is absoluut niet toegestaan!");
                     }
-                }
+                } 
             }
 
             obj.Id = FindNextAvailableVoteId();
@@ -223,7 +223,7 @@ namespace DAL.repos
                 foundDevice.LocationX = newDevice.LocationX;
                 foundDevice.LocationY = newDevice.LocationY;
             }
-
+            
             _ctx.SaveChanges();
         }
 

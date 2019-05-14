@@ -128,7 +128,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-
+        
         #region Ideation CRUD
         public Ideation Create(Ideation obj)
         {
@@ -182,7 +182,7 @@ namespace DAL.repos
                 foundIdeation.MediaFile = newIdeation.MediaFile;
                 foundIdeation.RequiredFields = newIdeation.RequiredFields;
             }
-
+            
             ModulesDao newModule = GrabModuleInformationDao(obj);
             ModulesDao foundModule = _ctx.Modules.FirstOrDefault(dto => dto.ModuleId == newModule.ModuleId);
             if (foundModule != null)
@@ -196,7 +196,7 @@ namespace DAL.repos
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
             }
-
+            
             if (newModule.PhaseId != foundModule.PhaseId)
             {
                 foundModule.PhaseId = newModule.PhaseId;

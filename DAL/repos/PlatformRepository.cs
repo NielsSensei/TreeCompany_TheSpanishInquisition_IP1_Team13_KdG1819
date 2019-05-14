@@ -53,7 +53,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-
+        
         #region Platform CRUD
         public Platform Create(Platform obj)
         {

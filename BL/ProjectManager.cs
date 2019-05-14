@@ -10,20 +10,19 @@ namespace BL
     {
         private ProjectRepository ProjectRepo { get; }
         public ModuleManager ModuleMan { get; }
-
+        
         public ProjectManager()
         {
             ProjectRepo = new ProjectRepository();
             ModuleMan = new ModuleManager();
         }
-
+        
         #region Project
-
         public void EditProject(Project project)
         {
             ProjectRepo.Update(project);
         }
-
+        
         public Project GetProject(int projectId, bool details)
         {
             Project project = ProjectRepo.Read(projectId, details);
@@ -77,7 +76,7 @@ namespace BL
         {
             ProjectRepo.Update(phase);
         }
-
+        
         public IEnumerable<Phase> GetAllPhases(int projectId)
         {
             return ProjectRepo.ReadAllPhases(projectId);

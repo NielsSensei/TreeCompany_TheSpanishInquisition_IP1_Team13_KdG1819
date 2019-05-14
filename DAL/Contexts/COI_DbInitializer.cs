@@ -1,5 +1,4 @@
-﻿
-namespace DAL.Contexts
+﻿namespace DAL.Contexts
 {
     class COI_DbInitializer
     {

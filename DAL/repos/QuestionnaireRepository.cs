@@ -65,7 +65,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-
+        
         #region Questionnaire CRUD
         public Questionnaire Create(Questionnaire obj)
         {
@@ -135,8 +135,8 @@ namespace DAL.repos
                 if (dao.IsQuestionnaire)
                 {
                     Questionnaire toAdd = ConvertToDomain(dao);
-                    myQuery.Add(toAdd);
-                }
+                    myQuery.Add(toAdd);  
+                }             
             }
 
             return myQuery;

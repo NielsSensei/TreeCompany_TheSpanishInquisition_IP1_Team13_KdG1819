@@ -9,7 +9,7 @@ using UIMVC.Models;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(CityOfIdeasDbContext))]
+    [DbContext(typeof(UimvcContext))]
     [Migration("20190401180844_UserName")]
     partial class UserName
     {

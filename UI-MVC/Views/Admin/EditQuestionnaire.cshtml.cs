@@ -6,7 +6,7 @@ namespace UIMVC.Views.Admin
     {
         public void OnGet()
         {
-
+            
         }
     }
 }

@@ -8,7 +8,7 @@ using UIMVC.Models;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(CityOfIdeasDbContext))]
+    [DbContext(typeof(UimvcContext))]
     partial class UIMVCContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

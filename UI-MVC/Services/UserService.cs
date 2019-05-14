@@ -9,7 +9,6 @@ namespace UIMVC.Services
     {
         private readonly UserManager<UimvcUser> _usrMgr;
 
-
         public UserService(UserManager<UimvcUser> userManager)
         {
             _usrMgr = userManager;

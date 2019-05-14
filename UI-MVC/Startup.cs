@@ -22,7 +22,7 @@ namespace UIMVC
         }
 
         public IConfiguration Configuration { get; }
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -52,19 +52,19 @@ namespace UIMVC
             {
                 msOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
                 msOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
-            });
+            }); 
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            
             services.AddTransient<ProjectService>();
             services.AddTransient<QuestionService>();
             services.AddTransient<UserService>();
             services.AddTransient<RoleService>();
         }
-
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -79,7 +79,7 @@ namespace UIMVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
