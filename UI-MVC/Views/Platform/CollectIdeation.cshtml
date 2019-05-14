@@ -1,8 +1,4 @@
-@using Domain.Identity
 @using Domain.UserInput
-@using Domain.Users
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.EntityFrameworkCore
 @using UIMVC.Services
 @model Domain.Projects.Ideation
 @inject UserService Userservice
@@ -21,47 +17,22 @@
 
 <section class="container">
     <section class="row">
-        <div class="col-5">
-            <h2>@Model.Title</h2>
-            <p>door @Userservice.CollectUserName(Model.User.Id)</p>
-            @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-            {
-                LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount, TwitterLikeCount = Model.TwitterLikeCount, 
-                ShareCount = Model.ShareCount, RetweetCount = Model.RetweetCount, IconStyle = 3
-            })
-            <br/>
-            <p>@Model.ExtraInfo</p>
-            @if (Model.Event.Id != 0)
-            {
-                @* TODO Zorgt voor een eventPagina *@
-                <p>Deze ideation is georganiseerd dankzij dit evenement</p> 
-            }
-            <section>
-                <h6 class="font-weight-bold">Tags:</h6>
-
-                <div class="row justify-content-start">
-                    @if (Model.Tags.Any())
-                    {
-                        @Html.Partial("_TagsPartial", Model.Tags)
-                    }
-                    else
-                    {
-                        <p>Geen tags gevonden</p>
-                    }
-
-                    @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
-                    {
-                        <a class="btn btn-primary mx-1 m-0" data-toggle="modal" data-target="#addTagModal">
-                                                Nieuwe Tag</a>
-                    }
-
-                </div>
-            </section>
-        </div>
-        <div class="col-7">
-            @* TODO vervang images door Media *@
-            <img alt="IdeationMedia" src="https://via.placeholder.com/600x400"/>
-        </div>
+        @if (@Model.MediaLink == null)
+        {
+            <div class="col-12">
+                @Html.Partial("_IdeationHeaderPartial", Model)
+            </div>
+        }
+        else
+        {
+            <div class="col-5">
+                @Html.Partial("_IdeationHeaderPartial", Model)
+            </div>
+            <div class="col-7">
+                <iframe width="600" height="400" src="@Model.MediaLink"> </iframe>
+            </div>  
+        }
+        
     </section>
     <hr>
     <section class="container">
@@ -119,7 +90,7 @@
                     asp-route-id="@Model.Id">Pas deze ideation aan.</a>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-primary" data-toggle="modal" 
+                <button type="button" class="btn btn-primary" data-toggle="modal"
                     data-target="#deleteIdeationModal">Verwijder deze ideation.
                 </button>
             </div>
@@ -127,7 +98,7 @@
     </div>
 }
 
-<div class="modal fade" id="deleteIdeationModal" tabindex="-1" role="dialog" 
+<div class="modal fade" id="deleteIdeationModal" tabindex="-1" role="dialog"
      aria-labelledby="deleteIdeationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -136,14 +107,14 @@
             </div>
             <div class=modal-body>
                 <a type="button" class="btn btn-primary" asp-controller="Moderation"
-                        asp-action="DestroyIdeation" asp-route-id="@Model.Id">Bevestig</a>  
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>  
+                        asp-action="DestroyIdeation" asp-route-id="@Model.Id">Bevestig</a>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" 
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog"
      aria-labelledby="addTagModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -155,14 +126,14 @@
                     </div>
                     <div class="form-group">
                         <label>Vul hier de tag in:</label>
-                        @Html.TextBox("GetMeATag","", 
+                        @Html.TextBox("GetMeATag","",
                             new { @class="form-control"})
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" type="submit">Bevestig</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
-                </form>  
+                </form>
             </div>
         </div>
     </div>

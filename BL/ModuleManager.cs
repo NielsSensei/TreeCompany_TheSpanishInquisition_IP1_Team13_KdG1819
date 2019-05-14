@@ -20,49 +20,44 @@ namespace BL
         public IEnumerable<Ideation> GetIdeations(int projectId)
         {
             List<Ideation> modules = new List<Ideation>();
-            
+
             modules.AddRange(IdeationRepo.ReadAll(projectId));
 
             return modules;
         }
         
         public Ideation GetIdeation(int moduleId){
-            return IdeationRepo.ReadWithModule(moduleId);            
+            return IdeationRepo.ReadWithModule(moduleId);
         }
-        
+
         public Ideation GetIdeation(int phaseId, int projectId)
         {
             return IdeationRepo.ReadAll(projectId).FirstOrDefault(m => m.ParentPhase.Id == phaseId);
         }
-        
+
         public void MakeIdeation(Ideation ideation)
         {
             IdeationRepo.Create(ideation);
         }
-        
+
         public void EditIdeation(Ideation ideation)
         {
-            IdeationRepo.Update(ideation); 
+            IdeationRepo.Update(ideation);
         }
         #endregion
-        
+
         #region Questionnaire
         public Questionnaire GetQuestionnaire(int moduleId, bool details)
         {
             return QuestionnaireRepo.Read(moduleId, details);
-        } 
-        
-        public Questionnaire GetQuestionnaire(int phaseId, int projectId)
-        {
-            return QuestionnaireRepo.ReadAll(projectId).FirstOrDefault(m => m.ParentPhase.Id == phaseId);
         }
         
         public IEnumerable<Questionnaire> GetQuestionnaires(int projectId)
         {
             List<Questionnaire> modules = new List<Questionnaire>();
 
-            modules.AddRange(QuestionnaireRepo.ReadAll(projectId));            
-            
+            modules.AddRange(QuestionnaireRepo.ReadAll(projectId));
+
             return modules;
         }
         
@@ -95,7 +90,7 @@ namespace BL
         {
             if (questionnaire)
             {
-                QuestionnaireRepo.Delete(moduleId);    
+                QuestionnaireRepo.Delete(moduleId);
             }
             else
             {

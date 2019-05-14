@@ -3,7 +3,6 @@ using System.Data;
 using System.Linq;
 using DAL.Contexts;
 using DAL.Data_Access_Objects;
-using Domain.Common;
 using Domain.Projects;
 using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,21 +13,22 @@ namespace DAL.repos
     public class ProjectRepository : IRepository<Project>
     {
         private readonly CityOfIdeasDbContext _ctx;
-        
+
         public ProjectRepository()
         {
             _ctx = new CityOfIdeasDbContext();
         }
-        
+
         #region Conversion Methods
+
         private Project ConvertToDomain(ProjectsDao dao)
         {
             return new Project()
             {
                 Id = dao.ProjectId,
-                CurrentPhase = new Phase() { Id = dao.CurrentPhaseId },
-                User = new UimvcUser() { Id = dao.UserId },
-                Platform = new Platform() { Id = dao.PlatformId },
+                CurrentPhase = new Phase() {Id = dao.CurrentPhaseId},
+                User = new UimvcUser() {Id = dao.UserId},
+                Platform = new Platform() {Id = dao.PlatformId},
                 Title = dao.Title,
                 Goal = dao.Goal,
                 Status = dao.Status,
@@ -66,7 +66,7 @@ namespace DAL.repos
             return new Phase
             {
                 Id = dao.PhaseId,
-                Project = new Project { Id = dao.ProjectId },
+                Project = new Project {Id = dao.ProjectId},
                 Description = dao.Description,
                 StartDate = dao.StartDate,
                 EndDate = dao.EndDate
@@ -84,33 +84,61 @@ namespace DAL.repos
                 EndDate = phase.EndDate
             };
         }
+
+        private ProjectImagesDao ConvertToDao(byte[] obj, int projectId, int imageId)
+        {
+            return new ProjectImagesDao()
+            {
+                ProjectId = projectId,
+                ProjectImage = obj,
+                ImageId = imageId
+            };
+        }
+
+        private byte[] ConvertToDomain(ProjectImagesDao dao)
+        {
+            return dao.ProjectImage;
+        }
+
         #endregion
-        
+
         #region Id generation
+
         private int FindNextAvailableProjectId()
-        {               
+        {
             if (!_ctx.Projects.Any()) return 1;
             int newId = ReadAll().Max(platform => platform.Id)+1;
             return newId;
         }
-        
+
         private int FindNextAvailablePhaseId()
-        {               
+        {
             if (!_ctx.Phases.Any()) return 1;
-            int newId = ReadAllPhases().Max(platform => platform.Id)+1;
+            int newId = ReadAllPhases().Max(platform => platform.Id) + 1;
+            return newId;
+        }
+
+        private int FindNextAvailableImageId()
+        {
+            if (!_ctx.ProjectImages.Any()) return 1;
+            int newId = _ctx.ProjectImages.Count()+1;
             return newId;
         }
         #endregion
 
         #region Project CRUD
+
         public Project Create(Project obj)
         {
             IEnumerable<Project> projects = ReadAllForPlatform(obj.Platform.Id);
 
-            foreach(Project p in projects){
-                if(ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
+            foreach (Project p in projects)
+            {
+                if (ExtensionMethods.HasMatchingWords(p.Title, obj.Title) > 0)
                 {
-                    throw new DuplicateNameException("Dit project bestaat al of is misschien gelijkaardig. Project(ID=" + obj.Id + ") dat je wil aanmaken: " + 
+                    throw new DuplicateNameException(
+                        "Dit project bestaat al of is misschien gelijkaardig. Project(ID=" + obj.Id +
+                        ") dat je wil aanmaken: " +
                         obj.Title + ". Project(ID=" + p.Title + ") dat al bestaat: " + p.Title + ".");
                 }
             }
@@ -119,12 +147,14 @@ namespace DAL.repos
             _ctx.Projects.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
 
-            return obj; 
+            return obj;
         }
-        
+
         public Project Read(int id, bool details)
         {
-            ProjectsDao projectsDao = details ? _ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectId == id) : _ctx.Projects.FirstOrDefault(p => p.ProjectId == id);
+            ProjectsDao projectsDao = details
+                ? _ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectId == id)
+                : _ctx.Projects.FirstOrDefault(p => p.ProjectId == id);
             ExtensionMethods.CheckForNotFound(projectsDao, "Project", id);
             
             return ConvertToDomain(projectsDao);
@@ -138,6 +168,7 @@ namespace DAL.repos
             {
                 foundProj.Title = newProj.Title;
                 foundProj.Goal = newProj.Goal;
+                foundProj.CurrentPhaseId = newProj.CurrentPhaseId;
                 foundProj.Status = newProj.Status;
                 foundProj.Visible = newProj.Visible;
                 foundProj.ReactionCount = newProj.ReactionCount;
@@ -156,7 +187,7 @@ namespace DAL.repos
             _ctx.Projects.Remove(toDelete);
             _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Project> ReadAll()
         {
             List<Project> myQuery = new List<Project>();
@@ -173,19 +204,22 @@ namespace DAL.repos
         {
             return ReadAll().ToList().FindAll(p => p.Platform.Id == platformId);
         }
-        #endregion        
-        
+
+        #endregion
+
         #region Phase CRUD
         public Phase Create(Phase obj)
         {
             IEnumerable<Phase> phases = ReadAllPhases(obj.Project.Id);
 
-            foreach(Phase p in phases)
+            foreach (Phase p in phases)
             {
                 if (p.StartDate > obj.StartDate && p.EndDate < obj.EndDate)
                 {
-                    throw new DuplicateNameException("Deze phase met ID " + obj.Id + " (Start: " + obj.StartDate + ", Einde: " + obj.EndDate + ") overlapt" +
-                        " met een andere phase met ID " + p.Id + " (Start: " + p.StartDate + ", Einde: " + p.EndDate + ")");
+                    throw new DuplicateNameException("Deze phase met ID " + obj.Id + " (Start: " + obj.StartDate +
+                                                     ", Einde: " + obj.EndDate + ") overlapt" +
+                                                     " met een andere phase met ID " + p.Id + " (Start: " +
+                                                     p.StartDate + ", Einde: " + p.EndDate + ")");
                 }
             }
 
@@ -198,7 +232,9 @@ namespace DAL.repos
 
         public Phase ReadPhase(int phaseId, bool details)
         {
-            PhasesDao phasesDao = details ? _ctx.Phases.AsNoTracking().First(p => p.PhaseId == phaseId) : _ctx.Phases.First(p => p.PhaseId == phaseId);
+            PhasesDao phasesDao = details
+                ? _ctx.Phases.AsNoTracking().FirstOrDefault(p => p.PhaseId == phaseId)
+                : _ctx.Phases.FirstOrDefault(p => p.PhaseId == phaseId);
             ExtensionMethods.CheckForNotFound(phasesDao, "Phase", phaseId);
 
             return ConvertToDomain(phasesDao);
@@ -241,38 +277,38 @@ namespace DAL.repos
         {
             return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectId);
         }
+
         #endregion
-        
+
         #region Images CRUD
-        // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
-        public Image Create(Image obj)
+        public void Create(byte[] obj, int projectId)
         {
-            /* if (!images.Contains(obj))
+            ProjectImagesDao dao = ConvertToDao(obj, projectId, FindNextAvailableImageId());
+            _ctx.ProjectImages.Add(dao);
+            _ctx.SaveChanges();
+        }
+
+        public void DeleteImages(int projectId)
+        {
+            foreach (ProjectImagesDao img in _ctx.ProjectImages.Where(i => i.ProjectId == projectId))
             {
-                images.Add(obj);
-            } */
-            throw new DuplicateNameException("This Image already exists!");
-        }
+                _ctx.ProjectImages.Remove(img);
+            }
 
-        public Image Read(int projectID, int imageID)
+            _ctx.SaveChanges();
+        }
+        
+        public List<byte[]> ReadAllImages(int projectId)
         {
-            /* Image i = Read(projectID).PreviewImages.ToList()[imageID - 1];
-            if (i != null)
+            List<byte[]> myQuery = new List<byte[]>();
+
+            foreach (ProjectImagesDao img in _ctx.ProjectImages.Where(i => i.ProjectId == projectId))
             {
-                return i;
-            } */
-            throw new KeyNotFoundException("This Image can't be found!");
-        }
+                byte[] byteImg = ConvertToDomain(img);
+                myQuery.Add(byteImg);
+            }
 
-        public void Update(Image obj)
-        {
-            //DeleteImage(obj);
-            //Create(obj);
-        }
-
-        public void DeleteImage(Image obj)
-        {
-            //images.Remove(obj);
+            return myQuery;
         }
         #endregion
     }

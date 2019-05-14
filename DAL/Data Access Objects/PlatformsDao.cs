@@ -6,5 +6,7 @@
         public string Name { get; set; }
         public string SiteUrl { get; set; }
         public byte[] IconImage { get; set; }
+        public byte[] CarouselImage { get; set; }
+        public byte[] FrontPageImage { get; set; }
     }
 }

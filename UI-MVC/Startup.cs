@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UIMVC.Services;
@@ -35,8 +36,8 @@ namespace UIMVC
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.RequireUniqueEmail = false;
             });
-            
-            services.Configure<ForwardedHeadersOptions>(options => 
+
+            services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.KnownProxies.Add(IPAddress.Parse("34.76.133.167"));
             });
@@ -46,7 +47,7 @@ namespace UIMVC
                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             });
-                 
+
             services.AddAuthentication().AddMicrosoftAccount(msOptions =>
             {
                 msOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
@@ -83,10 +84,10 @@ namespace UIMVC
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-            
+
             app.UseAuthentication();
             app.UseCookiePolicy();
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -94,7 +95,7 @@ namespace UIMVC
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-        
+
         private async void CreateRoles(RoleManager<IdentityRole> roleManager)
         {
             foreach (string role in Enum.GetValues(typeof(Domain.Users.Role)))

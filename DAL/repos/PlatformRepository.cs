@@ -11,12 +11,12 @@ namespace DAL.repos
     public class PlatformRepository : IRepository<Platform>
     {
         private readonly CityOfIdeasDbContext _ctx;
-        
+
         public PlatformRepository()
         {
             _ctx = new CityOfIdeasDbContext();
         }
-        
+
         #region Conversion Methods
         private PlatformsDao ConvertToDao(Platform p)
         {
@@ -24,9 +24,10 @@ namespace DAL.repos
             {
                 PlatformId = p.Id,
                 Name = p.Name,
-                SiteUrl = p.Url
-                // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image
+                SiteUrl = p.Url,
+                CarouselImage =  p.CarouselImage,
+                IconImage = p.IconImage,
+                FrontPageImage = p.FrontPageImage
             };
         }
 
@@ -36,13 +37,14 @@ namespace DAL.repos
             {
                 Id = dao.PlatformId,
                 Name = dao.Name,
-                Url = dao.SiteUrl
-                // TODO: (SPRINT2?) Dit kunnen oplossen
-                // IconImage = p.Image
+                Url = dao.SiteUrl,
+                CarouselImage =  dao.CarouselImage,
+                IconImage = dao.IconImage,
+                FrontPageImage = dao.FrontPageImage
             };
         }
         #endregion
-        
+
         #region Id generation
         private int FindNextAvailablePlatformId()
         {
@@ -80,7 +82,7 @@ namespace DAL.repos
 
             return ConvertToDomain(platformDao);
         }
-        
+
         public void Update(Platform obj)
         {
             PlatformsDao newPlatform = ConvertToDao(obj);
@@ -90,6 +92,9 @@ namespace DAL.repos
                 foundPlatform.Name = newPlatform.Name;
                 foundPlatform.SiteUrl = newPlatform.SiteUrl;
                 foundPlatform.IconImage = newPlatform.IconImage;
+                foundPlatform.CarouselImage = newPlatform.CarouselImage;
+                foundPlatform.FrontPageImage = newPlatform.FrontPageImage;
+
                 _ctx.Platforms.Update(foundPlatform);
             }
 

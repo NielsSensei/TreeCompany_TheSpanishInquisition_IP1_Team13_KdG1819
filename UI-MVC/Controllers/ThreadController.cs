@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BL;
 using Domain.Identity;
 using Domain.UserInput;
+using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Services;
@@ -19,7 +20,7 @@ namespace UIMVC.Controllers
             _iqMgr = new IdeationQuestionManager();
             _roleService = roleService;
         }
-        
+
         [Authorize]
         public async Task<IActionResult> AddIdea(int ideationQuestion, string user, int parent)
         {
@@ -42,7 +43,7 @@ namespace UIMVC.Controllers
             }
             
             idea.VerifiedUser = await _roleService.IsVerified(User);
-            
+
             if (!Request.Form["newIdeaTitle"].ToString().Equals(null))
             {
                 idea.Title = Request.Form["newIdeaTitle"].ToString();
@@ -52,18 +53,18 @@ namespace UIMVC.Controllers
             {
                 Field field = new Field()
                 {
-                    Idea = idea    
-                };  
-                
+                    Idea = idea
+                };
+
                 field.Text = Request.Form["newIdeaField"].ToString();
                 field.TextLength = field.Text.Length;
 
                 idea.Field = field;
             }
-            
+
             //TODO dit met iq settings.
             if (idea.Field != null || idea.Cfield != null || idea.Mfield != null || idea.Vfield != null
-                || idea.Ifield != null) 
+                || idea.Ifield != null)
             {
                 try
                 {
@@ -79,7 +80,7 @@ namespace UIMVC.Controllers
                         });
                 }
             }
-            
+
             return RedirectToAction("CollectIdeationThread", "Platform", new { Id = ideationQuestion });
         }
     }

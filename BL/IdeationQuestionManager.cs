@@ -9,7 +9,6 @@ namespace BL
     {
         private IdeationQuestionsRepository IdeationQuestionRepo { get; }
         private VoteManager VoteMan { get; }
-        
         public IdeationQuestionManager()
         {
             IdeationQuestionRepo = new IdeationQuestionsRepository();
@@ -63,7 +62,7 @@ namespace BL
         {
             IdeationQuestionRepo.Create(idea);
         }
-        
+
         public void RemoveIdea(int ideaId)
         {
             IdeationQuestionRepo.DeleteIdea(ideaId);
@@ -112,7 +111,7 @@ namespace BL
             VoteMan.RemoveVotes(ideaId);
         }
         #endregion
-        
+
         #region Field
         public IEnumerable<Field> GetAllFields(int ideaId)
         {

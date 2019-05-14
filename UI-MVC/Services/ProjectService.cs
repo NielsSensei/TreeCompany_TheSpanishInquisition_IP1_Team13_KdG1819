@@ -39,10 +39,10 @@ namespace UIMVC.Services
         {
             return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
         }
-        
-        public IEnumerable<Phase> CollectProjectPhases(Project project)
+
+        public IEnumerable<byte[]> CollectProjectImages(Project project)
         {
-            return _projectManager.GetAllPhases(project.Id);
+            return _projectManager.GetAllImages(project.Id);
         }
     }
 }

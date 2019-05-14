@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using DAL.Contexts;
 using DAL.Data_Access_Objects;
-using Domain.Common;
 using Domain.Projects;
 using Domain.Identity;
 using Domain.Users;
@@ -15,12 +14,12 @@ namespace DAL.repos
     public class IdeationRepository : IRepository<Ideation>
     {
         private readonly CityOfIdeasDbContext _ctx;
-        
+
         public IdeationRepository()
         {
             _ctx = new CityOfIdeasDbContext();
         }
-        
+
         #region Conversion Methods
         private ModulesDao GrabModuleInformationDao(Ideation obj)
         {
@@ -41,7 +40,7 @@ namespace DAL.repos
             {
                 dao.Tags = ExtensionMethods.ListToString(obj.Tags);
             }
-            
+
             if (obj.Project != null)
             {
                 dao.ProjectId = obj.Project.Id;
@@ -51,7 +50,7 @@ namespace DAL.repos
             {
                 dao.PhaseId = obj.ParentPhase.Id;
             }
-            
+
             return dao;
         }
 
@@ -62,20 +61,20 @@ namespace DAL.repos
             IdeationsDao dao = new IdeationsDao()
             {
                     ModuleId = obj.Id,
-                    ExtraInfo = obj.ExtraInfo
-                    //MediaFile = obj.Media,
+                    ExtraInfo = obj.ExtraInfo,
+                    MediaFile = obj.MediaLink,
             };
 
             if (obj.User != null)
             {
                 dao.UserId = obj.User.Id;
             }
-            
+
             if (obj.RequiredFields > 0)
             {
                 dao.RequiredFields = (byte) obj.RequiredFields;
             }
-            
+
             if (obj.Event != null)
             {
                 dao.EventId = obj.Event.Id;
@@ -94,7 +93,7 @@ namespace DAL.repos
                 User = new UimvcUser { Id = dao.UserId },
                 UserIdea = dao.UserIdea,
                 Event = new Event { Id = dao.EventId },
-                //Media = DTO.MediaFile,
+                MediaLink = dao.MediaFile,
                 ExtraInfo = dao.ExtraInfo,
                 RequiredFields = dao.RequiredFields
             };
@@ -112,18 +111,18 @@ namespace DAL.repos
             ideation.ShareCount = dao.ShareCount;
             ideation.RetweetCount = dao.RetweetCount;
             ideation.Tags = new List<string>();
-            
+
             if (dao.Tags != null)
             {
-                ideation.Tags = ExtensionMethods.StringToList(dao.Tags); 
+                ideation.Tags = ExtensionMethods.StringToList(dao.Tags);
             }
             return ideation;
         }
         #endregion
-        
+
         #region Id generation
         private int FindNextAvailableIdeationId()
-        {               
+        {
             if (!_ctx.Ideations.Any()) return 1;
             int newId = _ctx.Modules.Max(q => q.ModuleId) + 1;
             return newId;
@@ -147,7 +146,7 @@ namespace DAL.repos
             obj.Id = FindNextAvailableIdeationId();
             ModulesDao newModule = GrabModuleInformationDao(obj);
             IdeationsDao newIdeation = ConvertToDao(obj);
-            
+
             _ctx.Modules.Add(newModule);
             _ctx.Ideations.Add(newIdeation);
             _ctx.SaveChanges();
@@ -207,14 +206,14 @@ namespace DAL.repos
         }
 
         public void Delete(int id)
-        {            
-            IdeationsDao toDelete = _ctx.Ideations.First(r => r.ModuleId == id);
-            _ctx.Ideations.Remove(toDelete);
+        {
             ModulesDao toDeleteModule = _ctx.Modules.First(r => r.ModuleId == id);
             _ctx.Modules.Remove(toDeleteModule);
+            IdeationsDao toDelete = _ctx.Ideations.First(r => r.ModuleId == id);
+            _ctx.Ideations.Remove(toDelete);
             _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Ideation> ReadAll()
         {
             List<Ideation> myQuery = new List<Ideation>();
@@ -234,37 +233,6 @@ namespace DAL.repos
         }
         #endregion
         
-        #region Media CRUD
-        // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
-        public Media Create(Media obj)
-        {
-            //if (!mediafiles.Contains(obj))
-            //{
-            //    mediafiles.Add(obj);
-            //}
-            throw new DuplicateNameException("This MediaFile already exist!");
-        }
-
-        public Media ReadMedia(int ideationId)
-        {
-            //Media m = Read(ideationID).Media;
-            //if (m != null)
-            //{
-            //    return m;
-            //}
-            throw new KeyNotFoundException("This Media can't be found!");
-        }
-
-        public void DeleteMedia(int ideationId)
-        {
-            //Media m = ReadMedia(ideationID);
-            //if (m != null)
-            //{
-            //    mediafiles.Remove(m);
-            //}
-        }
-        #endregion
-        
         #region Tag CRUD
         public string CreateTag(string obj, int moduleId)
         {
@@ -274,7 +242,7 @@ namespace DAL.repos
 
             ideationWTags.Tags = ExtensionMethods.StringToList(oldTags);
             Update(ideationWTags);
-            
+
             return obj;
         }
 

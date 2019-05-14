@@ -41,7 +41,7 @@ namespace DAL
                     if (i != myStrings.Count - 1) myString += ",";
                 }
             }
-            
+
             return myString;
         }
 

@@ -127,7 +127,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-                        
+
                         var userFound = await _userManager.FindByEmailAsync(user.UserName);
                         _roleService.AssignToRole(userFound, Domain.Users.Role.LoggedIn);
                         

@@ -37,9 +37,9 @@ namespace DAL.repos
             {
                 v.DeviceId = obj.Device.Id;
             }
-            
+
             return v;
-        }    
+        }
 
         private Vote ConvertToDomain(VotesDao dao)
         {
@@ -82,7 +82,7 @@ namespace DAL.repos
             };
         }
         #endregion
-        
+
         #region Id generation
         private int FindNextAvailableVoteId()
         {               
@@ -90,7 +90,7 @@ namespace DAL.repos
             int newId = ReadAll().Max(vote => vote.Id) + 1;
             return newId;
         }
-        
+
         private int FindNextAvailableDeviceId()
         {          
             if (!_ctx.Devices.Any()) return 1;
@@ -110,19 +110,19 @@ namespace DAL.repos
                 {
                     if(v.UserMail == obj.UserMail)
                     {
-                        throw new DuplicateNameException("Vote(ID=" + obj.Id + ") en Vote(ID=" + v.Id + ") hebben dezelfde email en Device(ID=" + 
+                        throw new DuplicateNameException("Vote(ID=" + obj.Id + ") en Vote(ID=" + v.Id + ") hebben dezelfde email en Device(ID=" +
                                                          obj.Device.Id + "), dit is absoluut niet toegestaan!");
                     }
                 } 
             }
-            
+
             obj.Id = FindNextAvailableVoteId();
             _ctx.Votes.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
 
             return obj;
         }
-        
+
         public Vote Read(int id, bool details)
         {
             VotesDao voteDao = details ? _ctx.Votes.AsNoTracking().First(p => p.VoteId == id) : _ctx.Votes.First(p => p.VoteId == id);
@@ -130,7 +130,7 @@ namespace DAL.repos
 
             return ConvertToDomain(voteDao);
         }
-        
+
         public void Update(Vote obj)
         {
             VotesDao newVote = ConvertToDao(obj);
@@ -144,7 +144,7 @@ namespace DAL.repos
 
             _ctx.SaveChanges();
         }
-        
+
         public void Delete(int id)
         {
             VotesDao toDelete = _ctx.Votes.First(v => v.VoteId == id);
@@ -161,7 +161,7 @@ namespace DAL.repos
                 Delete(vote.Id);
             }
         }
-        
+
         public IEnumerable<Vote> ReadAll()
         {
             List<Vote> myQuery = new List<Vote>();
@@ -184,7 +184,7 @@ namespace DAL.repos
             return ReadAll().ToList().FindAll(vote => vote.Idea.Id == ideaId);
         }
         #endregion
-        
+
         #region Devices CRUD
         public IotDevice Create(IotDevice obj)
         {

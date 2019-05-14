@@ -1,15 +1,11 @@
-﻿/* Platform */
-INSERT INTO Platforms(PlatformID,Name,SiteUrl) 
-VALUES(1,'Stad Antwerpen','www.cityofideas.be')
-
-/* Organisationevents */
+﻿/* Organisationevents */
 INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate)
 VALUES(1,5,'The Inquisition','Een conferentie over hoe we Antwerpen kunnen introduceren tot de Spaanse cultuur','2019-03-31','2019-04-1')
 
-/* Projects 
+/* Projects
 Status: Niet gestart/Phase naam/Afgesloten
 likeVisbility
-0 = enkel likecount 
+0 = enkel likecount
 1 = enkel fblikecount
 2 = enkel twitterlikecount
 3 = likecount & fblikecount
@@ -17,8 +13,8 @@ likeVisbility
 5 = fblikecount & twitterlikecount
 6 = alle 3
 */
-INSERT INTO Projects(ProjectID,CurrentPhaseID,UserID,PlatformID,Title,Goal,Status,Visible,LikeVisibility,ReactionCount,LikeCount,FbLikeCount,TwitterLikeCOunt, StartDate,
-EndDate) VALUES(1,1,7,1,'GROENplaats','De Antwerpse Groenplaats terug groen maken','NIET GESTART',1,6,0,0,0,0,'2019-03-10','2019-07-31')
+INSERT INTO Projects(ProjectID,CurrentPhaseID,UserID,PlatformID,Title,Goal,Status,Visible,LikeVisibility,ReactionCount,LikeCount,FbLikeCount,TwitterLikeCOunt)
+VALUES(1,1,7,1,'GROENplaats','De Antwerpse Groenplaats terug groen maken','NIET GESTART',1,6,0,0,0,0)
 
 /* Phases */
 INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
@@ -43,11 +39,11 @@ VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1,0,0,0,0,0
 INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
 VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0,0,0,0,0,0,'Geef uw alternatief!')
 
-/* QuestionnaireQuestions 
-0 = open                                                                                                                                                       
-1 = single               
-2 = multi                                                                                                                                                       
-3 = drop                 
+/* QuestionnaireQuestions
+0 = open
+1 = single
+2 = multi
+3 = drop
 4 = mail
 */
 INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Required)
@@ -166,7 +162,7 @@ INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
 VALUES(6,5,'30 jaar geleden was de groenplaats nog groen toen dat SPA aan het roer hing in antwerpen. Sinds de NVA zich kwam moeien is er een echte vergrijzing in de stad!',0,0)
 
 /* Devices */
-INSERT INTO Devices(DeviceID,LocationX,LocationY) 
+INSERT INTO Devices(DeviceID,LocationX,LocationY)
 VALUES(1,55,55)
 
 /* votes */
@@ -179,7 +175,7 @@ VALUES(2,1,2,2,'niels.vanzandbergen@student.kdg.be','No',2)
 INSERT INTO Votes(VoteID,DeviceID,InputID,InputType,UserMail,Choices,UserID)
 VALUES(3,1,2,2,'niels.vanzandbergen@student.kdg.be','Yes',3)
 
-/* useractivities 
+/* useractivities
 Note: de bedoeling van de keywords hier is dat ze vervangen worden door obj.
 */
 INSERT INTO UserActivities(ActivityID,UserID,PlatformID,ProjectID,ActionDescription)

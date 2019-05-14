@@ -1,0 +1,68 @@
+@using Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@model UIMVC.Models.CreateProjectModel
+@inject UserManager<UimvcUser> UserManager
+
+ @{
+    ViewBag.Title = "Create New Project";
+    Layout = "_Layout";
+}
+
+ @section Scripts {
+    <script type="module" src="~/dist/validation.entry.js" defer></script>
+} 
+
+ <br>
+
+ <h2>Maak een nieuw project aan</h2>
+<br>
+<form id="ProjectForm" asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model" 
+      asp-route-platform="@ViewData["platform"]" asp-route-user="@UserManager.GetUserId(User)"
+      enctype="multipart/form-data">
+
+     <div class="form-row">
+        <div class="form-group col-md-12">
+            <label asp-for="Title">Naam</label>
+            <input type="text" asp-for="Title" class="form-control"/>
+        </div>
+
+         <div class="form-group col-md-6">
+            <label asp-for="Goal">Doel</label>
+            <input asp-for="Goal" class="form-control" required/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Status">Status</label>
+            <input asp-for="Status" class="form-control" value="OPEN" readonly="readonly"/>
+        </div>
+
+         <div class="form-group col-md-12">
+            <input type="checkbox" data-val="true" id="Visible" name="Visible" value="true">
+            <input name="Visible" type="hidden" value="false">
+            <label asp-for="Visible">Zichtbaar</label>
+         </div>
+
+         <div class="form-group col-md-12">
+            <h4>Huidige fase:</h4>
+            <label asp-for="CurrentPhase.Description">Omschrijving</label>
+            <input asp-for="CurrentPhase.Description" class="form-control" />
+        </div>
+         <div class="form-group col-md-6">
+             <label asp-for="CurrentPhase.StartDate">Start datum</label>
+             <input id="StartDatePhase" type="date" asp-for="CurrentPhase.StartDate" class="form-control"/>
+         </div>
+         <div class="form-group col-md-6">
+             <label asp-for="CurrentPhase.EndDate">Eind datum</label>
+             <input id="EndDatePhase" type="date" asp-for="CurrentPhase.EndDate" class="form-control"/>
+             <div id="EndDateErrorPhase" class="text-danger"></div>
+         </div>
+         <div class="form-group col-md-6">
+             <p>Geef hier een foto's voor op de projectpagina:</p>
+             @Html.TextBoxFor(m => m.InitialProjectImages, new
+             {
+                 type = "file",
+                 multiple = true
+             })
+         </div>
+    </div>
+    <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" />
+</form>

@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using UIMVC.Areas.Identity.Data;
 using UIMVC.Models;
+using DAL.Contexts;
 
 namespace UIMVC.Migrations
 {

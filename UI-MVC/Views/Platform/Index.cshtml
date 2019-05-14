@@ -2,31 +2,54 @@
 @using UIMVC.Services
 @model Domain.Users.Platform
 @inject ProjectService ProjectService
+@inject RoleService RoleService
 @{
     ViewData["Title"] = Model.Name;
 }
 
-<section>
-    <h1>@Model.Name</h1>
-    <hr/>
-    <p>This is where I'd put an image if I (knew how I) could convert from BLOB</p>
-    <hr/>
-    <div class="row">
-        @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())
-        {
-            <h4>Er zijn geen projecten voor dit platform</h4>
-        }
-        else
-        {
-            foreach (Project project in ProjectService.CollectPlatformProjects(Model))
-             {
-                 if (project.Visible)
-                 {
-                     <div class="col-md-4">
-                         @Html.DisplayFor(m => project)
-                     </div>  
-                 }
-             }
-        }
-    </div>
+<br/>
+<section class="container">
+   <div class="row">
+       <div class="col-5">
+           <section class="card">
+               <div class="card-header pb-0">
+                   <div class="card-title">
+                       <div class="row">
+                           <div class="col-8">
+                               <h1>@Model.Name</h1>
+                           </div>
+                           <div class="col-4">
+                               <img alt="Icon" width="100" height="100"
+                               src="data:image/png;base64, @System.Convert.ToBase64String(Model.IconImage)"/>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div class="card-body">
+                   <img alt="FrontPage"
+                        src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
+               </div>
+               <div class="card-footer">
+                   <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject"
+                      asp-route-platform="@Model.Id">Maak nieuw project aan</a>
+               </div>
+           </section>
+       </div>
+       <div class="col-7">
+           @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())
+           {
+                       <h4>Er zijn geen projecten voor dit platform</h4>
+           }
+           else
+           {
+                foreach (Project project in ProjectService.CollectPlatformProjects(Model))
+                {
+                    if (project.Visible)
+                    {
+                        @Html.DisplayFor(m => project)
+                    }
+                }
+           }
+       </div>
+   </div>
 </section>

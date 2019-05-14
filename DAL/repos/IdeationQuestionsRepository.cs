@@ -13,12 +13,12 @@ namespace DAL.repos
     public class IdeationQuestionsRepository : IRepository<IdeationQuestion>
     {
         private readonly CityOfIdeasDbContext _ctx;
-        
+
         public IdeationQuestionsRepository()
         {
             _ctx = new CityOfIdeasDbContext();
         }
-        
+
         #region Conversion Methods
         private IdeationQuestionsDao ConvertToDao(IdeationQuestion obj)
         {
@@ -28,7 +28,7 @@ namespace DAL.repos
                 ModuleId = obj.Ideation.Id,
                 QuestionTitle = obj.QuestionTitle,
                 Description = obj.Description,
-                WebsiteLink = obj.SiteUrl              
+                WebsiteLink = obj.SiteUrl
             };
         }
 
@@ -62,7 +62,7 @@ namespace DAL.repos
             {
                 dao.DeviceId = obj.Device.Id;
             }
-            
+
             return dao;
         }
 
@@ -169,7 +169,7 @@ namespace DAL.repos
                 Status = (ReportStatus) dao.ReportApproved
             };
         }
-        
+
         private Field ConvertFieldToDomain(IdeaFieldsDao dao)
         {
             return new Field {
@@ -235,7 +235,7 @@ namespace DAL.repos
             };
         }
         #endregion
-        
+
         #region Id Generation
         private int FindNextAvailableIQuestionId()
         {
@@ -250,7 +250,7 @@ namespace DAL.repos
             int newId = ReadAllIdeas().Max(idea => idea.Id)+1;
             return newId;
         }
-                
+
         private int FindNextAvailableReportId()
         {
             if (!_ctx.Reports.Any()) return 1;
@@ -286,7 +286,7 @@ namespace DAL.repos
 
             return obj;
         }
-        
+
         public IdeationQuestion Read(int id, bool details)
         {
             IdeationQuestionsDao ideationQuestionDao = details ? _ctx.IdeationQuestions.AsNoTracking().First(i => i.IquestionId == id) : _ctx.IdeationQuestions.First(i => i.IquestionId == id);
@@ -309,7 +309,7 @@ namespace DAL.repos
 
             _ctx.SaveChanges();
         }
-        
+
         public void Delete(int id)
         {
             IdeationQuestionsDao dao = _ctx.IdeationQuestions.First(d => d.IquestionId == id);
@@ -348,9 +348,8 @@ namespace DAL.repos
                         i.Id + " met titel " + i.Title + ".");
                 }
             }
-            
-            idea.Id = FindNextAvailableIdeaId();
-           
+
+            idea.Id = FindNextAvailableIdeaId();          
             _ctx.Ideas.Add(ConvertToDao(idea));
 
             if (idea.Field != null)
@@ -364,19 +363,19 @@ namespace DAL.repos
                 idea.Cfield.Id = FindNextAvailableFieldId();
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Cfield)); 
             }
-            
+
             if (idea.Ifield != null)
             {
                 idea.Ifield.Id = FindNextAvailableFieldId();
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Ifield));
             }
-            
+
             if (idea.Vfield != null)
             {
                 idea.Vfield.Id = FindNextAvailableFieldId();
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Vfield));
             }
-            
+
             if (idea.Mfield != null)
             {
                 idea.Mfield.Id = FindNextAvailableFieldId();
@@ -390,12 +389,12 @@ namespace DAL.repos
 
         public Idea ReadIdea(int ideaId, bool details)
         {
-            IdeasDao ideasDao = details ? _ctx.Ideas.AsNoTracking().First(i => i.IdeaId == ideaId) : _ctx.Ideas.First(i => i.IdeaId == ideaId);          
+            IdeasDao ideasDao = details ? _ctx.Ideas.AsNoTracking().First(i => i.IdeaId == ideaId) : _ctx.Ideas.First(i => i.IdeaId == ideaId);
             ExtensionMethods.CheckForNotFound(ideasDao, "Idea", ideaId);
 
             return ConvertToDomain(ideasDao);
         }
-        
+
         public Idea ReadWithFields(int id)
         {
             Idea idea = ReadIdea(id, true); 
@@ -405,24 +404,24 @@ namespace DAL.repos
             {
                 if (fields[i].FieldText != null && idea.Field == null)
                 {
-                    idea.Field = ConvertFieldToDomain(fields[i]);                   
-                } 
-                
+                    idea.Field = ConvertFieldToDomain(fields[i]);
+                }
+
                 if (fields[i].FieldStrings != null)
                 {
                     idea.Cfield = ConvertClosedFieldToDomain(fields[i]);
-                } 
-                
+                }
+
                 if(fields[i].LocationX > 0)
                 {
                     idea.Mfield = ConvertMapFieldToDomain(fields[i]);
-                } 
-                
+                }
+
                 if(fields[i].UploadedImage != null)
                 {
                     idea.Ifield = ConvertImageFieldToDomain(fields[i]);
-                } 
-                
+                }
+
                 if(fields[i].UploadedMedia != null)
                 {
                     idea.Vfield = ConvertVideoFieldToDomain(fields[i]);
@@ -451,7 +450,7 @@ namespace DAL.repos
                 foundIdea.IsDeleted = newIdea.IsDeleted;
                 _ctx.Ideas.Update(foundIdea);
             }
-           
+
             if (obj.Field != null)
             {
                 IdeaFieldsDao newTextField = ConvertToDao(obj.Field);
@@ -473,7 +472,7 @@ namespace DAL.repos
                     _ctx.IdeaFields.Update(foundCField);
                 }
             }
-            
+
             if (obj.Mfield != null)
             {
                 IdeaFieldsDao newMField = ConvertToDao(obj.Mfield);
@@ -486,7 +485,7 @@ namespace DAL.repos
                     _ctx.IdeaFields.Update(foundMField);
                 }
             }
-            
+
             if (obj.Ifield != null)
             {
                 IdeaFieldsDao newIField = ConvertToDao(obj.Ifield);
@@ -498,7 +497,7 @@ namespace DAL.repos
                     _ctx.IdeaFields.Update(foundIField);
                 }                               
             }
-            
+
             if (obj.Vfield != null)
             {
                 IdeaFieldsDao newVField = ConvertToDao(obj.Vfield);
@@ -513,7 +512,7 @@ namespace DAL.repos
 
             _ctx.SaveChanges();
         }
-        
+
         public void DeleteIdea(int ideaId)
         {
             IdeasDao i = _ctx.Ideas.First(d => d.IdeaId == ideaId);
@@ -538,7 +537,7 @@ namespace DAL.repos
         {
             return ReadAllIdeas().ToList().FindAll(i => i.IdeaQuestion.Id == questionId);
         }
-        
+
         #region Field CRUD
         public void DeleteField(int id)
         {
@@ -546,7 +545,7 @@ namespace DAL.repos
             _ctx.IdeaFields.Remove(i);
             _ctx.SaveChanges();
         }
-        
+
         public void DeleteFields(int ideaId)
         {
             List<Field> fields = (List<Field>) ReadAllFields(ideaId);
@@ -633,7 +632,7 @@ namespace DAL.repos
                 foundReport.ReportApproved = newReport.ReportApproved;
                 _ctx.Reports.Update(foundReport);
             }
-            
+
             _ctx.SaveChanges();
         }
 

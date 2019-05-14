@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using UIMVC.Areas.Identity.Data;
 using UIMVC.Services;
 using UimvcUser = Domain.Identity.UimvcUser;
 
@@ -90,7 +89,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
                     DateOfBirth = Input.DateOfBirth
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
@@ -104,8 +103,8 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    
-                    
+
+
                     var userFound = await _userManager.FindByEmailAsync(user.UserName);
                     _roleService.AssignToRole(userFound, Role.LoggedIn);
 

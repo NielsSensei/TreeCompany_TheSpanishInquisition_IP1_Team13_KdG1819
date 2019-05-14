@@ -14,12 +14,12 @@ namespace DAL.repos
     public class QuestionnaireQuestionsRepository : IRepository<QuestionnaireQuestion>
     {
         private readonly CityOfIdeasDbContext _ctx;
-        
+
         public QuestionnaireQuestionsRepository()
         {
             _ctx = new CityOfIdeasDbContext();
         }
-        
+
         #region Conversion Methods
         private QuestionnaireQuestionsDao ConvertToDao(QuestionnaireQuestion obj)
         {
@@ -119,15 +119,15 @@ namespace DAL.repos
             return ma;
         }
         #endregion
-        
+
         #region Id generation
         private int FindNextAvailableQQuestionId()
-        {               
+        {
             if (!_ctx.QuestionnaireQuestions.Any()) return 1;
             int newId = ReadAll().Max(qq => qq.Id)+1;
             return newId;
         }
-        
+
         private int FindNextAvailableAnswerId()
         {               
             if (!_ctx.Answers.Any()) return 1;
@@ -145,7 +145,7 @@ namespace DAL.repos
             {
                 if (ExtensionMethods.HasMatchingWords(obj.QuestionText, qq.QuestionText) > 0)
                 {
-                    throw new DuplicateNameException("QuestionnaireQuestion(ID=" + obj.Id + ") is een gelijkaardige vraag aan QuestionnaireQuestion(ID=" + 
+                    throw new DuplicateNameException("QuestionnaireQuestion(ID=" + obj.Id + ") is een gelijkaardige vraag aan QuestionnaireQuestion(ID=" +
                         qq.Id + ") de vraag specifiek was: " + obj.QuestionText + ".");
                 }
             }
@@ -156,7 +156,7 @@ namespace DAL.repos
 
             return obj;
         }
-        
+
         public QuestionnaireQuestion Read(int id, bool details)
         {
             QuestionnaireQuestionsDao questionnaireQuestionDao = details ? _ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QquestionId == id) : _ctx.QuestionnaireQuestions.First(q => q.QquestionId == id);
@@ -185,7 +185,7 @@ namespace DAL.repos
             _ctx.QuestionnaireQuestions.Remove(toDelete);
             _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<QuestionnaireQuestion> ReadAll()
         {
             List<QuestionnaireQuestion> myQuery = new List<QuestionnaireQuestion>();
@@ -223,13 +223,12 @@ namespace DAL.repos
                     _ctx.Choices.Add(ConvertToDao(id,ma.Id,_ctx.Choices.Count()+1));
                 }
             }
-           
+
             _ctx.SaveChanges();
 
             return obj;
         }
 
-        
         public OpenAnswer ReadOpenAnswer(int answerId, bool details)
         {
             AnswersDao answersDao = details ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId) : _ctx.Answers.First(i => i.AnswerId == answerId);
@@ -242,14 +241,14 @@ namespace DAL.repos
         {
             AnswersDao answersDao = details ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId) : _ctx.Answers.First(i => i.AnswerId == answerId);
             ExtensionMethods.CheckForNotFound(answersDao, "Answer", answerId);
-            
+
             List<OptionsDao> optionsDaos = _ctx.Options.ToList().FindAll(o => o.QquestionId == answersDao.QQuestionId);
             List<OptionsDao> chosenOptionsDao = new List<OptionsDao>();
 
             foreach(OptionsDao dao in optionsDaos)
             {
-                ChoicesDao choice = _ctx.Choices.First(c => c.OptionId == dao.OptionId);   
-                
+                ChoicesDao choice = _ctx.Choices.First(c => c.OptionId == dao.OptionId);
+
                 if(choice.ChoiceId != null)
                 {
                     chosenOptionsDao.Add(dao);
@@ -258,7 +257,7 @@ namespace DAL.repos
 
             return ConvertToDomain(answersDao, chosenOptionsDao);
         }
-        
+
         public IEnumerable<Answer> ReadAll(int questionId)
         {
             List<Answer> myQuery = new List<Answer>();
@@ -325,7 +324,7 @@ namespace DAL.repos
             _ctx.Options.Remove(toDelete);
             _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<string> ReadAllOptions(int questionId)
         {
             List<string> myQuery = new List<string>();

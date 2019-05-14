@@ -12,7 +12,7 @@ namespace DAL.repos
     public class QuestionnaireRepository : IRepository<Questionnaire>
     {
         private readonly CityOfIdeasDbContext _ctx;
-        
+
         public QuestionnaireRepository()
         {
             _ctx = new CityOfIdeasDbContext();
@@ -56,7 +56,7 @@ namespace DAL.repos
             };
         }
         #endregion
-        
+
         #region Id generation
         private int FindNextAvailableQuestionnaireId()
         {
@@ -75,7 +75,7 @@ namespace DAL.repos
             {
                 if (obj.ParentPhase.Id == q.ParentPhase.Id)
                 {
-                    throw new DuplicateNameException("Questionnaire(ID=" + obj.Id + ") heeft dezelfde parentPhase als Questionnaire(ID=" + q.Id + "). " + 
+                    throw new DuplicateNameException("Questionnaire(ID=" + obj.Id + ") heeft dezelfde parentPhase als Questionnaire(ID=" + q.Id + "). " +
                         "De phaseID is " + obj.ParentPhase.Id + ".");
                 }
             }
@@ -86,12 +86,12 @@ namespace DAL.repos
 
             return obj;
         }
-        
+
         public Questionnaire Read(int id, bool details)
         {
             ModulesDao moduleDao = details ? _ctx.Modules.AsNoTracking().First(m => m.ModuleId == id) : _ctx.Modules.First(m => m.ModuleId == id);
             ExtensionMethods.CheckForNotFound(moduleDao, "Questionnaire", id);
-            
+
             return ConvertToDomain(moduleDao);
         }
 
@@ -125,7 +125,7 @@ namespace DAL.repos
             _ctx.Modules.Remove(toDelete);
             _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Questionnaire> ReadAll()
         {
             List<Questionnaire> myQuery = new List<Questionnaire>();
@@ -146,7 +146,7 @@ namespace DAL.repos
         {
             return ReadAll().ToList().FindAll(q => q.Project.Id == projectId);
         }
-        #endregion   
+        #endregion
 
         #region Tag CRUD
         public string CreateTag(string obj, int moduleId)
