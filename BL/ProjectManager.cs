@@ -61,9 +61,14 @@ namespace BL
             ProjectRepo.Create(img, project);
         }
 
-        public void RemoveImagesForProject(object id)
+        public void RemoveImagesForProject(int id)
         {
-            throw new System.NotImplementedException();
+            ProjectRepo.DeleteImages(id);
+        }
+
+        public IEnumerable<byte[]> GetAllImages(int projectId)
+        {
+            return ProjectRepo.ReadAllImages(projectId);
         }
         #endregion
 
@@ -100,8 +105,5 @@ namespace BL
             return ProjectRepo.ReadAllForPlatform(platform.Id);
         }
         #endregion
-
-
-
     }
 }

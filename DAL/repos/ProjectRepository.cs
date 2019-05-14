@@ -94,6 +94,12 @@ namespace DAL.repos
                 ImageId = imageId
             };
         }
+
+        private byte[] ConvertToDomain(ProjectImagesDao dao)
+        {
+            return dao.ProjectImage;
+        }
+
         #endregion
 
         #region Id generation
@@ -285,15 +291,25 @@ namespace DAL.repos
 
         public void DeleteImages(int projectId)
         {
-            foreach (ProjectImagesDao img in _ctx.ProjectImages)
+            foreach (ProjectImagesDao img in _ctx.ProjectImages.Where(i => i.ProjectId == projectId))
             {
-                if (img.ProjectId == projectId)
-                {
-                    _ctx.ProjectImages.Remove(img);
-                }
+                _ctx.ProjectImages.Remove(img);
             }
 
             _ctx.SaveChanges();
+        }
+        
+        public List<byte[]> ReadAllImages(int projectId)
+        {
+            List<byte[]> myQuery = new List<byte[]>();
+
+            foreach (ProjectImagesDao img in _ctx.ProjectImages.Where(i => i.ProjectId == projectId))
+            {
+                byte[] byteImg = ConvertToDomain(img);
+                myQuery.Add(byteImg);
+            }
+
+            return myQuery;
         }
         #endregion
     }

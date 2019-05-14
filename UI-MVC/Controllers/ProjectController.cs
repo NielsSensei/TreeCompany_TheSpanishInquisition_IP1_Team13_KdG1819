@@ -33,7 +33,7 @@ namespace UIMVC.Controllers
 
          #region Add
 
-         [Authorize(Roles ="ADMIN, SUPERADMIN")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult AddProject(int platform)
         {
@@ -72,7 +72,19 @@ namespace UIMVC.Controllers
              
              return RedirectToAction("Index", "Platform", new {id = platform });
         }
-
+        
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
+        public async Task<RedirectToActionResult> AddImage(AddImageModel aim)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await aim.File.CopyToAsync(memoryStream);
+                _projManager.MakeProjectImage(memoryStream.ToArray(), aim.Project.Id);
+            }
+            
+            return RedirectToAction("CollectProject", "Platform", 
+                new {Id = aim.Project.Id});
+        }
          #endregion
 
 
