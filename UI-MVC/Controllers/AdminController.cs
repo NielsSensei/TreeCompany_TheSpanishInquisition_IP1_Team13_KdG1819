@@ -108,7 +108,8 @@ namespace UIMVC.Controllers
                 Module = toAdd,
                 Questionnaire = toAdd,
                 Optional = cqqm.Optional,
-                Answers = new List<Answer>()
+                Answers = new List<Answer>(),
+                Options = new List<string>()
 
             };
 
@@ -116,9 +117,9 @@ namespace UIMVC.Controllers
 
             if (cqqm.QuestionType.Equals(QuestionType.DROP) || cqqm.QuestionType.Equals(QuestionType.MULTI) || cqqm.QuestionType.Equals(QuestionType.SINGLE) )
             {
-                foreach (string options in cqqm.Options)
+                foreach (string option in cqqm.Options)
                 {
-                    
+                    newQuestion.Options.Add(option);
                 }
             }
 
@@ -181,12 +182,9 @@ namespace UIMVC.Controllers
                 parentPhase = projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
                 parentPhase.Module = toBeUpdated;
 
-
-
                 Phase previousParent = projMgr.GetPhase(toBeUpdated.ParentPhase.Id);
                 previousParent.Module = null;
-
-                
+                                
                 toBeUpdated.ParentPhase = parentPhase;
                 projMgr.EditPhase(previousParent);
 
@@ -211,19 +209,103 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteQuestionnaire(EditQuestionnaireModel eqm, int projectid)
+        public IActionResult DeleteQuestionnaire(int questionnaireid)
         {
-            return RedirectToAction("");
+            Questionnaire questionnaire = (Questionnaire)modMgr.GetModule(questionnaireid, false, true);
+
+            
+
+            Phase parentPhase = projMgr.GetPhase(questionnaire.ParentPhase.Id);
+            parentPhase.Module = null;
+            projMgr.EditPhase(parentPhase);
+
+            List<QuestionnaireQuestion> questions = qqMgr.GetAllByModuleId(questionnaireid);
+
+            foreach (QuestionnaireQuestion q in questions)
+            {
+                if(q.QuestionType == QuestionType.DROP || q.QuestionType == QuestionType.MULTI || q.QuestionType == QuestionType.SINGLE)
+                {
+                    List<string> options = qqMgr.GetAllOptionsForQuestion(q.Id).ToList();
+
+                    foreach (string option in options)
+                    {
+                        int optionId = qqMgr.GetOptionId(option, q.Id);
+                        qqMgr.DestroyOption(optionId);
+                    }
+                }
+
+                qqMgr.RemoveQuestion(q.Id);
+            }
+
+            modMgr.RemoveModule(questionnaireid, questionnaire.Project.Id, true);
+
+
+
+
+
+            return RedirectToAction("CollectProject", "Platform", new { id = questionnaire.Project.Id});
         }
 
         [HttpGet]
         public IActionResult DeleteQuestionnaireQuestion(int questionid)
         {
             QuestionnaireQuestion toDelete = qqMgr.GetQuestion(questionid, true);
+
+            if(toDelete.QuestionType == QuestionType.DROP || toDelete.QuestionType == QuestionType.MULTI || toDelete.QuestionType == QuestionType.SINGLE)
+            {
+                List<string> options = qqMgr.GetAllOptionsForQuestion(toDelete.Id).ToList();
+
+                if(options.Count != 0)
+                {
+                    foreach (string option in options)
+                    {
+                        qqMgr.DestroyOption(qqMgr.GetOptionId(option, questionid));
+                    }
+                }
+
+                
+
+
+
+            }
             qqMgr.RemoveQuestion(questionid);
             return RedirectToAction("EditQuestionnaire", new { questionnaireid = toDelete.Module.Id });
         }
 
+        [HttpPost]
+        public IActionResult EditQuestionnaireQuestion(int questionid)
+        {
+            throw new NotImplementedException("Work In Progress");
+        }
+
+        [HttpGet]
+        public IActionResult AnswerQuestionnaire(int questionnaireid)
+        {
+            Questionnaire questionnaire = (Questionnaire) modMgr.GetModule(questionnaireid, true, true);
+
+            List<QuestionnaireQuestion> questions = qqMgr.GetAllByModuleId(questionnaireid);
+
+            foreach (QuestionnaireQuestion qQ in questions)
+            {
+                if (qQ.QuestionType == QuestionType.DROP || qQ.QuestionType == QuestionType.MULTI || qQ.QuestionType == QuestionType.SINGLE)
+                {
+                    qQ.Options = qqMgr.GetAllOptionsForQuestion(qQ.Id).ToList();
+                }
+                else qQ.Options = new List<string>();
+
+                qQ.Answers = new List<Answer>();
+            }
+
+            questionnaire.Questions = questions;
+            
+            return View(questionnaire);
+        }
+
+        [HttpPost]
+        public IActionResult AnswerQuestionnaire(List<QuestionnaireQuestion> list)
+        {
+            return null;
+        }
 
     }
 }

@@ -141,6 +141,19 @@ namespace DAL
             int newId = ReadAll().Max(answer => answer.Id)+1;
             return newId;
         }
+
+        private int FindNextAvailableOptionId()
+        {
+            if(ReadAllOptions().Count() == 0)
+            {
+                return 1;
+            }
+
+            int newId = ctx.Options.Max(option => option.OptionID) + 1;
+            return newId;
+
+
+        }
         #endregion
 
         // Added by NVZ
@@ -165,6 +178,17 @@ namespace DAL
             
 
             obj.Id = FindNextAvailableQQuestionId();
+
+            if(obj.QuestionType == QuestionType.DROP || obj.QuestionType == QuestionType.MULTI || obj.QuestionType == QuestionType.SINGLE)
+            {
+                foreach (string option in obj.Options)
+                {
+                    CreateOption(obj.Id, option);
+                }
+            }
+
+            
+
             ctx.QuestionnaireQuestions.Add(ConvertToDTO(obj));
             ctx.SaveChanges();
 
@@ -317,17 +341,17 @@ namespace DAL
         #region
         public string CreateOption(int questionID, string obj)
         {
-            IEnumerable<string> options = ReadAllOptions(questionID);
-            int newID = options.Count() + 1;
+            IEnumerable<string> options = ReadAllOptionsForQuestion(questionID);
+            int newID = FindNextAvailableOptionId();
 
-            for (int i = 0; i < options.Count(); i++)
+           /* for (int i = 0; i < options.Count(); i++)
             {
                 if (ExtensionMethods.HasMatchingWords(obj, options.ElementAt(i)) > 0)
                 {
                     throw new DuplicateNameException("Deze Option(ID=" + newID + ") met Optiontekst: " + obj + " is gelijkaardig aan de Option(ID=" + i + 
                         "). De Optiontekst is: " + options.ElementAt(i) + ".");
                 }
-            }
+            }*/
 
             ctx.Options.Add(ConvertToDTO(newID, obj, questionID));
             ctx.SaveChanges();
@@ -338,19 +362,13 @@ namespace DAL
         public String ReadOption(int optionID, int questionID)
         {
             return ConvertToDomain(ctx.Options.Find(optionID));
+
         }
 
         public int ReadOptionID(string optionText, int questionID)
         {
-            List<string> options = ReadAllOptions(questionID).ToList();
-            for(int i = 0; i < options.Count; i++)
-            {
-                if (options[i].Equals(optionText))
-                {
-                    return i + 1;
-                }
-            }
-            throw new DuplicateNameException("Option " + optionText + " niet gevonden voor de QuestionnaireQuestion(ID=" + questionID + ").");
+            OptionsDTO option = ctx.Options.Where(o => o.QQuestionID == questionID && o.OptionText == optionText).FirstOrDefault();
+            return option.OptionID;
         }
 
         public void DeleteOption(int optionID)
@@ -360,7 +378,7 @@ namespace DAL
             ctx.SaveChanges();
         }
         
-        public IEnumerable<string> ReadAllOptions(int QuestionID)
+        public IEnumerable<string> ReadAllOptionsForQuestion(int QuestionID)
         {
             List<string> myQuery = new List<string>();
 
@@ -368,8 +386,20 @@ namespace DAL
             {
                 if (DTO.QQuestionID == QuestionID)
                 {
-                    myQuery.Append(ConvertToDomain(DTO));
+                    myQuery.Add(ConvertToDomain(DTO));
                 }
+            }
+
+            return myQuery;
+        }
+
+        public IEnumerable<string> ReadAllOptions()
+        {
+            List<string> myQuery = new List<string>();
+
+            foreach(OptionsDTO DTO in ctx.Options)
+            {
+                myQuery.Add(ConvertToDomain(DTO));
             }
 
             return myQuery;

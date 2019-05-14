@@ -16,9 +16,8 @@ namespace Domain.UserInput
         */
         public string CustomOption { get; set; }
         public bool DropdownList { get; set; }
-
         public List<string> Choices { get; set; }
-        public List<string> Options { get; set; }
+        
 
         // Added by EKT
         // Modified by NVZ
@@ -26,11 +25,7 @@ namespace Domain.UserInput
 
         #region
 
-        public void AddOption(string option)
-        {
-            Options.Add(option);
-        }
-
+        
         public void SetCustomOption(string option)
         {
             CustomOption = option;

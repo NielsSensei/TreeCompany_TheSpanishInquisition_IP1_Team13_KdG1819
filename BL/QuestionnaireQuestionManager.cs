@@ -162,6 +162,16 @@ namespace BL
             QuestionnaireQuestionRepo.DeleteOption(optionId);
         }
 
+        public IEnumerable<string> GetAllOptions()
+        {
+            return QuestionnaireQuestionRepo.ReadAllOptions();
+        }
+
+        public IEnumerable<string> GetAllOptionsForQuestion(int questionId)
+        {
+            return QuestionnaireQuestionRepo.ReadAllOptionsForQuestion(questionId);
+        }
+
 
 
 
