@@ -1,8 +1,4 @@
-@using Domain.Identity
 @using Domain.UserInput
-@using Domain.Users
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.EntityFrameworkCore
 @using UIMVC.Services
 @model Domain.Projects.Ideation
 @inject UserService Userservice
@@ -21,47 +17,22 @@
 
 <section class="container">
     <section class="row">
-        <div class="col-5">
-            <h2>@Model.Title</h2>
-            <p>door @Userservice.CollectUserName(Model.User.Id)</p>
-            @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-            {
-                LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount, TwitterLikeCount = Model.TwitterLikeCount,
-                ShareCount = Model.ShareCount, RetweetCount = Model.RetweetCount, IconStyle = 3
-            })
-            <br/>
-            <p>@Model.ExtraInfo</p>
-            @if (Model.Event.Id != 0)
-            {
-                @* TODO Zorgt voor een eventPagina *@
-                <p>Deze ideation is georganiseerd dankzij dit evenement</p>
-            }
-            <section>
-                <h6 class="font-weight-bold">Tags:</h6>
-
-                <div class="row justify-content-start">
-                    @if (Model.Tags.Any())
-                    {
-                        @Html.Partial("_TagsPartial", Model.Tags)
-                    }
-                    else
-                    {
-                        <p>Geen tags gevonden</p>
-                    }
-
-                    @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
-                    {
-                        <a class="btn btn-primary mx-1 m-0" data-toggle="modal" data-target="#addTagModal">
-                                                Nieuwe Tag</a>
-                    }
-
-                </div>
-            </section>
-        </div>
-        <div class="col-7">
-            @* TODO vervang images door Media *@
-            <img alt="IdeationMedia" src="https://via.placeholder.com/600x400"/>
-        </div>
+        @if (@Model.MediaLink == null)
+        {
+            <div class="col-12">
+                @Html.Partial("_IdeationHeaderPartial", Model)
+            </div>
+        }
+        else
+        {
+            <div class="col-5">
+                @Html.Partial("_IdeationHeaderPartial", Model)
+            </div>
+            <div class="col-7">
+                <iframe width="600" height="400" src="@Model.MediaLink"> </iframe>
+            </div>  
+        }
+        
     </section>
     <hr>
     <section class="container">

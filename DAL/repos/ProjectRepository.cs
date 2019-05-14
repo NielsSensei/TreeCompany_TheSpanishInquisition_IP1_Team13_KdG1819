@@ -234,8 +234,8 @@ namespace DAL.repos
         public Phase ReadPhase(int phaseId, bool details)
         {
             PhasesDao phasesDao = details
-                ? _ctx.Phases.AsNoTracking().First(p => p.PhaseId == phaseId)
-                : _ctx.Phases.First(p => p.PhaseId == phaseId);
+                ? _ctx.Phases.AsNoTracking().FirstOrDefault(p => p.PhaseId == phaseId)
+                : _ctx.Phases.FirstOrDefault(p => p.PhaseId == phaseId);
             ExtensionMethods.CheckForNotFound(phasesDao, "Phase", phaseId);
 
             return ConvertToDomain(phasesDao);

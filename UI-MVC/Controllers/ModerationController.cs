@@ -140,6 +140,11 @@ namespace UIMVC.Controllers
                 i.ExtraInfo = cim.ExtraInfo;
             }
 
+            if (cim.MediaLink != null)
+            {
+                i.MediaLink = cim.MediaLink;
+            }
+
             _moduleMgr.MakeIdeation(i);
 
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
@@ -234,21 +239,21 @@ namespace UIMVC.Controllers
             {
                 Id = ideation,
                 Title = Request.Form["Title"].ToString(),
-                ExtraInfo = Request.Form["ExtraInfo"].ToString()
+                ExtraInfo = Request.Form["ExtraInfo"].ToString(),
+                MediaLink = Request.Form["MediaFile"].ToString()
             };
 
-            if (!Request.Form["ParentPhase"].ToString().Equals(null))
+            try
             {
-                try
+                if (Int32.Parse(Request.Form["ParentPhase"].ToString()) != 0)
                 {
                     i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
                     _moduleMgr.EditIdeation(i);
                 }
-                catch (FormatException e)
-                {
-                    _moduleMgr.EditIdeation(i);
-                }
-
+                
+            }catch(FormatException e)
+            {
+                _moduleMgr.EditIdeation(i);  
             }
 
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});

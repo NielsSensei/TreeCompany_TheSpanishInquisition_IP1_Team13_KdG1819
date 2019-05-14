@@ -61,8 +61,8 @@ namespace DAL.repos
             IdeationsDao dao = new IdeationsDao()
             {
                     ModuleId = obj.Id,
-                    ExtraInfo = obj.ExtraInfo
-                    //MediaFile = obj.Media,
+                    ExtraInfo = obj.ExtraInfo,
+                    MediaFile = obj.MediaLink,
             };
 
             if (obj.User != null)
@@ -93,7 +93,7 @@ namespace DAL.repos
                 User = new UimvcUser { Id = dao.UserId },
                 UserIdea = dao.UserIdea,
                 Event = new Event { Id = dao.EventId },
-                //Media = DTO.MediaFile,
+                MediaLink = dao.MediaFile,
                 ExtraInfo = dao.ExtraInfo,
                 RequiredFields = dao.RequiredFields
             };
@@ -232,38 +232,7 @@ namespace DAL.repos
             return ReadAll().ToList().FindAll(i => i.Project.Id == projectId);
         }
         #endregion
-
-        #region Media CRUD
-        // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
-        /*public Media Create(Media obj)
-        {
-            //if (!mediafiles.Contains(obj))
-            //{
-            //    mediafiles.Add(obj);
-            //}
-            throw new DuplicateNameException("This MediaFile already exist!");
-        }
-
-        public Media ReadMedia(int ideationId)
-        {
-            //Media m = Read(ideationID).Media;
-            //if (m != null)
-            //{
-            //    return m;
-            //}
-            throw new KeyNotFoundException("This Media can't be found!");
-        }
-
-        public void DeleteMedia(int ideationId)
-        {
-            //Media m = ReadMedia(ideationID);
-            //if (m != null)
-            //{
-            //    mediafiles.Remove(m);
-            //}
-        } */
-        #endregion
-
+        
         #region Tag CRUD
         public string CreateTag(string obj, int moduleId)
         {

@@ -8,7 +8,7 @@
         public bool Organisation { get; set; }
         public int EventId { get; set; }
         public bool UserIdea { get; set; }
-        public byte[] MediaFile { get; set; }
+        public string MediaFile { get; set; }
         public byte RequiredFields { get; set; }
     }
 }
