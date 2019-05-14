@@ -1,0 +1,42 @@
+@using UIMVC.Services
+@inject RoleService RoleService
+@model Domain.Projects.Project
+
+<h2>@Model.Title</h2>
+@Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+{
+    LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount,
+    TwitterLikeCount = Model.TwitterLikeCount, IconStyle = 1
+})
+<p>@Model.Goal</p>
+@if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+{
+    <div class="project-actions">
+        <button type="button" class="btn btn-light"> 
+            Voeg een Image Toe            
+        </button>
+        <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" asp-route-id="@Model.Id">
+            Wijzig project
+        </a>
+        <br/>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProject">
+            Wis project
+        </button>
+    </div>  
+}
+
+<div class="modal fade" id="addImage" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a class="btn btn-primary" asp-controller="Project" asp-action="AddImage">
+                    Verwijder
+                </a><br/>
+            </div>
+        </div>
+    </div>
+</div>
