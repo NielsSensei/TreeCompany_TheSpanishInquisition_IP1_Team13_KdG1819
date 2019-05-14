@@ -177,10 +177,10 @@ namespace UIMVC.Services
         #region Authorization
         public async Task<bool> IsVerified(ClaimsPrincipal user)
         {
-            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "LOGGEDINVERIFIED") ||
-                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "MODERATOR") ||
-                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "ADMIN") ||
-                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "LoggedInVerified") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Moderator") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Admin") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SuperAdmin"))
             {
                 return true;
             }
@@ -191,9 +191,9 @@ namespace UIMVC.Services
 
         public async Task<bool> IsModerator(ClaimsPrincipal user)
         {
-            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "MODERATOR") ||
-                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "ADMIN") ||
-                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Moderator") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Admin") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SuperAdmin"))
             {
                 return true;
             }
@@ -204,8 +204,8 @@ namespace UIMVC.Services
 
         public async Task<bool> IsAdmin(ClaimsPrincipal user)
         {
-            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "ADMIN") ||
-                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Admin") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SuperAdmin"))
             {
                 return true;
             }
@@ -215,7 +215,7 @@ namespace UIMVC.Services
 
         public async Task<bool> IsSuperAdmin(ClaimsPrincipal user)
         {
-            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SUPERADMIN"))
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SuperAdmin"))
             {
                 return true;
             }

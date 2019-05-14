@@ -24,7 +24,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaire(int projectId)
         {
             Project toAddQuestionnaireTo = ProjMgr.GetProject(projectId, true);
@@ -49,7 +49,7 @@ namespace UIMVC.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
         {
             if(cqm == null)
@@ -85,7 +85,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid)
         {
             ViewData["Questionnaire"] = ModMgr.GetQuestionnaire(questionnaireid, false);
@@ -93,7 +93,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
         {
             Questionnaire toAdd = ModMgr.GetQuestionnaire(questionnaireId, false);
@@ -123,7 +123,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
             Questionnaire q = ModMgr.GetQuestionnaire(questionnaireId, false);
