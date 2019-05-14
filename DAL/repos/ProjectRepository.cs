@@ -121,7 +121,7 @@ namespace DAL.repos
         private int FindNextAvailableImageId()
         {
             if (!_ctx.ProjectImages.Any()) return 1;
-            int newId = 0;
+            int newId = _ctx.ProjectImages.Count()+1;
             return newId;
         }
         #endregion

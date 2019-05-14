@@ -63,33 +63,36 @@ namespace UIMVC.Controllers
 
              Project newProj = _projManager.MakeProject(pr);
 
-             using (var memoryStream = new MemoryStream())
+             foreach (IFormFile file in pvm.InitialProjectImages)
              {
-                 await pvm.InitialProjectImage.CopyToAsync(memoryStream);
-                 _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
+                 using (var memoryStream = new MemoryStream())
+                 {
+                     await file.CopyToAsync(memoryStream);
+                     _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
+                 } 
              }
              
              return RedirectToAction("Index", "Platform", new {id = platform });
         }
         
         [Authorize(Roles ="Admin, SuperAdmin")]
-        public async Task<RedirectToActionResult> AddImage(AddImageModel aim)
+        public async Task<IActionResult> AddImage(IFormFile file, int projectId)
         {
             using (var memoryStream = new MemoryStream())
             {
-                await aim.File.CopyToAsync(memoryStream);
-                _projManager.MakeProjectImage(memoryStream.ToArray(), aim.Project.Id);
+                await file.CopyToAsync(memoryStream);
+                _projManager.MakeProjectImage(memoryStream.ToArray(), projectId);
             }
             
             return RedirectToAction("CollectProject", "Platform", 
-                new {id = aim.Project.Id});
+                new {id = projectId});
         }
          #endregion
 
 
          #region ChangeProject
 
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangeProject(int id)
         {
@@ -104,16 +107,14 @@ namespace UIMVC.Controllers
             return View();
         }
 
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
             Project updateProj = _projManager.GetProject(id, false);
 
-             updateProj.Title = epm.Title;
+            updateProj.Title = epm.Title;
             updateProj.Goal = epm.Goal;
-            /*updateProj.StartDate = epm.StartDate;
-            updateProj.EndDate = epm.EndDate;*/
             updateProj.Visible = epm.Visible;
             updateProj.Status = epm.Status.ToUpper();
 

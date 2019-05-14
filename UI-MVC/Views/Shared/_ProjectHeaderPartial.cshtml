@@ -29,15 +29,20 @@
 <div class="modal fade" id="addImage" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id="ProjectForm" asp-controller="Project" asp-action="AddImage"
-                  asp-route-aim="@Model" enctype="multipart/form-data">
-                <div class="form-row">
-                    <div class="form-group">
-                         <p>Geef hier een foto:</p>
-                         @Html.TextBoxFor(m => m.File, new { type = "file" })
-                     </div>
+            <form asp-controller="Project" asp-action="AddImage" enctype="multipart/form-data"
+                  asp-route-projectId="@Model.Project.Id" asp-route-file="@Model.File">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <p>Geef hier een foto:</p>
+                            @Html.TextBoxFor(m => m.File, new {type = "file"})
+                        </div>
+                    </div>  
                 </div>
-                <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" />
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Opslaan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </form>
         </div>
     </div>
