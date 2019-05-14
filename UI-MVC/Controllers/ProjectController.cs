@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using BL;
 using Domain.Identity;
@@ -63,18 +64,12 @@ namespace UIMVC.Controllers
 
              Project newProj = _projManager.MakeProject(pr);
 
-             foreach (IFormFile file in pvm.ProjectImages)
+             using (var memoryStream = new MemoryStream())
              {
-                 if (file.Length > 0)
-                 {
-                     using (var memoryStream = new MemoryStream())
-                     {
-                         await file.CopyToAsync(memoryStream);
-                         _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
-                     }
-                 }
+                 await pvm.InitialProjectImage.CopyToAsync(memoryStream);
+                 _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
              }
-
+             
              return RedirectToAction("Index", "Platform", new {id = platform });
         }
 
@@ -121,7 +116,7 @@ namespace UIMVC.Controllers
 
          #region DeleteProject
 
-         [Authorize(Roles ="ADMIN, SUPERADMIN")]
+        [Authorize(Roles ="ADMIN, SUPERADMIN")]
         [HttpGet]
         public IActionResult DestroyProject(int id)
         {
@@ -156,6 +151,8 @@ namespace UIMVC.Controllers
                 }
             }
 
+            _projManager.RemoveImagesForProject(project.Id);
+            
             _projManager.RemoveProject(id);
 
 

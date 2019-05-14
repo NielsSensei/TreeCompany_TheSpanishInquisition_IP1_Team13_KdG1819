@@ -26,7 +26,6 @@ namespace UIMVC.Models
 
         [Required(ErrorMessage = "Vul de eerste fase in")]
         public Phase CurrentPhase { get; set; }
-        
-        public IFormCollection ProjectImages { get; set; }
+        public IFormFile InitialProjectImage { get; set; }
     }
 }

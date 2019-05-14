@@ -59,6 +59,11 @@ namespace BL
         {
             ProjectRepo.Create(img, project);
         }
+        
+        public void RemoveImagesForProject(object id)
+        {
+            throw new System.NotImplementedException();
+        }
         #endregion
         
         #region Phase
@@ -94,5 +99,8 @@ namespace BL
             return ProjectRepo.ReadAllForPlatform(platform.Id);
         }
         #endregion
+
+
+        
     }
 }

@@ -276,8 +276,23 @@ namespace DAL.repos
         #endregion
 
         #region Images CRUD
-        public void Create(byte[] obj, int projectId){
-            _ctx.ProjectImages.Add(ConvertToDao(obj, projectId, FindNextAvailableImageId()));
+        public void Create(byte[] obj, int projectId)
+        {
+            ProjectImagesDao dao = ConvertToDao(obj, projectId, FindNextAvailableImageId());
+            _ctx.ProjectImages.Add(dao);
+            _ctx.SaveChanges();
+        }
+        
+        public void DeleteImages(int projectId)
+        {
+            foreach (ProjectImagesDao img in _ctx.ProjectImages)
+            {
+                if (img.ProjectId == projectId)
+                {
+                    _ctx.ProjectImages.Remove(img);
+                }
+            }
+
             _ctx.SaveChanges();
         }
         #endregion
