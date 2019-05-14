@@ -27,8 +27,7 @@ namespace UIMVC.Controllers
             _projManager = new ProjectManager();
             _userManager = userManager;
         }
-
-
+         
          #region Project
 
          #region Add
@@ -83,7 +82,7 @@ namespace UIMVC.Controllers
             }
             
             return RedirectToAction("CollectProject", "Platform", 
-                new {Id = aim.Project.Id});
+                new {id = aim.Project.Id});
         }
          #endregion
 
