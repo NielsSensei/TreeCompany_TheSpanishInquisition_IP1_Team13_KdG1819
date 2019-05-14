@@ -1,8 +1,19 @@
+@using Domain.Identity
+@using UIMVC.Services
 @model Domain.Users.Platform
+@inject RoleService RoleService
+
+@section Scripts
+{
+    <script type="module" src="~/dist/changeplatform.entry.js" defer></script>
+
+}
 
 @{
-    ViewBag.Title = "Edit: "+Model.Name;
+    ViewBag.Title = "Edit: " + Model.Name;
     Layout = "_Layout";
+    IEnumerable<UimvcUser> admins = await RoleService.GetAllAdmins(Model.Id);
+    IEnumerable<UimvcUser> mods = await RoleService.GetAllModerators(Model.Id);
 }
 
 <h2>Aanpassen van @Model.Name</h2>
@@ -16,6 +27,59 @@
         <input asp-for="Url" class="form-control" value="@Model.Url"/>
     </div>
     <div class="row">
-        <input type="submit" class="btn btn-primary" value="Opslaan" />
+        <input type="submit" class="btn btn-primary" value="Opslaan"/>
     </div>
 </form>
+<br/>
+<section class="container">
+    <div class="row">
+        <div class="col-8">
+            <h2>Wijs een admin toe aan het project</h2>
+            @Html.Partial("Partials/AssignUserPartial", new AssignUserModel() {PlatformId = Model.Id})
+        </div>
+        <div class="col-4">
+            <h4>Admins van dit platform</h4>
+            @if (admins.Any())
+            {
+                foreach (UimvcUser admin in admins)
+                 {
+                     <div class="row">
+                         <div class="col-2">
+                             @Html.Partial("Partials/RemoveUserPartial", new AssignUserModel() {PlatformId = Model.Id, UserMail = admin.Email})
+                         </div>
+                         <div class="col-10">
+                             <p>@admin.Name</p>
+                             <p>@admin.Email</p>
+                         </div>
+                     </div>
+                 }
+            }
+            else
+            {
+                <p>Geen admins gevonden.</p>
+            }
+
+            <h4>Moderators van dit platform</h4>
+            @if (mods.Any())
+            {
+                foreach (UimvcUser admin in mods)
+                 {
+                     <div class="row">
+                         <div class="col-2">
+                             @Html.Partial("Partials/RemoveUserPartial", new AssignUserModel() {PlatformId = Model.Id, UserMail = admin.Email})
+                         </div>
+                         <div class="col-10">
+                             <p>@admin.Name</p>
+                             <p>@admin.Email</p>
+                         </div>
+                     </div>
+                 }
+            }
+            else
+            {
+                <p>Geen moderators gevonden.</p>
+            }
+            
+        </div>
+    </div>
+</section>

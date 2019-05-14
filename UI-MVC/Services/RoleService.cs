@@ -293,5 +293,39 @@ namespace UIMVC.Services
             return false;
         }
         #endregion
+        
+        #region Users
+
+        
+        public async Task<IEnumerable<UimvcUser>> GetAllAdmins(int platformId)
+        {
+            List<UimvcUser> users = new List<UimvcUser>();
+            foreach (UimvcUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
+            {
+                if (await _userManager.IsInRoleAsync(user, "ADMIN"))
+                {
+                    users.Add(user);
+                }
+            }
+
+            return users;
+        }
+
+        public async Task<IEnumerable<UimvcUser>> GetAllModerators(int platformId)
+        {
+            List<UimvcUser> users = new List<UimvcUser>();
+            foreach (UimvcUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
+            {
+                if (await _userManager.IsInRoleAsync(user, "MODERATOR"))
+                {
+                    users.Add(user);
+                }
+            }
+
+            return users;
+        }
+
+        #endregion
     }
 }
+

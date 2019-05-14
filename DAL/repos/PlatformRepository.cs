@@ -77,7 +77,7 @@ namespace DAL.repos
 
         public Platform Read(int id, bool details)
         {
-            PlatformsDao platformDao = details ? _ctx.Platforms.AsNoTracking().First(p => p.PlatformId == id) : _ctx.Platforms.First(p => p.PlatformId == id);
+            PlatformsDao platformDao = details ? _ctx.Platforms.AsNoTracking().FirstOrDefault(p => p.PlatformId == id) : _ctx.Platforms.FirstOrDefault(p => p.PlatformId == id);
             ExtensionMethods.CheckForNotFound(platformDao, "Platform", id);
 
             return ConvertToDomain(platformDao);
