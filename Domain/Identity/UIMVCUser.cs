@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Identity
 {
-    public class UIMVCUser : IdentityUser
+    public class UimvcUser : IdentityUser
     {
         
         [PersonalData]
