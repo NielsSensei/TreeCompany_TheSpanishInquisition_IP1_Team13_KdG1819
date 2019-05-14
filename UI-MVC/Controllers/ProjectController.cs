@@ -74,16 +74,16 @@ namespace UIMVC.Controllers
         }
         
         [Authorize(Roles ="ADMIN, SUPERADMIN")]
-        public async Task<RedirectToActionResult> AddImage(AddIdeaModel aim)
+        public async Task<RedirectToActionResult> AddImage(AddImageModel aim)
         {
-            IFormFile file = Request.Form["Image"];
             using (var memoryStream = new MemoryStream())
             {
-                await file.CopyToAsync(memoryStream);
-                _projManager.MakeProjectImage(memoryStream.ToArray(), projectId);
+                await aim.File.CopyToAsync(memoryStream);
+                _projManager.MakeProjectImage(memoryStream.ToArray(), aim.Project.Id);
             }
             
-            return RedirectToAction("CollectProject", "Platform", new {Id = projectId});
+            return RedirectToAction("CollectProject", "Platform", 
+                new {Id = aim.Project.Id});
         }
          #endregion
 

@@ -1,21 +1,22 @@
 @using UIMVC.Services
 @inject RoleService RoleService
-@model Domain.Projects.Project
+@model UIMVC.Models.AddImageModel
 
-<h2>@Model.Title</h2>
+<h2>@Model.Project.Title</h2>
 @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
 {
-    LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount,
-    TwitterLikeCount = Model.TwitterLikeCount, IconStyle = 1
+    LikeCount = Model.Project.LikeCount, FbLikeCount = Model.Project.FbLikeCount,
+    TwitterLikeCount = Model.Project.TwitterLikeCount, IconStyle = 1
 })
-<p>@Model.Goal</p>
+<p>@Model.Project.Goal</p>
 @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
 {
     <div class="project-actions">
         <button type="button" class="btn btn-light"> 
             Voeg een Image Toe            
         </button>
-        <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" asp-route-id="@Model.Id">
+        <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" 
+           asp-route-id="@Model.Project.Id">
             Wijzig project
         </a>
         <br/>
@@ -33,7 +34,37 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a class="btn btn-primary" asp-controller="Project" asp-action="AddImage">
+                <a class="btn btn-primary" asp-controller="Project" asp-action="AddImage" asp-route-aim="@Model">
+                    Toevoegen
+                </a><br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteProject" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Verwijder project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    <i>Bent u zeker dat u dit project wilt wissen?</i>
+                </h5>
+                <p>
+                    <b>@Model.Project.Title</b>
+                </p>
+                <p>@Model.Project.Goal</p>
+                <p>Aantal fases: @Model.Project.Phases.Count</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyProject" 
+                   asp-route-id="@Model.Project.Id">
                     Verwijder
                 </a><br/>
             </div>

@@ -6,6 +6,6 @@ namespace UIMVC.Models
     public class AddImageModel
     {
         public Project Project { get; set; }
-        public IFormFile file { get; set; }
+        public IFormFile File { get; set; }
     }
 }

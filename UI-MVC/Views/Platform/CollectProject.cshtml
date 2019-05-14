@@ -22,13 +22,13 @@
         @if (!ProjectService.CollectProjectImages(Model).Any())
         {
             <div class="col-12">
-               @Html.Partial("_ProjectHeaderPartial", Model) 
+               @Html.Partial("_ProjectHeaderPartial", new AddImageModel(){ Project = Model }) 
             </div>
         }
         else
         {
             <div class="col-4">
-                @Html.Partial("_ProjectHeaderPartial", Model)
+                @Html.Partial("_ProjectHeaderPartial", new AddImageModel(){ Project = Model })
             </div>
             <div class="col-8">
                 @if (ProjectService.CollectProjectImages(Model).Count() == 1)
@@ -215,32 +215,5 @@ else
 }
 <hr/>
 
-<div class="modal fade" id="deleteProject" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Verwijder project</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h5>
-                    <i>Bent u zeker dat u dit project wilt wissen?</i>
-                </h5>
-                <p>
-                    <b>@Model.Title</b>
-                </p>
-                <p>@Model.Goal</p>
-                <p>Aantal fases: @Model.Phases.Count</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyProject" asp-route-id="@Model.Id">
-                    Verwijder
-                </a><br/>
-            </div>
-        </div>
-    </div>
-</div>
+
 
