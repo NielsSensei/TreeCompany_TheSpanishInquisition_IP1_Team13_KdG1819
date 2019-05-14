@@ -15,7 +15,7 @@ namespace UIMVC.Controllers
         public IActionResult Index()
         {
             var platforms = _platformMgr.ReadAllPlatforms();
-            
+
             return View(platforms);
         }
 

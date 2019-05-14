@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using UIMVC.Areas.Identity.Data;
+using DAL.Contexts;
 using UIMVC.Models;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(UimvcContext))]
+    [DbContext(typeof(CityOfIdeasDbContext))]
     [Migration("20190401180844_UserName")]
     partial class UserName
     {

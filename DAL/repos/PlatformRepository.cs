@@ -11,12 +11,12 @@ namespace DAL.repos
     public class PlatformRepository : IRepository<Platform>
     {
         private readonly CityOfIdeasDbContext _ctx;
-        
+
         public PlatformRepository()
         {
             _ctx = new CityOfIdeasDbContext();
         }
-        
+
         #region Conversion Methods
         private PlatformsDao ConvertToDao(Platform p)
         {
@@ -44,7 +44,7 @@ namespace DAL.repos
             };
         }
         #endregion
-        
+
         #region Id generation
         private int FindNextAvailablePlatformId()
         {
@@ -53,7 +53,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region Platform CRUD
         public Platform Create(Platform obj)
         {
@@ -82,7 +82,7 @@ namespace DAL.repos
 
             return ConvertToDomain(platformDao);
         }
-        
+
         public void Update(Platform obj)
         {
             PlatformsDao newPlatform = ConvertToDao(obj);
@@ -94,7 +94,7 @@ namespace DAL.repos
                 foundPlatform.IconImage = newPlatform.IconImage;
                 foundPlatform.CarouselImage = newPlatform.CarouselImage;
                 foundPlatform.FrontPageImage = newPlatform.FrontPageImage;
-                
+
                 _ctx.Platforms.Update(foundPlatform);
             }
 

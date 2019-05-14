@@ -61,4 +61,8 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Data" />
+  </ItemGroup>
+
 </Project>

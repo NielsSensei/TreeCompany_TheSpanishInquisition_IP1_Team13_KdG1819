@@ -47,9 +47,9 @@ namespace UIMVC.Controllers
         #endregion
 
         #region Change
-        
+
         [HttpGet]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult ChangePlatform(int id)
         {
             Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
@@ -61,14 +61,14 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult ChangePlatform(Platform platform)
         {
             _platformMgr.EditPlatform(platform);
             return RedirectToAction("Index", new {id = platform.Id});
         }
         #endregion
-        
+
         #region Project
         [HttpGet]
         public IActionResult CollectProject(int id)
@@ -83,26 +83,26 @@ namespace UIMVC.Controllers
                 {
                     if (phase.Id == project.CurrentPhase.Id)
                     {
-                        project.CurrentPhase = phase;                       
-                    }                
+                        project.CurrentPhase = phase;
+                    }
                 }
 
                 phases.Remove(project.CurrentPhase);
                 ViewData["Phases"] = phases;
-            
-                return View(project); 
+
+                return View(project);
             }
-            
+
             return RedirectToAction("HandleErrorCode", "Errors", 404);
         }
         #endregion
-        
+
         #region Ideation
         public IActionResult CollectIdeation(int id)
         {
             Ideation ideation = _projectMgr.ModuleMan.GetIdeation(id);
-            
-            return View(ideation);            
+
+            return View(ideation);
         }
 
         public IActionResult CollectIdeationThread(int id, string message)
@@ -111,10 +111,10 @@ namespace UIMVC.Controllers
 
             ViewData["Message"] = message;
             ViewData["IdeationQuestion"] = iq;
-            
+
             return View(iq);
         }
-        
+
         #region Idea
         [Authorize]
         public IActionResult AddVote(int idea, string user, int thread)
@@ -122,9 +122,9 @@ namespace UIMVC.Controllers
             if (_iqMgr.MakeVote(idea, user))
             {
                 return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                    { id = thread, message = "Stem gelukt, dankjewel!" }); 
+                    { id = thread, message = "Stem gelukt, dankjewel!" });
             }
-            
+
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
                 { id = thread, message = "Al gestemd op dit idee!" });
         }
@@ -141,7 +141,7 @@ namespace UIMVC.Controllers
                 Reportee = new UimvcUser() {Id = ToReport.User.Id},
                 Status = ReportStatus.StatusNotViewed
             };
-            
+
             if (!Request.Form["Reason"].ToString().Equals(""))
             {
                 Report alreadyReport = _iqMgr.GetAllReportsByIdea(idea).FirstOrDefault(
@@ -162,13 +162,13 @@ namespace UIMVC.Controllers
                 return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
                     {id = thread, message = "Je oude rapport is nog in de behandeling"});
             }
-            
+
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
                                { id = thread, message = "Je hebt geen reden opgegeven voor je rapport!" });
         }
         #endregion
         #endregion
 
-        
+
     }
 }

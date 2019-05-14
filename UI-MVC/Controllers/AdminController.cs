@@ -22,9 +22,9 @@ namespace UIMVC.Controllers
             ProjMgr = new ProjectManager();
             QqMgr = new QuestionnaireQuestionManager();
         }
-        
+
         [HttpGet]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaire(int projectId)
         {
             Project toAddQuestionnaireTo = ProjMgr.GetProject(projectId, true);
@@ -49,7 +49,7 @@ namespace UIMVC.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
         {
             if(cqm == null)
@@ -59,7 +59,7 @@ namespace UIMVC.Controllers
 
             Project questionnaireProject = ProjMgr.GetProject(projectId, false);
             Phase parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
-            
+
             Questionnaire newQuestionnaire = new Questionnaire
             {
                 Project = questionnaireProject,
@@ -85,15 +85,15 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireid)
         {
             ViewData["Questionnaire"] = ModMgr.GetQuestionnaire(questionnaireid, false);
             return View(new QuestionnaireQuestion());
         }
-        
+
         [HttpPost]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
         {
             Questionnaire toAdd = ModMgr.GetQuestionnaire(questionnaireId, false);
@@ -123,7 +123,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN, SUPERADMIN")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult EditQuestionnaire(int questionnaireId)
         {
             Questionnaire q = ModMgr.GetQuestionnaire(questionnaireId, false);
@@ -169,7 +169,7 @@ namespace UIMVC.Controllers
                 Phase previousParent = ProjMgr.GetPhase(toBeUpdated.ParentPhase.Id);
                 previousParent.Module = null;
 
-                
+
                 toBeUpdated.ParentPhase = parentPhase;
                 ProjMgr.EditPhase(previousParent);
 
@@ -183,11 +183,11 @@ namespace UIMVC.Controllers
             {
                 toBeUpdated.VoteLevel = eqm.VoteLevel;
             }
-                             
+
             toBeUpdated.OnGoing = eqm.OnGoing;
             toBeUpdated.Title = eqm.Title;
-            
-            
+
+
             ModMgr.EditQuestionnaire(toBeUpdated);
 
             return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});

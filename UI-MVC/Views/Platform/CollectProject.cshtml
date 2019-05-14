@@ -22,7 +22,7 @@
         @if (!ProjectService.CollectProjectImages(Model).Any())
         {
             <div class="col-12">
-               @Html.Partial("_ProjectHeaderPartial", new AddImageModel(){ Project = Model }) 
+               @Html.Partial("_ProjectHeaderPartial", new AddImageModel(){ Project = Model })
             </div>
         }
         else
@@ -34,12 +34,12 @@
                 @if (ProjectService.CollectProjectImages(Model).Count() == 1)
                 {
                     <br/>
-                    <img alt="projectImage" width="700" height="350" src="data:image/png;base64, 
-                    @System.Convert.ToBase64String(ProjectService.CollectProjectImages(Model).First())"/>  
+                    <img alt="projectImage" width="700" height="350" src="data:image/png;base64,
+                    @System.Convert.ToBase64String(ProjectService.CollectProjectImages(Model).First())"/>
                 }
                 else
                 {
-                    <section class="platformCar"> 
+                    <section class="platformCar">
                         <div class="">
                             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
@@ -63,12 +63,12 @@
                                         </div>
                                     }
                                 </div>
-                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" 
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
                                    data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Previous</span>
                                 </a>
-                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" 
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
                                    data-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Next</span>
@@ -78,7 +78,7 @@
                     </section>
                 }
             </div>
-        }        
+        }
     </div>
     <hr />
     <h2>Alle fases</h2>
@@ -88,10 +88,10 @@
             @Html.DisplayFor(m => Model.CurrentPhase)<br/>
             @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
             {
-                <a class="btn btn-primary" asp-controller="Project" asp-action="AddPhase" 
+                <a class="btn btn-primary" asp-controller="Project" asp-action="AddPhase"
                    asp-route-projectId="@Model.Id">
                     Voeg fase toe
-                </a> 
+                </a>
             }
         </div>
         <div class="col-8">
@@ -105,7 +105,7 @@
                     {
                         <th>huidig</th>
                         <th>pas aan</th>
-                        <th>wis</th>  
+                        <th>wis</th>
                     }
                 </thead>
                 @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"]){
@@ -117,13 +117,13 @@
                         <td>@p.EndDate.ToShortDateString()</td>
                         @if(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result){
                             <td>
-                                <a class="btn btn-light" asp-controller="Project" asp-action="SetCurrentPhase" 
+                                <a class="btn btn-light" asp-controller="Project" asp-action="SetCurrentPhase"
                                    asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
-                                    <img src="https://img.icons8.com/ios/25/000000/map-pin-filled.png" /> 
+                                    <img src="https://img.icons8.com/ios/25/000000/map-pin-filled.png" />
                                 </a>
                         </td>
                         <td>
-                            <a class="btn btn-light" asp-controller="Project" asp-action="ChangePhase" 
+                            <a class="btn btn-light" asp-controller="Project" asp-action="ChangePhase"
                                asp-route-phaseId="@p.Id">
                                <img src="https://img.icons8.com/metro/25/000000/edit.png" />
                             </a>
@@ -132,8 +132,8 @@
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletePhase">
                             <img src="https://img.icons8.com/ios/25/000000/trash.png" />
                         </button>
-                        
-                            <div class="modal fade" id="deletePhase" tabindex="-1" role="dialog" 
+
+                            <div class="modal fade" id="deletePhase" tabindex="-1" role="dialog"
                                  aria-labelledby="modalLabelPhase" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -149,7 +149,7 @@
                                         </h5>
                                     </div>
                                     <div class="modal-footer">
-                                        <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyPhase" 
+                                        <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyPhase"
                                            asp-route-projectId="@Model.Id" asp-route-phaseId="@p.Id">
                                             Verwijder
                                         </a>
@@ -161,7 +161,7 @@
                         </div>
                         </td>
                         }
-                    </tr>  
+                    </tr>
                      }
                 }
             </table>
@@ -173,12 +173,12 @@
 {
     <section class="container">
         <div class="row justify-content-around">
-            <a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation" 
+            <a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation"
                asp-route-project="@Model.Id">
                 Maak een nieuwe ideation
             </a>
 
-            <a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" 
+            <a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire"
             asp-route-projectid="@Model.Id" method="get">
                 Nieuwe vragenlijst maken
             </a>
@@ -198,7 +198,7 @@
                 @Html.DisplayFor(m => questionnaire)
             }
         }
-        
+
         @if (ViewData["Ideations"] != null)
         {
             foreach (Ideation ideation in (IEnumerable<Ideation>) ViewData["Ideations"])
@@ -211,9 +211,6 @@
 else
 {
     <p>Geen modules voor dit project.</p>
-    
+
 }
 <hr/>
-
-
-
