@@ -14,12 +14,12 @@ namespace DAL.repos
     public class IdeationRepository : IRepository<Ideation>
     {
         private readonly CityOfIdeasDbContext _ctx;
-        
+
         public IdeationRepository()
         {
             _ctx = new CityOfIdeasDbContext();
         }
-        
+
         #region Conversion Methods
         private ModulesDao GrabModuleInformationDao(Ideation obj)
         {
@@ -40,7 +40,7 @@ namespace DAL.repos
             {
                 dao.Tags = ExtensionMethods.ListToString(obj.Tags);
             }
-            
+
             if (obj.Project != null)
             {
                 dao.ProjectId = obj.Project.Id;
@@ -50,7 +50,7 @@ namespace DAL.repos
             {
                 dao.PhaseId = obj.ParentPhase.Id;
             }
-            
+
             return dao;
         }
 
@@ -69,12 +69,12 @@ namespace DAL.repos
             {
                 dao.UserId = obj.User.Id;
             }
-            
+
             if (obj.RequiredFields > 0)
             {
                 dao.RequiredFields = (byte) obj.RequiredFields;
             }
-            
+
             if (obj.Event != null)
             {
                 dao.EventId = obj.Event.Id;
@@ -111,24 +111,24 @@ namespace DAL.repos
             ideation.ShareCount = dao.ShareCount;
             ideation.RetweetCount = dao.RetweetCount;
             ideation.Tags = new List<string>();
-            
+
             if (dao.Tags != null)
             {
-                ideation.Tags = ExtensionMethods.StringToList(dao.Tags); 
+                ideation.Tags = ExtensionMethods.StringToList(dao.Tags);
             }
             return ideation;
         }
         #endregion
-        
+
         #region Id generation
         private int FindNextAvailableIdeationId()
-        {               
+        {
             if (!_ctx.Ideations.Any()) return 1;
             int newId = _ctx.Modules.Max(q => q.ModuleId) + 1;
             return newId;
         }
         #endregion
-        
+
         #region Ideation CRUD
         public Ideation Create(Ideation obj)
         {
@@ -146,7 +146,7 @@ namespace DAL.repos
             obj.Id = FindNextAvailableIdeationId();
             ModulesDao newModule = GrabModuleInformationDao(obj);
             IdeationsDao newIdeation = ConvertToDao(obj);
-            
+
             _ctx.Modules.Add(newModule);
             _ctx.Ideations.Add(newIdeation);
             _ctx.SaveChanges();
@@ -182,7 +182,7 @@ namespace DAL.repos
                 foundIdeation.MediaFile = newIdeation.MediaFile;
                 foundIdeation.RequiredFields = newIdeation.RequiredFields;
             }
-            
+
             ModulesDao newModule = GrabModuleInformationDao(obj);
             ModulesDao foundModule = _ctx.Modules.FirstOrDefault(dto => dto.ModuleId == newModule.ModuleId);
             if (foundModule != null)
@@ -196,7 +196,7 @@ namespace DAL.repos
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
             }
-            
+
             if (newModule.PhaseId != foundModule.PhaseId)
             {
                 foundModule.PhaseId = newModule.PhaseId;
@@ -206,14 +206,14 @@ namespace DAL.repos
         }
 
         public void Delete(int id)
-        {     
+        {
             ModulesDao toDeleteModule = _ctx.Modules.First(r => r.ModuleId == id);
             _ctx.Modules.Remove(toDeleteModule);
             IdeationsDao toDelete = _ctx.Ideations.First(r => r.ModuleId == id);
             _ctx.Ideations.Remove(toDelete);
             _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Ideation> ReadAll()
         {
             List<Ideation> myQuery = new List<Ideation>();
@@ -232,7 +232,7 @@ namespace DAL.repos
             return ReadAll().ToList().FindAll(i => i.Project.Id == projectId);
         }
         #endregion
-        
+
         #region Media CRUD
         // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
         /*public Media Create(Media obj)
@@ -263,7 +263,7 @@ namespace DAL.repos
             //}
         } */
         #endregion
-        
+
         #region Tag CRUD
         public string CreateTag(string obj, int moduleId)
         {
@@ -273,7 +273,7 @@ namespace DAL.repos
 
             ideationWTags.Tags = ExtensionMethods.StringToList(oldTags);
             Update(ideationWTags);
-            
+
             return obj;
         }
 

@@ -39,7 +39,7 @@ CREATE TABLE Projects(
 	Visible BOOL NOT NULL,
 	ReactionCount INT,
 	LikeCount INT,
-	FbLikeCount INT, 
+	FbLikeCount INT,
 	TwitterLikeCOunt INT,
 	LikeVisibility TINYINT NOT NULL,
 
@@ -68,7 +68,7 @@ CREATE TABLE Modules(
 	OnGoing BOOL NOT NULL,
 	Title NVARCHAR(100),
 	LikeCount INT,
-	FbLikeCount INT, 
+	FbLikeCount INT,
 	TwitterLikeCount INT,
 	ShareCount INT,
 	RetweetCount INT,

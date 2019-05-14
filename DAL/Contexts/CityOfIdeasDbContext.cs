@@ -11,7 +11,7 @@ namespace DAL.Contexts
          * Naar deployment toe is dit wel nuttig. Options wordt wel vaak gebruikt voor de connectionstring mee te geven als deze in een aparte
          * file zit. Je hebt de optie om ou db te linken via de onconfiguring de .usedataprovider (in ons geval .usesqlserver) te gebruiken. Of
          * alle connectionstrings in een app.config achtige file ramt. -NVZ (Uitleg door Kenneth De Keulenaer).
-         */ 
+         */
         public CityOfIdeasDbContext(DbContextOptions<CityOfIdeasDbContext> options) : base(options)
         {
             COI_DbInitializer.Initialize(this, false);
@@ -21,7 +21,7 @@ namespace DAL.Contexts
         {
             COI_DbInitializer.Initialize(this, false);
         }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -29,7 +29,7 @@ namespace DAL.Contexts
                 optionsBuilder.UseSqlite("Data Source=TheSpanishDatabase.db");
                 optionsBuilder.EnableSensitiveDataLogging();
             }
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace DAL.Contexts
         public DbSet<ChoicesDao> Choices { get; set; }
         public DbSet<DevicesDao> Devices { get; set; }
         public DbSet<IdeaFieldsDao> IdeaFields { get; set; }
-        public DbSet<IdeasDao> Ideas { get; set; }        
+        public DbSet<IdeasDao> Ideas { get; set; }
         public DbSet<IdeationQuestionsDao> IdeationQuestions { get; set; }
         public DbSet<IdeationsDao> Ideations { get; set; }
         public DbSet<ModulesDao> Modules { get; set; }

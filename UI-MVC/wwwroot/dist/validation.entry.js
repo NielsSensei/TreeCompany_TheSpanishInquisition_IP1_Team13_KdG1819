@@ -12832,7 +12832,8 @@ function validatePhaseDate() {
         error.innerText = "Eind datum kan niet voor begindatum zijn";
         document.getElementById("EndDatePhase").value = "";
     }
-} 
+}
+
 
 /***/ })
 

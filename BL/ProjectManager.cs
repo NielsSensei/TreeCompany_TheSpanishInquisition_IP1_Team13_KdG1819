@@ -10,19 +10,20 @@ namespace BL
     {
         private ProjectRepository ProjectRepo { get; }
         public ModuleManager ModuleMan { get; }
-        
+
         public ProjectManager()
         {
             ProjectRepo = new ProjectRepository();
             ModuleMan = new ModuleManager();
         }
-        
+
         #region Project
+
         public void EditProject(Project project)
         {
             ProjectRepo.Update(project);
         }
-        
+
         public Project GetProject(int projectId, bool details)
         {
             Project project = ProjectRepo.Read(projectId, details);
@@ -34,7 +35,7 @@ namespace BL
 
             return project;
         }
-        
+
         public Project MakeProject(Project project)
         {
             Project newProject = ProjectRepo.Create(project);
@@ -43,7 +44,7 @@ namespace BL
             newProject.CurrentPhase.Project = newProject;
 
             ProjectRepo.Create(newProject.CurrentPhase);
-            
+
             ProjectRepo.Update(newProject);
 
             return newProject;
@@ -59,19 +60,19 @@ namespace BL
         {
             ProjectRepo.Create(img, project);
         }
-        
+
         public void RemoveImagesForProject(object id)
         {
             throw new System.NotImplementedException();
         }
         #endregion
-        
+
         #region Phase
         public void EditPhase(Phase phase)
         {
             ProjectRepo.Update(phase);
         }
-        
+
         public IEnumerable<Phase> GetAllPhases(int projectId)
         {
             return ProjectRepo.ReadAllPhases(projectId);
@@ -81,18 +82,18 @@ namespace BL
         {
             return ProjectRepo.ReadPhase(phaseId, false);
         }
-        
+
         public void MakePhase(Phase newPhase)
         {
             ProjectRepo.Create(newPhase);
         }
-        
+
         public void RemovePhase(int phaseId)
         {
             ProjectRepo.DeletePhase(phaseId);
         }
         #endregion
-        
+
         #region PlatformMethods
         public IEnumerable<Project> GetPlatformProjects(Platform platform)
         {
@@ -101,6 +102,6 @@ namespace BL
         #endregion
 
 
-        
+
     }
 }

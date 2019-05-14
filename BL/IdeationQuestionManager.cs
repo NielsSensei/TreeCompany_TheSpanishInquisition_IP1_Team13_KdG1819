@@ -9,24 +9,24 @@ namespace BL
     {
         private IdeationQuestionsRepository IdeationQuestionRepo { get; }
         private VoteManager VoteMan { get; }
-        
+
         public IdeationQuestionManager()
         {
             IdeationQuestionRepo = new IdeationQuestionsRepository();
             VoteMan = new VoteManager();
         }
-        
+
         #region IdeationQuestion
         public void EditQuestion(IdeationQuestion question)
         {
             IdeationQuestionRepo.Update(question);
         }
-        
+
         public IdeationQuestion GetQuestion(int questionId, bool details)
         {
             return IdeationQuestionRepo.Read(questionId, details);
         }
-        
+
         public void MakeQuestion(IdeationQuestion question, int moduleId)
         {
             IdeationQuestionRepo.Create(question);
@@ -47,7 +47,7 @@ namespace BL
             return IdeationQuestionRepo.ReadAll(id).ToList();
         }
         #endregion
-        
+
         #region Idea
         public void EditIdea(Idea idea)
         {
@@ -63,12 +63,12 @@ namespace BL
         {
             IdeationQuestionRepo.Create(idea);
         }
-        
+
         public void RemoveIdea(int ideaId)
         {
             IdeationQuestionRepo.DeleteIdea(ideaId);
         }
-        
+
         public List<Idea> GetIdeas(int questionId)
         {
             return IdeationQuestionRepo.ReadAllIdeasByQuestion(questionId).ToList();
@@ -79,25 +79,25 @@ namespace BL
             return IdeationQuestionRepo.ReadAllIdeas().ToList();
         }
         #endregion
-        
+
         #region Vote
         public void MakeVote(int feedbackId, string userId, int? deviceId, double? x, double? y)
         {
             Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
             if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, deviceId, x, y))
-            {    
+            {
                 //TODO fix voting via device
                 feedback.VoteCount++;
                 EditIdea(feedback);
             }
         }
-        
+
         public bool MakeVote(int feedbackId, string userId)
         {
             Idea feedback = GetIdea(feedbackId);
             if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, null, null, null))
             {
-                VoteMan.MakeVote(feedbackId, userId, null, null, null, true); 
+                VoteMan.MakeVote(feedbackId, userId, null, null, null, true);
                 feedback.VoteCount++;
                 EditIdea(feedback);
 
@@ -112,7 +112,7 @@ namespace BL
             VoteMan.RemoveVotes(ideaId);
         }
         #endregion
-        
+
         #region Field
         public IEnumerable<Field> GetAllFields(int ideaId)
         {
@@ -124,7 +124,7 @@ namespace BL
             IdeationQuestionRepo.DeleteFields(ideaId);
         }
         #endregion
-        
+
         #region Report
         public void RemoveReport(int id)
         {
@@ -133,9 +133,9 @@ namespace BL
 
         public void RemoveReports(int ideaId)
         {
-            IdeationQuestionRepo.DeleteReports(ideaId);    
+            IdeationQuestionRepo.DeleteReports(ideaId);
         }
-        
+
         public void EditReport(Report obj)
         {
             IdeationQuestionRepo.Update(obj);
@@ -145,7 +145,7 @@ namespace BL
         {
             IdeationQuestionRepo.Create(obj);
         }
-        
+
         public IEnumerable<Report> GetAllReportsByIdea(int ideaId)
         {
             return IdeationQuestionRepo.ReadAllReportsByIdea(ideaId);

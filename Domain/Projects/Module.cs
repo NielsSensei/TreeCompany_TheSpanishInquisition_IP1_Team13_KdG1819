@@ -14,7 +14,7 @@ namespace Domain.Projects
         public int FbLikeCount{ get; set; }
         public int TwitterLikeCount { get; set; }
         public int ShareCount { get; set; }
-        public int RetweetCount { get; set; }      
+        public int RetweetCount { get; set; }
         public Role VoteLevel { get; set; }
         public ModuleType ModuleType { get; set; }
         public List<Phase> Phases { get; set; }

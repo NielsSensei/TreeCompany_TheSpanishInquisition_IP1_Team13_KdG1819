@@ -8,7 +8,7 @@ namespace UIMVC.Services
     public class UserService
     {
         private readonly UserManager<UimvcUser> _usrMgr;
-        
+
 
         public UserService(UserManager<UimvcUser> userManager)
         {

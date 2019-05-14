@@ -7,8 +7,8 @@ namespace Domain.Projects
 {
     public class Ideation : Module
     {
-        public UimvcUser User { get; set; } 
-        public bool UserIdea { get; set; }  
+        public UimvcUser User { get; set; }
+        public bool UserIdea { get; set; }
         public Event Event{ get; set; }
         //public Media Media { get; set; }
         public string ExtraInfo { get; set; }

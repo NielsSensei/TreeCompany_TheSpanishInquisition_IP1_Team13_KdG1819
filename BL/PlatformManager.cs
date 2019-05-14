@@ -8,12 +8,12 @@ namespace BL
     public class PlatformManager
     {
         private PlatformRepository PlatformRepo { get; }
-        
+
         public PlatformManager()
         {
             PlatformRepo = new PlatformRepository();
         }
-        
+
         #region Platform
         public Platform GetPlatform(int platformId)
         {
@@ -34,12 +34,12 @@ namespace BL
         {
             PlatformRepo.Delete(platformId);
         }
-        
+
         public IEnumerable<Platform> ReadAllPlatforms()
         {
             return PlatformRepo.ReadAll();
         }
-        
+
         public IEnumerable<Platform> SearchPlatforms(string search)
         {
             return PlatformRepo.ReadAll()

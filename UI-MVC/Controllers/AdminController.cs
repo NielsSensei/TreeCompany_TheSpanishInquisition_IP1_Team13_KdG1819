@@ -22,7 +22,7 @@ namespace UIMVC.Controllers
             ProjMgr = new ProjectManager();
             QqMgr = new QuestionnaireQuestionManager();
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaire(int projectId)
@@ -59,7 +59,7 @@ namespace UIMVC.Controllers
 
             Project questionnaireProject = ProjMgr.GetProject(projectId, false);
             Phase parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
-            
+
             Questionnaire newQuestionnaire = new Questionnaire
             {
                 Project = questionnaireProject,
@@ -91,7 +91,7 @@ namespace UIMVC.Controllers
             ViewData["Questionnaire"] = ModMgr.GetQuestionnaire(questionnaireid, false);
             return View(new QuestionnaireQuestion());
         }
-        
+
         [HttpPost]
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, QuestionnaireQuestion qQ)
@@ -169,7 +169,7 @@ namespace UIMVC.Controllers
                 Phase previousParent = ProjMgr.GetPhase(toBeUpdated.ParentPhase.Id);
                 previousParent.Module = null;
 
-                
+
                 toBeUpdated.ParentPhase = parentPhase;
                 ProjMgr.EditPhase(previousParent);
 
@@ -183,11 +183,11 @@ namespace UIMVC.Controllers
             {
                 toBeUpdated.VoteLevel = eqm.VoteLevel;
             }
-                             
+
             toBeUpdated.OnGoing = eqm.OnGoing;
             toBeUpdated.Title = eqm.Title;
-            
-            
+
+
             ModMgr.EditQuestionnaire(toBeUpdated);
 
             return RedirectToAction("EditQuestionnaire", new { questionnaireId = questionnaireid});

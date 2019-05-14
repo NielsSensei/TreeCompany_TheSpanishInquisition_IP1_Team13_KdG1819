@@ -282,7 +282,7 @@ namespace DAL.repos
             _ctx.ProjectImages.Add(dao);
             _ctx.SaveChanges();
         }
-        
+
         public void DeleteImages(int projectId)
         {
             foreach (ProjectImagesDao img in _ctx.ProjectImages)

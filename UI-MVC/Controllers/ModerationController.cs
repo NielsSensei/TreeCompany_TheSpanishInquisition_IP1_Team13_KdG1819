@@ -34,7 +34,7 @@ namespace UIMVC.Controllers
             _moduleMgr = new ModuleManager();
             _projMgr = new ProjectManager();
             _userManager = userManager;
-            _roleService = roleService; 
+            _roleService = roleService;
         }
 
         #region AddPlatform
@@ -54,7 +54,7 @@ namespace UIMVC.Controllers
             {
                 return BadRequest("Platform cannot be null");
             }
-            
+
             Platform platform = new Platform()
             {
                 Name = cpm.Name,
@@ -68,13 +68,13 @@ namespace UIMVC.Controllers
                 await cpm.IconImage.CopyToAsync(memoryStream);
                 platform.IconImage = memoryStream.ToArray();
             }
-            
+
             using (var memoryStream = new MemoryStream())
             {
                 await cpm.CarouselImage.CopyToAsync(memoryStream);
                 platform.CarouselImage = memoryStream.ToArray();
             }
-            
+
             using (var memoryStream = new MemoryStream())
             {
                 await cpm.FrontPageImage.CopyToAsync(memoryStream);
@@ -85,7 +85,7 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
         }
-        
+
         #endregion
 
         #region Ideation
@@ -144,12 +144,12 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("CollectProject", "Platform", new {Id = project});
         }
-        
+
         [Authorize(Roles = "ADMIN, SUPERADMIN")]
         public IActionResult AddTag(int ideation)
         {
             string tag = Request.Form["GetMeATag"].ToString();
-            
+
             if (tag == null)
             {
                 return BadRequest("Tag can't be null");
@@ -157,7 +157,7 @@ namespace UIMVC.Controllers
 
             _moduleMgr.MakeTag(tag, ideation, false);
 
-            return RedirectToAction("CollectIdeation", "Platform", 
+            return RedirectToAction("CollectIdeation", "Platform",
                 new {Id = ideation});
         }
 
@@ -199,7 +199,7 @@ namespace UIMVC.Controllers
             Ideation i = _moduleMgr.GetIdeation(id);
 
             ViewData["Project"] = i.Project.Id;
-            
+
             List<Phase> allPhases = (List<Phase>) _projMgr.GetAllPhases(i.Project.Id);
             List<Phase> availablePhases = new List<Phase>();
 

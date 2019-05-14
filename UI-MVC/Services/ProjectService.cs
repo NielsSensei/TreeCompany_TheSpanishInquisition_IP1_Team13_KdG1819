@@ -39,7 +39,7 @@ namespace UIMVC.Services
         {
             return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
         }
-        
+
         public IEnumerable<Phase> CollectProjectPhases(Project project)
         {
             return _projectManager.GetAllPhases(project.Id);
