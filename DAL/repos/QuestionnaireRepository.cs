@@ -81,7 +81,8 @@ namespace DAL.repos
             }
 
             obj.Id = FindNextAvailableQuestionnaireId();
-            _ctx.Modules.Add(ConvertToDao(obj));
+            ModulesDao newModule = ConvertToDao(obj);
+            _ctx.Modules.Add(newModule);
             _ctx.SaveChanges();
 
             return obj;

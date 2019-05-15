@@ -39,6 +39,11 @@ namespace BL
         {
             return QuestionnaireQuestionRepo.ReadAll().ToList();
         }
+        
+        public List<QuestionnaireQuestion> GetAllByModuleId(int questionnaireId)
+        {
+            return QuestionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId).ToList();
+        }
         #endregion
         
         #region Answer
@@ -47,10 +52,37 @@ namespace BL
             return QuestionnaireQuestionRepo.ReadAll(questionId).ToList();
         }  
         
-        public List<QuestionnaireQuestion> GetAllByModuleId(int questionnaireId)
+        #region Option
+        public void MakeOption(int questionId, string optionText)
         {
-            return QuestionnaireQuestionRepo.ReadAllByQuestionnaireId(questionnaireId).ToList();
+            QuestionnaireQuestionRepo.CreateOption(questionId, optionText);
         }
+
+        public string GetOption(int optionId, int questionId)
+        {
+            return QuestionnaireQuestionRepo.ReadOption(optionId, questionId);
+        }
+
+        public int GetOptionId(string optionText, int questionId)
+        {
+            return QuestionnaireQuestionRepo.ReadOptionId(optionText, questionId);
+        }
+
+        public void DestroyOption(int optionId)
+        {
+            QuestionnaireQuestionRepo.DeleteOption(optionId);
+        }
+
+        public IEnumerable<string> GetAllOptions()
+        {
+            return QuestionnaireQuestionRepo.ReadAllOptions();
+        }
+
+        public IEnumerable<string> GetAllOptionsForQuestion(int questionId)
+        {
+            return QuestionnaireQuestionRepo.ReadAllOptionsForQuestion(questionId);
+        }
+        #endregion
         #endregion
     }
 }

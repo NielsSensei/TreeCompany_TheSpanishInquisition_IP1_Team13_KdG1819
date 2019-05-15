@@ -1,0 +1,87 @@
+@using Domain.Projects
+@using Domain.UserInput
+@model Questionnaire
+
+<h1>@Model.Title</h1>
+
+@if (Model.OnGoing)
+{
+    
+<form asp-action="AnswerQuestionnaire" asp-controller="Admin" method="post">
+    @foreach (QuestionnaireQuestion qQ in Model.Questions)
+    {
+        switch (qQ.QuestionType)
+        {
+            case QuestionType.Drop:
+
+                <label>@qQ.QuestionText</label>
+                <select class="custom-select my-1 mr-sm-2">
+                    @foreach (string Option in qQ.Options)
+                    {
+                        <option>@Option</option>
+                    }
+                </select>
+
+
+
+                break;
+            case QuestionType.Multi:
+
+                <div class="form-group">
+                    <label>@qQ.QuestionText</label>
+
+                    @foreach (string Option in qQ.Options)
+                    {
+                    <input class="form-check-input" type="checkbox" id="@qQ.Id">
+                    <label class="form-check-label" for="@qQ.Id">
+                        @Option
+                    </label>
+                    }
+
+                </div>
+
+                break;
+            case QuestionType.Open:
+                <div class="form-group">
+                    <label>qQ.QuestionText</label>
+                    <textarea rows="3" class="form-control"></textarea>
+                       
+                </div>
+                break;
+            case QuestionType.Single:
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">@qQ.QuestionText</legend>
+                        <div class="col-sm-10">
+                            @foreach (string option in qQ.Options)
+                            {
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input"/>
+                                    <label class="form-check-label">@option</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </fieldset>
+
+                break;
+            case QuestionType.Mail:
+                <div class="form-group">
+                    <label>@qQ.QuestionText</label>
+                    <input type="email" class="form-control" placeholder="name@example.com"/>
+                </div>
+                break;
+
+
+        }
+    }
+
+                <input type="submit" class="btn btn-primary" value="Antwoorden verzenden"/>
+</form>
+
+} else
+{
+<h2>Oops...</h2>
+<h4>Deze vragenlijst is nog niet openbaar gemaakt! Gelieve later nog eens te proberen...</h4>
+
+}
