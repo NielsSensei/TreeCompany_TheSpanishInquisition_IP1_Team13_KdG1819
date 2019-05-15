@@ -451,7 +451,7 @@ namespace UIMVC.Controllers
         #region UIMVCUser
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
-        public IActionResult CollectAllUsers(string sortOrder, string searchString)
+        public async Task<IActionResult> CollectAllUsers(string sortOrder, string searchString)
         {
 
             ViewData["CurrentFilter"] = searchString;
@@ -460,6 +460,11 @@ namespace UIMVC.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 users = users.Where(u => u.Name.ToUpper().Contains(searchString.ToUpper()));
+            } 
+            if (!User.IsInRole(Role.SuperAdmin.ToString("G")))
+            {
+                UimvcUser user = await _userManager.GetUserAsync(User);
+                users = users.Where(u => u.PlatformDetails == user.PlatformDetails);
             }
 
             switch (sortOrder)
