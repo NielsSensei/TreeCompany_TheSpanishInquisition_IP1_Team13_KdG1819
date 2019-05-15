@@ -106,7 +106,8 @@ console.log("AddQuestionnaireQuestion active!");
 function requiresOptions() {
     dropdownvalue = dropdown.options[dropdown.selectedIndex].value;
 
-    if (dropdownvalue === "SINGLE" || dropdownvalue === "MULTI" || dropdownvalue === "DROP") {
+    if (dropdownvalue.toUpperCase() === "SINGLE" || dropdownvalue.toUpperCase() === "MULTI" || 
+        dropdownvalue.toUpperCase() === "DROP") {
         optionsContainer.classList.remove("hidden");
     } else {
         if (!optionsContainer.classList.contains("hidden")) {
