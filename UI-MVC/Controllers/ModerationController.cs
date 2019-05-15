@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using BL;
 using Domain.Projects;
@@ -90,15 +91,16 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> AssignUserToPlatform(AssignUserModel aum)
         {
-            if (aum == null)
-            {
-                return BadRequest("Cannot be null");
-            }
-
+            if (aum == null) return BadRequest("Cannot be null");
+            if (User.IsInRole(Role.Admin.ToString("G")) &&
+                (await _userManager.GetUserAsync(User)).PlatformDetails != aum.PlatformId)
+                return BadRequest("You are no admin of this platform");
 
             UimvcUser user = await _userManager.FindByEmailAsync(aum.UserMail);
             if (user == null) return BadRequest("Wrong user mail");
             user.PlatformDetails = aum.PlatformId;
+            
+            if (aum.Role == 0) aum.Role = AssignUserRole.MODERATOR;
             _userManager.AddToRoleAsync(user, Enum.GetName(typeof(AssignUserRole), aum.Role));
 
             await _userManager.UpdateAsync(user);
@@ -530,6 +532,13 @@ namespace UIMVC.Controllers
                 }
             }
             return RedirectToAction("CollectAllUsers", "Moderation");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RequestVerification(int platformId)
+        {
+            
+            
         }
         #endregion
     }

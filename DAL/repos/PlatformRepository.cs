@@ -91,9 +91,9 @@ namespace DAL.repos
             {
                 foundPlatform.Name = newPlatform.Name;
                 foundPlatform.SiteUrl = newPlatform.SiteUrl;
-                foundPlatform.IconImage = newPlatform.IconImage;
-                foundPlatform.CarouselImage = newPlatform.CarouselImage;
-                foundPlatform.FrontPageImage = newPlatform.FrontPageImage;
+                if (newPlatform.IconImage != null) foundPlatform.IconImage = newPlatform.IconImage;
+                if (newPlatform.CarouselImage != null) foundPlatform.CarouselImage = newPlatform.CarouselImage;
+                if (newPlatform.FrontPageImage != null) foundPlatform.FrontPageImage = newPlatform.FrontPageImage;
 
                 _ctx.Platforms.Update(foundPlatform);
             }

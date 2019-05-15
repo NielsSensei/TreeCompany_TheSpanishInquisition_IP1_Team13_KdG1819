@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,14 @@ namespace UIMVC.Services
             }
 
             return foundUser.Name;
+        }
+
+        public async Task<int> GetUserPlatform(ClaimsPrincipal user)
+        {
+            var userFound = await _usrMgr.GetUserAsync(user);
+            if (userFound == null) return 0;
+
+            return userFound.PlatformDetails;
         }
     }
 }

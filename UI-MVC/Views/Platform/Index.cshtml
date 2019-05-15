@@ -20,13 +20,13 @@
                            </div>
                            <div class="col-4">
                                <img alt="Icon" width="100" height="100"
-                               src="data:image/png;base64, @System.Convert.ToBase64String(Model.IconImage)"/>
+                                    src="data:image/png;base64, @System.Convert.ToBase64String(Model.IconImage)"/>
                            </div>
                        </div>
                    </div>
                </div>
                <div class="card-body">
-                   <img alt="FrontPage"
+                   <img alt="FrontPage" class="card-img"
                         src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
                </div>
                <div class="card-footer">
@@ -34,6 +34,15 @@
                       asp-route-platform="@Model.Id">Maak nieuw project aan</a>
                </div>
            </section>
+           @if (User.Identity.IsAuthenticated)
+           {
+               <section class="card">
+                   <div class="card-body">
+                       
+                   </div>
+               </section>
+           }
+           
        </div>
        <div class="col-7">
            @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())
