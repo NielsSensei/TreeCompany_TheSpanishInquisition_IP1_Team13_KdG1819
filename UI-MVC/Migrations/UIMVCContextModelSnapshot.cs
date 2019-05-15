@@ -2,9 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using DAL.Contexts;
-using UIMVC.Models;
+using UIMVC.Areas.Identity.Data;
 
 namespace UIMVC.Migrations
 {

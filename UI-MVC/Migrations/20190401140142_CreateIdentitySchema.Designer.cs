@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UIMVC.Models;
 using DAL.Contexts;
+using UIMVC.Areas.Identity.Data;
 
 namespace UIMVC.Migrations
 {
