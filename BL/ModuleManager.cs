@@ -51,6 +51,11 @@ namespace BL
         {
             return QuestionnaireRepo.Read(moduleId, details);
         }
+
+        public Questionnaire GetQuestionnaire(int phaseId, int projectId)
+        {
+            return QuestionnaireRepo.ReadAll(projectId).FirstOrDefault(m => m.ParentPhase.Id == phaseId);
+        }
         
         public IEnumerable<Questionnaire> GetQuestionnaires(int projectId)
         {

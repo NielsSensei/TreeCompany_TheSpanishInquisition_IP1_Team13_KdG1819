@@ -110,7 +110,7 @@
                     }
                 </thead>
                 @foreach (Phase p in (IEnumerable<Phase>) ViewData["Phases"]){
-                    @if (p != Model.CurrentPhase)
+                    if (p != Model.CurrentPhase)
                      {
                          <tr>
                         <td>@p.Description</td>

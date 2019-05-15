@@ -30,7 +30,7 @@
             <a class="nav-link" asp-controller="Moderation" asp-action="CollectAllIdeas">Toon alle ideeën</a>
         </li>
 
-        @if (RoleService.IsSuperAdmin(User).Result)
+        if (RoleService.IsSuperAdmin(User).Result)
          {
              <li class="nav-item">
                  <a class="nav-link" asp-controller="Moderation" asp-action="AddPlatform">Platform Management</a>

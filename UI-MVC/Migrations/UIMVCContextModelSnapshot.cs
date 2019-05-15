@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using UIMVC.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using DAL.Contexts;
 using UIMVC.Models;

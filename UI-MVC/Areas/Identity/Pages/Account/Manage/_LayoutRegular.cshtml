@@ -1,57 +1,57 @@
-<!DOCTYPE html>	
-<html>	
-<head>	
-    <meta charset="utf-8"/>	
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>	
-    <title>@ViewData["Title"]</title>	
+<!DOCTYPE html>    
+<html>    
+<head>    
+    <meta charset="utf-8"/>    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>    
+    <title>@ViewData["Title"]</title>    
 
-    @RenderSection("Tags", required: false)	
+    @RenderSection("Tags", required: false)    
 
-    <script type="module" src="~/dist/site.entry.js" defer></script>	
-    <link rel="stylesheet" href="~/dist/site.css">	
-</head>	
-<body>	
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">	
-    <div class="container">	
-        <div class="collapse navbar-collapse">	
-            <ul class="navbar-nav mr-auto">	
-                <li class="nav-item layouttitle">	
-                    <a class="nav-link test" asp-area="" asp-controller="Home" asp-action="Index">City of Ideas</a>	
-                </li>	
-            </ul>	
-            <partial name="_LoginPartial"/>	
-        </div>	
-    </div>	
-</nav>	
+    <script type="module" src="~/dist/site.entry.js" defer></script>    
+    <link rel="stylesheet" href="~/dist/site.css">    
+</head>    
+<body>    
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">    
+    <div class="container">    
+        <div class="collapse navbar-collapse">    
+            <ul class="navbar-nav mr-auto">    
+                <li class="nav-item layouttitle">    
+                    <a class="nav-link test" asp-area="" asp-controller="Home" asp-action="Index">City of Ideas</a>    
+                </li>    
+            </ul>    
+            <partial name="_LoginPartial"/>    
+        </div>    
+    </div>    
+</nav>    
 
 
-<partial name="_CookieConsentPartial"/>	
+<partial name="_CookieConsentPartial"/>    
 
-<div class="container body-content">	
-    @RenderBody()	
-</div>	
+<div class="container body-content">    
+    @RenderBody()    
+</div>    
 
-<footer class="footer row">	
-    <div class="col-md-6">	
-        <p>Project voor de Karel de Grote Hogeschool, Treecompany en District Antwerpen.</p>	
-        <p class="font-italic">Team #13 ~ The Spanish Inquisition</p>	
-    </div>	
-    <ul class="col-md-3">	
-        <li class="font-weight-bold">City of Ideas</li>	
-        <li>	
-            <a asp-controller="Home" asp-action="About">Over ons</a>	
-        </li>	
-        <li>	
-            <a asp-controller="Home" asp-action="Privacy">Privacy</a>	
-        </li>	
-    </ul>	
-    <ul class="col-md-3">	
-        <li class="font-weight-bold">Contact</li>	
-        <li>Email: <a href="mailto:fake@@student.kdg.be">fake@@student.kdg.be</a></li>	
-        <li>Tel: 012/34.56.78</li>	
-    </ul>	
-</footer>	
+<footer class="footer row">    
+    <div class="col-md-6">    
+        <p>Project voor de Karel de Grote Hogeschool, Treecompany en District Antwerpen.</p>    
+        <p class="font-italic">Team #13 ~ The Spanish Inquisition</p>    
+    </div>    
+    <ul class="col-md-3">    
+        <li class="font-weight-bold">City of Ideas</li>    
+        <li>    
+            <a asp-controller="Home" asp-action="About">Over ons</a>    
+        </li>    
+        <li>    
+            <a asp-controller="Home" asp-action="Privacy">Privacy</a>    
+        </li>    
+    </ul>    
+    <ul class="col-md-3">    
+        <li class="font-weight-bold">Contact</li>    
+        <li>Email: <a href="mailto:fake@@student.kdg.be">fake@@student.kdg.be</a></li>    
+        <li>Tel: 012/34.56.78</li>    
+    </ul>    
+</footer>    
 
-@RenderSection("Scripts", required: false)	
-</body>	
+@RenderSection("Scripts", required: false)    
+</body>    
 </html>
