@@ -28,6 +28,8 @@ namespace UIMVC.Services
             return foundUser.Name;
         }
 
+        #region Platforms
+
         public async Task<int> GetUserPlatform(ClaimsPrincipal user)
         {
             var userFound = await _usrMgr.GetUserAsync(user);
@@ -35,5 +37,15 @@ namespace UIMVC.Services
 
             return userFound.PlatformDetails;
         }
+
+        public async void AddUserToPlatform(ClaimsPrincipal userClaim, int platform)
+        {
+            var user = await _usrMgr.GetUserAsync(userClaim);
+            user.PlatformDetails = platform;
+
+            _usrMgr.UpdateAsync(user);
+        }
+
+        #endregion
     }
 }

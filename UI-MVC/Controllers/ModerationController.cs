@@ -27,8 +27,9 @@ namespace UIMVC.Controllers
         private readonly ProjectManager _projMgr;
         private readonly UserManager<UimvcUser> _userManager;
         private readonly RoleService _roleService;
+        private readonly UserService _userService;
 
-        public ModerationController(UserManager<UimvcUser> userManager, RoleService roleService)
+        public ModerationController(UserManager<UimvcUser> userManager, RoleService roleService, UserService userService)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
@@ -36,6 +37,7 @@ namespace UIMVC.Controllers
             _projMgr = new ProjectManager();
             _userManager = userManager;
             _roleService = roleService;
+            _userService = userService;
         }
 
         #region AddPlatform
@@ -535,10 +537,12 @@ namespace UIMVC.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> RequestVerification(int platformId)
         {
-            
-            
+            _userService.AddUserToPlatform(HttpContext.User, platformId);
+
+            return RedirectToAction("Index", "Platform", new {Id = platformId});
         }
         #endregion
     }
