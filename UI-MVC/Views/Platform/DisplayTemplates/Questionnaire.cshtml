@@ -13,8 +13,8 @@
         </div>
     </div>
     <div class="card-footer">
-        <a class="btn btn-primary" asp-controller="Admin" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
-                    Nieuwe vragenlijst maken
+        <a class="btn btn-primary" asp-action="AnswerQuestionnaire" asp-controller="Admin" asp-route-questionnaireid="@Model.Id">
+            Vul vragenlijst in!
         </a>
     </div>
 </div>

@@ -142,7 +142,7 @@ namespace UIMVC.Controllers
 
             ViewData["Project"] = q.Project;
             ViewData["Questionnaire"] = q;
-            ViewData["Cqqm"] = new CreateQuestionnaireModel();
+            ViewData["Cqqm"] = new CreateQuestionnaireQuestionModel();
             return View();
         }
 
