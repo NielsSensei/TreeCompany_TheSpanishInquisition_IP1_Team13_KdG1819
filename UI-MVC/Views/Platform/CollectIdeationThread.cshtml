@@ -40,11 +40,9 @@
         <p>@ViewData["Message"]</p> 
     </div>
     <hr/>
-    <div class="row">
-        @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
-        {
-               @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = idea, IdeaLevel = 0 })
-               <hr/>
-        } 
-    </div>
+    @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
+    {
+        @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = idea, IdeaLevel = 0 })
+        <hr/>
+    }
 </div>

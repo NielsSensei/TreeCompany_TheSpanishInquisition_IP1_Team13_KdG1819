@@ -369,8 +369,7 @@ namespace UIMVC.Controllers
 
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas" , routeValues: "report");
         }
-
-        [HttpPost]
+        
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult DestroyIdea(int idea, string from, int thread)
         {
