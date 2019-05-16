@@ -5,7 +5,7 @@ namespace UIMVC.Views.Admin
     public class CreateQuestionnaireModel : PageModel
     {
         public void OnGet(){
-        
+
         }
     }
 }

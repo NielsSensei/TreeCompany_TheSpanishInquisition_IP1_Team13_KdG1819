@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BL;
 using Domain.Identity;
 using Domain.Projects;
 using Domain.UserInput;
 using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using UIMVC.Models;
 
 namespace UIMVC.Controllers
 {
@@ -16,12 +20,14 @@ namespace UIMVC.Controllers
         private readonly PlatformManager _platformMgr;
         private readonly ProjectManager _projectMgr;
         private readonly IdeationQuestionManager _iqMgr;
+        private readonly UserManager<UimvcUser> _userManager;
 
-        public PlatformController()
+        public PlatformController(UserManager<UimvcUser> userManager)
         {
             _platformMgr = new PlatformManager();
             _projectMgr = new ProjectManager();
             _iqMgr = new IdeationQuestionManager();
+            _userManager = userManager;
         }
 
         [Route("Platform/{id}")]
@@ -32,6 +38,7 @@ namespace UIMVC.Controllers
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
             }
+
             return View(platform);
         }
 
@@ -50,26 +57,83 @@ namespace UIMVC.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult ChangePlatform(int id)
+        public async Task<IActionResult> ChangePlatform(int id)
         {
+            if (User.IsInRole(Role.Admin.ToString("G")) &&
+                (await _userManager.GetUserAsync(User)).PlatformDetails != id)
+                return BadRequest("You are no admin of this platform");
+
             Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
             if (platform == null)
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 404);
             }
-            return View(platform);
+
+            ViewData["platform"] = platform;
+            return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult ChangePlatform(Platform platform)
+        public async Task<IActionResult> ChangePlatform(CreatePlatformModel platformEdit, int platformId)
         {
+            Platform platform = new Platform()
+            {
+                Id = platformId,
+                Name = platformEdit.Name,
+                Url = platformEdit.Url
+            };
+
+            if (platformEdit.IconImage != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await platformEdit.IconImage.CopyToAsync(memoryStream);
+                    platform.IconImage = memoryStream.ToArray();
+                }
+            }
+
+            if (platformEdit.CarouselImage != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await platformEdit.CarouselImage.CopyToAsync(memoryStream);
+                    platform.CarouselImage = memoryStream.ToArray();
+                }
+            }
+
+            if (platformEdit.FrontPageImage != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await platformEdit.FrontPageImage.CopyToAsync(memoryStream);
+                    platform.FrontPageImage = memoryStream.ToArray();
+                }
+            }
+
             _platformMgr.EditPlatform(platform);
-            return RedirectToAction("Index", new {id = platform.Id});
+            return RedirectToAction("ChangePlatform", new {id = platform.Id});
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<IActionResult> AssignAdmin(string usermail, int platformId)
+        {
+            UimvcUser user = await _userManager.FindByEmailAsync(usermail);
+            Platform platform = _platformMgr.GetPlatform(platformId);
+            if (user == null) return BadRequest("Can't find user");
+            if (platform == null) return BadRequest("Can't find platform");
+
+            user.PlatformDetails = platformId;
+            await _userManager.UpdateAsync(user);
+
+            return Ok(user);
+        }
+
         #endregion
 
         #region Project
+
         [HttpGet]
         public IActionResult CollectProject(int id)
         {
@@ -95,9 +159,11 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("HandleErrorCode", "Errors", 404);
         }
+
         #endregion
 
         #region Ideation
+
         public IActionResult CollectIdeation(int id)
         {
             Ideation ideation = _projectMgr.ModuleMan.GetIdeation(id);
@@ -114,8 +180,11 @@ namespace UIMVC.Controllers
 
             return View(iq);
         }
+        
+        #endregion
 
         #region Idea
+
         [Authorize]
         public IActionResult AddVote(int idea, string user, int thread)
         {
@@ -126,7 +195,7 @@ namespace UIMVC.Controllers
             }
 
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                { id = thread, message = "Al gestemd op dit idee!" });
+                {id = thread, message = "Al gestemd op dit idee!"});
         }
 
         [Authorize]
@@ -164,9 +233,9 @@ namespace UIMVC.Controllers
             }
 
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                               { id = thread, message = "Je hebt geen reden opgegeven voor je rapport!" });
+                {id = thread, message = "Je hebt geen reden opgegeven voor je rapport!"});
         }
-        #endregion
+        
         #endregion
 
 

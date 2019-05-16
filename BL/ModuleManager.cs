@@ -9,13 +9,13 @@ namespace BL
     {
         private IdeationRepository IdeationRepo { get; }
         private QuestionnaireRepository QuestionnaireRepo { get; }
-        
+
         public ModuleManager()
         {
             IdeationRepo = new IdeationRepository();
             QuestionnaireRepo = new QuestionnaireRepository();
         }
-        
+
         #region Ideation
         public IEnumerable<Ideation> GetIdeations(int projectId)
         {
@@ -25,7 +25,7 @@ namespace BL
 
             return modules;
         }
-        
+
         public Ideation GetIdeation(int moduleId){
             return IdeationRepo.ReadWithModule(moduleId);
         }
@@ -51,12 +51,12 @@ namespace BL
         {
             return QuestionnaireRepo.Read(moduleId, details);
         }
-        
+
         public Questionnaire GetQuestionnaire(int phaseId, int projectId)
         {
             return QuestionnaireRepo.ReadAll(projectId).FirstOrDefault(m => m.ParentPhase.Id == phaseId);
         }
-        
+
         public IEnumerable<Questionnaire> GetQuestionnaires(int projectId)
         {
             List<Questionnaire> modules = new List<Questionnaire>();
@@ -65,12 +65,12 @@ namespace BL
 
             return modules;
         }
-        
+
         public void MakeQuestionnaire(Questionnaire questionnaire)
         {
             QuestionnaireRepo.Create(questionnaire);
         }
-        
+
         public void EditQuestionnaire(Questionnaire questionnaire)
         {
             QuestionnaireRepo.Update(questionnaire);
@@ -90,7 +90,7 @@ namespace BL
                 IdeationRepo.CreateTag(tag, moduleId);
             }
         }
-        
+
         public void RemoveModule(int moduleId, bool questionnaire)
         {
             if (questionnaire)

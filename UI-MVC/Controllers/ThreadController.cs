@@ -41,7 +41,7 @@ namespace UIMVC.Controllers
             {
                 idea.ParentIdea = new Idea(){ Id = parent};
             }
-            
+
             idea.VerifiedUser = await _roleService.IsVerified(User);
 
             if (!Request.Form["newIdeaTitle"].ToString().Equals(null))
