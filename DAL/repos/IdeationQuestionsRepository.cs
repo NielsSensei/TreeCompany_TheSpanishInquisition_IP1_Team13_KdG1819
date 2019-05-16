@@ -91,8 +91,8 @@ namespace DAL.repos
             return new IdeaFieldsDao
             {
                 FieldId = obj.Id,
-                IdeaId = obj.Idea.Id
-                //UploadedImage = obj.UploadedImage,
+                IdeaId = obj.Idea.Id,
+                UploadedImage = obj.UploadedImage
             };
         }
 
@@ -200,7 +200,7 @@ namespace DAL.repos
             {
                 Id = dao.FieldId,
                 Idea = new Idea { Id = dao.IdeaId },
-                //UploadedVideo= DTO.UploadedVideo
+                UploadedImage = dao.UploadedImage
             };
         }
 

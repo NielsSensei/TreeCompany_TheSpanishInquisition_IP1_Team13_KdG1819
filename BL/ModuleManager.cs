@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DAL.repos;
 using Domain.Projects;
+using Domain.UserInput;
 
 namespace BL
 {
@@ -9,6 +10,7 @@ namespace BL
     {
         private IdeationRepository IdeationRepo { get; }
         private QuestionnaireRepository QuestionnaireRepo { get; }
+        private IdeationQuestionManager _ideaMgr { get; }
         
         public ModuleManager()
         {
@@ -99,6 +101,21 @@ namespace BL
             }
             else
             {
+                List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(moduleId);
+                foreach (IdeationQuestion iq in iqs)
+                {
+                    List<Idea> ideas = _ideaMgr.GetIdeas(iq.Id);
+                    foreach (Idea idea in ideas)
+                    {
+                        _ideaMgr.RemoveFields(idea.Id);
+                        _ideaMgr.RemoveReports(idea.Id);
+                        _ideaMgr.RemoveVotes(idea.Id);
+                        _ideaMgr.RemoveIdea(idea.Id);
+                    }
+
+                    _ideaMgr.RemoveQuestion(iq.Id);
+                }
+                
                 IdeationRepo.Delete(moduleId);
             }
         }

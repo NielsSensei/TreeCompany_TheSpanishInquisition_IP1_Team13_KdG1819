@@ -5,22 +5,22 @@
 
 <div class="container">
     <div class="row" id="newIdea">
-        <form asp-controller="Thread" asp-action="AddIdea" asp-route-ideationQuestion="@Model.IdeationQuestionId"
-              asp-route-user="@UserManager.GetUserId(User)" asp-route-parent="@Model.ParentId" class="row">
+        <form asp-controller="Thread" asp-action="AddIdea" asp-route-aim="@Model" asp-route-user="@UserManager.GetUserId(User)" 
+              asp-route-ideation="@Model.IdeationQuestionId" asp-route-parent="@Model.ParentId" class="row" enctype="multipart/form-data">
             <div class="col-6">
                 <div class="form-group">
-                    <label>Titel:</label>
-                    @Html.TextBox("newIdeaTitle", "", new {@class = "form-control"})
+                    <label asp-for="Title">Titel:</label>
+                    <input asp-for="Title" class="form-control"/>
                 </div>
                 <div class="form-group">
-                    <label>Text:</label>
-                    @Html.TextArea("newIdeaField", "", new {@class = "form-control"})
-                </div> 
-                <div class="form-group">
-                    <label>Geef hier een youtube link:</label>
-                    @Html.TextBox("newIdeaVideoLink", "", new {@class = "form-control"})
+                    <label asp-for="FieldText">Text:</label>
+                    <input asp-for="FieldText" class="form-control"/>
                 </div>
-                
+                <div class="form-group">
+                    <label asp-for="FieldVideo">Geef hier een youtube link:</label>
+                    <input asp-for="FieldVideo" class="form-control"/>
+                </div>
+
                 <button class="btn btn-outline-primary" type="submit">Voeg jouw idee toe</button>
             </div>
             <div class="col-6">
@@ -31,6 +31,10 @@
                     <br/>
                     @Html.TextBox("newIdeaMapY", "Tweede coordinaat", new {@class = "form-control"})
                 </div> 
+                <div class="form-group">
+                    <label asp-for="FieldImage">Geef hier een foto:</label>
+                    <input asp-for="FieldImage" class="form-control" type="file"/>
+                </div>
             </div>
         </form>
     </div>    

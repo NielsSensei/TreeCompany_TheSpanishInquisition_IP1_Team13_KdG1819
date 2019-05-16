@@ -1,12 +1,13 @@
 using System;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using BL;
 using Domain.Identity;
 using Domain.UserInput;
-using Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UIMVC.Models;
 using UIMVC.Services;
 
 namespace UIMVC.Controllers
@@ -23,12 +24,12 @@ namespace UIMVC.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AddIdea(int ideationQuestion, string user, int parent)
+        public async Task<IActionResult> AddIdea(string user, AddIdeaModel aim, int ideation, int parent)
         {
             Idea idea = new Idea()
             {
                 IsDeleted = false,
-                IdeaQuestion = _iqMgr.GetQuestion(ideationQuestion, false),
+                IdeaQuestion = _iqMgr.GetQuestion(ideation, false),
                 User = new UimvcUser(){ Id = user},
                 Reported = false,
                 ReviewByAdmin = false,
@@ -40,24 +41,24 @@ namespace UIMVC.Controllers
 
             if (parent != 0)
             {
-                idea.ParentIdea = new Idea(){ Id = parent};
+                idea.ParentIdea = new Idea(){ Id = parent };
             }
             
             idea.VerifiedUser = await _roleService.IsVerified(User);
 
-            if (!Request.Form["newIdeaTitle"].ToString().Equals(""))
+            if (aim.Title != null)
             {
-                idea.Title = Request.Form["newIdeaTitle"].ToString();
+                idea.Title = aim.Title;
             }
 
-            if (!Request.Form["newIdeaField"].ToString().Equals(""))
+            if (aim.FieldText != null)
             {
                 Field field = new Field()
                 {
                     Idea = idea
                 };
 
-                field.Text = Request.Form["newIdeaField"].ToString();
+                field.Text = aim.FieldText;
                 field.TextLength = field.Text.Length;
 
                 idea.Field = field;
@@ -79,16 +80,32 @@ namespace UIMVC.Controllers
                 idea.Mfield = field;
             }
 
-            if (!Request.Form["newIdeaVideoLink"].ToString().Equals(""))
+            if (aim.FieldVideo != null)
             {
                 VideoField field = new VideoField()
                 {
                     Idea = idea
                 };
 
-                field.VideoLink = "https://www.youtube.com/embed/" + Request.Form["newIdeaVideoLink"].ToString().Split("=")[1];
+                field.VideoLink = "https://www.youtube.com/embed/" + aim.FieldVideo.Split("=")[1];
 
                 idea.Vfield = field;
+            }
+
+            if (aim.FieldImage != null)
+            {
+                ImageField field = new ImageField()
+                {
+                    Idea = idea
+                };
+                
+                using (var memoryStream = new MemoryStream())
+                {
+                    await aim.FieldImage.CopyToAsync(memoryStream);
+                    field.UploadedImage = memoryStream.ToArray();
+                }
+
+                idea.Ifield = field;
             }
             
             if (idea.Field != null || idea.Cfield != null || idea.Mfield != null || idea.Vfield != null
@@ -103,13 +120,13 @@ namespace UIMVC.Controllers
                     return RedirectToAction("CollectIdeationThread", "Platform",
                         new
                         {
-                            Id = ideationQuestion, message = "Dit idee heeft iemand anders al eens " +
+                            Id = ideation, message = "Dit idee heeft iemand anders al eens " +
                                                              "bedacht, je kan er wel op reageren."
                         });
                 }
             }
 
-            return RedirectToAction("CollectIdeationThread", "Platform", new { Id = ideationQuestion });
+            return RedirectToAction("CollectIdeationThread", "Platform", new { Id = ideation});
         }
     }
 }

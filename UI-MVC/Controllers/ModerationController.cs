@@ -264,22 +264,7 @@ namespace UIMVC.Controllers
         public IActionResult DestroyIdeation(int id)
         {
             Ideation i = _moduleMgr.GetIdeation(id);
-
-            List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
-            foreach (IdeationQuestion iq in iqs)
-            {
-                List<Idea> ideas = _ideaMgr.GetIdeas(iq.Id);
-                foreach (Idea idea in ideas)
-                {
-                    _ideaMgr.RemoveFields(idea.Id);
-                    _ideaMgr.RemoveReports(idea.Id);
-                    _ideaMgr.RemoveVotes(idea.Id);
-                    _ideaMgr.RemoveIdea(idea.Id);
-                }
-
-                _ideaMgr.RemoveQuestion(iq.Id);
-            }
-
+            
             _moduleMgr.RemoveModule(id, false);
 
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });

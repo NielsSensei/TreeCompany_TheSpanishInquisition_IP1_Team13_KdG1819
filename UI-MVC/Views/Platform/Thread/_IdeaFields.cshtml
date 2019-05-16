@@ -34,6 +34,14 @@
     </div>
 }
 
+@if (Model.Field == null && Model.Cfield == null && Model.Ifield != null && Model.Vfield == null &&
+     Model.Mfield == null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+    </div>
+}
+
 <!-- 2 Fields combinatie -->
 
 @if (Model.Field != null && Model.Cfield != null && Model.Ifield == null && Model.Vfield == null && 
@@ -58,19 +66,6 @@
     </div>
 }
 
-@if (Model.Field == null && Model.Cfield != null && Model.Ifield == null && Model.Vfield == null && 
-     Model.Mfield != null)
-{
-    <div class="row">
-        <div class="col-6">
-            @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
-        </div>
-        <div class="col-6">
-            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
-        </div>
-    </div>
-}
-
 @if (Model.Field != null && Model.Cfield == null && Model.Ifield == null && Model.Vfield != null && 
      Model.Mfield == null)
 {
@@ -80,6 +75,32 @@
         </div>
         <div class="col-6">
             @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+    </div>
+}
+
+@if (Model.Field != null && Model.Cfield == null && Model.Ifield != null && Model.Vfield == null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield != null && Model.Ifield == null && Model.Vfield == null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
         </div>
     </div>
 }
@@ -97,6 +118,19 @@
     </div>
 }
 
+@if (Model.Field == null && Model.Cfield != null && Model.Ifield != null && Model.Vfield == null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
 @if (Model.Field == null && Model.Cfield == null && Model.Ifield == null && Model.Vfield != null && 
      Model.Mfield != null)
 {
@@ -106,6 +140,32 @@
         </div>
         <div class="col-6">
             @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield == null && Model.Ifield != null && Model.Vfield == null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield == null && Model.Ifield != null && Model.Vfield != null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
         </div>
     </div>
 }
@@ -140,6 +200,20 @@
     </div>
 }
 
+@if (Model.Field != null && Model.Cfield != null && Model.Ifield != null && Model.Vfield == null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+            @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield) 
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
 @if (Model.Field != null && Model.Cfield == null && Model.Ifield == null && Model.Vfield != null && 
      Model.Mfield != null)
 {
@@ -151,6 +225,102 @@
             @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
         </div>
         <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+    </div>
+}
+
+@if (Model.Field != null && Model.Cfield == null && Model.Ifield != null && Model.Vfield == null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+    </div>
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
+@if (Model.Field != null && Model.Cfield == null && Model.Ifield != null && Model.Vfield != null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+    </div>
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield != null && Model.Ifield == null && Model.Vfield != null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+    </div>
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield != null && Model.Ifield != null && Model.Vfield == null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+    </div>
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield != null && Model.Ifield != null && Model.Vfield != null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+    </div>
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield == null && Model.Ifield != null && Model.Vfield != null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)  
+        </div>
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+        <div class="col-4">
             @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
         </div>
     </div>
@@ -171,6 +341,100 @@
         </div>
         <div class="col-6">
             @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+    </div>
+}
+
+@if (Model.Field != null && Model.Cfield != null && Model.Ifield != null && Model.Vfield == null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+    </div>
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
+@if (Model.Field != null && Model.Cfield != null && Model.Ifield != null && Model.Vfield != null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+    </div>
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
+@if (Model.Field != null && Model.Cfield == null && Model.Ifield != null && Model.Vfield != null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+    </div>
+    <div class="row">
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield != null && Model.Ifield != null && Model.Vfield != null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+    </div>
+    <div class="row">
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
+        </div>
+    </div>
+}
+
+<!-- 5 Fields combinatie -->
+
+@if (Model.Field != null && Model.Cfield != null && Model.Ifield != null && Model.Vfield != null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+    </div>
+    <div class="row">
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
+        </div>
+        <div class="col-4">
+            @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
         </div>
     </div>
 }
