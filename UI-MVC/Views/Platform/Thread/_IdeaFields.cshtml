@@ -1,0 +1,47 @@
+@model Domain.UserInput.Idea
+
+@if (Model.Field != null && Model.Cfield == null && Model.Ifield == null && Model.Vfield == null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield != null && Model.Ifield == null && Model.Vfield == null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+      @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)  
+    </div>
+}
+
+@if (Model.Field == null && Model.Cfield == null && Model.Ifield == null && Model.Vfield == null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+    </div>
+}
+
+@if (Model.Field != null && Model.Cfield != null && Model.Ifield == null && Model.Vfield == null && 
+     Model.Mfield == null)
+{
+    <div class="row">
+       @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+       @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield) 
+    </div>
+}
+
+@if (Model.Field != null && Model.Cfield == null && Model.Ifield == null && Model.Vfield == null && 
+     Model.Mfield != null)
+{
+    <div class="row">
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+        </div>
+        <div class="col-6">
+            @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
+        </div>
+    </div>
+}

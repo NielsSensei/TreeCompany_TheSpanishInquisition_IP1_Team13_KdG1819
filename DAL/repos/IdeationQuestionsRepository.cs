@@ -339,6 +339,7 @@ namespace DAL.repos
         public Idea Create(Idea idea)
         {
             IEnumerable<Idea> ideas = ReadAllIdeasByQuestion(idea.IdeaQuestion.Id);
+            int lastField = FindNextAvailableFieldId();
 
             foreach (Idea i in ideas)
             {
@@ -354,31 +355,35 @@ namespace DAL.repos
 
             if (idea.Field != null)
             {
-                idea.Field.Id = FindNextAvailableFieldId();
+                idea.Field.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Field));   
             }
 
             if (idea.Cfield != null)
             {
-                idea.Cfield.Id = FindNextAvailableFieldId();
+                idea.Cfield.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Cfield)); 
             }
 
             if (idea.Ifield != null)
             {
-                idea.Ifield.Id = FindNextAvailableFieldId();
+                idea.Ifield.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Ifield));
             }
 
             if (idea.Vfield != null)
             {
-                idea.Vfield.Id = FindNextAvailableFieldId();
+                idea.Vfield.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Vfield));
             }
 
             if (idea.Mfield != null)
             {
-                idea.Mfield.Id = FindNextAvailableFieldId();
+                idea.Mfield.Id = lastField;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Mfield));
             }
 

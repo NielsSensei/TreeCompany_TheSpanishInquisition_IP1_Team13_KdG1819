@@ -111,8 +111,8 @@ CREATE TABLE Projectimages(
 
 CREATE TABLE Devices(
 	DeviceID INT IDENTITY,
-	LocationX FLOAT,
-	LocationY FLOAT,
+	LocationX REAL,
+	LocationY REAL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Devices PRIMARY KEY(DeviceID)
@@ -210,8 +210,8 @@ CREATE TABLE IdeaFields(
 	IdeaID INT NOT NULL,
 	FieldText NVARCHAR(255),
 	FieldStrings NVARCHAR(800),
-	LocationX FLOAT,
-	LocationY FLOAT,
+	LocationX REAL,
+	LocationY REAL,
 	Url VARCHAR(50),
 	UploadedImage VARBINARY(255),
 	UploadedMedia VARBINARY(255),

@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using System.Threading.Tasks;
 using BL;
@@ -44,12 +45,12 @@ namespace UIMVC.Controllers
             
             idea.VerifiedUser = await _roleService.IsVerified(User);
 
-            if (!Request.Form["newIdeaTitle"].ToString().Equals(null))
+            if (!Request.Form["newIdeaTitle"].ToString().Equals(""))
             {
                 idea.Title = Request.Form["newIdeaTitle"].ToString();
             }
 
-            if (!Request.Form["newIdeaField"].ToString().Equals(null))
+            if (!Request.Form["newIdeaField"].ToString().Equals(""))
             {
                 Field field = new Field()
                 {
@@ -62,7 +63,22 @@ namespace UIMVC.Controllers
                 idea.Field = field;
             }
 
-            //TODO dit met iq settings.
+            if (!Request.Form["newIdeaMapX"].ToString().Equals("Eerste coordinaat") &&
+                !Request.Form["newIdeaMapY"].ToString().Equals("Tweede coordinaat") &&  
+                !Request.Form["newIdeaMapX"].ToString().Equals("") &&
+                !Request.Form["newIdeaMapY"].ToString().Equals(""))
+            {
+                MapField field = new MapField()
+                {    
+                    Idea = idea
+                };
+                
+                field.LocationX = Double.Parse(Request.Form["newIdeaMapX"].ToString().Replace(".", ","));
+                field.LocationY = Double.Parse(Request.Form["newIdeaMapY"].ToString().Replace(".", ","));
+
+                idea.Mfield = field;
+            }
+            
             if (idea.Field != null || idea.Cfield != null || idea.Mfield != null || idea.Vfield != null
                 || idea.Ifield != null)
             {

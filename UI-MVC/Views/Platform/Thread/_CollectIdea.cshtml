@@ -56,16 +56,9 @@ else
             </div>
         </div>
         <div class="card-body pb-0">
-            <p>@Model.ToView.Field.Text</p>
-            @if (Model.ToView.Cfield != null)
-            {
-                <ul>
-                    @foreach (string o in Model.ToView.Cfield.Options)
-                    {
-                        <li>@o</li>
-                    }
-                </ul>
-            }
+            <div class="container">
+                @Html.Partial("Thread/_IdeaFields", Model.ToView)
+            </div>
             <hr/>
             <section class="row justify-content-between m-auto">
                 <div class="row m-1 align-content-center mx-1">
@@ -83,7 +76,7 @@ else
                     </div>
                 </div>
                 <div>
-                    @if(Model.IdeaLevel < 3)
+                    @if (Model.IdeaLevel < 3)
                     {
                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#makeCommentModal@(Model.ToView.Id)">Reageren
@@ -98,7 +91,8 @@ else
                            asp-route-thread="@Model.ToView.IdeaQuestion.Id">
                             Stemmen
                         </a>
-                    } else if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
+                    }
+                    else if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
                     {
                         <a class="btn btn-primary" asp-controller="Platform" asp-action="AddVote"
                            asp-route-idea="@Model.ToView.Id"
@@ -113,7 +107,8 @@ else
                         </a>
                     }
 
-                    @if(User.Identity.IsAuthenticated && UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && !Model.ToView.IsDeleted){
+                    @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && !Model.ToView.IsDeleted)
+                    {
                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#deleteIdeaModal@(Model.ToView.Id)">Idee Verwijderen
                         </button>
