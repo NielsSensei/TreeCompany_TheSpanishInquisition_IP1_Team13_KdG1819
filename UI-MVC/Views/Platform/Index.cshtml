@@ -37,35 +37,6 @@
                     </a>
                 </div>
             </section>
-            @if (User.Identity.IsAuthenticated && await RoleService.IsVerified(User))
-            {
-                <section class="card">
-                    <div class="card-body">
-                        <p class="btn btn-block">Je bent geverifiëerd!</p>
-                    </div>
-                </section>
-            }
-            else if (User.Identity.IsAuthenticated && await UserService.GetUserPlatform(User) == Model.Id)
-            {
-                <section class="card">
-                    <div class="card-body">
-                        <p class="btn btn-block">Verificatie is aangevraagd</p>
-                    </div>
-                </section>
-            }
-            else
-            {
-                <section class="card">
-                    <div class="card-body">
-                        @using (Html.BeginForm("RequestVerification", "Moderation", FormMethod.Post))
-                        {
-                            @Html.Hidden("platformId", Model.Id)
-                            <input type="submit" class="btn btn-primary text-center" value="Vraag verificatie aan"/>
-                        }
-                    </div>
-                </section>
-            }
-
         </div>
         <div class="col-7">
             <h1>Projecten</h1>

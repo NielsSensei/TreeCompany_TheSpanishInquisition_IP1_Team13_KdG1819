@@ -540,15 +540,6 @@ namespace UIMVC.Controllers
             }
             return RedirectToAction("CollectAllUsers", "Moderation");
         }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> RequestVerification(int platformId)
-        {
-            _userService.AddUserToPlatform(HttpContext.User, platformId);
-
-            return RedirectToAction("Index", "Platform", new {Id = platformId});
-        }
         #endregion
     }
 }
