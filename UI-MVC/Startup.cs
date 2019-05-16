@@ -63,6 +63,7 @@ namespace UIMVC
             services.AddTransient<QuestionService>();
             services.AddTransient<UserService>();
             services.AddTransient<RoleService>();
+            services.AddTransient<Settings>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
