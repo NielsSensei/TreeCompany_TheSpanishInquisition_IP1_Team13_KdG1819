@@ -180,6 +180,8 @@ namespace UIMVC.Controllers
 
             return View(iq);
         }
+        
+        #endregion
 
         #region Idea
 
@@ -233,7 +235,7 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
                 {id = thread, message = "Je hebt geen reden opgegeven voor je rapport!"});
         }
-
+        
         #endregion
 
 
