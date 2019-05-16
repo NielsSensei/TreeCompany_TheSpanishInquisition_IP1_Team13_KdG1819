@@ -8,8 +8,7 @@
         public string FieldStrings { get; set; }
         public double LocationX { get; set; }
         public double LocationY { get; set; }
-        public string Url { get; set; }
         public byte[] UploadedImage { get; set; }
-        public byte[] UploadedMedia { get; set; }
+        public string MediaLink { get; set; }
     }
 }

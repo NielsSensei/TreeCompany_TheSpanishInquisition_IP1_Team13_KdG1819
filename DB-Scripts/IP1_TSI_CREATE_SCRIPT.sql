@@ -204,7 +204,6 @@ CREATE TABLE Choices(
 	CONSTRAINT pk_Choices PRIMARY KEY(ChoiceID, AnswerID, OptionID)
 )
 
-
 CREATE TABLE IdeaFields(
 	FieldID INT IDENTITY,
 	IdeaID INT NOT NULL,
@@ -212,14 +211,12 @@ CREATE TABLE IdeaFields(
 	FieldStrings NVARCHAR(800),
 	LocationX REAL,
 	LocationY REAL,
-	Url VARCHAR(50),
 	UploadedImage VARBINARY(255),
-	UploadedMedia VARBINARY(255),
+	MediaLink VARCHAR(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_IdeaFields PRIMARY KEY(FieldID,IdeaID)
 )
-
 
 CREATE TABLE Votes(
 	VoteID INT IDENTITY,

@@ -78,6 +78,18 @@ namespace UIMVC.Controllers
 
                 idea.Mfield = field;
             }
+
+            if (!Request.Form["newIdeaVideoLink"].ToString().Equals(""))
+            {
+                VideoField field = new VideoField()
+                {
+                    Idea = idea
+                };
+
+                field.VideoLink = "https://www.youtube.com/embed/" + Request.Form["newIdeaVideoLink"].ToString().Split("=")[1];
+
+                idea.Vfield = field;
+            }
             
             if (idea.Field != null || idea.Cfield != null || idea.Mfield != null || idea.Vfield != null
                 || idea.Ifield != null)

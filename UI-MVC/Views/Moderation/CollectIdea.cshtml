@@ -3,6 +3,7 @@
 @using UIMVC.Services
 @model Domain.UserInput.Idea
 @inject UserService Userservice
+@inject Settings Settings
 
 @{
     Layout = "_Layout";
@@ -43,10 +44,16 @@
             
             @if (Model.Mfield != null)
             {
-                <iframe width="300" height="170" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
-                        src="https://maps.google.com/maps?q='@Model.Mfield.LocationX','
-                        @Model.Mfield.LocationX'&hl=es;z=14&amp;output=embed">
-                </iframe>
+                <p><span style="font-weight: bold">Map Field:</span></p>
+                <iframe src="https://www.google.com/maps/embed/v1/view?key=@Settings.GetApiKey()
+                               &center=@Model.Mfield.LocationX.ToString().Replace(",","."),
+                @Model.Mfield.LocationY.ToString().Replace(",",".")&zoom=20"></iframe>
+            }
+            
+            @if (Model.Vfield != null)
+            {
+                <p><span style="font-weight: bold">Video Field:</span></p>
+                <iframe src="@Model.Vfield.VideoLink"> </iframe>
             }
             
 
@@ -57,7 +64,6 @@
 
             <!-- TODO: (sprint2)
             public ImageField Ifield { get; set; }
-            public VideoField Vfield { get; set; }
             -->
         </div>
         <div class="col-6">
