@@ -6,8 +6,8 @@
 <div class="container">
     <div class="row" id="newIdea">
         <form asp-controller="Thread" asp-action="AddIdea" asp-route-ideationQuestion="@Model.IdeationQuestionId"
-              asp-route-user="@UserManager.GetUserId(User)" asp-route-parent="@Model.ParentId">
-            <div class="col-4 h-100">
+              asp-route-user="@UserManager.GetUserId(User)" asp-route-parent="@Model.ParentId" class="row">
+            <div class="col-4">
                 <div class="form-group">
                     <label>Titel:</label>
                     @Html.TextBox("newIdeaTitle", "", new {@class = "form-control"})
@@ -17,7 +17,7 @@
                     @Html.TextArea("newIdeaField", "", new {@class = "form-control"})
                 </div> 
             </div>
-            <div class="col-4 h-100">
+            <div class="col-4">
                 <div class="form-group">
                     <label>Voeg hier de coordinaten toe van je map: <a href="@Url.Action("FAQ", "Home")">
                         Hoe vind ik deze? </a></label>
@@ -25,7 +25,7 @@
                     @Html.TextBox("newIdeaMapY", "Tweede coordinaat", new {@class = "form-control"})
                 </div> 
             </div>
-            <div class="col-4 h-100">
+            <div class="col-4">
                 <label>Test</label>
             </div>
             <button class="btn btn-outline-primary" type="submit">Voeg jouw idee toe</button>
