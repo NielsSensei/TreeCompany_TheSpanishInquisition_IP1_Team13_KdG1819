@@ -1,4 +1,4 @@
-﻿namespace Domain.UserInput
+namespace Domain.UserInput
 {
     public class OpenAnswer : Answer
     {

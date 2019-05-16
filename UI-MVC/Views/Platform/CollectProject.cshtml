@@ -53,7 +53,8 @@
                                     <div class="carousel-item active">
                                         <img class="imageCarousel d-block w-100" alt="First slide"
                                              src="data:image/png;base64,@System.Convert.ToBase64String(
-                                             ProjectService.CollectProjectImages(Model).First())" />
+                                             ProjectService.CollectProjectImages(Model).First())"
+                                             style="filter: blur(5px); -webkit-filter: blur(5px);"/>
                                     </div>
                                     @foreach (byte[] img in ProjectService.CollectProjectImages(Model))
                                     {

@@ -88,7 +88,7 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
         }
-        
+
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> AssignUserToPlatform(AssignUserModel aum)
@@ -101,7 +101,7 @@ namespace UIMVC.Controllers
             UimvcUser user = await _userManager.FindByEmailAsync(aum.UserMail);
             if (user == null) return BadRequest("Wrong user mail");
             user.PlatformDetails = aum.PlatformId;
-            
+
             if (aum.Role == 0) aum.Role = AssignUserRole.MODERATOR;
             _userManager.AddToRoleAsync(user, Enum.GetName(typeof(AssignUserRole), aum.Role));
 
@@ -185,6 +185,11 @@ namespace UIMVC.Controllers
             if (cim.ExtraInfo != null)
             {
                 i.ExtraInfo = cim.ExtraInfo;
+            }
+
+            if (cim.MediaLink != null)
+            {
+                i.MediaLink = cim.MediaLink;
             }
 
             _moduleMgr.MakeIdeation(i);
@@ -281,21 +286,21 @@ namespace UIMVC.Controllers
             {
                 Id = ideation,
                 Title = Request.Form["Title"].ToString(),
-                ExtraInfo = Request.Form["ExtraInfo"].ToString()
+                ExtraInfo = Request.Form["ExtraInfo"].ToString(),
+                MediaLink = Request.Form["MediaFile"].ToString()
             };
 
-            if (!Request.Form["ParentPhase"].ToString().Equals(null))
+            try
             {
-                try
+                if (Int32.Parse(Request.Form["ParentPhase"].ToString()) != 0)
                 {
                     i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
                     _moduleMgr.EditIdeation(i);
                 }
-                catch (FormatException e)
-                {
-                    _moduleMgr.EditIdeation(i);
-                }
 
+            }catch(FormatException e)
+            {
+                _moduleMgr.EditIdeation(i);
             }
 
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
@@ -464,7 +469,7 @@ namespace UIMVC.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 users = users.Where(u => u.Name.ToUpper().Contains(searchString.ToUpper()));
-            } 
+            }
             if (!User.IsInRole(Role.SuperAdmin.ToString("G")))
             {
                 UimvcUser user = await _userManager.GetUserAsync(User);

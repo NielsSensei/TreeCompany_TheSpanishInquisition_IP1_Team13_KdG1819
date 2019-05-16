@@ -62,7 +62,7 @@ namespace UIMVC.Controllers
             if (User.IsInRole(Role.Admin.ToString("G")) &&
                 (await _userManager.GetUserAsync(User)).PlatformDetails != id)
                 return BadRequest("You are no admin of this platform");
-            
+
             Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
             if (platform == null)
             {
@@ -189,7 +189,7 @@ namespace UIMVC.Controllers
             if (_iqMgr.MakeVote(idea, user))
             {
                 return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
-                    {id = thread, message = "Stem gelukt, dankjewel!"});
+                    { id = thread, message = "Stem gelukt, dankjewel!" });
             }
 
             return RedirectToAction("CollectIdeationThread", "Platform", routeValues: new
@@ -236,6 +236,6 @@ namespace UIMVC.Controllers
 
         #endregion
 
-        #endregion
+
     }
 }

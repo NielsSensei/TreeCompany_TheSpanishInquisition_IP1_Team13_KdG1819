@@ -89,8 +89,8 @@ namespace DAL.repos
             PlatformsDao foundPlatform = _ctx.Platforms.FirstOrDefault(dto => dto.PlatformId == newPlatform.PlatformId);
             if (foundPlatform != null)
             {
-                foundPlatform.Name = newPlatform.Name;
-                foundPlatform.SiteUrl = newPlatform.SiteUrl;
+                if (newPlatform.Name != null) foundPlatform.Name = newPlatform.Name;
+                if (newPlatform.SiteUrl != null) foundPlatform.SiteUrl = newPlatform.SiteUrl;
                 if (newPlatform.IconImage != null) foundPlatform.IconImage = newPlatform.IconImage;
                 if (newPlatform.CarouselImage != null) foundPlatform.CarouselImage = newPlatform.CarouselImage;
                 if (newPlatform.FrontPageImage != null) foundPlatform.FrontPageImage = newPlatform.FrontPageImage;

@@ -28,7 +28,6 @@ namespace UIMVC.Controllers
             _userManager = userManager;
         }
 
-
          #region Project
 
          #region Add
@@ -64,33 +63,36 @@ namespace UIMVC.Controllers
 
              Project newProj = _projManager.MakeProject(pr);
 
-             using (var memoryStream = new MemoryStream())
+             foreach (IFormFile file in pvm.InitialProjectImages)
              {
-                 await pvm.InitialProjectImage.CopyToAsync(memoryStream);
-                 _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
+                 using (var memoryStream = new MemoryStream())
+                 {
+                     await file.CopyToAsync(memoryStream);
+                     _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
+                 }
              }
-             
+
              return RedirectToAction("Index", "Platform", new {id = platform });
         }
-        
+
         [Authorize(Roles ="Admin, SuperAdmin")]
-        public async Task<RedirectToActionResult> AddImage(AddImageModel aim)
+        public async Task<IActionResult> AddImage(IFormFile file, int projectId)
         {
             using (var memoryStream = new MemoryStream())
             {
-                await aim.File.CopyToAsync(memoryStream);
-                _projManager.MakeProjectImage(memoryStream.ToArray(), aim.Project.Id);
+                await file.CopyToAsync(memoryStream);
+                _projManager.MakeProjectImage(memoryStream.ToArray(), projectId);
             }
-            
-            return RedirectToAction("CollectProject", "Platform", 
-                new {Id = aim.Project.Id});
+
+            return RedirectToAction("CollectProject", "Platform",
+                new {id = projectId});
         }
          #endregion
 
 
          #region ChangeProject
 
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangeProject(int id)
         {
@@ -105,16 +107,14 @@ namespace UIMVC.Controllers
             return View();
         }
 
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public ActionResult ChangeProject(EditProjectModel epm, int id)
         {
             Project updateProj = _projManager.GetProject(id, false);
 
-             updateProj.Title = epm.Title;
+            updateProj.Title = epm.Title;
             updateProj.Goal = epm.Goal;
-            /*updateProj.StartDate = epm.StartDate;
-            updateProj.EndDate = epm.EndDate;*/
             updateProj.Visible = epm.Visible;
             updateProj.Status = epm.Status.ToUpper();
 
@@ -135,8 +135,8 @@ namespace UIMVC.Controllers
             Project project = _projManager.GetProject(id, false);
             int platformId = project.Platform.Id;
             project.Phases = (List<Phase>) _projManager.GetAllPhases(project.Id);
-            
-            List<Ideation> ideations = (List<Ideation>) _modManager.GetIdeations(project.Id); 
+
+            List<Ideation> ideations = (List<Ideation>) _modManager.GetIdeations(project.Id);
             List<Questionnaire> questionnaires = (List<Questionnaire>) _modManager.GetQuestionnaires(project.Id);
 
             if (ideations.Count != 0)
@@ -146,7 +146,7 @@ namespace UIMVC.Controllers
                     _modManager.RemoveModule(ideation.Id, false);
                 }
             }
-            
+
             if (questionnaires.Count != 0)
             {
                 foreach (Questionnaire questionnaire in questionnaires)
@@ -154,7 +154,7 @@ namespace UIMVC.Controllers
                     _modManager.RemoveModule(questionnaire.Id, true);
                 }
             }
-            
+
             if (project.Phases.Count != 0)
             {
                 foreach (var phase in project.Phases)
@@ -164,7 +164,7 @@ namespace UIMVC.Controllers
             }
 
             _projManager.RemoveImagesForProject(project.Id);
-            
+
             _projManager.RemoveProject(id);
 
 

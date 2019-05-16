@@ -158,7 +158,7 @@ CREATE TABLE Ideations (
 	Organisation BIT NOT NULL,
 	EventID INT,
 	UserIdea BIT NOT NULL,
-	MediaFile BINARY(255),
+	MediaFile VARCHAR(255),
 	RequiredFields tinyint NOT NULL,
 	ExtraInfo NVARCHAR(100),
 
@@ -372,7 +372,7 @@ create table AspNetRoles
 	UserId TEXT not null
 		constraint FK_AspNetUserRoles_AspNetUsers_UserId
 			references AspNetUsers
-				on delete cascade,	
+				on delete cascade,
 	RoleId TEXT not null
 		constraint FK_AspNetUserRoles_AspNetRoles_RoleId
 			references AspNetRoles

@@ -12,10 +12,10 @@
 @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
 {
     <div class="project-actions">
-        <button type="button" class="btn btn-light"> 
-            Voeg een Image Toe            
+        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#addImage">
+            Voeg een Image Toe
         </button>
-        <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" 
+        <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject"
            asp-route-id="@Model.Project.Id">
             Wijzig project
         </a>
@@ -23,21 +23,27 @@
         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProject">
             Wis project
         </button>
-    </div>  
+    </div>
 }
 
 <div class="modal fade" id="addImage" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-body">
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a class="btn btn-primary" asp-controller="Project" asp-action="AddImage" asp-route-aim="@Model">
-                    Toevoegen
-                </a><br/>
-            </div>
+            <form asp-controller="Project" asp-action="AddImage" enctype="multipart/form-data"
+                  asp-route-projectId="@Model.Project.Id" asp-route-file="@Model.File">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <p>Geef hier een foto:</p>
+                            @Html.TextBoxFor(m => m.File, new {type = "file"})
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Opslaan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -63,7 +69,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyProject" 
+                <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyProject"
                    asp-route-id="@Model.Project.Id">
                     Verwijder
                 </a><br/>

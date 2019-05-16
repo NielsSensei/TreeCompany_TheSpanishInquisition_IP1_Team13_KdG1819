@@ -93,7 +93,7 @@ namespace DAL.repos
                 User = new UimvcUser { Id = dao.UserId },
                 UserIdea = dao.UserIdea,
                 Event = new Event { Id = dao.EventId },
-                //Media = DTO.MediaFile,
+                MediaLink = dao.MediaFile,
                 ExtraInfo = dao.ExtraInfo,
                 RequiredFields = dao.RequiredFields
             };

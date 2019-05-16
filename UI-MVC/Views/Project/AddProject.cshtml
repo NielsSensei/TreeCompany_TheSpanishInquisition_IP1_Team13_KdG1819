@@ -10,13 +10,13 @@
 
  @section Scripts {
     <script type="module" src="~/dist/validation.entry.js" defer></script>
-} 
+}
 
  <br>
 
  <h2>Maak een nieuw project aan</h2>
 <br>
-<form id="ProjectForm" asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model" 
+<form id="ProjectForm" asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model"
       asp-route-platform="@ViewData["platform"]" asp-route-user="@UserManager.GetUserId(User)"
       enctype="multipart/form-data">
 
@@ -57,7 +57,11 @@
          </div>
          <div class="form-group col-md-6">
              <p>Geef hier een foto's voor op de projectpagina:</p>
-             @Html.TextBoxFor(m => m.InitialProjectImage, new { type = "file" })
+             @Html.TextBoxFor(m => m.InitialProjectImages, new
+             {
+                 type = "file",
+                 multiple = true
+             })
          </div>
     </div>
     <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" />

@@ -121,7 +121,7 @@ namespace DAL.repos
         private int FindNextAvailableImageId()
         {
             if (!_ctx.ProjectImages.Any()) return 1;
-            int newId = 0;
+            int newId = _ctx.ProjectImages.Count()+1;
             return newId;
         }
         #endregion
@@ -234,8 +234,8 @@ namespace DAL.repos
         public Phase ReadPhase(int phaseId, bool details)
         {
             PhasesDao phasesDao = details
-                ? _ctx.Phases.AsNoTracking().First(p => p.PhaseId == phaseId)
-                : _ctx.Phases.First(p => p.PhaseId == phaseId);
+                ? _ctx.Phases.AsNoTracking().FirstOrDefault(p => p.PhaseId == phaseId)
+                : _ctx.Phases.FirstOrDefault(p => p.PhaseId == phaseId);
             ExtensionMethods.CheckForNotFound(phasesDao, "Phase", phaseId);
 
             return ConvertToDomain(phasesDao);
@@ -298,7 +298,7 @@ namespace DAL.repos
 
             _ctx.SaveChanges();
         }
-        
+
         public List<byte[]> ReadAllImages(int projectId)
         {
             List<byte[]> myQuery = new List<byte[]>();

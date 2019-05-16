@@ -293,10 +293,10 @@ namespace UIMVC.Services
             return false;
         }
         #endregion
-        
+
         #region Users
 
-        
+
         public async Task<IEnumerable<UimvcUser>> GetAllAdmins(int platformId)
         {
             List<UimvcUser> users = new List<UimvcUser>();
@@ -328,4 +328,3 @@ namespace UIMVC.Services
         #endregion
     }
 }
-
