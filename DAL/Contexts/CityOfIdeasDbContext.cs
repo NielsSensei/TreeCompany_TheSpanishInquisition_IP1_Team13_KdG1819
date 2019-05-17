@@ -26,7 +26,7 @@ namespace DAL.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite("Data Source=TheSpanishDatabase.db");
+                optionsBuilder.UseMySQL("server=localhost;database=library;user=root;password=root");
             }
 
         }
