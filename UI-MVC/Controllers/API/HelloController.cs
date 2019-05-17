@@ -50,26 +50,6 @@ namespace UIMVC.Controllers.API
 */
 
 
-        //moduleId
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Idea>> GetIdea(int id)
-        {
-
-            var idea = _idQuesMan.GetIdea(id);
-            if (idea == null)
-            {
-                return NotFound();
-            }
-
-            return idea;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Idea>> PostIdea(Idea idea)
-        {
-            _idQuesMan.MakeIdea(idea);
-
-            return CreatedAtAction(nameof(GetIdea), new { id = idea.Id }, idea);
-        }
+        
     }
 }

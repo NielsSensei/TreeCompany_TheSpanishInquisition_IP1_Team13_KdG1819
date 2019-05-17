@@ -7,7 +7,6 @@ using Domain.Projects;
 using Domain.UserInput;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace UIMVC.Controllers.API
 {
@@ -148,18 +147,7 @@ namespace UIMVC.Controllers.API
             }
 
 
-            throw new Exception("FUUUUUUUUUUUUUCK");
-
-       
-
-            
-
-           
-
-          
-
-            
-            
+            throw new Exception("Skipping the IF statement for some reason...");
 
             
 
@@ -181,6 +169,29 @@ namespace UIMVC.Controllers.API
             return null;
         }
 
-        
+        //DAVIDSHIZZLE TO REFACTOR
+        //moduleId
+        /*[HttpGet("{id}")]
+        public async Task<ActionResult<Idea>> GetIdea(int id)
+        {
+
+            var idea = _idQuesMan.GetIdea(id);
+            if (idea == null)
+            {
+                return NotFound();
+            }
+
+            return idea;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Idea>> PostIdea(Idea idea)
+        {
+            _idQuesMan.MakeIdea(idea);
+
+            return CreatedAtAction(nameof(GetIdea), new { id = idea.Id }, idea);
+        }*/
+
+
     }
 }
