@@ -2,8 +2,7 @@ namespace Domain.Projects
 {
     public enum LikeVisibility
     {
-        //Added by EKT & DM
-        EnkelLikecount = 0,
+        OnlyLikeCount = 0,
         FbLikeCount = 1,
         TwitterLikeCount = 2,
         LikeCountAndFbLikeCount = 3,

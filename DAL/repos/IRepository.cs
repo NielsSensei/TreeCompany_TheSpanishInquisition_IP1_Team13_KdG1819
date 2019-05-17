@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DAL
+namespace DAL.repos
 {
     public interface IRepository<T>
     {

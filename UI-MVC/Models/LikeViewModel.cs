@@ -2,13 +2,12 @@ namespace UIMVC.Models
 {
     public class LikeViewModel
     {
-        public int likeCount { get; set; }
-        public int fbLikeCount { get; set; }
-        public int twitterLikeCount { get; set; }
-        public int shareCount { get; set; }
-        public int retweetCount { get; set; }
-        public int iconStyle { get; set; }
-        
+        public int LikeCount { get; set; }
+        public int FbLikeCount { get; set; }
+        public int TwitterLikeCount { get; set; }
+        public int ShareCount { get; set; }
+        public int RetweetCount { get; set; }
+        public int IconStyle { get; set; }
         public string Username { get; set; }
     }
 }

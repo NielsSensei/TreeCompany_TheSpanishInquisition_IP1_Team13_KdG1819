@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using BL;
 using Domain.Projects;
@@ -38,6 +39,10 @@ namespace UIMVC.Services
         {
             return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
         }
-        
+
+        public IEnumerable<byte[]> CollectProjectImages(Project project)
+        {
+            return _projectManager.GetAllImages(project.Id);
+        }
     }
 }

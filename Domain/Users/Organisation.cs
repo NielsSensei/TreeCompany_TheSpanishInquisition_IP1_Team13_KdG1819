@@ -4,14 +4,11 @@ using Domain.Projects;
 
 namespace Domain.Users
 {
-    public class Organisation : UIMVCUser
+    public class Organisation : UimvcUser
     {
-        // Added by NG
-        // Modified by XV & NVZ & DM & EKT
-        public string OrgName { get; set; }
-        public string Description { get; set; }
-        
-        public List<Event> organisationEvents { get; set; }
+        public string NewOrgName { get; set; }
+        public string NewDescription { get; set; }
+        public List<Event> OrganisationEvents { get; set; }
         public List<Ideation> Ideations { get; set; }
     }
 }

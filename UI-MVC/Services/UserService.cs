@@ -1,14 +1,18 @@
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace UIMVC.Services
 {
     public class UserService
     {
-        private readonly UserManager<UIMVCUser> _usrMgr;
+        private readonly UserManager<UimvcUser> _usrMgr;
 
-        public UserService(UserManager<UIMVCUser> userManager)
+
+        public UserService(UserManager<UimvcUser> userManager)
         {
             _usrMgr = userManager;
         }
@@ -20,7 +24,28 @@ namespace UIMVC.Services
             {
                 return "NOTFOUND";
             }
+
             return foundUser.Name;
         }
+
+        #region Platforms
+
+        public async Task<int> GetUserPlatform(ClaimsPrincipal user)
+        {
+            var userFound = await _usrMgr.GetUserAsync(user);
+            if (userFound == null) return 0;
+
+            return userFound.PlatformDetails;
+        }
+
+        public async void AddUserToPlatform(ClaimsPrincipal userClaim, int platform)
+        {
+            var user = await _usrMgr.GetUserAsync(userClaim);
+            user.PlatformDetails = platform;
+
+            _usrMgr.UpdateAsync(user);
+        }
+
+        #endregion
     }
 }

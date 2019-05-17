@@ -1,0 +1,29 @@
+@model Domain.Projects.Phase
+
+@{
+    ViewBag.Title = "Maak nieuwe fase aan";
+    Layout = "_Layout";
+}
+
+@section Scripts {
+    <script type="module" src="~/dist/validation.entry.js" defer></script>
+}
+
+<h2>Maak een fase aan</h2>
+
+<form asp-controller="Project" asp-action="AddPhase" method="post" asp-route-pm="@Model"
+      asp-route-projectId="@ViewData["project"]">
+    <div class="form-group col-md-12">
+        <label asp-for="Description">Omschrijving</label>
+        <input asp-for="Description" class="form-control"/>
+    </div>
+    <div class="form-group col-md-6">
+        <label asp-for="StartDate">Start datum</label>
+        <input id="StartDatePhase" type="date" asp-for="StartDate" class="form-control"/>
+    </div>
+    <div class="form-group col-md-6">
+        <label asp-for="EndDate">Eind datum</label>
+        <input id="EndDateErrorPhase" type="date" asp-for="EndDate" class="form-control"/>
+    </div>
+    <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
+</form>

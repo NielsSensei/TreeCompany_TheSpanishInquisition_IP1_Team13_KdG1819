@@ -3,116 +3,138 @@
 @model Domain.Projects.Ideation
 @inject UserService Userservice
 @inject QuestionService Questionservice
+@inject RoleService RoleService
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = Model.Title;
 }
 
-@section Tags
+@section Scripts
 {
-    <script type="module" src="./js/showmenu.js" defer></script>
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-6">
-            <h2>@Model.Title</h2>
-            <p>door @Userservice.CollectUserName(Model.User.Id)</p>
-            @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
-            {
-                likeCount = Model.LikeCount, fbLikeCount = Model.FbLikeCount, twitterLikeCount = Model.TwitterLikeCount, 
-                shareCount = Model.ShareCount, retweetCount = Model.RetweetCount, iconStyle = 3
-            })
-            <br/>
-            <p>@Model.ExtraInfo</p>
-            @if (Model.Event.Id != 0)
-            {
-                @* TODO Zorgt voor een eventPagina *@
-                <p>Deze ideation is georganiseerd dankzij dit evenement</p> 
-            }
-            <section>
-                <h6 class="font-weight-bold">Tags:</h6>
+<section class="container">
+    <section class="row">
+        @if (@Model.MediaLink == null)
+        {
+            <div class="col-12">
+                @Html.Partial("_IdeationHeaderPartial", Model)
+            </div>
+        }
+        else
+        {
+            <div class="col-5">
+                @Html.Partial("_IdeationHeaderPartial", Model)
+            </div>
+            <div class="col-7">
+                <iframe width="600" height="400" src="@Model.MediaLink"> </iframe>
+            </div>
+        }
 
-                <div class="row justify-content-start">
-                    @Html.Partial("_TagsPartial", Model.Tags)
-                    @* TODO zet hier ne rolecheck op *@
-                    <a class="btn btn-primary mx-1 m-0" asp-controller="Moderation" asp-action="AddTag"
-                       formmethod="get" asp-route-ideation="@Model.Id">
-                        @*TODO hier met een menuke*@
-                        Nieuwe Tag
-                    </a>
-                </div>
-            </section>
-        </div>
-        <div class="col-7">
-            @* TODO vervang images door Media *@
-            <img alt="IdeationMedia" src="https://via.placeholder.com/250"/>
-        </div>
-        <div class="col-6">
-            <br/>
-            @* TODO zet hier ne rolecheck op *@
-            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
+    </section>
+    <hr>
+    <section class="container">
+        <div class="row justify-content-between">
+            <div>
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
+                {
+                    <h1>Geen centrale vragen gesteld, wat jammer.</h1>
+                }
+
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
+                {
+                    <h1>1 centrale vraag</h1>
+                }
+
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
+                {
+                    <h1>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</h1>
+                }
+            </div>
+            @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
             {
-                <p>Geen centrale vragen gesteld, wat jammer.</p>
-                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
-                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
+                <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
+                   asp-route-ideation="@Model.Id">
+                    Stel een nieuwe centrale vraag
+                </a>
             }
-            
-            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
-            {
-                <p>1 centrale vraag</p>
-                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
-                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
-            }
-            
-            @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
-            {
-                <p>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</p>
-                <a class="btn btn-primary" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion" 
-                   asp-route-ideation="@Model.Id">Stel een nieuwe centrale vraag.</a>
-            }           
-            <hr/>
+        </div>
+        <section class="card-columns">
             @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))
             {
-                <p class="font-weight-bold">@iq.QuestionTitle</p>
-                <p>@iq.Description</p>
-                if (iq.SiteURL != null)
-                {
-                    <p>Lees meer: <a href="">@iq.SiteURL</a></p>
-                }
-                <a asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
-                <hr/>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@iq.QuestionTitle</h5>
+                        <p class="card-text">@iq.Description</p>
+                        @if (iq.SiteUrl != null)
+                        {
+                            <p>Meer info: <a href="">@iq.SiteUrl</a></p>
+                        }
+                    </div>
+                    <div class="card-footer text-center">
+                        <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
+                    </div>
+                </div>
             }
         </section>
     </section>
 </section>
 <hr/>
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
-                    asp-route-id="@Model.Id">Pas deze ideation aan.</a> 
-        </div>
-        <div class="col-md-6">
-            <button class="btn btn-primary" id="activateMenu">Verwijder deze ideation</button>
-        </div>  
-    </div>
-</div>
-<div id="menu">
-    <div class="row">
-        <div class="col-md-10">
-            <div class="row">
-              <h1>Verwijderen van een ideation</h1>
-              <p>Ben je zeker?</p>  
+@if(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result){
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
+                    asp-route-id="@Model.Id">Pas deze ideation aan.</a>
             </div>
-            <div class="row">
-                <a asp-controller="Moderation" asp-action="DestroyIdeation" asp-route-id="@Model.Id"
-                        type="button" class="btn btn-primary">Bevestig</a>
-                <button type="button" class="btn btn-secondary" id="closeMenu">Annuleren</button>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#deleteIdeationModal">Verwijder deze ideation.
+                </button>
             </div>
         </div>
     </div>
-</div>
-<hr/>
+}
 
+<div class="modal fade" id="deleteIdeationModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteIdeationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Ben je zeker dat je deze ideation wil verwijderen?</h5>
+            </div>
+            <div class=modal-body>
+                <a type="button" class="btn btn-primary" asp-controller="Moderation"
+                        asp-action="DestroyIdeation" asp-route-id="@Model.Id">Bevestig</a>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog"
+     aria-labelledby="addTagModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class=modal-body>
+                <form asp-controller="Moderation" asp-action="AddTag" asp-route-ideation="@Model.Id">
+                    <div class="form-group">
+                        <label>IdeationID</label>
+                        <input disabled value="@Model.Id" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Vul hier de tag in:</label>
+                        @Html.TextBox("GetMeATag","",
+                            new { @class="form-control"})
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Bevestig</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using UIMVC.Areas.Identity.Data;
-using UIMVCUser = Domain.Identity.UIMVCUser;
+using UimvcUser = Domain.Identity.UimvcUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account.Manage
 {
     public class ExternalLoginsModel : PageModel
     {
-        private readonly UserManager<UIMVCUser> _userManager;
-        private readonly SignInManager<UIMVCUser> _signInManager;
+        private readonly UserManager<UimvcUser> _userManager;
+        private readonly SignInManager<UimvcUser> _signInManager;
 
         public ExternalLoginsModel(
-            UserManager<UIMVCUser> userManager,
-            SignInManager<UIMVCUser> signInManager)
+            UserManager<UimvcUser> userManager,
+            SignInManager<UimvcUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

@@ -15,9 +15,9 @@ namespace UIMVC.Services
             _qqMgr = new QuestionnaireQuestionManager();
         }
 
-        public List<IdeationQuestion> CollectIdeationQuestions(int ideationID)
+        public List<IdeationQuestion> CollectIdeationQuestions(int ideationId)
         {
-            return _iqMgr.GetAllByModuleId(ideationID);
+            return _iqMgr.GetAllByModuleId(ideationId);
         }
     }
 }

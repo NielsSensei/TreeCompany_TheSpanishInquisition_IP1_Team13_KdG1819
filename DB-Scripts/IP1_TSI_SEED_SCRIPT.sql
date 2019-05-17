@@ -1,76 +1,11 @@
-﻿/* Platform */
-INSERT INTO Platforms(PlatformID,Name,SiteUrl) 
-VALUES(1,'Stad Antwerpen','www.cityofideas.be')
-/* Users 
-0 = Anonymous
-1 = loggedin
-2 = loggedinverified
-3 = loggedinorg
-4 = moderator
-5 = admin
-6 = superadmin
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(1,'TSI_LoggedIn','niels.vanzandbergen@student.kdg.be',1,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(2,'TSI_BANNED','niels.vanzandbergen@student.kdg.be',1,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(3,'TSI_INACTIVE','niels.vanzandbergen@student.kdg.be',1,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(4,'TSI_LoggedInVerified','niels.vanzandbergen@student.kdg.be',2,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(5,'TSI_LoggedInOrganisation','niels.vanzandbergen@student.kdg.be',3,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(6,'TSI_Moderator','niels.vanzandbergen@student.kdg.be',4,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(7,'TSI_Admin','niels.vanzandbergen@student.kdg.be',5,1)
-
-INSERT INTO Users(UserID,Name,Email,Role,PlatformID)
-VALUES(8,'TSI_SuperAdmin','niels.vanzandbergen@student.kdg.be',6,1)
-*/
-
-/* UserDetails 
-BIT 0 = true | 1 = false 
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(1,'9120',0,1,1,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(2,'9120',1,2,0,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(3,'9120',0,3,0,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(4,'9120',0,1,1,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate,OrgName,Description)
-Values(5,'9120',0,0,1,'30-01-2019','The Spanish Inquisition','Een groep programmeurs die klaar is om de wereld over te nemen omdat niemand hen verwacht')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(6,'9120',0,1,1,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(7,'9120',0,1,1,'1997-09-08')
-
-INSERT INTO UserDetails(UserID,Zipcode,Banned,Gender,Active,BirthDate)
-VALUES(8,'9120',0,1,1,'1997-09-08')
-*/
-
-/* Organisationevents */
+﻿/* Organisationevents */
 INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate)
 VALUES(1,5,'The Inquisition','Een conferentie over hoe we Antwerpen kunnen introduceren tot de Spaanse cultuur','2019-03-31','2019-04-1')
 
-/* Projects 
+/* Projects
 Status: Niet gestart/Phase naam/Afgesloten
 likeVisbility
-0 = enkel likecount 
+0 = enkel likecount
 1 = enkel fblikecount
 2 = enkel twitterlikecount
 3 = likecount & fblikecount
@@ -104,11 +39,11 @@ VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1,0,0,0,0,0
 INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
 VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0,0,0,0,0,0,'Geef uw alternatief!')
 
-/* QuestionnaireQuestions 
-0 = open                                                                                                                                                       
-1 = single               
-2 = multi                                                                                                                                                       
-3 = drop                 
+/* QuestionnaireQuestions
+0 = open
+1 = single
+2 = multi
+3 = drop
 4 = mail
 */
 INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Required)
@@ -227,7 +162,7 @@ INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
 VALUES(6,5,'30 jaar geleden was de groenplaats nog groen toen dat SPA aan het roer hing in antwerpen. Sinds de NVA zich kwam moeien is er een echte vergrijzing in de stad!',0,0)
 
 /* Devices */
-INSERT INTO Devices(DeviceID,LocationX,LocationY) 
+INSERT INTO Devices(DeviceID,LocationX,LocationY)
 VALUES(1,55,55)
 
 /* votes */
@@ -240,7 +175,7 @@ VALUES(2,1,2,2,'niels.vanzandbergen@student.kdg.be','No',2)
 INSERT INTO Votes(VoteID,DeviceID,InputID,InputType,UserMail,Choices,UserID)
 VALUES(3,1,2,2,'niels.vanzandbergen@student.kdg.be','Yes',3)
 
-/* useractivities 
+/* useractivities
 Note: de bedoeling van de keywords hier is dat ze vervangen worden door obj.
 */
 INSERT INTO UserActivities(ActivityID,UserID,PlatformID,ProjectID,ActionDescription)

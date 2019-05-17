@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UIMVC.Models;
+using DAL.Contexts;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(UIMVCContext))]
+    [DbContext(typeof(CityOfIdeasDbContext))]
     [Migration("20190401140142_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {

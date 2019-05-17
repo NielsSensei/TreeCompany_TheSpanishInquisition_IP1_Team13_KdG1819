@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,35 +6,35 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using UIMVC.Areas.Identity.Data;
-using UIMVCUser = Domain.Identity.UIMVCUser;
+using UIMVC.Services;
+using UimvcUser = Domain.Identity.UimvcUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<UIMVCUser> _signInManager;
-        private readonly UserManager<UIMVCUser> _userManager;
+        private readonly SignInManager<UimvcUser> _signInManager;
+        private readonly UserManager<UimvcUser> _userManager;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly RoleService _roleService;
 
         public ExternalLoginModel(
-            SignInManager<UIMVCUser> signInManager,
-            UserManager<UIMVCUser> userManager,
-            ILogger<ExternalLoginModel> logger)
+            SignInManager<UimvcUser> signInManager,
+            UserManager<UimvcUser> userManager,
+            ILogger<ExternalLoginModel> logger,
+            RoleService roleService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
+            _roleService = roleService;
         }
 
         [BindProperty]
         public InputModel Input { get; set; }
-
         public string LoginProvider { get; set; }
-
         public string ReturnUrl { get; set; }
-
         [TempData]
         public string ErrorMessage { get; set; }
 
@@ -46,6 +43,8 @@ namespace UIMVC.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+            [Required]
+            public string Name { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -55,7 +54,6 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
-            // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
@@ -76,7 +74,6 @@ namespace UIMVC.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
             if (result.Succeeded)
             {
@@ -89,7 +86,6 @@ namespace UIMVC.Areas.Identity.Pages.Account
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 LoginProvider = info.LoginProvider;
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
@@ -106,7 +102,6 @@ namespace UIMVC.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            // Get the information about the user from the external login provider
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
@@ -116,7 +111,13 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new UIMVCUser { UserName = Input.Email, Email = Input.Email };
+                var user = new UimvcUser
+                {
+                    UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                    EmailConfirmed = true,
+                    Name = Input.Name
+                };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -125,6 +126,10 @@ namespace UIMVC.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                        var userFound = await _userManager.FindByEmailAsync(user.UserName);
+                        _roleService.AssignToRole(userFound, Domain.Users.Role.LoggedIn);
+
                         return LocalRedirect(returnUrl);
                     }
                 }

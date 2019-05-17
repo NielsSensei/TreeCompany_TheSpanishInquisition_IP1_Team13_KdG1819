@@ -1,38 +1,31 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Domain;
 using Domain.Projects;
-using DAL.Contexts;
-using DAL.Data_Transfer_Objects;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using DAL.Contexts;
+using DAL.Data_Access_Objects;
 
-namespace DAL
+namespace DAL.repos
 {
     public class QuestionnaireRepository : IRepository<Questionnaire>
     {
-        // Added by DM
-        // Modified by NVZ
-        private readonly CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext _ctx;
 
-        // Added by NVZ
-        // Modified by XV
         public QuestionnaireRepository()
         {
-            ctx = new CityOfIdeasDbContext();
+            _ctx = new CityOfIdeasDbContext();
         }
 
-        // Added by NVZ
-        // Standard Methods
-        #region
-        private ModulesDTO ConvertToDTO(Questionnaire obj)
+        #region Conversion Methods
+        private ModulesDao ConvertToDao(Questionnaire obj)
         {
-            return new ModulesDTO
+            return new ModulesDao
             {
-                ModuleID = obj.Id,
-                ProjectID = obj.Project.Id,
-                PhaseID = obj.ParentPhase.Id,
+                ModuleId = obj.Id,
+                ProjectId = obj.Project.Id,
+                PhaseId = obj.ParentPhase.Id,
                 OnGoing = obj.OnGoing,
                 Title = obj.Title,
                 LikeCount = obj.LikeCount,
@@ -41,17 +34,17 @@ namespace DAL
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
                 Tags = ExtensionMethods.ListToString(obj.Tags),
-                IsQuestionnaire = obj.type == ModuleType.Questionnaire
+                IsQuestionnaire = obj.ModuleType == ModuleType.Questionnaire
             };
         }
 
-        private Questionnaire ConvertToDomain(ModulesDTO module)
+        private Questionnaire ConvertToDomain(ModulesDao module)
         {
             return new Questionnaire
             {
-                Id = module.ModuleID,
-                Project = new Project { Id = module.ProjectID },
-                ParentPhase = new Phase { Id = module.PhaseID },
+                Id = module.ModuleId,
+                Project = new Project { Id = module.ProjectId },
+                ParentPhase = new Phase { Id = module.PhaseId },
                 Title = module.Title,
                 OnGoing = module.OnGoing,
                 LikeCount = module.LikeCount,
@@ -62,18 +55,18 @@ namespace DAL
                 Tags = ExtensionMethods.StringToList(module.Tags),
             };
         }
-        
+        #endregion
+
+        #region Id generation
         private int FindNextAvailableQuestionnaireId()
         {
-            if (!ctx.Modules.Any()) return 1;
-            int newId = ctx.Modules.Max(q => q.ModuleID) + 1;
+            if (!_ctx.Modules.Any()) return 1;
+            int newId = _ctx.Modules.Max(q => q.ModuleId) + 1;
             return newId;
         }
         #endregion
 
-        // Added by NVZ
-        // Questionnaire CRUD
-        #region
+        #region Questionnaire CRUD
         public Questionnaire Create(Questionnaire obj)
         {
             IEnumerable<Questionnaire> questionnaires = ReadAll(obj.Project.Id);
@@ -82,31 +75,30 @@ namespace DAL
             {
                 if (obj.ParentPhase.Id == q.ParentPhase.Id)
                 {
-                    throw new DuplicateNameException("Questionnaire(ID=" + obj.Id + ") heeft dezelfde parentPhase als Questionnaire(ID=" + q.Id + "). " + 
+                    throw new DuplicateNameException("Questionnaire(ID=" + obj.Id + ") heeft dezelfde parentPhase als Questionnaire(ID=" + q.Id + "). " +
                         "De phaseID is " + obj.ParentPhase.Id + ".");
                 }
             }
 
             obj.Id = FindNextAvailableQuestionnaireId();
-            ctx.Modules.Add(ConvertToDTO(obj));
-            ctx.SaveChanges();
+            _ctx.Modules.Add(ConvertToDao(obj));
+            _ctx.SaveChanges();
 
             return obj;
         }
-        
+
         public Questionnaire Read(int id, bool details)
         {
-            ModulesDTO moduleDTO = null;
-            moduleDTO = details ? ctx.Modules.AsNoTracking().First(m => m.ModuleID == id) : ctx.Modules.First(m => m.ModuleID == id);
-            ExtensionMethods.CheckForNotFound(moduleDTO, "Questionnaire", id);
-            
-            return ConvertToDomain(moduleDTO);
+            ModulesDao moduleDao = details ? _ctx.Modules.AsNoTracking().First(m => m.ModuleId == id) : _ctx.Modules.First(m => m.ModuleId == id);
+            ExtensionMethods.CheckForNotFound(moduleDao, "Questionnaire", id);
+
+            return ConvertToDomain(moduleDao);
         }
 
         public void Update(Questionnaire obj)
         {
-            ModulesDTO newModule = ConvertToDTO(obj);
-            ModulesDTO foundModule = ctx.Modules.First(q => q.ModuleID == obj.Id);
+            ModulesDao newModule = ConvertToDao(obj);
+            ModulesDao foundModule = _ctx.Modules.First(q => q.ModuleId == obj.Id);
             if (foundModule != null)
             {
                 foundModule.OnGoing = newModule.OnGoing;
@@ -119,70 +111,67 @@ namespace DAL
                 foundModule.Tags = newModule.Tags;
             }
 
-            if (newModule.PhaseID != foundModule.PhaseID)
+            if (newModule.PhaseId != foundModule.PhaseId)
             {
-                foundModule.PhaseID = newModule.PhaseID;
+                foundModule.PhaseId = newModule.PhaseId;
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            ModulesDTO toDelete = ctx.Modules.First(q => q.ModuleID == id);
-            ctx.Modules.Remove(toDelete);
-            ctx.SaveChanges();
+            ModulesDao toDelete = _ctx.Modules.First(q => q.ModuleId == id);
+            _ctx.Modules.Remove(toDelete);
+            _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Questionnaire> ReadAll()
         {
             List<Questionnaire> myQuery = new List<Questionnaire>();
 
-            foreach (ModulesDTO DTO in ctx.Modules)
+            foreach (ModulesDao dao in _ctx.Modules)
             {
-                if (DTO.IsQuestionnaire)
+                if (dao.IsQuestionnaire)
                 {
-                    Questionnaire toAdd = ConvertToDomain(DTO);
-                    myQuery.Add(toAdd);  
-                }             
+                    Questionnaire toAdd = ConvertToDomain(dao);
+                    myQuery.Add(toAdd);
+                }
             }
 
             return myQuery;
         }
 
-        public IEnumerable<Questionnaire> ReadAll(int projectID)
+        public IEnumerable<Questionnaire> ReadAll(int projectId)
         {
-            return ReadAll().ToList().FindAll(q => q.Project.Id == projectID);
+            return ReadAll().ToList().FindAll(q => q.Project.Id == projectId);
         }
-        #endregion   
+        #endregion
 
-        // Added by NVZ
-        // Tag CRUD
-        #region
-        public string CreateTag(string obj, int moduleID)
+        #region Tag CRUD
+        public string CreateTag(string obj, int moduleId)
         {
-            Questionnaire moduleWTags = Read(moduleID, false);
-            ModulesDTO module = ConvertToDTO(moduleWTags);
+            Questionnaire moduleWTags = Read(moduleId, false);
+            ModulesDao module = ConvertToDao(moduleWTags);
             module.Tags += "," + obj;
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
 
             return obj;
         }
 
-        public void DeleteTag(int moduleID, int tagID)
+        public void DeleteTag(int moduleId, int tagId)
         {
-            List<String> keptTags = new List<string>();
-            Questionnaire moduleWTags = Read(moduleID, false);
-            ModulesDTO module = ConvertToDTO(moduleWTags);
-            keptTags = ExtensionMethods.StringToList(module.Tags);
-            keptTags.RemoveAt(tagID - 1);
+            Questionnaire moduleWTags = Read(moduleId, false);
+            ModulesDao module = ConvertToDao(moduleWTags);
+            List<String> keptTags = ExtensionMethods.StringToList(module.Tags);
+            keptTags.RemoveAt(tagId - 1);
             module.Tags = ExtensionMethods.ListToString(keptTags);
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
-        public IEnumerable<String> ReadAllTags(int moduleID)
+        public IEnumerable<String> ReadAllTags(int moduleId)
         {
-            return Read(moduleID, true).Tags;
+            return Read(moduleId, true).Tags;
         }
         #endregion
     }

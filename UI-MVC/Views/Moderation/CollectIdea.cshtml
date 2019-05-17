@@ -11,7 +11,7 @@
 
 @section Tags
 {
-    <title>Overzicht van Idee: @Model.Id</title>    
+    <title>Overzicht van Idee: @Model.Id</title>
 }
 
 <div class="container">
@@ -26,10 +26,10 @@
             <p><span style="font-weight: bold">Titel:</span> @Model.Title</p>
             <p><span style="font-weight: bold">Content:</span> </p>
             @if (Model.Field.Text != null && !Model.Field.Text.Equals("<null>"))
-            {    
+            {
                 <p><span style="font-weight: bold">Field:</span> @Model.Field.Text</p>
             }
-            
+
             @if (Model.Cfield != null)
             {
                 <p><span style="font-weight: bold">Closed Field:</span></p>
@@ -39,42 +39,43 @@
                     <p>Option: @opt</p>
                 }
             }
-           
-            <form asp-controller="Moderation" asp-action="DestroyIdea" asp-route-idea="@Model.Id" method="post">
-                <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Delete Idea" />                             
+
+            <form asp-controller="Moderation" asp-action="DestroyIdea" asp-route-idea="@Model.Id"
+                  asp-route-from="ModerationPanel">
+                <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Delete Idea" />
             </form>
-            
+
             <!-- TODO: (sprint2)
             public ImageField Ifield { get; set; }
             public VideoField Vfield { get; set; }
             public MapField Mfield { get; set; }
-            -->            
+            -->
         </div>
         <div class="col-6">
             <h2>Rapporteringen</h2>
             @if (badIdea.Any())
             {
                 badIdea.OrderByDescending(x => (byte) (x.Status)).ToList();
-                
+
                 foreach (Report r in badIdea)
                 {
                     <p><span style="font-weight: bold">Id:</span> @r.Id</p>
-                    <p><span style="font-weight: bold">Gebruiker die Rapport heeft verstuurd:</span> 
+                    <p><span style="font-weight: bold">Gebruiker die Rapport heeft verstuurd:</span>
                         @Userservice.CollectUserName(r.Flagger.Id)</p>
                     <p><span style="font-weight: bold">Reden:</span> @r.Reason</p>
                     <p><span style="font-weight: bold">Status:</span> @r.Status</p>
-                                                                               
+
                     <h2>Actions</h2>
-                    if (r.Status == ReportStatus.STATUS_NOTVIEWED)
-                    {                       
-                        <form asp-controller="Moderation" asp-action="ReviewByAdmin" asp-route-idea="@Model.Id" 
+                    if (r.Status == ReportStatus.StatusNotViewed)
+                    {
+                        <form asp-controller="Moderation" asp-action="ReviewByAdmin" asp-route-idea="@Model.Id"
                               asp-route-report="@r.Id" method="post">
-                            <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Vraag Review door Admin" />                             
+                            <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Vraag Review door Admin" />
                         </form>
-                                             
+
                     }
 
-                    if (r.Status == ReportStatus.STATUS_NEEDADMIN || r.Status == ReportStatus.STATUS_NOTVIEWED)
+                    if (r.Status == ReportStatus.StatusNeedAdmin || r.Status == ReportStatus.StatusNotViewed)
                     {
                         <div class="container">
                             <div class="row">
@@ -92,24 +93,24 @@
                         </div>
                     }
 
-                    if (r.Status == ReportStatus.STATUS_APPROVED)
+                    if (r.Status == ReportStatus.StatusApproved)
                     {
                         <p>Rapportering is opgelost, geen acties beschikbaar.</p>
                     }
 
-                    if (r.Status == ReportStatus.STATUS_DENIED)
+                    if (r.Status == ReportStatus.StatusDenied)
                     {
                         <form asp-controller="Moderation" asp-action="DestroyReport" asp-route-report="@r.Id" method="post"
                               asp-route-idea="@Model.Id">
                             <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Verwijder Rapport"/>
                         </form>
                     }
-                }    
+                }
             }
             else
             {
                 <p>Dit idee is niet geraporteerd.</p>
-            }                   
+            }
         </div>
-    </div>     
+    </div>
 </div>

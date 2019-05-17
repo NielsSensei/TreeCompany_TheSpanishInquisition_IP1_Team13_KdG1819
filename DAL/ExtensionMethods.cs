@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL
 {
@@ -42,7 +41,7 @@ namespace DAL
                     if (i != myStrings.Count - 1) myString += ",";
                 }
             }
-            
+
             return myString;
         }
 

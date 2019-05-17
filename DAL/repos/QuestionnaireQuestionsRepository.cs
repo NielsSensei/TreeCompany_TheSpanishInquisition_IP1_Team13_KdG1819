@@ -1,149 +1,142 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
-using Domain.UserInput;
 using DAL.Contexts;
-using DAL.Data_Transfer_Objects;
+using DAL.Data_Access_Objects;
+using Domain.UserInput;
 using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
-using Domain.Users;
 
-namespace DAL
+namespace DAL.repos
 {
     public class QuestionnaireQuestionsRepository : IRepository<QuestionnaireQuestion>
     {
-        // Added by DM
-        // Modified by NVZ
-        private readonly CityOfIdeasDbContext ctx;
+        private readonly CityOfIdeasDbContext _ctx;
 
-        // Added by NVZ
         public QuestionnaireQuestionsRepository()
         {
-            ctx = new CityOfIdeasDbContext();
+            _ctx = new CityOfIdeasDbContext();
         }
 
-        // Added by NVZ
-        // Standard Methods
-        #region
-        private QuestionnaireQuestionsDTO ConvertToDTO(QuestionnaireQuestion obj)
+        #region Conversion Methods
+        private QuestionnaireQuestionsDao ConvertToDao(QuestionnaireQuestion obj)
         {
-            return new QuestionnaireQuestionsDTO
+            return new QuestionnaireQuestionsDao
             {
-                QQuestionID = obj.Id,
-                ModuleID = obj.Module.Id,
+                QquestionId = obj.Id,
+                ModuleId = obj.Module.Id,
                 QuestionText = obj.QuestionText,
                 QType = (byte) obj.QuestionType,
                 Required = obj.Optional
             };
         }
 
-        private QuestionnaireQuestion ConvertToDomain(QuestionnaireQuestionsDTO DTO)
+        private QuestionnaireQuestion ConvertToDomain(QuestionnaireQuestionsDao dao)
         {
             return new QuestionnaireQuestion
             {
-                Id = DTO.QQuestionID,
-                Module = new Questionnaire { Id = DTO.ModuleID },
-                QuestionText = DTO.QuestionText,
-                QuestionType = (QuestionType) DTO.QType,
-                Optional = DTO.Required
+                Id = dao.QquestionId,
+                Module = new Questionnaire { Id = dao.ModuleId },
+                QuestionText = dao.QuestionText,
+                QuestionType = (QuestionType) dao.QType,
+                Optional = dao.Required
             };
         }
 
-        private OptionsDTO ConvertToDTO(int id, string obj, int qID)
+        private OptionsDao ConvertToDao(int id, string obj, int qid)
         {
-            return new OptionsDTO
+            return new OptionsDao
             {
-                OptionID = id,
+                OptionId = id,
                 OptionText = obj,
-                QQuestionID = qID
+                QquestionId = qid
             };
         }
 
-        private String ConvertToDomain(OptionsDTO DTO)
+        private String ConvertToDomain(OptionsDao dao)
         {
-            return DTO.OptionText;
+            return dao.OptionText;
         }
 
-        private AnswersDTO OpenConvertToDTO(OpenAnswer obj)
+        private AnswersDao OpenConvertToDao(OpenAnswer obj)
         {
-            return new AnswersDTO
+            return new AnswersDao
             {
-                AnswerID = obj.Id,
-                QQuestionID = obj.Question.Id,
-                UserID = obj.User.Id,
+                AnswerId = obj.Id,
+                QQuestionId = obj.Question.Id,
+                UserId = obj.User.Id,
                 AnswerText = obj.AnswerText,
             };
         }
 
-        private AnswersDTO MultipleConvertToDTO(MultipleAnswer obj)
+        private AnswersDao MultipleConvertToDao(MultipleAnswer obj)
         {
-            return new AnswersDTO
+            return new AnswersDao
             {
-                AnswerID = obj.Id,
-                QQuestionID = obj.Question.Id,
-                UserID = obj.User.Id
+                AnswerId = obj.Id,
+                QQuestionId = obj.Question.Id,
+                UserId = obj.User.Id
             };
         }
 
-        private ChoicesDTO ConvertToDTO(int optionID, int answerID, int choiceID)
+        private ChoicesDao ConvertToDao(int optionId, int answerId, int choiceId)
         {
-            return new ChoicesDTO
+            return new ChoicesDao
             {
-                ChoiceID = choiceID,
-                AnswerID = answerID,
-                OptionID = optionID
+                ChoiceId = choiceId,
+                AnswerId = answerId,
+                OptionId = optionId
             };
         }
 
-        private OpenAnswer ConvertToDomain(AnswersDTO DTO)
+        private OpenAnswer ConvertToDomain(AnswersDao dao)
         {
             return new OpenAnswer
             {
-                Id = DTO.AnswerID,
-                User = new UIMVCUser { Id = DTO.UserID },
-                Question = new QuestionnaireQuestion { Id = DTO.QQuestionID },
-                IsUserEmail = DTO.AnswerText.Contains("@"),
-                AnswerText = DTO.AnswerText
+                Id = dao.AnswerId,
+                User = new UimvcUser { Id = dao.UserId },
+                Question = new QuestionnaireQuestion { Id = dao.QQuestionId },
+                IsUserEmail = dao.AnswerText.Contains("@"),
+                AnswerText = dao.AnswerText
             };
         }
 
-        private MultipleAnswer ConvertToDomain(AnswersDTO answersDTO, List<OptionsDTO> chosenOptionsDTO)
+        private MultipleAnswer ConvertToDomain(AnswersDao answersDao, List<OptionsDao> chosenOptionsDao)
         {
             MultipleAnswer ma = null;
-            ma.Id = answersDTO.AnswerID;
-            ma.User = new UIMVCUser { Id = answersDTO.UserID };
-            ma.Question = new QuestionnaireQuestion { Id = answersDTO.QQuestionID };
-            ma.DropdownList = chosenOptionsDTO.Count == 1;
+            ma.Id = answersDao.AnswerId;
+            ma.User = new UimvcUser { Id = answersDao.UserId };
+            ma.Question = new QuestionnaireQuestion { Id = answersDao.QQuestionId };
+            ma.DropdownList = chosenOptionsDao.Count == 1;
 
-            foreach(OptionsDTO DTO in chosenOptionsDTO)
+            foreach(OptionsDao dao in chosenOptionsDao)
             {
-                ma.Choices.Add(DTO.OptionText);
+                ma.Choices.Add(dao.OptionText);
             }
 
             return ma;
         }
-        
+        #endregion
+
+        #region Id generation
         private int FindNextAvailableQQuestionId()
-        {               
-            if (!ctx.QuestionnaireQuestions.Any()) return 1;
+        {
+            if (!_ctx.QuestionnaireQuestions.Any()) return 1;
             int newId = ReadAll().Max(qq => qq.Id)+1;
             return newId;
         }
-        
+
         private int FindNextAvailableAnswerId()
-        {               
-            if (!ctx.Answers.Any()) return 1;
+        {
+            if (!_ctx.Answers.Any()) return 1;
             int newId = ReadAll().Max(answer => answer.Id)+1;
             return newId;
         }
         #endregion
 
-        // Added by NVZ
-        // QuestionnaireQuestion CRUD
-        #region 
+        #region QuestionnaireQuestion CRUD
         public QuestionnaireQuestion Create(QuestionnaireQuestion obj)
         {
             IEnumerable<QuestionnaireQuestion> qqs = ReadAllByQuestionnaireId(obj.Questionnaire.Id);
@@ -152,31 +145,30 @@ namespace DAL
             {
                 if (ExtensionMethods.HasMatchingWords(obj.QuestionText, qq.QuestionText) > 0)
                 {
-                    throw new DuplicateNameException("QuestionnaireQuestion(ID=" + obj.Id + ") is een gelijkaardige vraag aan QuestionnaireQuestion(ID=" + 
+                    throw new DuplicateNameException("QuestionnaireQuestion(ID=" + obj.Id + ") is een gelijkaardige vraag aan QuestionnaireQuestion(ID=" +
                         qq.Id + ") de vraag specifiek was: " + obj.QuestionText + ".");
                 }
             }
 
             obj.Id = FindNextAvailableQQuestionId();
-            ctx.QuestionnaireQuestions.Add(ConvertToDTO(obj));
-            ctx.SaveChanges();
+            _ctx.QuestionnaireQuestions.Add(ConvertToDao(obj));
+            _ctx.SaveChanges();
 
             return obj;
         }
-        
+
         public QuestionnaireQuestion Read(int id, bool details)
         {
-            QuestionnaireQuestionsDTO questionnaireQuestionDTO = null;
-            questionnaireQuestionDTO = details ? ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QQuestionID == id) : ctx.QuestionnaireQuestions.First(q => q.QQuestionID == id);
-            ExtensionMethods.CheckForNotFound(questionnaireQuestionDTO, "QuestionnaireQuestion", id);
+            QuestionnaireQuestionsDao questionnaireQuestionDao = details ? _ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QquestionId == id) : _ctx.QuestionnaireQuestions.First(q => q.QquestionId == id);
+            ExtensionMethods.CheckForNotFound(questionnaireQuestionDao, "QuestionnaireQuestion", id);
 
-            return ConvertToDomain(questionnaireQuestionDTO);
+            return ConvertToDomain(questionnaireQuestionDao);
         }
 
         public void Update(QuestionnaireQuestion obj)
         {
-            QuestionnaireQuestionsDTO newQuestionnaireQuestion = ConvertToDTO(obj);
-            QuestionnaireQuestionsDTO foundQuestionnaireQuestion = ctx.QuestionnaireQuestions.First(qq => qq.QQuestionID == obj.Id);
+            QuestionnaireQuestionsDao newQuestionnaireQuestion = ConvertToDao(obj);
+            QuestionnaireQuestionsDao foundQuestionnaireQuestion = _ctx.QuestionnaireQuestions.First(qq => qq.QquestionId == obj.Id);
             if (foundQuestionnaireQuestion != null)
             {
                 foundQuestionnaireQuestion.QuestionText = newQuestionnaireQuestion.QuestionText;
@@ -184,23 +176,23 @@ namespace DAL
                 foundQuestionnaireQuestion.Required = newQuestionnaireQuestion.Required;
             }
 
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            QuestionnaireQuestionsDTO toDelete = ctx.QuestionnaireQuestions.First(qq => qq.QQuestionID == id);
-            ctx.QuestionnaireQuestions.Remove(toDelete);
-            ctx.SaveChanges();
+            QuestionnaireQuestionsDao toDelete = _ctx.QuestionnaireQuestions.First(qq => qq.QquestionId == id);
+            _ctx.QuestionnaireQuestions.Remove(toDelete);
+            _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<QuestionnaireQuestion> ReadAll()
         {
             List<QuestionnaireQuestion> myQuery = new List<QuestionnaireQuestion>();
 
-            foreach (QuestionnaireQuestionsDTO DTO in ctx.QuestionnaireQuestions)
+            foreach (QuestionnaireQuestionsDao dao in _ctx.QuestionnaireQuestions)
             {
-                myQuery.Add(ConvertToDomain(DTO));
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;
@@ -210,93 +202,76 @@ namespace DAL
         {
             return ReadAll().Where(c => c.Module.Id == questionnaireId);
         }
-        #endregion       
-        
-        // Added by NVZ
-        // Answer CRUD
-        /*
-        Hier mogen dubbele antwoorden aangezien niemand van elkaar hoort te weten wat de antwoorden zijn. De admins hebben natuurlijk een overzichtje maar
-        zij zijn de enige. Hier is er totaal geen controle op dubbele dingen zoals de rest van de objecten.
-        */
-        #region
+        #endregion
+
+        #region Answer CRUD
         public Answer Create(Answer obj)
         {
             QuestionnaireQuestion qq = Read(obj.Question.Id, false);
             obj.Id = FindNextAvailableAnswerId();
-            
-            if(qq.QuestionType == QuestionType.OPEN || qq.QuestionType == QuestionType.MAIL)
+
+            if(qq.QuestionType == QuestionType.Open || qq.QuestionType == QuestionType.Mail)
             {
-                ctx.Answers.Add(OpenConvertToDTO((OpenAnswer) obj));
+                _ctx.Answers.Add(OpenConvertToDao((OpenAnswer) obj));
             }else
             {
                 MultipleAnswer ma = (MultipleAnswer)obj;
-                ctx.Answers.Add(MultipleConvertToDTO(ma));
+                _ctx.Answers.Add(MultipleConvertToDao(ma));
                 foreach(String s in ma.Choices)
                 {
-                    int id = ReadOptionID(s, ma.Question.Id);
-                    ctx.Choices.Add(ConvertToDTO(id,ma.Id,ctx.Choices.Count()+1));
+                    int id = ReadOptionId(s, ma.Question.Id);
+                    _ctx.Choices.Add(ConvertToDao(id,ma.Id,_ctx.Choices.Count()+1));
                 }
             }
-           
-            ctx.SaveChanges();
+
+            _ctx.SaveChanges();
 
             return obj;
         }
 
-        
-        public OpenAnswer ReadOpenAnswer(int answerID, bool details)
-        {
-            AnswersDTO answersDTO = null;
-            answersDTO = details ? ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID) : ctx.Answers.First(i => i.AnswerID == answerID);
-            ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
 
-            return ConvertToDomain(answersDTO);
+        public OpenAnswer ReadOpenAnswer(int answerId, bool details)
+        {
+            AnswersDao answersDao = details ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId) : _ctx.Answers.First(i => i.AnswerId == answerId);
+            ExtensionMethods.CheckForNotFound(answersDao, "Answer", answerId);
+
+            return ConvertToDomain(answersDao);
         }
 
-        public MultipleAnswer ReadMultipleAnswer(int answerID, bool details)
+        public MultipleAnswer ReadMultipleAnswer(int answerId, bool details)
         {
-            AnswersDTO answersDTO = null;
-            answersDTO = details ? ctx.Answers.AsNoTracking().First(i => i.AnswerID == answerID) : ctx.Answers.First(i => i.AnswerID == answerID);
-            ExtensionMethods.CheckForNotFound(answersDTO, "Answer", answerID);
+            AnswersDao answersDao = details ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId) : _ctx.Answers.First(i => i.AnswerId == answerId);
+            ExtensionMethods.CheckForNotFound(answersDao, "Answer", answerId);
 
-            List<ChoicesDTO> choicesDTO = ctx.Choices.ToList().FindAll(c => c.AnswerID == answerID);
-            List<OptionsDTO> optionsDTO = ctx.Options.ToList().FindAll(o => o.QQuestionID == answersDTO.QQuestionID);
-            List<OptionsDTO> chosenOptionsDTO = new List<OptionsDTO>();
+            List<OptionsDao> optionsDaos = _ctx.Options.ToList().FindAll(o => o.QquestionId == answersDao.QQuestionId);
+            List<OptionsDao> chosenOptionsDao = new List<OptionsDao>();
 
-            foreach(OptionsDTO DTO in optionsDTO)
+            foreach(OptionsDao dao in optionsDaos)
             {
-                ChoicesDTO choice = ctx.Choices.First(c => c.OptionID == DTO.OptionID);   
-                
-                if(choice.ChoiceID != null)
+                ChoicesDao choice = _ctx.Choices.First(c => c.OptionId == dao.OptionId);
+
+                if(choice.ChoiceId != null)
                 {
-                    chosenOptionsDTO.Add(DTO);
+                    chosenOptionsDao.Add(dao);
                 }
             }
 
-            return ConvertToDomain(answersDTO, chosenOptionsDTO);
+            return ConvertToDomain(answersDao, chosenOptionsDao);
         }
 
-        /* Eens de questionnaire is ingevuld door de gebruiker is em ingevuld. Ik denk niet dat er enkel nut is van het te veranderen of te verwijderen.
-  * Dit is nog altijd open tot discussie of course. -NVZ
-  * 
-  * public void Update(Answer obj)
-  * public void Delete(int questionID, int answerID)
-  * 
- */
-
-        public IEnumerable<Answer> ReadAll(int questionID)
+        public IEnumerable<Answer> ReadAll(int questionId)
         {
             List<Answer> myQuery = new List<Answer>();
 
-            foreach (AnswersDTO DTO in ctx.Answers.ToList().FindAll(a => a.QQuestionID == questionID))
+            foreach (AnswersDao dao in _ctx.Answers.ToList().FindAll(a => a.QQuestionId == questionId))
             {
-                if (ctx.Choices.Where(c => c.AnswerID == DTO.AnswerID).Count() == 0)
+                if (!_ctx.Choices.Where(c => c.AnswerId == dao.AnswerId).Any())
                 {
-                    myQuery.Add(ConvertToDomain(DTO));
+                    myQuery.Add(ConvertToDomain(dao));
                 }
                 else
                 {
-                    MultipleAnswer toAdd = ReadMultipleAnswer(DTO.AnswerID, false);
+                    MultipleAnswer toAdd = ReadMultipleAnswer(dao.AnswerId, false);
                     myQuery.Add(toAdd);
                 }
             }
@@ -305,37 +280,35 @@ namespace DAL
         }
         #endregion
 
-        // Added by NVZ
-        // Options CRUD
-        #region
-        public string Create(int questionID, string obj)
+        #region Options CRUD
+        public string Create(int questionId, string obj)
         {
-            IEnumerable<string> options = ReadAllOptions(questionID);
-            int newID = options.Count() + 1;
+            IEnumerable<string> options = ReadAllOptions(questionId);
+            int newId = options.Count() + 1;
 
             for (int i = 0; i < options.Count(); i++)
             {
                 if (ExtensionMethods.HasMatchingWords(obj, options.ElementAt(i)) > 0)
                 {
-                    throw new DuplicateNameException("Deze Option(ID=" + newID + ") met Optiontekst: " + obj + " is gelijkaardig aan de Option(ID=" + i + 
+                    throw new DuplicateNameException("Deze Option(ID=" + newId + ") met Optiontekst: " + obj + " is gelijkaardig aan de Option(ID=" + i +
                         "). De Optiontekst is: " + options.ElementAt(i) + ".");
                 }
             }
 
-            ctx.Options.Add(ConvertToDTO(newID, obj, questionID));
-            ctx.SaveChanges();
+            _ctx.Options.Add(ConvertToDao(newId, obj, questionId));
+            _ctx.SaveChanges();
 
             return obj;
         }
 
-        public String ReadOption(int optionID, int questionID)
+        public String ReadOption(int optionId, int questionID)
         {
-            return ConvertToDomain(ctx.Options.Find(optionID));
+            return ConvertToDomain(_ctx.Options.Find(optionId));
         }
 
-        public int ReadOptionID(string optionText, int questionID)
+        public int ReadOptionId(string optionText, int questionId)
         {
-            List<string> options = ReadAllOptions(questionID).ToList();
+            List<string> options = ReadAllOptions(questionId).ToList();
             for(int i = 0; i < options.Count; i++)
             {
                 if (options[i].Equals(optionText))
@@ -343,25 +316,25 @@ namespace DAL
                     return i + 1;
                 }
             }
-            throw new DuplicateNameException("Option " + optionText + " niet gevonden voor de QuestionnaireQuestion(ID=" + questionID + ").");
+            throw new DuplicateNameException("Option " + optionText + " niet gevonden voor de QuestionnaireQuestion(ID=" + questionId + ").");
         }
 
-        public void DeleteOption(int optionID)
+        public void DeleteOption(int optionId)
         {
-            OptionsDTO toDelete = ctx.Options.First(o => o.OptionID == optionID);
-            ctx.Options.Remove(toDelete);
-            ctx.SaveChanges();
+            OptionsDao toDelete = _ctx.Options.First(o => o.OptionId == optionId);
+            _ctx.Options.Remove(toDelete);
+            _ctx.SaveChanges();
         }
-        
-        public IEnumerable<string> ReadAllOptions(int QuestionID)
+
+        public IEnumerable<string> ReadAllOptions(int questionId)
         {
             List<string> myQuery = new List<string>();
 
-            foreach (OptionsDTO DTO in ctx.Options)
+            foreach (OptionsDao dao in _ctx.Options)
             {
-                if (DTO.QQuestionID == QuestionID)
+                if (dao.QquestionId == questionId)
                 {
-                    myQuery.Append(ConvertToDomain(DTO));
+                    myQuery.Append(ConvertToDomain(dao));
                 }
             }
 
