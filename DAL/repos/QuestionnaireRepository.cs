@@ -53,6 +53,7 @@ namespace DAL.repos
                 ShareCount = module.ShareCount,
                 RetweetCount = module.RetweetCount,
                 Tags = ExtensionMethods.StringToList(module.Tags),
+                ModuleType = ModuleType.Questionnaire
             };
         }
         #endregion

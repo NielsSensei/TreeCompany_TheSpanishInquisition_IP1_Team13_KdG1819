@@ -24,6 +24,8 @@ namespace UIMVC.Controllers.API
         {
             projMgr = new ProjectManager();
             modMgr = new ModuleManager();
+            qqMgr = new QuestionnaireQuestionManager();
+            iqMgr = new IdeationQuestionManager();
         }
 
         // GET: api/<controller>
@@ -81,40 +83,80 @@ namespace UIMVC.Controllers.API
         [Route("GetModuleForPhase")]
         public IActionResult GetModuleForPhase(int phaseId)
         {
+            bool isQuestionnaire = false;
+
             Phase phase = projMgr.GetPhase(phaseId);
 
-            Module toReturn = null;
-
+            Module toReturn = new Module();
+           
             List<Module> modules = modMgr.GetAllModules(phase.Project.Id).ToList();
-
-            
 
             foreach (Module mod in modules)
             {
-                if (mod.ParentPhase.Id == phase.Id) toReturn = mod;
+
+                if (mod.ParentPhase.Id == phase.Id)
+                {
+                    if (mod.ModuleType == ModuleType.Questionnaire)
+                    {
+                        isQuestionnaire = true;
+                        //toReturnQuestionnaire = (Questionnaire)mod;
+                        
+                    }
+                    else
+                    {
+                        isQuestionnaire = false;
+                        //toReturnIdeation = (Ideation)mod;
+                    }
+                    toReturn = mod;
+
+                }
             }
 
-            /*if (toReturn.ModuleType == ModuleType.Questionnaire)
+            if (isQuestionnaire)
             {
-                List<QuestionnaireQuestion> qQuestions = qqMgr.GetAllByModuleId(toReturn.Id);
+                Questionnaire toReturnQuestionnaire = (Questionnaire)toReturn;
+                
+
+                List<QuestionnaireQuestion> qQuestions = qqMgr.GetAllByModuleId(toReturnQuestionnaire.Id);
 
                 foreach (QuestionnaireQuestion qQ in qQuestions)
                 {
                     if (qQ.QuestionType == QuestionType.Drop || qQ.QuestionType == QuestionType.Multi || qQ.QuestionType == QuestionType.Single)
                     {
-                        
+                        /*TODO optionlogica*/
                     }
                 }
 
-            }*/
-
-
-            if (toReturn == null)
-            {
-                return NotFound("Geen modules voor deze fase gevonden!");
+                toReturnQuestionnaire.Questions = qQuestions;
+                return Ok(toReturnQuestionnaire);
             }
 
-            return Ok(toReturn);
+            else if (!isQuestionnaire)
+            {
+                Ideation toReturnIdeation = (Ideation)toReturn;
+
+                List<IdeationQuestion> ideationQuestions = iqMgr.GetAllByModuleId(toReturnIdeation.Id).ToList();
+
+                foreach (IdeationQuestion ideationQ in ideationQuestions)
+                {
+                    List<Idea> ideas = iqMgr.GetIdeas(ideationQ.Id);
+                }
+
+                toReturnIdeation.CentralQuestions = ideationQuestions;
+
+                return Ok(toReturnIdeation);
+            }
+
+
+            throw new Exception("FUUUUUUUUUUUUUCK");
+
+       
+
+            
+
+           
+
+          
 
             
             
