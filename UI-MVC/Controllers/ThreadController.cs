@@ -1,11 +1,13 @@
 using System;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using BL;
 using Domain.Identity;
 using Domain.UserInput;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
 using UIMVC.Services;
@@ -24,7 +26,8 @@ namespace UIMVC.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AddIdea(string user, AddIdeaModel aim, int ideation, int parent)
+        [HttpPost]
+        public async Task<IActionResult> AddIdea(string user, IFormCollection form, int ideation, int parent)
         {
             Idea idea = new Idea()
             {
@@ -46,19 +49,19 @@ namespace UIMVC.Controllers
             
             idea.VerifiedUser = await _roleService.IsVerified(User);
 
-            if (aim.Title != null)
+            if (!Request.Form["Title"].ToString().Equals(""))
             {
-                idea.Title = aim.Title;
+                idea.Title = Request.Form["Title"].ToString();
             }
 
-            if (aim.FieldText != null)
+            if (!Request.Form["FieldText"].ToString().Equals(""))
             {
                 Field field = new Field()
                 {
                     Idea = idea
                 };
 
-                field.Text = aim.FieldText;
+                field.Text = Request.Form["FieldText"].ToString();
                 field.TextLength = field.Text.Length;
 
                 idea.Field = field;
@@ -80,19 +83,19 @@ namespace UIMVC.Controllers
                 idea.Mfield = field;
             }
 
-            if (aim.FieldVideo != null)
+            if (!Request.Form["FieldVideo"].ToString().Equals(""))
             {
                 VideoField field = new VideoField()
                 {
                     Idea = idea
                 };
 
-                field.VideoLink = "https://www.youtube.com/embed/" + aim.FieldVideo.Split("=")[1];
-
+                field.VideoLink = "https://www.youtube.com/embed/" + 
+                                  Request.Form["FieldVideo"].ToString().Split("=")[1].Split("&")[0];
                 idea.Vfield = field;
             }
 
-            if (aim.FieldImage != null)
+            if (form.Files.Any())
             {
                 ImageField field = new ImageField()
                 {
@@ -101,12 +104,12 @@ namespace UIMVC.Controllers
                 
                 using (var memoryStream = new MemoryStream())
                 {
-                    await aim.FieldImage.CopyToAsync(memoryStream);
+                    await form.Files[0].CopyToAsync(memoryStream);
                     field.UploadedImage = memoryStream.ToArray();
                 }
 
                 idea.Ifield = field;
-            }
+            } 
             
             if (idea.Field != null || idea.Cfield != null || idea.Mfield != null || idea.Vfield != null
                 || idea.Ifield != null)

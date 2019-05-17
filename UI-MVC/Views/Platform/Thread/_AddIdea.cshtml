@@ -5,23 +5,24 @@
 
 <div class="container">
     <div class="row" id="newIdea">
-        <form asp-controller="Thread" asp-action="AddIdea" asp-route-aim="@Model" asp-route-user="@UserManager.GetUserId(User)" 
-              asp-route-ideation="@Model.IdeationQuestionId" asp-route-parent="@Model.ParentId" class="row" enctype="multipart/form-data">
+        @using (Html.BeginForm("AddIdea", "Thread", new { user = UserManager.GetUserId(User),
+            parent = Model.ParentId, ideation = Model.IdeationQuestionId, form = @Model.FormCollection }, FormMethod.Post, null, 
+            new { enctype = "multipart/form-data", @class = "row" }))
+        { 
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="Title">Titel:</label>
-                    <input asp-for="Title" class="form-control"/>
+                    <label>Titel:</label>
+                    @Html.TextBox("Title", "", new { @class = "form-control" })
                 </div>
                 <div class="form-group">
-                    <label asp-for="FieldText">Text:</label>
-                    <input asp-for="FieldText" class="form-control"/>
+                    <label>Text:</label>
+                    @Html.TextBox("FieldText", "", new { @class = "form-control" })
                 </div>
                 <div class="form-group">
-                    <label asp-for="FieldVideo">Geef hier een youtube link:</label>
-                    <input asp-for="FieldVideo" class="form-control"/>
+                    <label>Geef hier een youtube link:</label>
+                     @Html.TextBox("FieldVideo", "", new { @class = "form-control" })
                 </div>
-
-                <button class="btn btn-outline-primary" type="submit">Voeg jouw idee toe</button>
+                <input class="btn btn-outline-primary" type="submit" name="submit" value="Voeg jouw idee toe" />
             </div>
             <div class="col-6">
                 <div class="form-group">
@@ -32,11 +33,10 @@
                     @Html.TextBox("newIdeaMapY", "Tweede coordinaat", new {@class = "form-control"})
                 </div> 
                 <div class="form-group">
-                    <label asp-for="FieldImage">Geef hier een foto:</label>
-                    <input asp-for="FieldImage" class="form-control" type="file"/>
+                    <label>Geef hier een foto:</label>
+                    @Html.TextBox("FieldImage", "", new { @class = "form-control", type="file" })
                 </div>
             </div>
-        </form>
+        }
     </div>    
 </div>
-

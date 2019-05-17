@@ -142,7 +142,7 @@ namespace UIMVC.Controllers
 
             if (cim.MediaLink != null)
             {
-                i.MediaLink = "https://youtube.com/embed/" + cim.MediaLink.Split("=")[1];
+                i.MediaLink = "https://youtube.com/embed/" + cim.MediaLink.Split("=")[1].Split("&")[0];
             }
 
             _moduleMgr.MakeIdeation(i);
@@ -240,7 +240,7 @@ namespace UIMVC.Controllers
                 Id = ideation,
                 Title = Request.Form["Title"].ToString(),
                 ExtraInfo = Request.Form["ExtraInfo"].ToString(),
-                MediaLink = "https://youtube.com/embed/" + Request.Form["MediaFile"].ToString().Split("=")[1]
+                MediaLink = "https://youtube.com/embed/" + Request.Form["MediaFile"].ToString().Split("=")[1].Split("&")[0]
             };
 
             try

@@ -6,9 +6,6 @@ namespace UIMVC.Models
     {
         public int IdeationQuestionId { get; set; }
         public int ParentId { get; set; }
-        public string Title { get; set; }
-        public string FieldText { get; set; }
-        public string FieldVideo { get; set; }
-        public IFormFile FieldImage { get; set; }
+        public IFormCollection FormCollection { get; set; }
     }
 }
