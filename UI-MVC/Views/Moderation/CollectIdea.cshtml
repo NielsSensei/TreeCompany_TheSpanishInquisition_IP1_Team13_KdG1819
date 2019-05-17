@@ -35,7 +35,6 @@
             @if (Model.Cfield != null)
             {
                 <p><span style="font-weight: bold">Closed Field:</span></p>
-                <p><span style="font-weight: bold">Is het multiplechoice?</span> @Model.Cfield.MultipleChoice</p>
                 foreach (string opt in Model.Cfield.Options)
                 {
                     <p>Option: @opt</p>

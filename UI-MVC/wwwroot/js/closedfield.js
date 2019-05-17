@@ -1,12 +1,12 @@
 let closedFieldBody = document.querySelector(".addClosedField");
 let fieldStringsContainer = document.querySelector(".addFieldStringsContainer");
 let fieldButton = document.querySelector(".fieldStringButton");
-let containerToPutFieldStringsIn = document.querySelector(".fieldStringContainer");
+let containersToPutFieldStringsIn = document.querySelectorAll(".fieldStringContainer");
 let addedFieldStrings = 0;
 
 console.log("closedfield active!");
 
-function reassignIndex() {
+function reassignIndex(index) {
     addedFieldStrings = 0;
 
     let allInputs = document.querySelectorAll(".fieldStringsInput");
@@ -25,7 +25,7 @@ function reassignIndex() {
     addedFieldStrings = allInputs.length;
 }
 
-function removeFieldString() {
+function removeFieldString(ind) {
     console.log("Removing element: " + this.getAttribute("data-option"));
 
     let index = this.getAttribute("data-option");
@@ -39,11 +39,11 @@ function removeFieldString() {
         }
     }
 
-    reassignIndex();
+    reassignIndex(ind);
 }
 
 
-function addFieldString() {
+function addFieldString(index) {
     console.log("Adding Field String: " + addedFieldStrings);
     let input = document.createElement("input");
     input.setAttribute("type", "text");
@@ -65,10 +65,13 @@ function addFieldString() {
 
     inputcontainer.appendChild(input);
     inputcontainer.appendChild(removebutton);
-
-
-    containerToPutFieldStringsIn.appendChild(inputcontainer);
+    
+    containersToPutFieldStringsIn[index].appendChild(inputcontainer);
     addedFieldStrings++;
 }
 
-document.querySelector(".addFieldStringsButton").addEventListener("click", addFieldString);
+const buttons = document.querySelectorAll(".addFieldStringsButton");
+    
+for(let i = 0; i < buttons.length; i++){
+    buttons[i].addEventListener("click", addFieldString(i));
+}

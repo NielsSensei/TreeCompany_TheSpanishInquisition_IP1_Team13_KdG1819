@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace UIMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddIdea(string user, IFormCollection form, int ideation, int parent)
+        public async Task<IActionResult> AddIdea(string user, IFormCollection form, int ideation, int parent, List<string> fieldStrings)
         {
             Idea idea = new Idea()
             {
@@ -109,7 +110,23 @@ namespace UIMVC.Controllers
                 }
 
                 idea.Ifield = field;
-            } 
+            }
+
+            if (fieldStrings != null)
+            {
+                ClosedField field = new ClosedField()
+                {
+                    Idea = idea,
+                    Options = new List<string>()
+                };
+                
+                foreach (string item in fieldStrings)
+                {
+                    field.Options.Add(item);
+                }
+
+                idea.Cfield = field;
+            }
             
             if (idea.Field != null || idea.Cfield != null || idea.Mfield != null || idea.Vfield != null
                 || idea.Ifield != null)

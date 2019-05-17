@@ -48,8 +48,10 @@
      Model.Mfield == null)
 {
     <div class="row">
-       @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
-       @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield) 
+        @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+    </div>
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield) 
     </div>
 }
 
@@ -177,8 +179,12 @@
 {
     <div class="row">
         <div class="col-6">
-            @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
-            @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield) 
+            <div class="row">
+                @Html.Partial("Thread/FieldDisplay/Field", Model.Field)   
+            </div>
+            <div class="row">
+                @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)             
+            </div>
         </div>
         <div class="col-6">
             @Html.Partial("Thread/FieldDisplay/VideoField", Model.Vfield)
@@ -191,8 +197,12 @@
 {
     <div class="row">
         <div class="col-6">
-            @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
-            @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield) 
+            <div class="row">
+                @Html.Partial("Thread/FieldDisplay/Field", Model.Field)   
+            </div>
+            <div class="row">
+                @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)              
+            </div>
         </div>
         <div class="col-6">
             @Html.Partial("Thread/FieldDisplay/MapField", Model.Mfield)
@@ -205,8 +215,12 @@
 {
     <div class="row">
         <div class="col-6">
-            @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
-            @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield) 
+            <div class="row">
+                @Html.Partial("Thread/FieldDisplay/Field", Model.Field)   
+            </div>
+            <div class="row">
+                @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)               
+            </div>
         </div>
         <div class="col-6">
             @Html.Partial("Thread/FieldDisplay/ImageField", Model.Ifield)
@@ -333,7 +347,9 @@
 {
     <div class="row">
         @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
-        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
+    </div>
+    <div class="row">
+        @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield) 
     </div>
     <div class="row">
         <div class="col-6">
@@ -350,6 +366,8 @@
 {
     <div class="row">
         @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+    </div>
+    <div class="row">
         @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
     </div>
     <div class="row">
@@ -367,6 +385,8 @@
 {
     <div class="row">
         @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+    </div>
+    <div class="row">
         @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
     </div>
     <div class="row">
@@ -424,6 +444,8 @@
 {
     <div class="row">
         @Html.Partial("Thread/FieldDisplay/Field", Model.Field)
+    </div>
+    <div class="row">
         @Html.Partial("Thread/FieldDisplay/ClosedField", Model.Cfield)
     </div>
     <div class="row">
