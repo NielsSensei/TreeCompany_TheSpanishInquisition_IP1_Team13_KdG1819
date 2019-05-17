@@ -102,6 +102,30 @@ namespace BL
                 IdeationRepo.Delete(moduleId);
             }
         }
+
+        public IEnumerable<Module> GetAllModules(int projectId)
+        {
+            List<Ideation> ideations = GetIdeations(projectId).ToList();
+            List<Questionnaire> questionnaires = GetQuestionnaires(projectId).ToList();
+
+            List<Module> modules = new List<Module>();
+
+            foreach (Ideation ideation in ideations)
+            {
+                modules.Add(ideation);
+            }
+
+            foreach (Questionnaire questionnaire in questionnaires)
+            {
+                modules.Add(questionnaire);
+            }
+
+            return modules;
+
+        }
+
+        
+
         #endregion
     }
 }
