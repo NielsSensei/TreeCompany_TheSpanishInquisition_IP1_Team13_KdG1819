@@ -61,8 +61,8 @@ namespace DAL.repos
             IdeationsDao dao = new IdeationsDao()
             {
                     ModuleId = obj.Id,
-                    ExtraInfo = obj.ExtraInfo,
-                    MediaFile = obj.MediaLink,
+                    ExtraInfo = obj.ExtraInfo
+                    //MediaFile = obj.Media,
             };
 
             if (obj.User != null)
@@ -129,7 +129,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region Ideation CRUD
         public Ideation Create(Ideation obj)
         {
@@ -183,7 +183,7 @@ namespace DAL.repos
                 foundIdeation.MediaFile = newIdeation.MediaFile;
                 foundIdeation.RequiredFields = newIdeation.RequiredFields;
             }
-            
+
             ModulesDao newModule = GrabModuleInformationDao(obj);
             ModulesDao foundModule = _ctx.Modules.FirstOrDefault(dto => dto.ModuleId == newModule.ModuleId);
             if (foundModule != null)
@@ -197,7 +197,7 @@ namespace DAL.repos
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
             }
-            
+
             if (newModule.PhaseId != foundModule.PhaseId)
             {
                 foundModule.PhaseId = newModule.PhaseId;
@@ -233,7 +233,38 @@ namespace DAL.repos
             return ReadAll().ToList().FindAll(i => i.Project.Id == projectId);
         }
         #endregion
-        
+
+        #region Media CRUD
+        // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
+        /*public Media Create(Media obj)
+        {
+            //if (!mediafiles.Contains(obj))
+            //{
+            //    mediafiles.Add(obj);
+            //}
+            throw new DuplicateNameException("This MediaFile already exist!");
+        }
+
+        public Media ReadMedia(int ideationId)
+        {
+            //Media m = Read(ideationID).Media;
+            //if (m != null)
+            //{
+            //    return m;
+            //}
+            throw new KeyNotFoundException("This Media can't be found!");
+        }
+
+        public void DeleteMedia(int ideationId)
+        {
+            //Media m = ReadMedia(ideationID);
+            //if (m != null)
+            //{
+            //    mediafiles.Remove(m);
+            //}
+        } */
+        #endregion
+
         #region Tag CRUD
         public string CreateTag(string obj, int moduleId)
         {

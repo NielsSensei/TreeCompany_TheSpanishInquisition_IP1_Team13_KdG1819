@@ -27,7 +27,7 @@ namespace UIMVC.Controllers
             _projManager = new ProjectManager();
             _userManager = userManager;
         }
-         
+
          #region Project
 
          #region Add
@@ -69,12 +69,12 @@ namespace UIMVC.Controllers
                  {
                      await file.CopyToAsync(memoryStream);
                      _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
-                 } 
+                 }
              }
-             
+
              return RedirectToAction("Index", "Platform", new {id = platform });
         }
-        
+
         [Authorize(Roles ="Admin, SuperAdmin")]
         public async Task<IActionResult> AddImage(IFormFile file, int projectId)
         {
@@ -83,8 +83,8 @@ namespace UIMVC.Controllers
                 await file.CopyToAsync(memoryStream);
                 _projManager.MakeProjectImage(memoryStream.ToArray(), projectId);
             }
-            
-            return RedirectToAction("CollectProject", "Platform", 
+
+            return RedirectToAction("CollectProject", "Platform",
                 new {id = projectId});
         }
          #endregion
@@ -135,8 +135,8 @@ namespace UIMVC.Controllers
             Project project = _projManager.GetProject(id, false);
             int platformId = project.Platform.Id;
             project.Phases = (List<Phase>) _projManager.GetAllPhases(project.Id);
-            
-            List<Ideation> ideations = (List<Ideation>) _modManager.GetIdeations(project.Id); 
+
+            List<Ideation> ideations = (List<Ideation>) _modManager.GetIdeations(project.Id);
             List<Questionnaire> questionnaires = (List<Questionnaire>) _modManager.GetQuestionnaires(project.Id);
 
             if (ideations.Count != 0)
@@ -146,7 +146,7 @@ namespace UIMVC.Controllers
                     _modManager.RemoveModule(ideation.Id, false);
                 }
             }
-            
+
             if (questionnaires.Count != 0)
             {
                 foreach (Questionnaire questionnaire in questionnaires)
@@ -154,7 +154,7 @@ namespace UIMVC.Controllers
                     _modManager.RemoveModule(questionnaire.Id, true);
                 }
             }
-            
+
             if (project.Phases.Count != 0)
             {
                 foreach (var phase in project.Phases)
@@ -164,7 +164,7 @@ namespace UIMVC.Controllers
             }
 
             _projManager.RemoveImagesForProject(project.Id);
-            
+
             _projManager.RemoveProject(id);
 
 

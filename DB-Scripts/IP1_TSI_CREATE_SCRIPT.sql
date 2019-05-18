@@ -67,6 +67,7 @@ CREATE TABLE Projects(
 	/*Constraints*/
 	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID),
 	CONSTRAINT ck_Projects_Status CHECK (Status = UPPER(Status))
+
 )
 
 CREATE TABLE Phases(
@@ -368,7 +369,7 @@ create table AspNetRoles
 	UserId TEXT not null
 		constraint FK_AspNetUserRoles_AspNetUsers_UserId
 			references AspNetUsers
-				on delete cascade,	
+				on delete cascade,
 	RoleId TEXT not null
 		constraint FK_AspNetUserRoles_AspNetRoles_RoleId
 			references AspNetRoles

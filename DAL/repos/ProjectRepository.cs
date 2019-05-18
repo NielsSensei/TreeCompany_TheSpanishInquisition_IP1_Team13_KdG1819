@@ -107,7 +107,7 @@ namespace DAL.repos
         private int FindNextAvailableProjectId()
         {
             if (!_ctx.Projects.Any()) return 1;
-            int newId = ReadAll().Max(platform => platform.Id)+1;
+            int newId = ReadAll().Max(platform => platform.Id) + 1;
             return newId;
         }
 
@@ -156,7 +156,7 @@ namespace DAL.repos
                 ? _ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectId == id)
                 : _ctx.Projects.FirstOrDefault(p => p.ProjectId == id);
             ExtensionMethods.CheckForNotFound(projectsDao, "Project", id);
-            
+
             return ConvertToDomain(projectsDao);
         }
 
@@ -192,7 +192,7 @@ namespace DAL.repos
         {
             List<Project> myQuery = new List<Project>();
 
-            foreach(ProjectsDao dao in _ctx.Projects)
+            foreach (ProjectsDao dao in _ctx.Projects)
             {
                 myQuery.Add(ConvertToDomain(dao));
             }
@@ -208,6 +208,7 @@ namespace DAL.repos
         #endregion
 
         #region Phase CRUD
+
         public Phase Create(Phase obj)
         {
             IEnumerable<Phase> phases = ReadAllPhases(obj.Project.Id);
@@ -226,7 +227,7 @@ namespace DAL.repos
             obj.Id = FindNextAvailablePhaseId();
             _ctx.Phases.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
-            
+
             return obj;
         }
 
@@ -272,7 +273,7 @@ namespace DAL.repos
 
             return myQuery;
         }
-        
+
         public IEnumerable<Phase> ReadAllPhases(int projectId)
         {
             return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectId);
@@ -297,7 +298,7 @@ namespace DAL.repos
 
             _ctx.SaveChanges();
         }
-        
+
         public List<byte[]> ReadAllImages(int projectId)
         {
             List<byte[]> myQuery = new List<byte[]>();

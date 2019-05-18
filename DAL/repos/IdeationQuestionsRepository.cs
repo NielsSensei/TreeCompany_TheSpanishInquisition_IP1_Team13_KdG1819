@@ -257,7 +257,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region IdeationQuestion CRUD
         public IdeationQuestion Create(IdeationQuestion obj)
         {
@@ -273,7 +273,7 @@ namespace DAL.repos
             }
 
             obj.Id = FindNextAvailableIQuestionId();
-            _ctx.IdeationQuestions.Add(ConvertToDao(obj));           
+            _ctx.IdeationQuestions.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
 
             return obj;
@@ -326,7 +326,7 @@ namespace DAL.repos
             return ReadAll().ToList().FindAll(i => i.Ideation.Id == ideationId);
         }
         #endregion
-        
+
         #region Idea CRUD
         public Idea Create(Idea idea)
         {
@@ -342,7 +342,8 @@ namespace DAL.repos
                 }
             }
 
-            idea.Id = FindNextAvailableIdeaId();          
+            idea.Id = FindNextAvailableIdeaId();
+
             _ctx.Ideas.Add(ConvertToDao(idea));
 
             if (idea.Field != null)
@@ -394,9 +395,9 @@ namespace DAL.repos
 
         public Idea ReadWithFields(int id)
         {
-            Idea idea = ReadIdea(id, true); 
+            Idea idea = ReadIdea(id, true);
             List<IdeaFieldsDao> fields = _ctx.IdeaFields.ToList().FindAll(i => i.IdeaId == id);
-           
+
             for (int i = 0; i < fields.Count; i++)
             {
                 if (fields[i].FieldText != null && idea.Field == null)
@@ -490,7 +491,7 @@ namespace DAL.repos
                 {
                     foundIField.UploadedImage = newIField.UploadedImage;
                     _ctx.IdeaFields.Update(foundIField);
-                }                               
+                }
             }
 
             if (obj.Vfield != null)
@@ -513,7 +514,7 @@ namespace DAL.repos
             _ctx.Ideas.Remove(i);
             _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Idea> ReadAllIdeas()
         {
             List<Idea> myQuery = new List<Idea>();
@@ -526,7 +527,7 @@ namespace DAL.repos
 
             return myQuery;
         }
-        
+
         public IEnumerable<Idea> ReadAllIdeasByQuestion(int questionId)
         {
             return ReadAllIdeas().ToList().FindAll(i => i.IdeaQuestion.Id == questionId);
@@ -548,7 +549,7 @@ namespace DAL.repos
                 DeleteField(field.Id);
             }
         }
-        
+
         public IEnumerable<Field> ReadAllFields()
         {
             List<Field> myQuery = new List<Field>();
@@ -579,14 +580,14 @@ namespace DAL.repos
 
             return myQuery;
         }
-        
+
         public IEnumerable<Field> ReadAllFields(int ideaId)
         {
             return ReadAllFields().ToList().FindAll(idea => idea.Idea.Id == ideaId);
         }
         #endregion
-        #endregion 
-        
+        #endregion
+
         #region Report CRUD
         public Report Create(Report obj)
         {
@@ -610,7 +611,7 @@ namespace DAL.repos
 
         public Report ReadReport(int id, bool details)
         {
-            ReportsDao reportsDao = details ? _ctx.Reports.AsNoTracking().First(i => i.ReportId == id) : _ctx.Reports.First(i => i.ReportId == id);         
+            ReportsDao reportsDao = details ? _ctx.Reports.AsNoTracking().First(i => i.ReportId == id) : _ctx.Reports.First(i => i.ReportId == id);
             ExtensionMethods.CheckForNotFound(reportsDao, "Report", id);
 
             return ConvertToDomain(reportsDao);
