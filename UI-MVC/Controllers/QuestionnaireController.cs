@@ -132,6 +132,13 @@ namespace UIMVC.Controllers
             foreach (QuestionnaireQuestion question in questions)
             {
                 question.Answers = QqMgr.GetAnswers(question.Id);
+                
+                if (question.QuestionType == QuestionType.Drop || question.QuestionType == QuestionType.Multi ||
+                    question.QuestionType == QuestionType.Single)
+                {
+                    question.Options = QqMgr.GetAllOptionsForQuestion(question.Id).ToList();
+                }
+                else question.Options = new List<string>();
             }
 
             foreach (Phase phase in ProjMgr.GetAllPhases(q.Project.Id).ToList())

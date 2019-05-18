@@ -13,7 +13,7 @@
         case QuestionType.Open:
             <div class="form-group">
                 <label>@question.QuestionText</label>
-                @Html.TextBoxFor(answer => answer.OpenAnswer.AnswerText)
+                @Html.TextAreaFor(answer => answer.OpenAnswer.AnswerText)
             </div>
             break;
 

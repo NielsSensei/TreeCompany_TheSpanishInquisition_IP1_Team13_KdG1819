@@ -231,6 +231,7 @@ namespace DAL.repos
                 {
                     int id = ReadOptionId(s, ma.Question.Id);
                     _ctx.Choices.Add(ConvertToDao(id,ma.Id,_ctx.Choices.AsNoTracking().Count()+1));
+                    _ctx.SaveChanges();
                 }
             }
 
@@ -280,7 +281,7 @@ namespace DAL.repos
                 }
                 else
                 {
-                    MultipleAnswer toAdd = ReadMultipleAnswer(dao.AnswerId, false);
+                    MultipleAnswer toAdd = ReadMultipleAnswer(dao.AnswerId, true);
                     myQuery.Add(toAdd);
                 }
             }

@@ -104,7 +104,7 @@ else
                 <td>@qQ.Answers.Count() Antwoorden</td>
                 <td>
                     <a class="btn btn-danger" asp-action="DeleteQuestionnaireQuestion" asp-controller="Questionnaire" asp-route-questionid="@qQ.Id" method="post">Verwijderen</a>
-                    <a class="btn btn-primary">Bewerken</a>
+                    @Html.Partial("Partials/QuestionResultPartial", qQ)
                 </td>
             </tr>
         }
