@@ -189,7 +189,7 @@ namespace UIMVC.Controllers
 
             if (cim.MediaLink != null)
             {
-                i.MediaLink = cim.MediaLink;
+                i.MediaLink = "https://youtube.com/embed/" + cim.MediaLink.Split("=")[1].Split("&")[0];
             }
 
             _moduleMgr.MakeIdeation(i);
@@ -287,7 +287,7 @@ namespace UIMVC.Controllers
                 Id = ideation,
                 Title = Request.Form["Title"].ToString(),
                 ExtraInfo = Request.Form["ExtraInfo"].ToString(),
-                MediaLink = Request.Form["MediaFile"].ToString()
+                MediaLink = "https://youtube.com/embed/" + Request.Form["MediaFile"].ToString().Split("=")[1].Split("&")[0]
             };
 
             try
@@ -311,22 +311,7 @@ namespace UIMVC.Controllers
         public IActionResult DestroyIdeation(int id)
         {
             Ideation i = _moduleMgr.GetIdeation(id);
-
-            List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
-            foreach (IdeationQuestion iq in iqs)
-            {
-                List<Idea> ideas = _ideaMgr.GetIdeas(iq.Id);
-                foreach (Idea idea in ideas)
-                {
-                    _ideaMgr.RemoveFields(idea.Id);
-                    _ideaMgr.RemoveReports(idea.Id);
-                    _ideaMgr.RemoveVotes(idea.Id);
-                    _ideaMgr.RemoveIdea(idea.Id);
-                }
-
-                _ideaMgr.RemoveQuestion(iq.Id);
-            }
-
+            
             _moduleMgr.RemoveModule(id, false);
 
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
@@ -416,8 +401,7 @@ namespace UIMVC.Controllers
 
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas" , routeValues: "report");
         }
-
-        [HttpPost]
+        
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult DestroyIdea(int idea, string from, int thread)
         {

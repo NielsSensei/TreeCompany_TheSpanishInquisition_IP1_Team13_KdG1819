@@ -10,6 +10,7 @@
 @section Scripts
 {
     <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+    <script type="module" src="~/dist/closedfield.entry.js" defer></script>
 }
 
 <div class="container">
@@ -28,10 +29,14 @@
         </div>
     </div>
     <hr/>
-    <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
-    @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionId = Model.Id, ParentId = 0})
+    <div class="row">
+        <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
+        @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionId = Model.Id, ParentId = 0}) 
+    </div>
     <br/>
-    <p>@ViewData["Message"]</p>
+    <div class="row">
+        <p class="text-info">@ViewData["Message"]</p> 
+    </div>
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {

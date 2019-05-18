@@ -3,6 +3,7 @@
 @using UIMVC.Services
 @model Domain.UserInput.Idea
 @inject UserService Userservice
+@inject Settings Settings
 
 @{
     Layout = "_Layout";
@@ -34,23 +35,35 @@
             @if (Model.Cfield != null)
             {
                 <p><span style="font-weight: bold">Closed Field:</span></p>
-                <p><span style="font-weight: bold">Is het multiplechoice?</span> @Model.Cfield.MultipleChoice</p>
                 foreach (string opt in Model.Cfield.Options)
                 {
                     <p>Option: @opt</p>
                 }
             }
-
+            
+            @if (Model.Mfield != null)
+            {
+                <p><span style="font-weight: bold">Map Field:</span></p>
+                <iframe src="https://www.google.com/maps/embed/v1/view?key=@Settings.GetApiKey()
+                               &center=@Model.Mfield.LocationX.ToString().Replace(",","."),
+                @Model.Mfield.LocationY.ToString().Replace(",",".")&zoom=20"></iframe>
+            }
+            
+            @if (Model.Vfield != null)
+            {
+                <p><span style="font-weight: bold">Video Field:</span></p>
+                <iframe src="@Model.Vfield.VideoLink"> </iframe>
+            }
+            
+            @if (Model.Ifield != null)
+            {
+                <p><span style="font-weight: bold">Image Field:</span></p>
+                <img alt="ImageField" src="data:image/png;base64,@System.Convert.ToBase64String(@Model.Ifield.UploadedImage)"/>
+            }
             <form asp-controller="Moderation" asp-action="DestroyIdea" asp-route-idea="@Model.Id"
                   asp-route-from="ModerationPanel">
-                <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Delete Idea" />
+                <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Verwijder Idee" />
             </form>
-
-            <!-- TODO: (sprint2)
-            public ImageField Ifield { get; set; }
-            public VideoField Vfield { get; set; }
-            public MapField Mfield { get; set; }
-            -->
         </div>
         <div class="col-6">
             <h2>Rapporteringen</h2>

@@ -82,7 +82,6 @@ namespace DAL.repos
             {
                 FieldId = obj.Id,
                 IdeaId = obj.Idea.Id,
-                FieldText = obj.Text,
                 FieldStrings = ExtensionMethods.ListToString(obj.Options)
             };
         }
@@ -93,9 +92,7 @@ namespace DAL.repos
             {
                 FieldId = obj.Id,
                 IdeaId = obj.Idea.Id,
-                FieldText = obj.Text,
-                Url = obj.Url
-                //UploadedImage = obj.UploadedImage,
+                UploadedImage = obj.UploadedImage
             };
         }
 
@@ -105,9 +102,7 @@ namespace DAL.repos
             {
                 FieldId = obj.Id,
                 IdeaId = obj.Idea.Id,
-                FieldText = obj.Text,
-                Url = obj.Url
-                //UploadedVideo
+                MediaLink = obj.VideoLink
             };
         }
 
@@ -117,7 +112,6 @@ namespace DAL.repos
             {
                 FieldId = obj.Id,
                 IdeaId = obj.Idea.Id,
-                FieldText = obj.Text,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY
             };
@@ -206,8 +200,7 @@ namespace DAL.repos
             {
                 Id = dao.FieldId,
                 Idea = new Idea { Id = dao.IdeaId },
-                Url = dao.Url
-                //UploadedVideo= DTO.UploadedVideo
+                UploadedImage = dao.UploadedImage
             };
         }
 
@@ -217,8 +210,7 @@ namespace DAL.repos
             {
                 Id = dao.FieldId,
                 Idea = new Idea { Id = dao.IdeaId },
-                Url = dao.Url
-                //UploadedImage = DTO.UploadedImage
+                VideoLink = dao.MediaLink
             };
         }
 
@@ -339,6 +331,7 @@ namespace DAL.repos
         public Idea Create(Idea idea)
         {
             IEnumerable<Idea> ideas = ReadAllIdeasByQuestion(idea.IdeaQuestion.Id);
+            int lastField = FindNextAvailableFieldId();
 
             foreach (Idea i in ideas)
             {
@@ -355,31 +348,35 @@ namespace DAL.repos
 
             if (idea.Field != null)
             {
-                idea.Field.Id = FindNextAvailableFieldId();
-                _ctx.IdeaFields.Add(ConvertToDao(idea.Field));
+                idea.Field.Id = lastField;
+                lastField++;
+                _ctx.IdeaFields.Add(ConvertToDao(idea.Field));   
             }
 
             if (idea.Cfield != null)
             {
-                idea.Cfield.Id = FindNextAvailableFieldId();
-                _ctx.IdeaFields.Add(ConvertToDao(idea.Cfield));
+                idea.Cfield.Id = lastField;
+                lastField++;
+                _ctx.IdeaFields.Add(ConvertToDao(idea.Cfield)); 
             }
 
             if (idea.Ifield != null)
             {
-                idea.Ifield.Id = FindNextAvailableFieldId();
+                idea.Ifield.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Ifield));
             }
 
             if (idea.Vfield != null)
             {
-                idea.Vfield.Id = FindNextAvailableFieldId();
+                idea.Vfield.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Vfield));
             }
 
             if (idea.Mfield != null)
             {
-                idea.Mfield.Id = FindNextAvailableFieldId();
+                idea.Mfield.Id = lastField;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Mfield));
             }
 
@@ -423,7 +420,7 @@ namespace DAL.repos
                     idea.Ifield = ConvertImageFieldToDomain(fields[i]);
                 }
 
-                if(fields[i].UploadedMedia != null)
+                if(fields[i].MediaLink != null)
                 {
                     idea.Vfield = ConvertVideoFieldToDomain(fields[i]);
                 }
@@ -482,7 +479,6 @@ namespace DAL.repos
                 {
                     foundMField.LocationX = newMField.LocationX;
                     foundMField.LocationY = newMField.LocationY;
-                    foundMField.Url = newMField.Url;
                     _ctx.IdeaFields.Update(foundMField);
                 }
             }
@@ -493,7 +489,6 @@ namespace DAL.repos
                 IdeaFieldsDao foundIField = _ctx.IdeaFields.First(f => f.FieldId == obj.Ifield.Id);
                 if (foundIField != null)
                 {
-                    foundIField.Url = newIField.Url;
                     foundIField.UploadedImage = newIField.UploadedImage;
                     _ctx.IdeaFields.Update(foundIField);
                 }
@@ -505,8 +500,7 @@ namespace DAL.repos
                 IdeaFieldsDao foundVField = _ctx.IdeaFields.First(f => f.FieldId == obj.Vfield.Id);
                 if (foundVField != null)
                 {
-                    foundVField.Url = newVField.Url;
-                    foundVField.UploadedMedia = newVField.UploadedMedia;
+                    foundVField.MediaLink = newVField.MediaLink;
                     _ctx.IdeaFields.Update(foundVField);
                 }
             }
@@ -578,7 +572,7 @@ namespace DAL.repos
                 {
                     myQuery.Add(ConvertImageFieldToDomain(dao));
                 }
-                else if (dao.UploadedMedia != null)
+                else if (dao.MediaLink != null)
                 {
                     myQuery.Add(ConvertVideoFieldToDomain(dao));
                 }

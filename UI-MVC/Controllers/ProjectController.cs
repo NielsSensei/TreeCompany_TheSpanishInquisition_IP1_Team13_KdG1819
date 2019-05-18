@@ -126,7 +126,7 @@ namespace UIMVC.Controllers
          #endregion
 
 
-         #region DeleteProject
+         #region DestroyProject
 
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
