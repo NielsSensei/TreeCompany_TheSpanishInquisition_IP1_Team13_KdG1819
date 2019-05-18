@@ -54,6 +54,15 @@ namespace UIMVC.Controllers
             {
                 idea.Title = Request.Form["Title"].ToString();
             }
+            else
+            {
+                return RedirectToAction("CollectIdeationThread", "Platform",
+                    new
+                    {
+                        Id = ideation, message = "Helaas hebben we een titel nodig voor een goed idee, anders is de kans" +
+                                                 " groter dat het niet gelezen wordt!"
+                    });
+            }
 
             if (!Request.Form["FieldText"].ToString().Equals(""))
             {
@@ -112,7 +121,7 @@ namespace UIMVC.Controllers
                 idea.Ifield = field;
             }
 
-            if (fieldStrings != null)
+            if (fieldStrings.Any())
             {
                 ClosedField field = new ClosedField()
                 {

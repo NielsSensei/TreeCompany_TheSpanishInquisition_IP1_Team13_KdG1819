@@ -24,8 +24,8 @@ namespace DAL.repos
             VotesDao v = new VotesDao
             {
                 VoteId = obj.Id,
-                DeviceId = obj.Device.Id,
                 InputId = obj.Idea.Id,
+                UserId = obj.User.Id,
                 InputType = 2, //Voorlopig Idee
                 UserMail = obj.UserMail,
                 LocationX = obj.LocationX,

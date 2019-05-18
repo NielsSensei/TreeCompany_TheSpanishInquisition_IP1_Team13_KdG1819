@@ -35,7 +35,7 @@
     </div>
     <br/>
     <div class="row">
-        <p>@ViewData["Message"]</p> 
+        <p class="text-info">@ViewData["Message"]</p> 
     </div>
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
