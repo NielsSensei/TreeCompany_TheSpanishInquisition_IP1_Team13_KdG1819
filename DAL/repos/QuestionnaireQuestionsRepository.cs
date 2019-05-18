@@ -106,11 +106,12 @@ namespace DAL.repos
 
         private MultipleAnswer ConvertToDomain(AnswersDao answersDao, List<OptionsDao> chosenOptionsDao)
         {
-            MultipleAnswer ma = null;
+            MultipleAnswer ma = new MultipleAnswer();
             ma.Id = answersDao.AnswerId;
             ma.User = new UimvcUser { Id = answersDao.UserId };
             ma.Question = new QuestionnaireQuestion { Id = answersDao.QQuestionId };
             ma.DropdownList = chosenOptionsDao.Count == 1;
+            ma.Choices = new List<string>();
 
             foreach(OptionsDao dao in chosenOptionsDao)
             {
@@ -132,7 +133,7 @@ namespace DAL.repos
         private int FindNextAvailableAnswerId()
         {               
             if (!_ctx.Answers.Any()) return 1;
-            int newId = ReadAll().Max(answer => answer.Id)+1;
+            int newId = _ctx.Answers.ToList().Max(answer => answer.AnswerId)+1;
             return newId;
         }
 
@@ -229,7 +230,7 @@ namespace DAL.repos
                 foreach(String s in ma.Choices)
                 {
                     int id = ReadOptionId(s, ma.Question.Id);
-                    _ctx.Choices.Add(ConvertToDao(id,ma.Id,_ctx.Choices.Count()+1));
+                    _ctx.Choices.Add(ConvertToDao(id,ma.Id,_ctx.Choices.AsNoTracking().Count()+1));
                 }
             }
 
@@ -256,9 +257,9 @@ namespace DAL.repos
 
             foreach(OptionsDao dao in optionsDaos)
             {
-                ChoicesDao choice = _ctx.Choices.First(c => c.OptionId == dao.OptionId);
+                ChoicesDao choice = _ctx.Choices.ToList().FirstOrDefault(choicesDao => choicesDao.OptionId == dao.OptionId);
 
-                if(choice.ChoiceId != null)
+                if(choice?.ChoiceId != null)
                 {
                     chosenOptionsDao.Add(dao);
                 }
@@ -338,7 +339,7 @@ namespace DAL.repos
             {
                 if (dao.QquestionId == questionId)
                 {
-                    myQuery.Append(ConvertToDomain(dao));
+                    myQuery.Add(ConvertToDomain(dao));
                 }
             }
 

@@ -1,0 +1,76 @@
+@using Domain.Projects
+@using Domain.UserInput
+@model AddAnswer
+
+@{
+    QuestionnaireQuestion question = (QuestionnaireQuestion) ViewData["Question"];
+    Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
+}
+
+<form asp-action="AnswerQuestionnaire" asp-controller="Questionnaire" method="post" asp-route-questionId="@question.Id" asp-route-questionnaireId="@questionnaire.Id">
+    @switch (question.QuestionType)
+    {
+        case QuestionType.Open:
+            <div class="form-group">
+                <label>@question.QuestionText</label>
+                @Html.TextBoxFor(answer => answer.OpenAnswer.AnswerText)
+            </div>
+            break;
+
+        case QuestionType.Mail:
+        {
+            Model.OpenAnswer = new OpenAnswer() {IsUserEmail = true};
+        }
+            <div class="form-group">
+                <label>@question.QuestionText</label>
+                @Html.HiddenFor(answer => answer.OpenAnswer.IsUserEmail)
+                @Html.TextBoxFor(answer => answer.OpenAnswer.AnswerText)
+            </div>
+            break;
+
+        case QuestionType.Drop:
+        {
+            Model.MultipleAnswer = new MultipleAnswer() {DropdownList = true};
+        }
+            <div class="form-group">
+                <label>@question.QuestionText</label>
+                @Html.HiddenFor(answer => answer.MultipleAnswer.DropdownList)
+                @Html.DropDownListFor(answer => answer.MultipleAnswer.Choices[0], question.Options.Select(option => new SelectListItem(option, option)))
+            </div>
+            break;
+
+        case QuestionType.Single:
+            <div class="form-group">
+                <label>@question.QuestionText</label>
+                @foreach (string option in question.Options)
+                {
+                    <p>@Html.RadioButtonFor(answer => answer.MultipleAnswer.Choices[0], option) @option</p>
+                }
+
+            </div>
+            break;
+
+        case QuestionType.Multi:
+            <div class="form-group">
+                <label>@question.QuestionText</label>
+                @{
+                    Model.CheckboxAnswers = new List<CheckboxAnswer>();
+                    question.Options.ForEach(option => Model.CheckboxAnswers.Add(new CheckboxAnswer()));
+                }
+                @for (int i = 0; i < question.Options.Count; i++)
+                {
+                    {
+                        Model.CheckboxAnswers[i].Value = question.Options[i];
+                    }
+                    @Html.HiddenFor(answer => answer.CheckboxAnswers[i].Value)
+                    <p>@Html.CheckBoxFor(answer => answer.CheckboxAnswers[i].Checked) @question.Options[i]</p>
+                }
+            </div>
+            break;
+
+        default:
+            <p>ERROR: Can't recognize this type of question</p>
+            break;
+    }
+    <input type="submit" value="Volgende vraag"/>
+</form>

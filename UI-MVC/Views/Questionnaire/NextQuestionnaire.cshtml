@@ -1,0 +1,26 @@
+@using System.Net
+@using Domain.Projects
+@using Domain.UserInput
+@using UIMVC.Services
+@model AddAnswer
+@inject RoleService RoleService
+
+@{
+    QuestionnaireQuestion question = (QuestionnaireQuestion) ViewData["Question"];
+    Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
+}
+
+<h1>@questionnaire.Title</h1>
+@if (User.Identity.IsAuthenticated && await RoleService.IsAdmin(User))
+{
+    <a class="btn btn-primary" asp-controller="Questionnaire" asp-action="EditQuestionnaire" asp-route-questionnaireid="@questionnaire.Id">Pas aan</a>
+}
+@if (questionnaire.OnGoing)
+{
+    @Html.Partial("Partials/AnswerQuestionnairePartial")
+}
+else
+{
+    <h2>Oops...</h2>
+    <h4>Deze vragenlijst is nog niet openbaar gemaakt! Gelieve later nog eens te proberen...</h4>
+}

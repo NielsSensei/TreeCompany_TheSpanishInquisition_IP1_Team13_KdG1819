@@ -19,7 +19,7 @@
 }
 
 <h1>Vragenlijst beheren</h1>
-<form asp-controller="Admin" asp-action="EditQuestionnaire" method="post" asp-route-eqm="@Model" asp-route-questionnaireid="@questionnaire.Id">
+<form asp-controller="Questionnaire" asp-action="EditQuestionnaire" method="post" asp-route-eqm="@Model" asp-route-questionnaireid="@questionnaire.Id">
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" label-for="Title">Titel</label>
         <div class="col-sm-10">
@@ -103,7 +103,7 @@ else
 
                 <td>@qQ.Answers.Count() Antwoorden</td>
                 <td>
-                    <a class="btn btn-danger" asp-action="DeleteQuestionnaireQuestion" asp-controller="Admin" asp-route-questionid="@qQ.Id" method="post">Verwijderen</a>
+                    <a class="btn btn-danger" asp-action="DeleteQuestionnaireQuestion" asp-controller="Questionnaire" asp-route-questionid="@qQ.Id" method="post">Verwijderen</a>
                     <a class="btn btn-primary">Bewerken</a>
                 </td>
             </tr>
@@ -150,7 +150,7 @@ else
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Ik ben niet zeker</button>
-                    <form asp-controller="Admin" asp-action="DeleteQuestionnaire" asp-route-questionnaireid="@questionnaire.Id" method="post">
+                    <form asp-controller="Questionnaire" asp-action="DeleteQuestionnaire" asp-route-questionnaireid="@questionnaire.Id" method="post">
                         <input type="submit" value="Ik ben zeker" class="btn btn-danger" />
                     </form>
                 </div>

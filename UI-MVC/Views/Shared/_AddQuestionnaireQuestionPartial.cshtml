@@ -16,7 +16,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-action="AddQuestionnaireQuestion" asp-controller="Admin" method="post" asp-route-cqqm="@Model" asp-route-questionnaireid="@questionnaire.Id" class="addQQuestionForm">
+            <form asp-action="AddQuestionnaireQuestion" asp-controller="Questionnaire" method="post" asp-route-cqqm="@Model" asp-route-questionnaireid="@questionnaire.Id" class="addQQuestionForm">
                 <div class="modal-body addQQuestion">
                     <div class="form-group row">
                         <label class="col-form-label" label-for="Title">Vraag:</label>
