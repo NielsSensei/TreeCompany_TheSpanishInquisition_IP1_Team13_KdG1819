@@ -111,6 +111,7 @@ namespace DAL.repos
             ideation.ShareCount = dao.ShareCount;
             ideation.RetweetCount = dao.RetweetCount;
             ideation.Tags = new List<string>();
+            ideation.ModuleType = ModuleType.Ideation;
 
             if (dao.Tags != null)
             {
