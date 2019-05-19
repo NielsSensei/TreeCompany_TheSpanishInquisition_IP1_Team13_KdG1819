@@ -342,13 +342,27 @@ namespace UIMVC.Controllers
             }
             else if (addAnswer.OpenAnswer != null)
             {
-                OpenAnswer answer = new OpenAnswer()
+                OpenAnswer answer;
+                if (addAnswer.OpenAnswer.AnswerText == null)
                 {
-                    AnswerText = addAnswer.OpenAnswer.AnswerText,
-                    IsUserEmail = addAnswer.OpenAnswer.IsUserEmail,
-                    Question = question,
-                    User = user
-                };
+                    answer = new OpenAnswer()
+                    {
+                        AnswerText = "EMPTY",
+                        IsUserEmail = addAnswer.OpenAnswer.IsUserEmail,
+                        Question = question,
+                        User = user
+                    };
+                } else
+                {
+                    answer = new OpenAnswer()
+                    {
+                        AnswerText = addAnswer.OpenAnswer.AnswerText,
+                        IsUserEmail = addAnswer.OpenAnswer.IsUserEmail,
+                        Question = question,
+                        User = user
+                    };
+                }
+                
                 QqMgr.MakeAnswer(answer);
             }
             else if (addAnswer.CheckboxAnswers != null)
