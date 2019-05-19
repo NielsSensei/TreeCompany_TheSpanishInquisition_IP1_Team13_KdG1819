@@ -6,15 +6,30 @@
 @inject RoleService RoleService
 
 @{
+    
     QuestionnaireQuestion question = (QuestionnaireQuestion) ViewData["Question"];
     Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
+    ViewBag.Title = question.QuestionText;
+    
 }
 
-<h1>@questionnaire.Title</h1>
-@if (User.Identity.IsAuthenticated && await RoleService.IsAdmin(User))
-{
-    <a class="btn btn-primary" asp-controller="Questionnaire" asp-action="EditQuestionnaire" asp-route-questionnaireid="@questionnaire.Id">Pas aan</a>
-}
+<section>
+
+    @if (User.Identity.IsAuthenticated && await RoleService.IsAdmin(User))
+    {
+        <div class="row align-items-center">
+            <h1 class="col-10">@questionnaire.Title</h1>
+            <a class="btn btn-primary col-2 h-25" asp-controller="Questionnaire" asp-action="EditQuestionnaire" asp-route-questionnaireid="@questionnaire.Id">Pas aan</a>
+        </div>
+    }
+    else
+    {
+        <h1>@questionnaire.Title</h1>
+    }
+</section>
+
+<hr/>
+
 @if (questionnaire.OnGoing)
 {
     @Html.Partial("Partials/AnswerQuestionnairePartial")
