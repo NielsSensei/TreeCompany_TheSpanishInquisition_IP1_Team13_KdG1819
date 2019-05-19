@@ -432,7 +432,7 @@ namespace DAL.repos
         public void Update(Idea obj)
         {
             IdeasDao newIdea = ConvertToDao(obj);
-            IdeasDao foundIdea = _ctx.Ideas.First(i => i.IdeaId == obj.Id);
+            IdeasDao foundIdea = _ctx.Ideas.FirstOrDefault(i => i.IdeaId == obj.Id);
             if (foundIdea != null)
             {
                 foundIdea.Title = newIdea.Title;
@@ -452,7 +452,7 @@ namespace DAL.repos
             if (obj.Field != null)
             {
                 IdeaFieldsDao newTextField = ConvertToDao(obj.Field);
-                IdeaFieldsDao foundTextField = _ctx.IdeaFields.First(f => f.FieldId == obj.Field.Id);
+                IdeaFieldsDao foundTextField = _ctx.IdeaFields.FirstOrDefault(f => f.IdeaId == obj.Id && !f.FieldText.Equals(null));
                 if (foundTextField != null)
                 {
                     foundTextField.FieldText = newTextField.FieldText;
@@ -463,7 +463,7 @@ namespace DAL.repos
             if (obj.Cfield != null)
             {
                 IdeaFieldsDao newCField = ConvertToDao(obj.Cfield);
-                IdeaFieldsDao foundCField = _ctx.IdeaFields.First(f => f.FieldId == obj.Cfield.Id);
+                IdeaFieldsDao foundCField = _ctx.IdeaFields.FirstOrDefault(f => f.IdeaId == obj.Id && !f.FieldStrings.Equals(null));
                 if (foundCField != null)
                 {
                     foundCField.FieldStrings = newCField.FieldStrings;
@@ -474,7 +474,8 @@ namespace DAL.repos
             if (obj.Mfield != null)
             {
                 IdeaFieldsDao newMField = ConvertToDao(obj.Mfield);
-                IdeaFieldsDao foundMField = _ctx.IdeaFields.First(f => f.FieldId == obj.Mfield.Id);
+                IdeaFieldsDao foundMField = _ctx.IdeaFields.FirstOrDefault(
+                    f => f.IdeaId == obj.Id && f.LocationX != 0 && f.LocationY != 0);
                 if (foundMField != null)
                 {
                     foundMField.LocationX = newMField.LocationX;
@@ -486,7 +487,7 @@ namespace DAL.repos
             if (obj.Ifield != null)
             {
                 IdeaFieldsDao newIField = ConvertToDao(obj.Ifield);
-                IdeaFieldsDao foundIField = _ctx.IdeaFields.First(f => f.FieldId == obj.Ifield.Id);
+                IdeaFieldsDao foundIField = _ctx.IdeaFields.FirstOrDefault(f => f.IdeaId == obj.Id && f.UploadedImage != null);
                 if (foundIField != null)
                 {
                     foundIField.UploadedImage = newIField.UploadedImage;
@@ -497,7 +498,7 @@ namespace DAL.repos
             if (obj.Vfield != null)
             {
                 IdeaFieldsDao newVField = ConvertToDao(obj.Vfield);
-                IdeaFieldsDao foundVField = _ctx.IdeaFields.First(f => f.FieldId == obj.Vfield.Id);
+                IdeaFieldsDao foundVField = _ctx.IdeaFields.FirstOrDefault(f => f.IdeaId == obj.Id && !f.MediaLink.Equals(null));
                 if (foundVField != null)
                 {
                     foundVField.MediaLink = newVField.MediaLink;

@@ -16,6 +16,7 @@ namespace BL
         {
             IdeationRepo = new IdeationRepository();
             QuestionnaireRepo = new QuestionnaireRepository();
+            _ideaMgr = new IdeationQuestionManager();
         }
 
         #region Ideation

@@ -9,7 +9,8 @@ module.exports = {
         validation: "./wwwroot/js/validation.js",
         index: "./wwwroot/js/index.js",
         confirmemail: "./wwwroot/js/confirmemail.js",
-        closedfield: "./wwwroot/js/closedfield.js"
+        closedfield: "./wwwroot/js/closedfield.js",
+        changeclosedfield: "./wwwroot/js/changeclosedfield.js"
     },
     output: {
         filename: "[name].entry.js",

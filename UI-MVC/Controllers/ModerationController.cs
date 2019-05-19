@@ -316,6 +316,7 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
         }
+        
         #region Ideas
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
