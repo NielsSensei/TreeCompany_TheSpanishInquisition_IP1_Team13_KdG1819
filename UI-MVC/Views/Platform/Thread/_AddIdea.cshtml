@@ -3,18 +3,57 @@
 @inject UserManager<UimvcUser> UserManager
 @model UIMVC.Models.AddIdeaModel
 
-<div class="row text-center" id="newIdea">
-    <form asp-controller="Thread" asp-action="AddIdea" asp-route-ideationQuestion="@Model.IdeationQuestionId"
-          asp-route-user="@UserManager.GetUserId(User)" asp-route-parent="@Model.ParentId">
-        <div class="form-group">
-            <label>Titel:</label>
-            @Html.TextBox("newIdeaTitle","", new { @class="form-control"})
-        </div>
-        @* Voorlopig enkel gewoon Field *@
-        <div class="form-group">
-            <label>Text:</label>
-            @Html.TextArea("newIdeaField","", new { @class="form-control"})
-        </div>
-        <button class="btn btn-outline-primary" type="submit">Voeg jouw idee toe</button>
-    </form>
+@section Scripts
+{
+    <script type="module" src="~/dist/closedfield.entry.js" defer></script>
+}
+
+<div class="container">
+    <div class="row" id="newIdea">
+        @using (Html.BeginForm("AddIdea", "Thread", new { user = UserManager.GetUserId(User),
+            parent = Model.ParentId, ideation = Model.IdeationQuestionId, form = @Model.FormCollection, fieldStrings = @Model.FieldStrings }, 
+            FormMethod.Post, null, new { enctype = "multipart/form-data", @class = "row" }))
+        { 
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Titel:</label>
+                    @Html.TextBox("Title", "", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label>Text:</label>
+                    @Html.TextBox("FieldText", "", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label>Geef hier een youtube link:</label>
+                     @Html.TextBox("FieldVideo", "", new { @class = "form-control" })
+                </div>
+                <input class="btn btn-outline-primary" type="submit" name="submit" value="Voeg jouw idee toe" />
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Voeg hier de coordinaten toe van je map: <a href="@Url.Action("FAQ", "Home")">
+                        Hoe vind ik deze? </a></label>
+                    @Html.TextBox("newIdeaMapX", "Eerste coordinaat", new {@class = "form-control"})
+                    <br/>
+                    @Html.TextBox("newIdeaMapY", "Tweede coordinaat", new {@class = "form-control"})
+                </div> 
+                <div class="form-group">
+                    <label>Geef hier een foto:</label>
+                    @Html.TextBox("FieldImage", "", new { @class = "form-control", type="file" })
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="addFieldStringsContainer hidden" id="@Model.ParentId">
+                    <div class="form-group row">
+                        <label>Maak hier eventueel een opsomming</label>
+                        <div class="fieldStringContainer" id="@Model.ParentId">
+                        </div>
+                    </div>
+                    <div class="form-group row fieldStringButton" id="@Model.ParentId">
+                        <a class="btn btn-primary addFieldStringsButton" id="@Model.ParentId">Item Toevoegen</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>    
 </div>

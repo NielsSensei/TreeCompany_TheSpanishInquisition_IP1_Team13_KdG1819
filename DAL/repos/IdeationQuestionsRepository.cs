@@ -82,7 +82,6 @@ namespace DAL.repos
             {
                 FieldId = obj.Id,
                 IdeaId = obj.Idea.Id,
-                FieldText = obj.Text,
                 FieldStrings = ExtensionMethods.ListToString(obj.Options)
             };
         }
@@ -93,9 +92,7 @@ namespace DAL.repos
             {
                 FieldId = obj.Id,
                 IdeaId = obj.Idea.Id,
-                FieldText = obj.Text,
-                Url = obj.Url
-                //UploadedImage = obj.UploadedImage,
+                UploadedImage = obj.UploadedImage
             };
         }
 
@@ -105,9 +102,7 @@ namespace DAL.repos
             {
                 FieldId = obj.Id,
                 IdeaId = obj.Idea.Id,
-                FieldText = obj.Text,
-                Url = obj.Url
-                //UploadedVideo
+                MediaLink = obj.VideoLink
             };
         }
 
@@ -117,7 +112,6 @@ namespace DAL.repos
             {
                 FieldId = obj.Id,
                 IdeaId = obj.Idea.Id,
-                FieldText = obj.Text,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY
             };
@@ -206,8 +200,7 @@ namespace DAL.repos
             {
                 Id = dao.FieldId,
                 Idea = new Idea { Id = dao.IdeaId },
-                Url = dao.Url
-                //UploadedVideo= DTO.UploadedVideo
+                UploadedImage = dao.UploadedImage
             };
         }
 
@@ -217,8 +210,7 @@ namespace DAL.repos
             {
                 Id = dao.FieldId,
                 Idea = new Idea { Id = dao.IdeaId },
-                Url = dao.Url
-                //UploadedImage = DTO.UploadedImage
+                VideoLink = dao.MediaLink
             };
         }
 
@@ -265,7 +257,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region IdeationQuestion CRUD
         public IdeationQuestion Create(IdeationQuestion obj)
         {
@@ -281,7 +273,7 @@ namespace DAL.repos
             }
 
             obj.Id = FindNextAvailableIQuestionId();
-            _ctx.IdeationQuestions.Add(ConvertToDao(obj));           
+            _ctx.IdeationQuestions.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
 
             return obj;
@@ -334,11 +326,12 @@ namespace DAL.repos
             return ReadAll().ToList().FindAll(i => i.Ideation.Id == ideationId);
         }
         #endregion
-        
+
         #region Idea CRUD
         public Idea Create(Idea idea)
         {
             IEnumerable<Idea> ideas = ReadAllIdeasByQuestion(idea.IdeaQuestion.Id);
+            int lastField = FindNextAvailableFieldId();
 
             foreach (Idea i in ideas)
             {
@@ -349,36 +342,41 @@ namespace DAL.repos
                 }
             }
 
-            idea.Id = FindNextAvailableIdeaId();          
+            idea.Id = FindNextAvailableIdeaId();
+
             _ctx.Ideas.Add(ConvertToDao(idea));
 
             if (idea.Field != null)
             {
-                idea.Field.Id = FindNextAvailableFieldId();
+                idea.Field.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Field));   
             }
 
             if (idea.Cfield != null)
             {
-                idea.Cfield.Id = FindNextAvailableFieldId();
+                idea.Cfield.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Cfield)); 
             }
 
             if (idea.Ifield != null)
             {
-                idea.Ifield.Id = FindNextAvailableFieldId();
+                idea.Ifield.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Ifield));
             }
 
             if (idea.Vfield != null)
             {
-                idea.Vfield.Id = FindNextAvailableFieldId();
+                idea.Vfield.Id = lastField;
+                lastField++;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Vfield));
             }
 
             if (idea.Mfield != null)
             {
-                idea.Mfield.Id = FindNextAvailableFieldId();
+                idea.Mfield.Id = lastField;
                 _ctx.IdeaFields.Add(ConvertToDao(idea.Mfield));
             }
 
@@ -397,9 +395,9 @@ namespace DAL.repos
 
         public Idea ReadWithFields(int id)
         {
-            Idea idea = ReadIdea(id, true); 
+            Idea idea = ReadIdea(id, true);
             List<IdeaFieldsDao> fields = _ctx.IdeaFields.ToList().FindAll(i => i.IdeaId == id);
-           
+
             for (int i = 0; i < fields.Count; i++)
             {
                 if (fields[i].FieldText != null && idea.Field == null)
@@ -422,7 +420,7 @@ namespace DAL.repos
                     idea.Ifield = ConvertImageFieldToDomain(fields[i]);
                 }
 
-                if(fields[i].UploadedMedia != null)
+                if(fields[i].MediaLink != null)
                 {
                     idea.Vfield = ConvertVideoFieldToDomain(fields[i]);
                 }
@@ -481,7 +479,6 @@ namespace DAL.repos
                 {
                     foundMField.LocationX = newMField.LocationX;
                     foundMField.LocationY = newMField.LocationY;
-                    foundMField.Url = newMField.Url;
                     _ctx.IdeaFields.Update(foundMField);
                 }
             }
@@ -492,10 +489,9 @@ namespace DAL.repos
                 IdeaFieldsDao foundIField = _ctx.IdeaFields.First(f => f.FieldId == obj.Ifield.Id);
                 if (foundIField != null)
                 {
-                    foundIField.Url = newIField.Url;
                     foundIField.UploadedImage = newIField.UploadedImage;
                     _ctx.IdeaFields.Update(foundIField);
-                }                               
+                }
             }
 
             if (obj.Vfield != null)
@@ -504,8 +500,7 @@ namespace DAL.repos
                 IdeaFieldsDao foundVField = _ctx.IdeaFields.First(f => f.FieldId == obj.Vfield.Id);
                 if (foundVField != null)
                 {
-                    foundVField.Url = newVField.Url;
-                    foundVField.UploadedMedia = newVField.UploadedMedia;
+                    foundVField.MediaLink = newVField.MediaLink;
                     _ctx.IdeaFields.Update(foundVField);
                 }
             }
@@ -519,7 +514,7 @@ namespace DAL.repos
             _ctx.Ideas.Remove(i);
             _ctx.SaveChanges();
         }
-        
+
         public IEnumerable<Idea> ReadAllIdeas()
         {
             List<Idea> myQuery = new List<Idea>();
@@ -532,7 +527,7 @@ namespace DAL.repos
 
             return myQuery;
         }
-        
+
         public IEnumerable<Idea> ReadAllIdeasByQuestion(int questionId)
         {
             return ReadAllIdeas().ToList().FindAll(i => i.IdeaQuestion.Id == questionId);
@@ -554,7 +549,7 @@ namespace DAL.repos
                 DeleteField(field.Id);
             }
         }
-        
+
         public IEnumerable<Field> ReadAllFields()
         {
             List<Field> myQuery = new List<Field>();
@@ -577,7 +572,7 @@ namespace DAL.repos
                 {
                     myQuery.Add(ConvertImageFieldToDomain(dao));
                 }
-                else if (dao.UploadedMedia != null)
+                else if (dao.MediaLink != null)
                 {
                     myQuery.Add(ConvertVideoFieldToDomain(dao));
                 }
@@ -585,14 +580,14 @@ namespace DAL.repos
 
             return myQuery;
         }
-        
+
         public IEnumerable<Field> ReadAllFields(int ideaId)
         {
             return ReadAllFields().ToList().FindAll(idea => idea.Idea.Id == ideaId);
         }
         #endregion
-        #endregion 
-        
+        #endregion
+
         #region Report CRUD
         public Report Create(Report obj)
         {
@@ -616,7 +611,7 @@ namespace DAL.repos
 
         public Report ReadReport(int id, bool details)
         {
-            ReportsDao reportsDao = details ? _ctx.Reports.AsNoTracking().First(i => i.ReportId == id) : _ctx.Reports.First(i => i.ReportId == id);         
+            ReportsDao reportsDao = details ? _ctx.Reports.AsNoTracking().First(i => i.ReportId == id) : _ctx.Reports.First(i => i.ReportId == id);
             ExtensionMethods.CheckForNotFound(reportsDao, "Report", id);
 
             return ConvertToDomain(reportsDao);

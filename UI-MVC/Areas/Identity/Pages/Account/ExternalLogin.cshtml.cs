@@ -73,7 +73,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
                 ErrorMessage = "Error loading external login information.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-            
+
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
             if (result.Succeeded)
             {
@@ -130,7 +130,7 @@ namespace UIMVC.Areas.Identity.Pages.Account
 
                         var userFound = await _userManager.FindByEmailAsync(user.UserName);
                         _roleService.AssignToRole(userFound, Domain.Users.Role.LoggedIn);
-                        
+
                         return LocalRedirect(returnUrl);
                     }
                 }

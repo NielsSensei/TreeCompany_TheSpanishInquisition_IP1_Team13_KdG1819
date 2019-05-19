@@ -53,6 +53,7 @@ namespace DAL.repos
                 ShareCount = module.ShareCount,
                 RetweetCount = module.RetweetCount,
                 Tags = ExtensionMethods.StringToList(module.Tags),
+                ModuleType = ModuleType.Questionnaire
             };
         }
         #endregion
@@ -65,7 +66,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region Questionnaire CRUD
         public Questionnaire Create(Questionnaire obj)
         {
@@ -136,8 +137,8 @@ namespace DAL.repos
                 if (dao.IsQuestionnaire)
                 {
                     Questionnaire toAdd = ConvertToDomain(dao);
-                    myQuery.Add(toAdd);  
-                }             
+                    myQuery.Add(toAdd);
+                }
             }
 
             return myQuery;

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DAL.repos;
 using Domain.Projects;
+using Domain.UserInput;
 
 namespace BL
 {
@@ -9,13 +10,14 @@ namespace BL
     {
         private IdeationRepository IdeationRepo { get; }
         private QuestionnaireRepository QuestionnaireRepo { get; }
+        private IdeationQuestionManager _ideaMgr { get; }
         
         public ModuleManager()
         {
             IdeationRepo = new IdeationRepository();
             QuestionnaireRepo = new QuestionnaireRepository();
         }
-        
+
         #region Ideation
         public IEnumerable<Ideation> GetIdeations(int projectId)
         {
@@ -25,7 +27,7 @@ namespace BL
 
             return modules;
         }
-        
+
         public Ideation GetIdeation(int moduleId){
             return IdeationRepo.ReadWithModule(moduleId);
         }
@@ -51,12 +53,12 @@ namespace BL
         {
             return QuestionnaireRepo.Read(moduleId, details);
         }
-        
+
         public Questionnaire GetQuestionnaire(int phaseId, int projectId)
         {
             return QuestionnaireRepo.ReadAll(projectId).FirstOrDefault(m => m.ParentPhase.Id == phaseId);
         }
-        
+
         public IEnumerable<Questionnaire> GetQuestionnaires(int projectId)
         {
             List<Questionnaire> modules = new List<Questionnaire>();
@@ -65,12 +67,12 @@ namespace BL
 
             return modules;
         }
-        
+
         public void MakeQuestionnaire(Questionnaire questionnaire)
         {
             QuestionnaireRepo.Create(questionnaire);
         }
-        
+
         public void EditQuestionnaire(Questionnaire questionnaire)
         {
             QuestionnaireRepo.Update(questionnaire);
@@ -90,7 +92,7 @@ namespace BL
                 IdeationRepo.CreateTag(tag, moduleId);
             }
         }
-        
+
         public void RemoveModule(int moduleId, bool questionnaire)
         {
             if (questionnaire)
@@ -99,6 +101,21 @@ namespace BL
             }
             else
             {
+                List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(moduleId);
+                foreach (IdeationQuestion iq in iqs)
+                {
+                    List<Idea> ideas = _ideaMgr.GetIdeas(iq.Id);
+                    foreach (Idea idea in ideas)
+                    {
+                        _ideaMgr.RemoveFields(idea.Id);
+                        _ideaMgr.RemoveReports(idea.Id);
+                        _ideaMgr.RemoveVotes(idea.Id);
+                        _ideaMgr.RemoveIdea(idea.Id);
+                    }
+
+                    _ideaMgr.RemoveQuestion(iq.Id);
+                }
+                
                 IdeationRepo.Delete(moduleId);
             }
         }

@@ -46,9 +46,6 @@
                 <div class="form-group">
                     <label asp-for="MediaFile">Geef hier een nieuw filmpje eventueel: </label>
                     @Html.TextBoxFor(c => c.MediaFile,   new { @class = "form-control" })
-                    @Html.ValidationMessage("MediaFile", 
-                        "De link moet embed zijn, bijvoorbeeld: youtube.com/embed/abc123def", 
-                        new { @class = "text-danger" })
                 </div>
                 <br/>
                 <div class="row">

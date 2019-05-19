@@ -8,12 +8,12 @@ namespace BL
     public class VoteManager
     {
         private IdeationVoteRepository VoteRepo { get; }
-        
+
         public VoteManager()
         {
             VoteRepo = new IdeationVoteRepository();
         }
-        
+
         #region Voting
         public bool VerifyVotingOnFeedback(int feedbackId, string userId, int? deviceId, double? x, double? y)
         {

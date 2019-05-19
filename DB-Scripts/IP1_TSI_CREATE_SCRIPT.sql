@@ -67,6 +67,7 @@ CREATE TABLE Projects(
 	/*Constraints*/
 	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID),
 	CONSTRAINT ck_Projects_Status CHECK (Status = UPPER(Status))
+
 )
 
 CREATE TABLE Phases(
@@ -111,8 +112,8 @@ CREATE TABLE Projectimages(
 
 CREATE TABLE Devices(
 	DeviceID INT IDENTITY,
-	LocationX FLOAT,
-	LocationY FLOAT,
+	LocationX REAL,
+	LocationY REAL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Devices PRIMARY KEY(DeviceID)
@@ -204,22 +205,19 @@ CREATE TABLE Choices(
 	CONSTRAINT pk_Choices PRIMARY KEY(ChoiceID, AnswerID, OptionID)
 )
 
-
 CREATE TABLE IdeaFields(
 	FieldID INT IDENTITY,
 	IdeaID INT NOT NULL,
 	FieldText NVARCHAR(255),
 	FieldStrings NVARCHAR(800),
-	LocationX FLOAT,
-	LocationY FLOAT,
-	Url VARCHAR(50),
+	LocationX REAL,
+	LocationY REAL,
 	UploadedImage VARBINARY(255),
-	UploadedMedia VARBINARY(255),
+	MediaLink VARCHAR(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_IdeaFields PRIMARY KEY(FieldID,IdeaID)
 )
-
 
 CREATE TABLE Votes(
 	VoteID INT IDENTITY,
@@ -371,7 +369,7 @@ create table AspNetRoles
 	UserId TEXT not null
 		constraint FK_AspNetUserRoles_AspNetUsers_UserId
 			references AspNetUsers
-				on delete cascade,	
+				on delete cascade,
 	RoleId TEXT not null
 		constraint FK_AspNetUserRoles_AspNetRoles_RoleId
 			references AspNetRoles

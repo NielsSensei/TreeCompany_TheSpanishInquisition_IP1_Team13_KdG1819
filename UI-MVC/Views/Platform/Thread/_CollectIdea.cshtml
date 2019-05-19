@@ -7,13 +7,22 @@
 @model UIMVC.Models.IdeaViewModel
 @inject ProjectService ProjectService
 
+@section Scripts
+{
+    <script type="module" src="~/dist/closedfield.entry.js" defer></script>
+}
+
 @if (Model.ToView.IsDeleted)
 {
     <section class="card">
-        <div class="card-title">
-            <div class="row justify-content-center-between m-auto">
-                <h4>[Verwijderd]</h4>
+        <div class="card-header pb-0">
+            <div class="card-title">
+                <div class="row justify-content-center-between m-auto">
+                    <h4>[Verwijderd]</h4>
+                </div>
             </div>
+        </div>
+        <div class="card-footer">
             <div class="row justify-content-center-between m-auto">
                 @if (Model.IdeaLevel < 3)
                 {
@@ -22,7 +31,7 @@
                             Model.ToView.IdeaQuestion).Where(i => i.ParentIdea.Id == Model.ToView.Id))
                         {
                             @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = child,
-                                IdeaLevel = (byte)(Model.IdeaLevel+1) })
+                                            IdeaLevel = (byte)(Model.IdeaLevel+1) })
                         }
                     </div>
                 }
@@ -52,16 +61,9 @@ else
             </div>
         </div>
         <div class="card-body pb-0">
-            <p>@Model.ToView.Field.Text</p>
-            @if (Model.ToView.Cfield != null)
-            {
-                <ul>
-                    @foreach (string o in Model.ToView.Cfield.Options)
-                    {
-                        <li>@o</li>
-                    }
-                </ul>
-            }
+            <div class="container">
+                @Html.Partial("Thread/_IdeaFields", Model.ToView)
+            </div>
             <hr/>
             <section class="row justify-content-between m-auto">
                 <div class="row m-1 align-content-center mx-1">
@@ -79,7 +81,7 @@ else
                     </div>
                 </div>
                 <div>
-                    @if(Model.IdeaLevel < 3)
+                    @if (Model.IdeaLevel < 3)
                     {
                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#makeCommentModal@(Model.ToView.Id)">Reageren
@@ -94,7 +96,8 @@ else
                            asp-route-thread="@Model.ToView.IdeaQuestion.Id">
                             Stemmen
                         </a>
-                    } else if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
+                    }
+                    else if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
                     {
                         <a class="btn btn-primary" asp-controller="Platform" asp-action="AddVote"
                            asp-route-idea="@Model.ToView.Id"
@@ -109,7 +112,8 @@ else
                         </a>
                     }
 
-                    @if(User.Identity.IsAuthenticated && UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && !Model.ToView.IsDeleted){
+                    @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && !Model.ToView.IsDeleted)
+                    {
                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#deleteIdeaModal@(Model.ToView.Id)">Idee Verwijderen
                         </button>
@@ -140,7 +144,7 @@ else
             </div>
 
             <div class="modal-body m-auto">
-                @Html.Partial("Thread/_AddIdea", new AddIdeaModel() {IdeationQuestionId = Model.ToView.IdeaQuestion.Id, 
+                @Html.Partial("Thread/_AddIdea", new AddIdeaModel() {IdeationQuestionId = Model.ToView.IdeaQuestion.Id,
                     ParentId = Model.ToView.Id})
             </div>
 

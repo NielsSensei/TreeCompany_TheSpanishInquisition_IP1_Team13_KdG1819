@@ -35,11 +35,8 @@
                     <input asp-for="ExtraInfo" class="form-control"/>
                 </div>
                 <div class="form-group">
-                    <label asp-for="MediaLink">Geef hier een filmpje eventueel: </label>
+                    <label asp-for="MediaLink">Geef hier een youtube filmpje eventueel: </label>
                     <input asp-for="MediaLink" class="form-control"/>
-                    @Html.ValidationMessage("MediaLink", 
-                        "De link moet embed zijn, bijvoorbeeld: youtube.com/embed/abc123def", 
-                        new { @class = "text-danger" })
                 </div>
                 <br/>
                 <div class="row">

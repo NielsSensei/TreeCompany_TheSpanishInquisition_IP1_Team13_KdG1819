@@ -131,7 +131,7 @@ namespace DAL.repos
         }
 
         private int FindNextAvailableAnswerId()
-        {               
+        {
             if (!_ctx.Answers.Any()) return 1;
             int newId = _ctx.Answers.ToList().Max(answer => answer.AnswerId)+1;
             return newId;
@@ -144,12 +144,12 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region QuestionnaireQuestion CRUD
         public QuestionnaireQuestion Create(QuestionnaireQuestion obj)
         {
             IEnumerable<QuestionnaireQuestion> qqs = ReadAllByQuestionnaireId(obj.Questionnaire.Id);
-            
+
             obj.Id = FindNextAvailableQQuestionId();
 
             if (obj.QuestionType == QuestionType.Drop || obj.QuestionType == QuestionType.Multi ||
@@ -160,7 +160,7 @@ namespace DAL.repos
                     CreateOption(obj.Id, option);
                 }
             }
-            
+
             _ctx.QuestionnaireQuestions.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
 
@@ -212,14 +212,14 @@ namespace DAL.repos
         {
             return ReadAll().Where(c => c.Module.Id == questionnaireId);
         }
-        #endregion       
-        
+        #endregion
+
         #region Answer CRUD
         public Answer Create(Answer obj)
         {
             QuestionnaireQuestion qq = Read(obj.Question.Id, false);
             obj.Id = FindNextAvailableAnswerId();
-            
+
             if(qq.QuestionType == QuestionType.Open || qq.QuestionType == QuestionType.Mail)
             {
                 _ctx.Answers.Add(OpenConvertToDao((OpenAnswer) obj));
@@ -239,6 +239,7 @@ namespace DAL.repos
 
             return obj;
         }
+
 
         public OpenAnswer ReadOpenAnswer(int answerId, bool details)
         {
@@ -296,13 +297,13 @@ namespace DAL.repos
             return myQuery;
         }
         #endregion
-        
+
         #region Options CRUD
         public string CreateOption(int questionId, string obj)
         {
             IEnumerable<string> options = ReadAllOptionsForQuestion(questionId);
             int newId = FindNextAvailableOptionId();
-            
+
             _ctx.Options.Add(ConvertToDao(newId, obj, questionId));
             _ctx.SaveChanges();
 
@@ -338,7 +339,7 @@ namespace DAL.repos
 
             return myQuery;
         }
-        
+
         public IEnumerable<string> ReadAllOptionsForQuestion(int questionId)
         {
             List<string> myQuery = new List<string>();
