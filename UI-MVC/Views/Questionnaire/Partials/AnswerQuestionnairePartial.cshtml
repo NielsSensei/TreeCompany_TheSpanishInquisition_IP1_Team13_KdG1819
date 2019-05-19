@@ -16,7 +16,7 @@
                 <label class="text-center">
                     <h3>@question.QuestionText</h3>
                 </label>
-                @Html.TextAreaFor(answer => answer.OpenAnswer.AnswerText, new {@class = "w-100"})
+                @Html.TextAreaFor(answer => answer.OpenAnswer.AnswerText, new {@class = "w-100 form-control"})
             </div>
             break;
 
@@ -29,7 +29,7 @@
                     <h3>@question.QuestionText</h3>
                 </label>
                 @Html.HiddenFor(answer => answer.OpenAnswer.IsUserEmail)
-                @Html.TextBoxFor(answer => answer.OpenAnswer.AnswerText, new {@class="w-100"})
+                @Html.TextBoxFor(answer => answer.OpenAnswer.AnswerText, new {@class="w-100 form-control"})
             </div>
             break;
 
