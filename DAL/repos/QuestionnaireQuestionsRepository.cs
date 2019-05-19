@@ -256,15 +256,22 @@ namespace DAL.repos
             List<OptionsDao> optionsDaos = _ctx.Options.ToList().FindAll(o => o.QquestionId == answersDao.QQuestionId);
             List<OptionsDao> chosenOptionsDao = new List<OptionsDao>();
 
-            foreach(OptionsDao dao in optionsDaos)
-            {
-                ChoicesDao choice = _ctx.Choices.ToList().FirstOrDefault(choicesDao => choicesDao.OptionId == dao.OptionId);
+            List<ChoicesDao> choices = _ctx.Choices.Where(dao => dao.AnswerId == answersDao.AnswerId).ToList();
 
-                if(choice?.ChoiceId != null)
-                {
-                    chosenOptionsDao.Add(dao);
-                }
+            foreach (ChoicesDao choicesDao in choices)
+            {
+                chosenOptionsDao.AddRange(optionsDaos.Where(dao => dao.OptionId == choicesDao.OptionId).ToList());
             }
+
+//            foreach(OptionsDao dao in optionsDaos)
+//            {
+//                ChoicesDao choice = _ctx.Choices.ToList().FirstOrDefault(choicesDao => choicesDao.AnswerId == dao.);
+//
+//                if(choice?.ChoiceId != null)
+//                {
+//                    chosenOptionsDao.Add(dao);
+//                }
+//            }
 
             return ConvertToDomain(answersDao, chosenOptionsDao);
         }

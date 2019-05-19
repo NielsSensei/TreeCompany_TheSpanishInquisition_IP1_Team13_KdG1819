@@ -151,7 +151,7 @@ namespace UIMVC.Controllers
         }
 
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult AddTag(int ideation)
+        public IActionResult AddTag(int ideation, bool questionnaire = false)
         {
             string tag = Request.Form["GetMeATag"].ToString();
 
@@ -159,8 +159,13 @@ namespace UIMVC.Controllers
             {
                 return BadRequest("Tag can't be null");
             }
+            
+            
 
-            _moduleMgr.MakeTag(tag, ideation, false);
+            _moduleMgr.MakeTag(tag, ideation, questionnaire);
+
+            if (questionnaire)
+                return RedirectToAction("EditQuestionnaire", "Questionnaire", new {questionnaireId = ideation});
 
             return RedirectToAction("CollectIdeation", "Platform",
                 new {Id = ideation});

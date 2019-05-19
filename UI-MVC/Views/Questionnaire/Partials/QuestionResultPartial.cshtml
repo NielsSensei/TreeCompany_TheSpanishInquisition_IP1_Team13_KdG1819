@@ -2,6 +2,7 @@
 @using UIMVC.Services
 @model Domain.UserInput.QuestionnaireQuestion
 @inject UserService UserService
+@inject QuestionService QuestionService
 
 <button type="button" class="btn btn-primary" data-toggle="modal"
         data-target="#questionResultModal@(Model.Id)">
@@ -52,15 +53,41 @@
                                 <tr>
                                     <td>@Model.Options[i]</td>
                                     <td>@Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i])</td>
+                                    <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i]) / (double) Model.Answers.Count)*100, 2)%</td>
                                 </tr>
                             }
                         
                         </tbody>
                     </table>
                 }
+                @if (Model.QuestionType == QuestionType.Multi)
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Antwoord</th>
+                            <th>#</th>
+                            <th>%</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        @for (int i = 0; i < Model.Options.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.Options[i]</td>
+                                @* <td>@Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i])</td> *@
+                                <td>@Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(Model.Options[i]))</td>
+                                <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(Model.Options[i])) / (double) QuestionService.CalculateTotalAnswers(Model))*100, 2)%</td>
+                            </tr>
+                        }
+                        
+                        </tbody>
+                    </table>
+                }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
             </div>
         </div>
     </div>
