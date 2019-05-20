@@ -47,16 +47,23 @@
                         </tr>
                         </thead>
                         <tbody>
-                        
-                            @for (int i = 0; i < Model.Options.Count; i++)
-                            {
-                                <tr>
-                                    <td>@Model.Options[i]</td>
+
+                        @for (int i = 0; i < Model.Options.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.Options[i]</td>
+                                @if (Model.Answers == null || !Model.Answers.Any())
+                                {
                                     <td>@Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i])</td>
-                                    <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i]) / (double) Model.Answers.Count)*100, 2)%</td>
-                                </tr>
-                            }
-                        
+                                    <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i]) / (double) Model.Answers.Count) * 100, 2)%</td>
+                                }
+                                else
+                                {
+                                    <td>Geen antwoorden</td>
+                                }
+                            </tr>
+                        }
+
                         </tbody>
                     </table>
                 }
@@ -71,17 +78,23 @@
                         </tr>
                         </thead>
                         <tbody>
-                        
+
                         @for (int i = 0; i < Model.Options.Count; i++)
                         {
                             <tr>
                                 <td>@Model.Options[i]</td>
-                                @* <td>@Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i])</td> *@
-                                <td>@Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(Model.Options[i]))</td>
-                                <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(Model.Options[i])) / (double) QuestionService.CalculateTotalAnswers(Model))*100, 2)%</td>
+                                @if (Model.Answers == null || !Model.Answers.Any())
+                                {
+                                    <td>@Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(Model.Options[i]))</td>
+                                    <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(Model.Options[i])) / (double) QuestionService.CalculateTotalAnswers(Model)) * 100, 2)%</td>
+                                }
+                                else
+                                {
+                                    <td>Geen antwoorden</td>
+                                }
                             </tr>
                         }
-                        
+
                         </tbody>
                     </table>
                 }

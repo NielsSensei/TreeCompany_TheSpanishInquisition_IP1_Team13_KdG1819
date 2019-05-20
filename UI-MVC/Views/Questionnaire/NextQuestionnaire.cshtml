@@ -8,6 +8,8 @@
 @{
     QuestionnaireQuestion question = (QuestionnaireQuestion) ViewData["Question"];
     Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
+
+    bool invalid = (bool) ViewData["InValid"];
 }
 
 <section>
@@ -26,6 +28,12 @@
 </section>
 
 <hr/>
+@if (invalid)
+{
+    <div>
+        <p class="text-danger">Gelieve de vraag te beantwoorden</p>
+    </div>
+}
 @if (questionnaire.OnGoing)
 {
     @Html.Partial("Partials/AnswerQuestionnairePartial")

@@ -136,7 +136,7 @@ namespace UIMVC.Controllers
             foreach (QuestionnaireQuestion question in questions)
             {
                 question.Answers = QqMgr.GetAnswers(question.Id);
-                
+
                 if (question.QuestionType == QuestionType.Drop || question.QuestionType == QuestionType.Multi ||
                     question.QuestionType == QuestionType.Single)
                 {
@@ -297,7 +297,7 @@ namespace UIMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult NextQuestionnaire(int questionid, int questionnaireid)
+        public IActionResult NextQuestionnaire(int questionid, int questionnaireid, bool invalid = false)
         {
             Questionnaire questionnaire = ModMgr.GetQuestionnaire(questionnaireid, false);
 
@@ -316,6 +316,8 @@ namespace UIMVC.Controllers
             }
 
             var question = questions.FirstOrDefault(questionA => questionA.Id == questionid);
+
+            ViewData["InValid"] = invalid;
 
             ViewData["Question"] = question;
             ViewData["Questionnaire"] = questionnaire;
@@ -336,9 +338,18 @@ namespace UIMVC.Controllers
             {
                 user = _userService.GetAnonymousUser();
             }
-            
+
             if (addAnswer.MultipleAnswer != null)
             {
+                if (!question.Optional)
+                {
+                    if (addAnswer.MultipleAnswer.Choices == null || !addAnswer.MultipleAnswer.Choices.Any())
+                    {
+                        return RedirectToAction("NextQuestionnaire",
+                            new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
+                    }
+                }
+
                 MultipleAnswer answer = new MultipleAnswer()
                 {
                     Choices = addAnswer.MultipleAnswer.Choices,
@@ -350,6 +361,15 @@ namespace UIMVC.Controllers
             }
             else if (addAnswer.OpenAnswer != null)
             {
+                if (!question.Optional)
+                {
+                    if (addAnswer.OpenAnswer.AnswerText == null || !addAnswer.OpenAnswer.AnswerText.Any())
+                    {
+                        return RedirectToAction("NextQuestionnaire",
+                            new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
+                    }
+                }
+
                 OpenAnswer answer;
                 if (addAnswer.OpenAnswer.AnswerText == null)
                 {
@@ -360,7 +380,8 @@ namespace UIMVC.Controllers
                         Question = question,
                         User = user
                     };
-                } else
+                }
+                else
                 {
                     answer = new OpenAnswer()
                     {
@@ -370,19 +391,36 @@ namespace UIMVC.Controllers
                         User = user
                     };
                 }
-                
+
                 QqMgr.MakeAnswer(answer);
             }
             else if (addAnswer.CheckboxAnswers != null)
             {
+                if (!question.Optional)
+                {
+                    if (addAnswer.CheckboxAnswers == null ||
+                        addAnswer.CheckboxAnswers.All(checkboxAnswer => checkboxAnswer.Checked == false))
+                    {
+                        return RedirectToAction("NextQuestionnaire",
+                            new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
+                    }
+                }
+
                 MultipleAnswer answer = new MultipleAnswer()
                 {
-                    Choices = new List<string>(addAnswer.CheckboxAnswers.ToList().Where(checkboxAnswer => checkboxAnswer.Checked).Select(checkboxAnswer => checkboxAnswer.Value)),
+                    Choices = new List<string>(addAnswer.CheckboxAnswers.ToList()
+                        .Where(checkboxAnswer => checkboxAnswer.Checked)
+                        .Select(checkboxAnswer => checkboxAnswer.Value)),
                     DropdownList = false,
                     Question = question,
                     User = user
                 };
                 QqMgr.MakeAnswer(answer);
+            }
+            else if (!question.Optional)
+            {
+                return RedirectToAction("NextQuestionnaire",
+                    new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
             }
 
             var nextQuestion = GetNextQuestion(questionnaireId, questionId);
