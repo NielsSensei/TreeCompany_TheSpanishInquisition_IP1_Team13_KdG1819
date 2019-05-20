@@ -283,7 +283,7 @@ namespace DAL.repos
 
             foreach (AnswersDao dao in _ctx.Answers.ToList().FindAll(a => a.QQuestionId == questionId))
             {
-                if (!_ctx.Choices.Any(c => c.AnswerId == dao.AnswerId))
+                if (!_ctx.Choices.Any(c => c.AnswerId == dao.AnswerId) && dao.AnswerText != null)
                 {
                     myQuery.Add(ConvertToDomain(dao));
                 }
