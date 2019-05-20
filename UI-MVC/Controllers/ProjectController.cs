@@ -56,7 +56,6 @@ namespace UIMVC.Controllers
                 Title = pvm.Title,
                 Platform = new Platform() {Id = platform},
                 Status = pvm.Status.ToUpper(),
-                LikeVisibility = 1,
                 Goal = pvm.Goal,
                 Visible = pvm.Visible
             };

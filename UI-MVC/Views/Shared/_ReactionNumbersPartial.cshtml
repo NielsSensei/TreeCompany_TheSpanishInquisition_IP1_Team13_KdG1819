@@ -1,6 +1,28 @@
+@using Domain.Projects
+@using UIMVC.Services
 @model LikeViewModel
+@inject RoleService Service
 
 <section class="text-center">
+@*
+OnlyLikeCount = 0,
+        FbLikeCount = 1,
+        TwitterLikeCount = 2,
+        LikeCountAndFbLikeCount = 3,
+        LikeCountAndTwitterLikeCount = 4,
+        FbLikeCountAndTwitterLikeCount = 5,
+        LikeFbAndTwitterCount = 6
+*@
+
+@if (Model.IconStyle == LikeVisibility.OnlyLikeCount)
+{
+    <p>Gepost door: @Model.Username</p>
+                                   
+
+    <img alt="verified" src="https://image.flaticon.com/icons/svg/148/148839.svg" height="25" width="25"/>
+    <p>Aantal stemmen: @Model.LikeCount |</p>
+}
+
     @if (Model.IconStyle == 1)
     {
         <div class="container">

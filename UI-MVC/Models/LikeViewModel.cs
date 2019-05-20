@@ -1,3 +1,5 @@
+using Domain.Projects;
+
 namespace UIMVC.Models
 {
     public class LikeViewModel
@@ -7,7 +9,8 @@ namespace UIMVC.Models
         public int TwitterLikeCount { get; set; }
         public int ShareCount { get; set; }
         public int RetweetCount { get; set; }
-        public int IconStyle { get; set; }
+        public LikeVisibility IconStyle { get; set; }
         public string Username { get; set; }
+        public bool Verified { get; set; }
     }
 }

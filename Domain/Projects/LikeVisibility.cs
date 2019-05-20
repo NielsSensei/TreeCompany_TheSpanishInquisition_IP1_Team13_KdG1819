@@ -8,6 +8,8 @@ namespace Domain.Projects
         LikeCountAndFbLikeCount = 3,
         LikeCountAndTwitterLikeCount = 4,
         FbLikeCountAndTwitterLikeCount = 5,
-        LikeFbAndTwitterCount = 6
+        LikeFbAndTwitterCount = 6,
+        ProjectPart = 7,
+        IdeationLikes = 8
     }
 }
