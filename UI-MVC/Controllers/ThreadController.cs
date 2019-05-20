@@ -193,7 +193,8 @@ namespace UIMVC.Controllers
                 }
             }
 
-            if (!Request.Form["FieldVideo"].ToString().Equals(""))
+            if (!Request.Form["FieldVideo"].ToString().Equals("") && 
+                Request.Form["FieldVideo"].ToString().Contains("youtube.com/watch?v="))
             {
                 if (toEdit.Vfield != null && !toEdit.Vfield.VideoLink.Equals(Request.Form["FieldVideo"].ToString()) ||
                     toEdit.Vfield == null)
@@ -224,17 +225,14 @@ namespace UIMVC.Controllers
 
             if (fieldStrings.Any())
             {
-                if (toEdit.Cfield != null && !fieldStrings[0].Equals(toEdit.Cfield.Options[0]) || toEdit.Cfield == null)
-                {
-                    ClosedField field = new ClosedField() { Idea = toEdit, Options = new List<string>() };
+                ClosedField field = new ClosedField() { Idea = toEdit, Options = new List<string>() };
                 
-                    foreach (string item in fieldStrings)
-                    {
-                        field.Options.Add(item);
-                    }
-
-                    toEdit.Cfield = field;  
+                foreach (string item in fieldStrings)
+                {
+                    field.Options.Add(item);
                 }
+
+                toEdit.Cfield = field;
             }
             
             if (toEdit.Field != null || toEdit.Cfield != null || toEdit.Mfield != null || toEdit.Vfield != null

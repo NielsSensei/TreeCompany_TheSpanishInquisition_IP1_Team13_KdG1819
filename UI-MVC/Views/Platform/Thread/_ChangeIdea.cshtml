@@ -47,11 +47,11 @@
                         Hoe vind ik deze? </a></label>
                     @if (Model.Idea.Mfield != null)
                     {
-                        @Html.TextBox("newIdeaMapX", @Model.Idea.Mfield.LocationX, 
-                            new {@class = "form-control"})
+                        @Html.TextBox("newIdeaMapX", @Model.Idea.Mfield.LocationX.ToString().Replace(
+                            ",","."), new {@class = "form-control"})
                         <br/>
-                        @Html.TextBox("newIdeaMapY", @Model.Idea.Mfield.LocationY, 
-                            new {@class = "form-control"})  
+                        @Html.TextBox("newIdeaMapY", @Model.Idea.Mfield.LocationY.ToString().Replace(
+                            ",","."), new {@class = "form-control"})  
                     }
                     else
                     {

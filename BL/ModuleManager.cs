@@ -108,7 +108,7 @@ namespace BL
                     List<Idea> ideas = _ideaMgr.GetIdeas(iq.Id);
                     foreach (Idea idea in ideas)
                     {
-                        _ideaMgr.RemoveFields(idea.Id);
+                        _ideaMgr.RemoveField(idea.Id);
                         _ideaMgr.RemoveReports(idea.Id);
                         _ideaMgr.RemoveVotes(idea.Id);
                         _ideaMgr.RemoveIdea(idea.Id);

@@ -137,7 +137,7 @@ function addRemoveButton(index){
 }
 
 function collectContainer(Idea){
-    let containers = document.querySelectorAll(".editStringContainer");
+    let containers = document.querySelectorAll(".editContainer");
     let out = undefined;
 
     for(let i = 0; i < containers.length; i++){
