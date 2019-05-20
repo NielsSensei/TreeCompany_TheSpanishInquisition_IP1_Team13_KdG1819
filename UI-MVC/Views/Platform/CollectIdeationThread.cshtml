@@ -1,7 +1,6 @@
 @using Domain.UserInput
 @model Domain.UserInput.IdeationQuestion
 @inject UIMVC.Services.ProjectService ProjectService
-@inject UIMVC.Services.UserService UserService
 
 @{
     ViewData["Title"] = Model.QuestionTitle;
@@ -11,6 +10,7 @@
 {
     <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
     <script type="module" src="~/dist/closedfield.entry.js" defer></script>
+    <script type="module" src="~/dist/changeclosedfield.entry.js" defer></script>
 }
 
 <div class="container">
@@ -31,7 +31,7 @@
     <hr/>
     <div class="row">
         <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
-        @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionId = Model.Id, ParentId = 0}) 
+        @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionId = Model.Id, ParentId = 0 })
     </div>
     <br/>
     <div class="row">

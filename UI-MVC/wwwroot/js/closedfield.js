@@ -46,7 +46,6 @@ function collectContainer(Parent){
     let out = undefined;
 
     for(let i = 0; i < containers.length; i++){
-        console.log(containers[i].getAttribute("id"));
         if(containers[i].getAttribute("id") === Parent){
             out = containers[i];
         }
@@ -70,7 +69,6 @@ function redoIndexes(Parent){
         allInputs[i].setAttribute("id", addedFieldStrings);
         allrows[i].setAttribute("id", addedFieldStrings);
         allRemoveButtons[i].setAttribute("id", addedFieldStrings);
-
     }
 
     addedFieldStrings = allInputs.length;

@@ -10,7 +10,6 @@ using Domain.UserInput;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using UIMVC.Models;
 using UIMVC.Services;
 
 namespace UIMVC.Controllers
@@ -156,6 +155,100 @@ namespace UIMVC.Controllers
             }
 
             return RedirectToAction("CollectIdeationThread", "Platform", new { Id = ideation});
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangeIdea(IFormCollection form, int ideation, int idea, List<string> fieldStrings)
+        {
+            Idea toEdit = _iqMgr.GetIdea(idea);
+            
+            if (!Request.Form["FieldText"].ToString().Equals(""))
+            {
+                if (toEdit.Field != null && !toEdit.Field.Text.Equals(Request.Form["FieldText"].ToString()) || toEdit.Field == null)
+                {
+                    Field field = new Field() { Idea = toEdit };
+
+                    field.Text = Request.Form["FieldText"].ToString();
+                    field.TextLength = field.Text.Length;
+
+                    toEdit.Field = field;
+                }
+            }
+
+            if (!Request.Form["newIdeaMapX"].ToString().Equals("Eerste coordinaat") &&
+                !Request.Form["newIdeaMapY"].ToString().Equals("Tweede coordinaat") &&  
+                !Request.Form["newIdeaMapX"].ToString().Equals("") &&
+                !Request.Form["newIdeaMapY"].ToString().Equals(""))
+            {
+                if(toEdit.Mfield != null && !toEdit.Mfield.LocationX.ToString().Equals(Request.Form["newIdeaMapX"].ToString()) && 
+                   !toEdit.Mfield.LocationY.ToString().Equals(Request.Form["newIdeaMapY"].ToString()) || toEdit.Mfield == null)
+                {
+                    MapField field = new MapField() { Idea = toEdit };
+                
+                    field.LocationX = Double.Parse(Request.Form["newIdeaMapX"].ToString().Replace(".", ","));
+                    field.LocationY = Double.Parse(Request.Form["newIdeaMapY"].ToString().Replace(".", ","));
+
+                    toEdit.Mfield = field;
+                }
+            }
+
+            if (!Request.Form["FieldVideo"].ToString().Equals("") && 
+                Request.Form["FieldVideo"].ToString().Contains("youtube.com/watch?v="))
+            {
+                if (toEdit.Vfield != null && !toEdit.Vfield.VideoLink.Equals(Request.Form["FieldVideo"].ToString()) ||
+                    toEdit.Vfield == null)
+                {
+                    VideoField field = new VideoField() { Idea = toEdit };
+
+                    field.VideoLink = "https://www.youtube.com/embed/" + 
+                                      Request.Form["FieldVideo"].ToString().Split("=")[1].Split("&")[0];
+                    toEdit.Vfield = field;
+                }
+            }
+
+            if (form.Files.Any())
+            {
+                ImageField field = new ImageField() { Idea = toEdit };
+                
+                using (var memoryStream = new MemoryStream())
+                {
+                    await form.Files[0].CopyToAsync(memoryStream);
+                    field.UploadedImage = memoryStream.ToArray();
+                }
+
+                if (toEdit.Ifield != null && toEdit.Ifield.UploadedImage != field.UploadedImage || toEdit.Ifield == null)
+                {
+                    toEdit.Ifield = field; 
+                }
+            }
+
+            if (fieldStrings.Any())
+            {
+                ClosedField field = new ClosedField() { Idea = toEdit, Options = new List<string>() };
+                
+                foreach (string item in fieldStrings)
+                {
+                    field.Options.Add(item);
+                }
+
+                toEdit.Cfield = field;
+            }
+            
+            if (toEdit.Field != null || toEdit.Cfield != null || toEdit.Mfield != null || toEdit.Vfield != null
+                || toEdit.Ifield != null)
+            {
+                _iqMgr.EditIdea(toEdit);
+            }
+            else
+            {
+                return RedirectToAction("CollectIdeationThread", "Platform", new
+                {
+                    Id = ideation, message = "Er is iets misgelopen waardoor je veranderingen niet zijn opgeslagen."
+                });
+            }
+
+            return RedirectToAction("CollectIdeationThread", "Platform", new { Id = ideation });
         }
     }
 }

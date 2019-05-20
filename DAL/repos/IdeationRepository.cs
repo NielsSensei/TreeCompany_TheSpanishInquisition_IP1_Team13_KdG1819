@@ -61,8 +61,8 @@ namespace DAL.repos
             IdeationsDao dao = new IdeationsDao()
             {
                     ModuleId = obj.Id,
-                    ExtraInfo = obj.ExtraInfo
-                    //MediaFile = obj.Media,
+                    ExtraInfo = obj.ExtraInfo,
+                    MediaFile = obj.MediaLink
             };
 
             if (obj.User != null)

@@ -114,6 +114,9 @@ else
 
                     @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && !Model.ToView.IsDeleted)
                     {
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editIdeaModal@(Model.ToView.Id)">
+                            Idee Aanpassen
+                        </button>
                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#deleteIdeaModal@(Model.ToView.Id)">Idee Verwijderen
                         </button>
@@ -167,7 +170,25 @@ else
                         asp-route-from="IdeationThread"
                         asp-route-thread="@Model.ToView.IdeaQuestion.Id">Bevestig
                 </a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="modal fade" id="editIdeaModal@(Model.ToView.Id)" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Idee aanpassen: @Model.ToView.Title </h5>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("Thread/_ChangeIdea", new ChangeIdeaModel() { Idea = Model.ToView, 
+                    ParentId = Model.ToView.ParentIdea.Id, IdeationQuestionId = Model.ToView.IdeaQuestion.Id
+                })                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>   
             </div>
         </div>
     </div>
