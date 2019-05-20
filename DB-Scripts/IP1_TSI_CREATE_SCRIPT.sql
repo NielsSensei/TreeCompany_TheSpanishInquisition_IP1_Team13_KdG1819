@@ -157,7 +157,7 @@ CREATE TABLE Ideations (
 	UserID NVARCHAR(255) NOT NULL,
 	Organisation BIT NOT NULL,
 	EventID INT,
-	UserIdea BIT NOT NULL,
+	UserVote BIT NOT NULL,
 	MediaFile VARCHAR(255),
 	RequiredFields tinyint NOT NULL,
 	ExtraInfo NVARCHAR(100),
