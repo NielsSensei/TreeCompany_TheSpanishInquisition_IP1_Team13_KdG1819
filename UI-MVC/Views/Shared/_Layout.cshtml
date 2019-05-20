@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Domain.Projects
+@using Domain.Users
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -18,6 +21,37 @@
                 <li class="nav-item layouttitle">
                     <a class="nav-link test" asp-area="" asp-controller="Home" asp-action="Index">City of Ideas</a>
                 </li>
+                @if (ViewData["Platform"] != null)
+                {
+                    Platform platform = (Platform) ViewData["Platform"];
+                    <li class="nav-item layouttitle nav-link">></li>
+                    <li class="nav-item layouttitle">
+                        <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="Index" asp-route-id="@platform.Id">@platform.Name</a>
+                    </li>
+                    @if (ViewData["Project"] != null)
+                     {
+                         Project project = (Project) ViewData["Project"];
+                         <li class="nav-item layouttitle nav-link">></li>
+                         <li class="nav-item layouttitle">
+                             <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@project.Id">@project.Title</a>
+                         </li>
+                         @if (ViewData["Module"] != null)
+                          {
+                              Module module = (Module) ViewData["Module"];
+                              <li class="nav-item layouttitle nav-link">></li>
+                              <li class="nav-item layouttitle">
+                                  @if (module.GetType() == typeof(Module))
+                                  {
+                                      <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectIdeation" asp-route-id="@module.Id">@module.Title</a>
+                                  } else if (module.GetType() == typeof(Questionnaire))
+                                  {
+                                      
+                                  }
+                                  
+                              </li>
+                          }
+                     }
+                }
             </ul>
             <partial name="_LoginPartial"/>
         </div>

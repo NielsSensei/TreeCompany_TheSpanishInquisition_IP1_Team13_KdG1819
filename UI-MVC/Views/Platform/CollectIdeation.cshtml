@@ -4,10 +4,14 @@
 @inject UserService Userservice
 @inject QuestionService Questionservice
 @inject RoleService RoleService
+@inject ProjectService ProjectService
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = Model.Title;
+    ViewData["Platform"] = ProjectService.GetPlatform(Model);
+    ViewData["Project"] = ProjectService.GetProject(Model);
+    ViewData["Module"] = Model;
 }
 
 @section Scripts

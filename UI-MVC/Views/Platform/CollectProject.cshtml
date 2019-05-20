@@ -11,6 +11,8 @@
     Layout = "_Layout";
     ViewData["Questionnaires"] = ProjectService.CollectProjectQuestionnaires(Model);
     ViewData["Ideations"] = ProjectService.CollectProjectIdeations(Model);
+    ViewData["Platform"] = Model.Platform;
+    ViewData["Project"] = Model;
 }
 
 @section Scripts{

@@ -4,6 +4,9 @@
 
 @{
     ViewData["Title"] = Model.QuestionTitle;
+    ViewData["Platform"] = ProjectService.GetPlatform(Model.Ideation);
+    ViewData["Project"] = ProjectService.GetProject(Model.Ideation);
+    ViewData["Module"] = Model.Ideation;
 }
 
 @section Scripts

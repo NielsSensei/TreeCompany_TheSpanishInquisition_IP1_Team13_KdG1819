@@ -4,12 +4,15 @@
 @using UIMVC.Services
 @model AddAnswer
 @inject RoleService RoleService
+@inject ProjectService ProjectService
 
 @{
     
     QuestionnaireQuestion question = (QuestionnaireQuestion) ViewData["Question"];
     Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
     ViewBag.Title = question.QuestionText;
+    ViewData["Platform"] = ProjectService.GetPlatform(questionnaire);
+    ViewData["Project"] = ProjectService.GetProject(questionnaire);
     
 }
 

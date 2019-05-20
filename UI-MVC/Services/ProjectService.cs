@@ -12,12 +12,14 @@ namespace UIMVC.Services
         private readonly ProjectManager _projectManager;
         private readonly ModuleManager _moduleManager;
         private readonly IdeationQuestionManager _ideationQuestionManager;
+        private readonly PlatformManager _platformManager;
 
         public ProjectService()
         {
             _projectManager = new ProjectManager();
             _moduleManager = new ModuleManager();
             _ideationQuestionManager = new IdeationQuestionManager();
+            _platformManager = new PlatformManager();
         }
 
         public IEnumerable<Project> CollectPlatformProjects(Platform platform)
@@ -44,5 +46,27 @@ namespace UIMVC.Services
         {
             return _projectManager.GetAllImages(project.Id);
         }
+        
+        
+        #region Breadcrumbs:Platform
+
+        public Platform GetPlatform(Module moduleIn)
+        {
+            Module module = _moduleManager.GetIdeation(moduleIn.Id);
+            Project project = _projectManager.GetProject(module.Project.Id, false);
+            return _platformManager.GetPlatform(project.Platform.Id);
+        }
+
+        #endregion
+
+        #region BreadCrumbs:Project
+
+        public Project GetProject(Module moduleIn)
+        {
+            Module module = _moduleManager.GetIdeation(moduleIn.Id);
+            return _projectManager.GetProject(module.Project.Id, false);
+        }
+
+        #endregion
     }
 }

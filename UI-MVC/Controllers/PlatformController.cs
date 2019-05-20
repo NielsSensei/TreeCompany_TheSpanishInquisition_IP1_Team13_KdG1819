@@ -154,6 +154,8 @@ namespace UIMVC.Controllers
                 phases.Remove(project.CurrentPhase);
                 ViewData["Phases"] = phases;
 
+                project.Platform = _platformMgr.GetPlatform(project.Platform.Id);
+                
                 return View(project);
             }
 
