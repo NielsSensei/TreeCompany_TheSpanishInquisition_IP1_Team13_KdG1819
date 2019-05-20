@@ -10,6 +10,7 @@ using Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using UIMVC.Models;
+using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
@@ -21,12 +22,15 @@ namespace UIMVC.Controllers
 
         private UserManager<UimvcUser> _userManager;
 
-        public QuestionnaireController(UserManager<UimvcUser> userManager)
+        private UserService _userService;
+
+        public QuestionnaireController(UserManager<UimvcUser> userManager, UserService userService)
         {
             ModMgr = new ModuleManager();
             ProjMgr = new ProjectManager();
             QqMgr = new QuestionnaireQuestionManager();
             _userManager = userManager;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -327,6 +331,10 @@ namespace UIMVC.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 user = await _userManager.GetUserAsync(User);
+            }
+            else
+            {
+                user = _userService.GetAnonymousUser();
             }
             
             if (addAnswer.MultipleAnswer != null)
