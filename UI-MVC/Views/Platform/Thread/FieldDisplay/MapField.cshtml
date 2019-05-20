@@ -1,5 +1,5 @@
 @model Domain.UserInput.MapField
-@inject Settings Settings
+@inject UIMVC.Settings Settings
 
 <iframe src="https://www.google.com/maps/embed/v1/view?key=@Settings.GetApiKey()
                &center=@Model.LocationX.ToString().Replace(",","."),

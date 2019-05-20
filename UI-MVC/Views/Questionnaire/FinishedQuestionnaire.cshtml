@@ -1,0 +1,11 @@
+@model Domain.Projects.Questionnaire
+
+@{
+    ViewBag.Title = "Bedankt";
+    Layout = "_Layout";
+}
+<section class="h-100 mt-2justify-content-between text-center">
+    <h2 class="text-center">Bedankt om de questionnaire <em>"@Model.Title"</em> in te vullen!</h2>
+    <hr/>
+    <a class="text-center btn btn-primary" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@Model.Project.Id">Klik hier om terug naar het project te gaan.</a>
+</section>

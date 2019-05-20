@@ -63,15 +63,18 @@ namespace UIMVC.Controllers
 
              Project newProj = _projManager.MakeProject(pr);
 
-             foreach (IFormFile file in pvm.InitialProjectImages)
+             if (pvm.InitialProjectImages.Any())
              {
-                 using (var memoryStream = new MemoryStream())
+                 foreach (IFormFile file in pvm.InitialProjectImages)
                  {
-                     await file.CopyToAsync(memoryStream);
-                     _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
-                 }
+                     using (var memoryStream = new MemoryStream())
+                     {
+                         await file.CopyToAsync(memoryStream);
+                         _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
+                     }
+                 }  
              }
-
+             
              return RedirectToAction("Index", "Platform", new {id = platform });
         }
 

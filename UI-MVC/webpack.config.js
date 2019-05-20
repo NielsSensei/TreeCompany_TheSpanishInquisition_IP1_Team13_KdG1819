@@ -10,6 +10,7 @@ module.exports = {
         index: "./wwwroot/js/index.js",
         confirmemail: "./wwwroot/js/confirmemail.js",
         closedfield: "./wwwroot/js/closedfield.js",
+        addQuestionnaireQuestion: "./wwwroot/js/addQuestionnaireQuestion.js",
         changeclosedfield: "./wwwroot/js/changeclosedfield.js"
     },
     output: {
