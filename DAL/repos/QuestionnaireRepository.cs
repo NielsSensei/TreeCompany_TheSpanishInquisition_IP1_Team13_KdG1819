@@ -82,7 +82,8 @@ namespace DAL.repos
             }
 
             obj.Id = FindNextAvailableQuestionnaireId();
-            _ctx.Modules.Add(ConvertToDao(obj));
+            ModulesDao newModule = ConvertToDao(obj);
+            _ctx.Modules.Add(newModule);
             _ctx.SaveChanges();
 
             return obj;
@@ -153,9 +154,11 @@ namespace DAL.repos
         public string CreateTag(string obj, int moduleId)
         {
             Questionnaire moduleWTags = Read(moduleId, false);
-            ModulesDao module = ConvertToDao(moduleWTags);
-            module.Tags += "," + obj;
-            _ctx.SaveChanges();
+            string oldTags = ExtensionMethods.ListToString(moduleWTags.Tags);
+            oldTags += "," + obj;
+            
+            moduleWTags.Tags = ExtensionMethods.StringToList(oldTags);
+            Update(moduleWTags);
 
             return obj;
         }
