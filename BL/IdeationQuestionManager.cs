@@ -86,7 +86,6 @@ namespace BL
             Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
             if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, deviceId, x, y))
             {
-                //TODO fix voting via device
                 feedback.VoteCount++;
                 EditIdea(feedback);
             }

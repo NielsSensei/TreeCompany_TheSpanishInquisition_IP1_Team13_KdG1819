@@ -136,7 +136,6 @@ namespace UIMVC.Controllers
         #endregion
 
         #region Ideation
-        //TODO sprint2 eens dat edwin klaar is met ze ding kunnen we ooit iets doen met events
         [Authorize(Roles = "SuperAdmin, Moderator, Admin")]
         [HttpGet]
         public IActionResult AddIdeation(int project)
@@ -518,8 +517,7 @@ namespace UIMVC.Controllers
             Object roleParse = null;
             if (!Enum.TryParse(typeof(Role), roletext, out roleParse)) return RedirectToAction("CollectAllUsers", "Moderation");
             var role = (Role) roleParse;
-
-            // TODO Send a message to the user stating that the role could not be added
+            
             if (!await _roleService.IsSameRoleOrLower(User, role))
             {
                 if (await _userManager.IsInRoleAsync(user, roletext))

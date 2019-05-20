@@ -10,7 +10,5 @@ namespace UIMVC.Models
         public int ShareCount { get; set; }
         public int RetweetCount { get; set; }
         public LikeVisibility IconStyle { get; set; }
-        public string Username { get; set; }
-        public bool Verified { get; set; }
     }
 }
