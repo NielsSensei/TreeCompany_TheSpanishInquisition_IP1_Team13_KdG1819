@@ -57,6 +57,7 @@ namespace UIMVC.Controllers
                 Platform = new Platform() {Id = platform},
                 Status = pvm.Status.ToUpper(),
                 Goal = pvm.Goal,
+                LikeVisibility = pvm.LikeVisibility,
                 Visible = pvm.Visible
             };
 
@@ -116,6 +117,7 @@ namespace UIMVC.Controllers
             updateProj.Goal = epm.Goal;
             updateProj.Visible = epm.Visible;
             updateProj.Status = epm.Status.ToUpper();
+            updateProj.LikeVisibility = epm.LikeVisibility;
 
 
              _projManager.EditProject(updateProj);

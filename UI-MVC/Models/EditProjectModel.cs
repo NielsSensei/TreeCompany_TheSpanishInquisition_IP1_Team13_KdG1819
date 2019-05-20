@@ -1,4 +1,5 @@
 using System;
+using Domain.Projects;
 
 namespace UIMVC.Models
 {
@@ -6,10 +7,7 @@ namespace UIMVC.Models
     {
         public string Title { get; set; }
         public string Goal { get; set; }
-        public DateTime StartDate { get; set; }
-
-        public DateTime EndDate { get; set; }
-
+        public LikeVisibility LikeVisibility { get; set; }
         public string Status { get; set; }
         public bool Visible { get; set; }
     }
