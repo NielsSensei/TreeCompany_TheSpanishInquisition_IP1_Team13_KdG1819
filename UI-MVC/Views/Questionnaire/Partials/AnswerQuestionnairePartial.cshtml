@@ -42,7 +42,7 @@
                     <h3>@question.QuestionText</h3>
                 </label>
                 @Html.HiddenFor(answer => answer.MultipleAnswer.DropdownList)
-                @Html.DropDownListFor(answer => answer.MultipleAnswer.Choices[0], question.Options.Select(option => new SelectListItem(option, option)),
+                @Html.DropDownListFor(answer => answer.MultipleAnswer.Choices[0], question.Options.Select(option => new SelectListItem(option, option)), "Maak een keuze", 
                     new {@class="w-100 form-control"})
             </div>
             break;

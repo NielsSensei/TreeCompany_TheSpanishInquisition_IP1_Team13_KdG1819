@@ -339,7 +339,7 @@ namespace UIMVC.Controllers
                 user = _userService.GetAnonymousUser();
             }
 
-            if (addAnswer.MultipleAnswer != null)
+            if (addAnswer.MultipleAnswer?.Choices != null && addAnswer.MultipleAnswer.Choices[0] != null)
             {
                 if (!question.Optional)
                 {
