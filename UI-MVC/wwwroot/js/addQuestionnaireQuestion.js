@@ -7,6 +7,7 @@ let containerToPutOptionsIn = document.querySelector(".optionsContainer");
 let addedOptions = 0;
 
 console.log("AddQuestionnaireQuestion active!");
+console.log(dropdownvalue);
 
 function requiresOptions() {
     dropdownvalue = dropdown.options[dropdown.selectedIndex].value;
