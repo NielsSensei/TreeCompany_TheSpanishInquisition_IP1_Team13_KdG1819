@@ -114,14 +114,9 @@ namespace BL
         #endregion
 
         #region Field
-        public IEnumerable<Field> GetAllFields(int ideaId)
+        public void RemoveField(int ideaId)
         {
-            return IdeationQuestionRepo.ReadAllFields(ideaId);
-        }
-
-        public void RemoveFields(int ideaId)
-        {
-            IdeationQuestionRepo.DeleteFields(ideaId);
+            IdeationQuestionRepo.DeleteField(ideaId);
         }
         #endregion
 

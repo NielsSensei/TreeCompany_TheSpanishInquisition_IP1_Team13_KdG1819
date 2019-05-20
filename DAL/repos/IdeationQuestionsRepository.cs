@@ -66,57 +66,43 @@ namespace DAL.repos
             return dao;
         }
 
-        private IdeaFieldsDao ConvertToDao(Field obj)
+        private IdeaFieldsDao ConvertToFieldDao(Idea idea)
         {
-            return new IdeaFieldsDao
+            IdeaFieldsDao ifd =  new IdeaFieldsDao()
             {
-                FieldId = obj.Id,
-                IdeaId = obj.Idea.Id,
-                FieldText = obj.Text
+                FieldId = idea.Field.Id,
+                IdeaId = idea.Id
             };
-        }
 
-        private IdeaFieldsDao ConvertToDao(ClosedField obj)
-        {
-            return new IdeaFieldsDao
+            if (idea.Field != null)
             {
-                FieldId = obj.Id,
-                IdeaId = obj.Idea.Id,
-                FieldStrings = ExtensionMethods.ListToString(obj.Options)
-            };
-        }
+                ifd.FieldText = idea.Field.Text;
+            }
 
-        private IdeaFieldsDao ConvertToDao(ImageField obj)
-        {
-            return new IdeaFieldsDao
+            if (idea.Cfield != null)
             {
-                FieldId = obj.Id,
-                IdeaId = obj.Idea.Id,
-                UploadedImage = obj.UploadedImage
-            };
-        }
+                ifd.FieldStrings = ExtensionMethods.ListToString(idea.Cfield.Options);
+            }
 
-        private IdeaFieldsDao ConvertToDao(VideoField obj)
-        {
-            return new IdeaFieldsDao
+            if (idea.Ifield != null)
             {
-                FieldId = obj.Id,
-                IdeaId = obj.Idea.Id,
-                MediaLink = obj.VideoLink
-            };
-        }
+                ifd.UploadedImage = idea.Ifield.UploadedImage;
+            }
 
-        private IdeaFieldsDao ConvertToDao(MapField obj)
-        {
-            return new IdeaFieldsDao
+            if (idea.Vfield != null)
             {
-                FieldId = obj.Id,
-                IdeaId = obj.Idea.Id,
-                LocationX = obj.LocationX,
-                LocationY = obj.LocationY
-            };
-        }
+                ifd.MediaLink = idea.Vfield.VideoLink;
+            }
 
+            if (idea.Mfield != null)
+            {
+                ifd.LocationX = idea.Mfield.LocationX;
+                ifd.LocationY = idea.Mfield.LocationY; 
+            }
+            
+            return ifd;
+        }
+        
         private IdeationQuestion ConvertToDomain(IdeationQuestionsDao dao)
         {
             return new IdeationQuestion
@@ -163,57 +149,7 @@ namespace DAL.repos
                 Status = (ReportStatus) dao.ReportApproved
             };
         }
-
-        private Field ConvertFieldToDomain(IdeaFieldsDao dao)
-        {
-            return new Field {
-                Id = dao.FieldId,
-                Idea = new Idea { Id = dao.IdeaId },
-                Text = dao.FieldText
-            };
-        }
-
-        private ClosedField ConvertClosedFieldToDomain(IdeaFieldsDao dao)
-        {
-            return new ClosedField
-            {
-                Id = dao.FieldId,
-                Idea = new Idea { Id = dao.IdeaId },
-                Options = ExtensionMethods.StringToList(dao.FieldStrings)
-            };
-        }
-
-        private MapField ConvertMapFieldToDomain(IdeaFieldsDao dao)
-        {
-            return new MapField
-            {
-                Id = dao.FieldId,
-                Idea = new Idea { Id = dao.IdeaId },
-                LocationX = dao.LocationX,
-                LocationY = dao.LocationY
-            };
-        }
-
-        private ImageField ConvertImageFieldToDomain(IdeaFieldsDao dao)
-        {
-            return new ImageField
-            {
-                Id = dao.FieldId,
-                Idea = new Idea { Id = dao.IdeaId },
-                UploadedImage = dao.UploadedImage
-            };
-        }
-
-        private VideoField ConvertVideoFieldToDomain(IdeaFieldsDao dao)
-        {
-            return new VideoField
-            {
-                Id = dao.FieldId,
-                Idea = new Idea { Id = dao.IdeaId },
-                VideoLink = dao.MediaLink
-            };
-        }
-
+        
         private ReportsDao ConvertToDao(Report obj)
         {
             return new ReportsDao()
@@ -253,7 +189,7 @@ namespace DAL.repos
         private int FindNextAvailableFieldId()
         {
             if (!_ctx.IdeaFields.Any()) return 1;
-            int newId = ReadAllFields().Max(field => field.Id)+1;
+            int newId = _ctx.IdeaFields.Max(f => f.FieldId)+1;
             return newId;
         }
         #endregion
@@ -331,8 +267,7 @@ namespace DAL.repos
         public Idea Create(Idea idea)
         {
             IEnumerable<Idea> ideas = ReadAllIdeasByQuestion(idea.IdeaQuestion.Id);
-            int lastField = FindNextAvailableFieldId();
-
+            
             foreach (Idea i in ideas)
             {
                 if(i.Title == idea.Title && !i.IsDeleted)
@@ -343,43 +278,12 @@ namespace DAL.repos
             }
 
             idea.Id = FindNextAvailableIdeaId();
-
             _ctx.Ideas.Add(ConvertToDao(idea));
 
-            if (idea.Field != null)
-            {
-                idea.Field.Id = lastField;
-                lastField++;
-                _ctx.IdeaFields.Add(ConvertToDao(idea.Field));   
-            }
-
-            if (idea.Cfield != null)
-            {
-                idea.Cfield.Id = lastField;
-                lastField++;
-                _ctx.IdeaFields.Add(ConvertToDao(idea.Cfield)); 
-            }
-
-            if (idea.Ifield != null)
-            {
-                idea.Ifield.Id = lastField;
-                lastField++;
-                _ctx.IdeaFields.Add(ConvertToDao(idea.Ifield));
-            }
-
-            if (idea.Vfield != null)
-            {
-                idea.Vfield.Id = lastField;
-                lastField++;
-                _ctx.IdeaFields.Add(ConvertToDao(idea.Vfield));
-            }
-
-            if (idea.Mfield != null)
-            {
-                idea.Mfield.Id = lastField;
-                _ctx.IdeaFields.Add(ConvertToDao(idea.Mfield));
-            }
-
+            IdeaFieldsDao fieldsDao = ConvertToFieldDao(idea);
+            fieldsDao.FieldId = FindNextAvailableFieldId();
+            _ctx.IdeaFields.Add(fieldsDao);
+            
             _ctx.SaveChanges();
 
             return idea;
@@ -396,43 +300,43 @@ namespace DAL.repos
         public Idea ReadWithFields(int id)
         {
             Idea idea = ReadIdea(id, true);
-            List<IdeaFieldsDao> fields = _ctx.IdeaFields.ToList().FindAll(i => i.IdeaId == id);
+            IdeaFieldsDao field = _ctx.IdeaFields.First(i => i.IdeaId == id);
 
-            for (int i = 0; i < fields.Count; i++)
+            if (field.FieldText != null)
             {
-                if (fields[i].FieldText != null && idea.Field == null)
-                {
-                    idea.Field = ConvertFieldToDomain(fields[i]);
-                }
-
-                if (fields[i].FieldStrings != null)
-                {
-                    idea.Cfield = ConvertClosedFieldToDomain(fields[i]);
-                }
-
-                if(fields[i].LocationX > 0)
-                {
-                    idea.Mfield = ConvertMapFieldToDomain(fields[i]);
-                }
-
-                if(fields[i].UploadedImage != null)
-                {
-                    idea.Ifield = ConvertImageFieldToDomain(fields[i]);
-                }
-
-                if(fields[i].MediaLink != null)
-                {
-                    idea.Vfield = ConvertVideoFieldToDomain(fields[i]);
-                }
+                idea.Field = new Field(){ Id = field.FieldId, Idea = idea, Text = field.FieldText, 
+                    TextLength = field.FieldText.Length };  
             }
 
+            if (field.FieldStrings != null)
+            {
+                idea.Cfield = new ClosedField(){ Id = field.FieldId, Idea = idea, 
+                    Options = ExtensionMethods.StringToList(field.FieldStrings) };  
+            }
+
+            if (field.LocationX != 0)
+            {
+                idea.Mfield = new MapField(){ Id = field.FieldId, Idea = idea, LocationX = field.LocationX, 
+                    LocationY = field.LocationY };
+            }
+
+            if (field.UploadedImage != null)
+            {
+                idea.Ifield = new ImageField(){ Id = field.FieldId, Idea = idea, UploadedImage = field.UploadedImage };
+            }
+
+            if (field.MediaLink != null)
+            {
+                idea.Vfield = new VideoField(){ Id = field.FieldId, Idea = idea, VideoLink = field.MediaLink };
+            }
+            
             return idea;
         }
 
         public void Update(Idea obj)
         {
             IdeasDao newIdea = ConvertToDao(obj);
-            IdeasDao foundIdea = _ctx.Ideas.First(i => i.IdeaId == obj.Id);
+            IdeasDao foundIdea = _ctx.Ideas.FirstOrDefault(i => i.IdeaId == obj.Id);
             if (foundIdea != null)
             {
                 foundIdea.Title = newIdea.Title;
@@ -449,62 +353,19 @@ namespace DAL.repos
                 _ctx.Ideas.Update(foundIdea);
             }
 
-            if (obj.Field != null)
+            IdeaFieldsDao newIdeaFields = ConvertToFieldDao(obj);
+            IdeaFieldsDao foundIdeaFields = _ctx.IdeaFields.FirstOrDefault(f => f.IdeaId == obj.Id);
+            if (foundIdeaFields != null)
             {
-                IdeaFieldsDao newTextField = ConvertToDao(obj.Field);
-                IdeaFieldsDao foundTextField = _ctx.IdeaFields.First(f => f.FieldId == obj.Field.Id);
-                if (foundTextField != null)
-                {
-                    foundTextField.FieldText = newTextField.FieldText;
-                    _ctx.IdeaFields.Update(foundTextField);
-                }
+                foundIdeaFields.FieldText = newIdeaFields.FieldText;
+                foundIdeaFields.FieldStrings = newIdeaFields.FieldStrings;
+                foundIdeaFields.LocationX = newIdeaFields.LocationX;
+                foundIdeaFields.LocationY = newIdeaFields.LocationY;
+                foundIdeaFields.UploadedImage = newIdeaFields.UploadedImage;
+                foundIdeaFields.MediaLink = newIdeaFields.MediaLink;
+                _ctx.IdeaFields.Update(foundIdeaFields);
             }
-
-            if (obj.Cfield != null)
-            {
-                IdeaFieldsDao newCField = ConvertToDao(obj.Cfield);
-                IdeaFieldsDao foundCField = _ctx.IdeaFields.First(f => f.FieldId == obj.Cfield.Id);
-                if (foundCField != null)
-                {
-                    foundCField.FieldStrings = newCField.FieldStrings;
-                    _ctx.IdeaFields.Update(foundCField);
-                }
-            }
-
-            if (obj.Mfield != null)
-            {
-                IdeaFieldsDao newMField = ConvertToDao(obj.Mfield);
-                IdeaFieldsDao foundMField = _ctx.IdeaFields.First(f => f.FieldId == obj.Mfield.Id);
-                if (foundMField != null)
-                {
-                    foundMField.LocationX = newMField.LocationX;
-                    foundMField.LocationY = newMField.LocationY;
-                    _ctx.IdeaFields.Update(foundMField);
-                }
-            }
-
-            if (obj.Ifield != null)
-            {
-                IdeaFieldsDao newIField = ConvertToDao(obj.Ifield);
-                IdeaFieldsDao foundIField = _ctx.IdeaFields.First(f => f.FieldId == obj.Ifield.Id);
-                if (foundIField != null)
-                {
-                    foundIField.UploadedImage = newIField.UploadedImage;
-                    _ctx.IdeaFields.Update(foundIField);
-                }
-            }
-
-            if (obj.Vfield != null)
-            {
-                IdeaFieldsDao newVField = ConvertToDao(obj.Vfield);
-                IdeaFieldsDao foundVField = _ctx.IdeaFields.First(f => f.FieldId == obj.Vfield.Id);
-                if (foundVField != null)
-                {
-                    foundVField.MediaLink = newVField.MediaLink;
-                    _ctx.IdeaFields.Update(foundVField);
-                }
-            }
-
+            
             _ctx.SaveChanges();
         }
 
@@ -534,56 +395,11 @@ namespace DAL.repos
         }
 
         #region Field CRUD
-        public void DeleteField(int id)
+        public void DeleteField(int ideaId)
         {
-            IdeaFieldsDao i = _ctx.IdeaFields.First(d => d.FieldId == id);
+            IdeaFieldsDao i = _ctx.IdeaFields.First(d => d.IdeaId == ideaId);
             _ctx.IdeaFields.Remove(i);
             _ctx.SaveChanges();
-        }
-
-        public void DeleteFields(int ideaId)
-        {
-            List<Field> fields = (List<Field>) ReadAllFields(ideaId);
-            foreach (Field field in fields)
-            {
-                DeleteField(field.Id);
-            }
-        }
-
-        public IEnumerable<Field> ReadAllFields()
-        {
-            List<Field> myQuery = new List<Field>();
-
-            foreach (IdeaFieldsDao dao in _ctx.IdeaFields)
-            {
-                if (dao.FieldText != null)
-                {
-                    myQuery.Add(ConvertFieldToDomain(dao));
-                }
-                else if (dao.FieldStrings != null)
-                {
-                    myQuery.Add(ConvertClosedFieldToDomain(dao));
-                }
-                else if (dao.LocationX > 0)
-                {
-                    myQuery.Add(ConvertMapFieldToDomain(dao));
-                }
-                else if (dao.UploadedImage != null)
-                {
-                    myQuery.Add(ConvertImageFieldToDomain(dao));
-                }
-                else if (dao.MediaLink != null)
-                {
-                    myQuery.Add(ConvertVideoFieldToDomain(dao));
-                }
-            }
-
-            return myQuery;
-        }
-
-        public IEnumerable<Field> ReadAllFields(int ideaId)
-        {
-            return ReadAllFields().ToList().FindAll(idea => idea.Idea.Id == ideaId);
         }
         #endregion
         #endregion

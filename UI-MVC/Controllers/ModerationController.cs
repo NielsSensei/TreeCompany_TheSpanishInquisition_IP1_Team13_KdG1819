@@ -187,7 +187,7 @@ namespace UIMVC.Controllers
                 i.ExtraInfo = cim.ExtraInfo;
             }
 
-            if (cim.MediaLink != null)
+            if (cim.MediaLink != null && cim.MediaLink.Contains("youtube.com/watch?v="))
             {
                 i.MediaLink = "https://youtube.com/embed/" + cim.MediaLink.Split("=")[1].Split("&")[0];
             }
@@ -291,9 +291,15 @@ namespace UIMVC.Controllers
             {
                 Id = ideation,
                 Title = Request.Form["Title"].ToString(),
-                ExtraInfo = Request.Form["ExtraInfo"].ToString(),
-                MediaLink = "https://youtube.com/embed/" + Request.Form["MediaFile"].ToString().Split("=")[1].Split("&")[0]
+                ExtraInfo = Request.Form["ExtraInfo"].ToString()
             };
+            
+            if(!Request.Form["MediaFile"].ToString().Equals("") && 
+               Request.Form["MediaFile"].ToString().Contains("youtube.com/watch?v="))
+            {
+                i.MediaLink = "https://youtube.com/embed/" +
+                              Request.Form["MediaFile"].ToString().Split("=")[1].Split("&")[0];
+            }
 
             try
             {
@@ -305,6 +311,8 @@ namespace UIMVC.Controllers
 
             }catch(FormatException e)
             {
+                Ideation previous = _moduleMgr.GetIdeation(i.Id);
+                i.ParentPhase = _projMgr.GetPhase(previous.ParentPhase.Id);
                 _moduleMgr.EditIdeation(i);
             }
 
@@ -321,6 +329,7 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
         }
+        
         #region Ideas
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
