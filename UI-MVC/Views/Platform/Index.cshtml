@@ -50,7 +50,7 @@
             {
                 foreach (Project project in ProjectService.CollectPlatformProjects(Model))
                 {
-                    if (project.Visible)
+                    if (project.Visible || RoleService.IsAdmin(User).Result)
                     {
                         @Html.DisplayFor(m => project)
                     }
