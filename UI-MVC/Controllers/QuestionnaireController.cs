@@ -303,6 +303,8 @@ namespace UIMVC.Controllers
 
             List<QuestionnaireQuestion> questions = QqMgr.GetAllByModuleId(questionnaireid);
 
+            questionnaire.Questions = questions;
+
             foreach (QuestionnaireQuestion qQ in questions)
             {
                 if (qQ.QuestionType == QuestionType.Drop || qQ.QuestionType == QuestionType.Multi ||

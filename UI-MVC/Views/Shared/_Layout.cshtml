@@ -1,4 +1,5 @@
 ﻿@using Domain.Projects
+@using Domain.UserInput
 @using Domain.Users
 
 <!DOCTYPE html>
@@ -35,19 +36,21 @@
                          <li class="nav-item layouttitle">
                              <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@project.Id">@project.Title</a>
                          </li>
-                         @if (ViewData["Module"] != null)
+                         @if (ViewData["Module"] != null && ViewData["Module"].GetType() == typeof(Ideation))
                           {
-                              Module module = (Module) ViewData["Module"];
+                              Ideation ideation = (Ideation) ViewData["Module"];
                               <li class="nav-item layouttitle nav-link">></li>
                               <li class="nav-item layouttitle">
-                                  @if (module.GetType() == typeof(Module))
-                                  {
-                                      <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectIdeation" asp-route-id="@module.Id">@module.Title</a>
-                                  } else if (module.GetType() == typeof(Questionnaire))
-                                  {
-                                      
-                                  }
-                                  
+                                  <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectIdeation" asp-route-id="@ideation.Id">@ideation.Title</a>
+                              </li>
+                          }
+                         @if (ViewData["Module"] != null && ViewData["Module"].GetType() == typeof(Questionnaire))
+                          {
+                              Questionnaire questionnaire = (Questionnaire) ViewData["Module"];
+                              <li class="nav-item layouttitle nav-link">></li>
+                              <li class="nav-item layouttitle">
+                                  <a class="nav-link test" asp-area="" asp-controller="Questionnaire" asp-action="AnswerQuestionnaire" asp-route-questionnaireId="@questionnaire.Id"
+                                     asp-route-questionId="@questionnaire.Questions[0].Id">@questionnaire.Title</a>
                               </li>
                           }
                      }

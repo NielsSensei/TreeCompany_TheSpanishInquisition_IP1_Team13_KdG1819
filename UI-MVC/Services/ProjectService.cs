@@ -48,23 +48,41 @@ namespace UIMVC.Services
         }
         
         
-        #region Breadcrumbs:Platform
+        #region Breadcrumbs
 
         public Platform GetPlatform(Module moduleIn)
         {
-            Module module = _moduleManager.GetIdeation(moduleIn.Id);
+            Module module = null;
+            if (moduleIn.GetType() == typeof(Questionnaire))
+            {
+                module = _moduleManager.GetQuestionnaire(moduleIn.Id, false);
+            }
+            else if (moduleIn.GetType() == typeof(Ideation))
+            {
+                module = _moduleManager.GetIdeation(moduleIn.Id);
+            }
+            
             Project project = _projectManager.GetProject(module.Project.Id, false);
             return _platformManager.GetPlatform(project.Platform.Id);
         }
 
-        #endregion
-
-        #region BreadCrumbs:Project
-
         public Project GetProject(Module moduleIn)
         {
-            Module module = _moduleManager.GetIdeation(moduleIn.Id);
+            Module module = null;
+            if (moduleIn.GetType() == typeof(Questionnaire))
+            {
+                module = _moduleManager.GetQuestionnaire(moduleIn.Id, false);
+            }
+            else if (moduleIn.GetType() == typeof(Ideation))
+            {
+                module = _moduleManager.GetIdeation(moduleIn.Id);
+            }
             return _projectManager.GetProject(module.Project.Id, false);
+        }
+
+        public Ideation GetIdeation(IdeationQuestion ideationQuestion)
+        {
+            return _moduleManager.GetIdeation(ideationQuestion.Ideation.Id);
         }
 
         #endregion

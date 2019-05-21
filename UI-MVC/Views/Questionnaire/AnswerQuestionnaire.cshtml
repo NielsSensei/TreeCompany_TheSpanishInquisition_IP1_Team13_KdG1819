@@ -13,6 +13,7 @@
     ViewBag.Title = question.QuestionText;
     ViewData["Platform"] = ProjectService.GetPlatform(questionnaire);
     ViewData["Project"] = ProjectService.GetProject(questionnaire);
+    ViewData["Module"] = questionnaire;
     
 }
 
