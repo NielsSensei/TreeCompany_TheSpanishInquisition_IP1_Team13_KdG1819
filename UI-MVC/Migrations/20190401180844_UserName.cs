@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace UIMVC.Migrations
 {
@@ -20,3 +21,4 @@ namespace UIMVC.Migrations
         }
     }
 }
+*/

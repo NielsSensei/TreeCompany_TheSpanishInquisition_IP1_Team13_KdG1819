@@ -17,7 +17,7 @@ namespace UIMVC.Controllers.API
         ModuleManager modMgr;
         QuestionnaireQuestionManager qqMgr;
         IdeationQuestionManager iqMgr;
-        
+
 
         public ModuleController()
         {
@@ -27,7 +27,7 @@ namespace UIMVC.Controllers.API
             iqMgr = new IdeationQuestionManager();
         }
 
-        // GET: api/<controller>
+        // GET: api/<controller>/GetModules?projectId=1
         [HttpGet]
         [Route("GetModules")]
         public IActionResult GetModules(int projectId)
@@ -38,33 +38,26 @@ namespace UIMVC.Controllers.API
             {
                 return NotFound("Geen modules gevonden voor project: " + projectId);
             }
-            return Ok(modules);
 
-            
+            return Ok(modules);
         }
 
-        // GET api/<controller>/5
+        // GET api/<controller>/GetQuestionnaire?projectId=1&phaseId=1
         [HttpGet]
         [Route("GetQuestionnaire")]
         public IActionResult GetQuestionnaire(int projectId, int phaseId)
         {
             Questionnaire q = modMgr.GetQuestionnaire(phaseId, projectId);
-
-
-            if(q == null)
+            if (q == null)
             {
                 return NotFound("Geen Questionnaire gevonden voor deze phase!");
             }
 
-            if(q.OnGoing == false) return BadRequest("Deze vragenlijst is nog niet publiek geplaatst!");
-           
-            
-
-
-
+            if (q.OnGoing == false) return BadRequest("Deze vragenlijst is nog niet publiek geplaatst!");
             return Ok(q);
         }
 
+        // GET api/<controller>/GetIdeation?projectId=1&phaseId=1
         [HttpGet]
         [Route("GetIdeation")]
         public IActionResult GetIdeation(int projectId, int phaseId)
@@ -78,6 +71,7 @@ namespace UIMVC.Controllers.API
             return Ok(i);
         }
 
+        // GET api/<controller>/GetModuleForPhase?phaseId=1
         [HttpGet]
         [Route("GetModuleForPhase")]
         public IActionResult GetModuleForPhase(int phaseId)
@@ -87,40 +81,39 @@ namespace UIMVC.Controllers.API
             Phase phase = projMgr.GetPhase(phaseId);
 
             Module toReturn = new Module();
-           
+
             List<Module> modules = modMgr.GetAllModules(phase.Project.Id).ToList();
 
             foreach (Module mod in modules)
             {
-
                 if (mod.ParentPhase.Id == phase.Id)
                 {
                     if (mod.ModuleType == ModuleType.Questionnaire)
                     {
                         isQuestionnaire = true;
                         //toReturnQuestionnaire = (Questionnaire)mod;
-                        
                     }
                     else
                     {
                         isQuestionnaire = false;
                         //toReturnIdeation = (Ideation)mod;
                     }
-                    toReturn = mod;
 
+                    toReturn = mod;
                 }
             }
 
             if (isQuestionnaire)
             {
-                Questionnaire toReturnQuestionnaire = (Questionnaire)toReturn;
-                
+                Questionnaire toReturnQuestionnaire = (Questionnaire) toReturn;
+
 
                 List<QuestionnaireQuestion> qQuestions = qqMgr.GetAllByModuleId(toReturnQuestionnaire.Id);
 
                 foreach (QuestionnaireQuestion qQ in qQuestions)
                 {
-                    if (qQ.QuestionType == QuestionType.Drop || qQ.QuestionType == QuestionType.Multi || qQ.QuestionType == QuestionType.Single)
+                    if (qQ.QuestionType == QuestionType.Drop || qQ.QuestionType == QuestionType.Multi ||
+                        qQ.QuestionType == QuestionType.Single)
                     {
                         /*TODO optionlogica*/
                     }
@@ -130,9 +123,9 @@ namespace UIMVC.Controllers.API
                 return Ok(toReturnQuestionnaire);
             }
 
-            else if (!isQuestionnaire)
+            else
             {
-                Ideation toReturnIdeation = (Ideation)toReturn;
+                Ideation toReturnIdeation = (Ideation) toReturn;
 
                 List<IdeationQuestion> ideationQuestions = iqMgr.GetAllByModuleId(toReturnIdeation.Id).ToList();
 
@@ -148,50 +141,42 @@ namespace UIMVC.Controllers.API
 
 
             throw new Exception("Skipping the IF statement for some reason...");
-
-            
-
-            
-
         }
 
         // POST api/<controller>
         [HttpPost]
-        public IActionResult Post([FromBody]string value)
+        public IActionResult Post([FromBody] string value)
         {
             return null;
         }
 
         // PUT api/<controller>/5
         [HttpPut]
-        public IActionResult Put(int id, [FromBody]string value)
+        public IActionResult Put(int id, [FromBody] string value)
         {
             return null;
         }
 
-        //DAVIDSHIZZLE TO REFACTOR
-        //moduleId
-        /*[HttpGet("{id}")]
-        public async Task<ActionResult<Idea>> GetIdea(int id)
-        {
 
-            var idea = _idQuesMan.GetIdea(id);
-            if (idea == null)
+        //api/module/GetIdeas?id=1
+        [HttpGet("GetIdeas")]
+        public IActionResult GetIdeas(int id)
+        {
+            var ideas = iqMgr.GetIdeas(id);
+            if (ideas == null)
             {
                 return NotFound();
             }
 
-            return idea;
+            return Ok(ideas);
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<Idea>> PostIdea(Idea idea)
         {
             _idQuesMan.MakeIdea(idea);
 
-            return CreatedAtAction(nameof(GetIdea), new { id = idea.Id }, idea);
-        }*/
-
-
+            return CreatedAtAction(nameof(GetIdea), new {id = idea.Id}, idea);
+        }#1#*/
     }
 }
