@@ -31,22 +31,25 @@
                     <img alt="FrontPage" class="card-img"
                          src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
                 </div>
-                <div class="card-footer">
-                    <div class="row justify-content-center">
-                        <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject"
-                           asp-route-platform="@Model.Id">
-                            Maak nieuw project aan
-                        </a>
+                @if (User.Identity.IsAuthenticated && await RoleService.IsAdmin(User))
+                {
+                    <div class="card-footer">
+                        <div class="row justify-content-center">
+                            <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject"
+                               asp-route-platform="@Model.Id">
+                                Maak nieuw project aan
+                            </a>
+                        </div>
                     </div>
+                }
 
-                </div>
             </section>
             <p class="text-info">@ViewData["StatusMessage"]</p>
         </div>
         <div class="col-md-12 col-lg-7">
             <h1>Projecten</h1>
             <hr/>
-            @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any() || 
+            @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any() ||
                  (!(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result) && !ProjectService.CollectPlatformProjects(Model).Any(project => project.Visible)))
             {
                 <h4>Er zijn geen projecten voor dit platform</h4>
