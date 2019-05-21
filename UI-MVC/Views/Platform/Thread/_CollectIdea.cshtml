@@ -67,8 +67,23 @@ else
             </div>
             <hr/>
             <section class="row justify-content-between m-auto">
-                @Html.Partial("_ReactionNumbersPartial", new LikeViewModel(){ IconStyle = LikeVisibility.IdeaLikes,
-                LikeCount = Model.ToView.VoteCount, ShareCount = Model.ToView.ShareCount, RetweetCount = Model.ToView.RetweetCount })
+                @if (Model.Voting)
+                {
+                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+                    {
+                        IconStyle = LikeVisibility.IdeaLikes, LikeCount = Model.ToView.VoteCount, 
+                        ShareCount = Model.ToView.ShareCount, RetweetCount = Model.ToView.RetweetCount
+                    })  
+                }
+                else
+                {
+                    @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+                    {
+                        IconStyle = LikeVisibility.IdeaWithoutLikes, LikeCount = Model.ToView.VoteCount, 
+                        ShareCount = Model.ToView.ShareCount, RetweetCount = Model.ToView.RetweetCount
+                    })
+                }
+                
                 <div>
                     @if (Model.IdeaLevel < 3)
                     {
@@ -76,7 +91,8 @@ else
                                 data-target="#makeCommentModal@(Model.ToView.Id)">Reageren
                         </button>
                     }
-                    @if (!User.Identity.IsAuthenticated)
+
+                    @if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && Model.Voting)
                     {
                         <a class="btn btn-primary" asp-controller="Platform" asp-action="AddVote"
                            asp-route-idea="@Model.ToView.Id"
@@ -85,15 +101,9 @@ else
                             Stemmen
                         </a>
                     }
-                    else if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
-                    {
-                        <a class="btn btn-primary" asp-controller="Platform" asp-action="AddVote"
-                           asp-route-idea="@Model.ToView.Id"
-                           asp-route-user="@UserManager.GetUserId(User)"
-                           asp-route-thread="@Model.ToView.IdeaQuestion.Id">
-                            Stemmen
-                        </a>
 
+                    @if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
+                    {
                         <a data-toggle="modal" data-target="#makeReportModal@(Model.ToView.Id)">
                             <img alt="reportflag" src="https://image.flaticon.com/icons/svg/148/148882.svg"
                                  title="Rapporteer dit idee!" width="25px" height="25px"/>

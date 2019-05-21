@@ -61,7 +61,8 @@ namespace DAL.repos
             {
                     ModuleId = obj.Id,
                     ExtraInfo = obj.ExtraInfo,
-                    MediaFile = obj.MediaLink
+                    MediaFile = obj.MediaLink,
+                    UserVote = obj.UserVote
             };
 
             if (obj.User != null)
@@ -77,7 +78,6 @@ namespace DAL.repos
             if (obj.Event != null)
             {
                 dao.EventId = obj.Event.Id;
-                dao.UserIdea = obj.UserIdea;
                 //DTO.Organisation = Org;
             }
 
@@ -90,7 +90,7 @@ namespace DAL.repos
             {
                 Id = dao.ModuleId,
                 User = new UimvcUser { Id = dao.UserId },
-                UserIdea = dao.UserIdea,
+                UserVote = dao.UserVote,
                 Event = new Event { Id = dao.EventId },
                 MediaLink = dao.MediaFile,
                 ExtraInfo = dao.ExtraInfo,
@@ -181,6 +181,7 @@ namespace DAL.repos
                 foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
                 foundIdeation.MediaFile = newIdeation.MediaFile;
                 foundIdeation.RequiredFields = newIdeation.RequiredFields;
+                foundIdeation.UserVote = newIdeation.UserVote;
             }
 
             ModulesDao newModule = GrabModuleInformationDao(obj);

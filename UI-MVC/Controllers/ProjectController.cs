@@ -72,7 +72,7 @@ namespace UIMVC.Controllers
 
             Project newProj = _projManager.MakeProject(pr);
 
-            if (pvm.InitialProjectImages.Any())
+            if (pvm.InitialProjectImages != null && pvm.InitialProjectImages.Any())
             {
                 foreach (IFormFile file in pvm.InitialProjectImages)
                 {

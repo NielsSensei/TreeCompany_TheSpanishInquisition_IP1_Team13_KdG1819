@@ -1,11 +1,16 @@
+@using Domain.Projects
 @model UIMVC.Models.AlterIdeationModel
+
+@{
+    Phase parent = (Phase) @ViewData["Parent"];
+}
 
 <div class="container">
     <div class="row">
         <div class="col-md-10">
             <h1>Een Ideation Aanpassen.</h1>
             <form asp-controller="Moderation" asp-action="ConfirmChangeIdeation" method="post" 
-                  asp-route-ideation="@ViewData["Ideation"]">
+                  asp-route-ideation="@ViewData["Ideation"]" asp-route-aim="@Model">
                 <div class="form-group">
                     <label>ProjectID</label>
                     <input disabled value="@ViewData["Project"]" class="form-control"/>
@@ -18,7 +23,7 @@
                     <div class="form-group row">  
                         <label class="col-sm-2 col-form-label">Huidige fase</label>
                         <div class="col-sm-10">
-                            <input class="form-control" type="Text" value="@Model.ParentPhase.Description" />
+                            <input class="form-control" type="Text" value="@parent.Description" />
                         </div>
                     </div>
                 </fieldset>
@@ -37,15 +42,25 @@
                                 
                 <div class="form-group">
                     <label label-for="Title">Titel van de module</label>
-                    @Html.TextBoxFor(c => c.Title, new { @class = "form-control" })
+                    <input asp-for="Title" class="form-control" value="@ViewData["Title"]"/>
                 </div>
                 <div class="form-group">
                     <label label-for="ExtraInfo">Geef hier extra informatie</label>
-                    @Html.TextBoxFor(c => c.ExtraInfo, new { @class = "form-control" })
+                    <input asp-for="ExtraInfo" class="form-control" value="@ViewData["ExtraInfo"]"/>
                 </div>
                 <div class="form-group">
                     <label asp-for="MediaFile">Geef hier een nieuw filmpje eventueel: </label>
-                    @Html.TextBoxFor(c => c.MediaFile,   new { @class = "form-control" })
+                    <input asp-for="MediaFile" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="UserVote">Mogen gebruikers stemmen op de ideeën? </label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="UserVote" class="form-check-input" check="@((bool) ViewData["UserVote"])"/>
+                        </div>
+                    </div>
                 </div>
                 <br/>
                 <div class="row">

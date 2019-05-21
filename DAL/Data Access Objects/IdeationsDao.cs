@@ -7,7 +7,7 @@
         public string ExtraInfo { get; set; }
         public bool Organisation { get; set; }
         public int EventId { get; set; }
-        public bool UserIdea { get; set; }
+        public bool UserVote { get; set; }
         public string MediaFile { get; set; }
         public byte RequiredFields { get; set; }
     }
