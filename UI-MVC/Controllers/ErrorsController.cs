@@ -14,19 +14,17 @@ namespace UIMVC.Controllers
         }
 
         [Route("Error/{statuscode}")]
-        public IActionResult HandleErrorCode(int statuscode)
+        public IActionResult HandleErrorCode(int statuscode, string path)
         {
-            var statusCodeData = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-
             switch (statuscode)
             {
                 case 404:
                     ViewBag.ErrorMessage = "Sorry, de gevraagde pagina kon niet worden gevonden.";
-                    ViewBag.RouteOfException = statusCodeData.OriginalPath;
+                    ViewBag.RouteOfException = path;
                     break;
                 case 500:
                     ViewBag.ErrorMessage = "Er is blijkbaar iets misgelopen langs onze kant";
-                    ViewBag.RouteOfException = statusCodeData.OriginalPath;
+                    ViewBag.RouteOfException = path;
                     break;
             }
 

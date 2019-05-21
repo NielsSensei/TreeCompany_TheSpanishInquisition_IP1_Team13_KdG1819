@@ -1,3 +1,4 @@
+@using Domain.Projects
 @using UIMVC.Services
 @inject UserService UserService
 @inject RoleService RoleService
@@ -8,13 +9,12 @@
 @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
 {
     LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount, TwitterLikeCount = Model.TwitterLikeCount,
-    ShareCount = Model.ShareCount, RetweetCount = Model.RetweetCount, IconStyle = 3
+    ShareCount = Model.ShareCount, RetweetCount = Model.RetweetCount, IconStyle = LikeVisibility.IdeationLikes
 })
 <br/>
 <p>@Model.ExtraInfo</p>
 @if (Model.Event.Id != 0)
 {
-                @* TODO Zorgt voor een eventPagina *@
     <p>Deze ideation is georganiseerd dankzij dit evenement</p>
 }
 <section>
