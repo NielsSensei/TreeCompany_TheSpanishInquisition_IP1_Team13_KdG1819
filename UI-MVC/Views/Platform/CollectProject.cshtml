@@ -29,10 +29,10 @@
         }
         else
         {
-            <div class="col-4">
+            <div class="col-md-12 col-lg-4">
                 @Html.Partial("_ProjectHeaderPartial", new AddImageModel(){ Project = Model })
             </div>
-            <div class="col-8">
+            <div class="col-md-12 col-lg-8">
                 @if (ProjectService.CollectProjectImages(Model).Count() == 1)
                 {
                     <br/>
@@ -86,7 +86,7 @@
     <hr />
     <h2>Alle fases</h2>
     <div class="row">
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
             <h3>Huidige fase:</h3>
             @Html.DisplayFor(m => Model.CurrentPhase)<br/>
             @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
@@ -97,7 +97,7 @@
                 </a>
             }
         </div>
-        <div class="col-8">
+        <div class="d-none d-lg-inline col-8">
             <h3>Andere fases:</h3>
             <table class="table">
                 <thead>
@@ -176,12 +176,12 @@
 {
     <section class="container">
         <div class="row justify-content-around">
-            <a class="btn btn-primary" asp-controller="Moderation" asp-action="AddIdeation"
+            <a class="btn btn-primary m-2" asp-controller="Moderation" asp-action="AddIdeation"
                asp-route-project="@Model.Id">
                 Maak een nieuwe ideation
             </a>
 
-            <a class="btn btn-primary" asp-controller="Questionnaire" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
+            <a class="btn btn-primary m-2" asp-controller="Questionnaire" asp-action="AddQuestionnaire" asp-route-projectid="@Model.Id" method="get">
                         Nieuwe vragenlijst maken
             </a>
         </div>

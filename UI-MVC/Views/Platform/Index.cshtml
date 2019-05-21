@@ -32,10 +32,13 @@
                          src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject"
-                       asp-route-platform="@Model.Id">
-                        Maak nieuw project aan
-                    </a>
+                    <div class="row justify-content-center">
+                        <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject"
+                           asp-route-platform="@Model.Id">
+                            Maak nieuw project aan
+                        </a>
+                    </div>
+
                 </div>
             </section>
         </div>

@@ -4,16 +4,16 @@
     @if (Model.IconStyle == 1)
     {
         <div class="container">
-            <div class="row">
-                <div class="col-sm-4 align-items-end">
+            <div class="row justify-content-around">
+                <div class="col-4 align-items-end">
                     <img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/>
                     <p>@Model.LikeCount</p>
                 </div>
-                <div class="col-sm-4 align-items-end">
+                <div class="col-4 align-items-end">
                     <img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/>
                     <p>@Model.FbLikeCount</p>
                 </div>
-                <div class="col-sm-4 align-items-end">
+                <div class="col-4 align-items-end">
                     <img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/>
                     <p>@Model.TwitterLikeCount</p>
                 </div>
