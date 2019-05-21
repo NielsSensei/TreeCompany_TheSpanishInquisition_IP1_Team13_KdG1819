@@ -70,32 +70,36 @@ namespace DAL.repos
         {
             IdeaFieldsDao ifd =  new IdeaFieldsDao()
             {
-                FieldId = idea.Field.Id,
                 IdeaId = idea.Id
             };
 
             if (idea.Field != null)
             {
+                ifd.FieldId = idea.Field.Id;
                 ifd.FieldText = idea.Field.Text;
             }
 
             if (idea.Cfield != null)
             {
+                ifd.FieldId = idea.Cfield.Id;
                 ifd.FieldStrings = ExtensionMethods.ListToString(idea.Cfield.Options);
             }
 
             if (idea.Ifield != null)
             {
+                ifd.FieldId = idea.Ifield.Id;
                 ifd.UploadedImage = idea.Ifield.UploadedImage;
             }
 
             if (idea.Vfield != null)
             {
+                ifd.FieldId = idea.Vfield.Id;
                 ifd.MediaLink = idea.Vfield.VideoLink;
             }
 
             if (idea.Mfield != null)
             {
+                ifd.FieldId = idea.Mfield.Id;
                 ifd.LocationX = idea.Mfield.LocationX;
                 ifd.LocationY = idea.Mfield.LocationY; 
             }

@@ -37,6 +37,7 @@ namespace UIMVC.Controllers
         public IActionResult AddProject(int platform)
         {
             ViewData["platform"] = platform;
+            
             return View();
         }
 
@@ -56,26 +57,34 @@ namespace UIMVC.Controllers
                 Title = pvm.Title,
                 Platform = new Platform() {Id = platform},
                 Status = pvm.Status.ToUpper(),
-                LikeVisibility = 1,
                 Goal = pvm.Goal,
                 Visible = pvm.Visible
             };
 
-             Project newProj = _projManager.MakeProject(pr);
+            if (!Request.Form["LikeSettings"].ToString().Equals(""))
+            {
+                pr.LikeVisibility = (LikeVisibility) byte.Parse(Request.Form["LikeSettings"].ToString());
+            }
+            else
+            {
+                pr.LikeVisibility = LikeVisibility.EveryTypeOfLike;
+            }
 
-             if (pvm.InitialProjectImages.Any())
-             {
-                 foreach (IFormFile file in pvm.InitialProjectImages)
-                 {
-                     using (var memoryStream = new MemoryStream())
-                     {
-                         await file.CopyToAsync(memoryStream);
-                         _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
-                     }
-                 }  
-             }
+            Project newProj = _projManager.MakeProject(pr);
+
+            if (pvm.InitialProjectImages.Any())
+            {
+                foreach (IFormFile file in pvm.InitialProjectImages)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(memoryStream);
+                        _projManager.MakeProjectImage(memoryStream.ToArray(), newProj.Id);
+                    }
+                }  
+            }
              
-             return RedirectToAction("Index", "Platform", new {id = platform });
+            return RedirectToAction("Index", "Platform", new {id = platform });
         }
 
         [Authorize(Roles ="Admin, SuperAdmin")]
@@ -103,7 +112,8 @@ namespace UIMVC.Controllers
 
              if (project == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 404);
+                return RedirectToAction("HandleErrorCode", "Errors", 
+                    new { statuscode = 404, path="/Project/ChangeProject/" + id });
             }
 
             ViewData["Project"] = project;
@@ -120,9 +130,13 @@ namespace UIMVC.Controllers
             updateProj.Goal = epm.Goal;
             updateProj.Visible = epm.Visible;
             updateProj.Status = epm.Status.ToUpper();
+            
+            if (!Request.Form["LikeSettings"].ToString().Equals(""))
+            {
+                updateProj.LikeVisibility = (LikeVisibility) byte.Parse(Request.Form["LikeSettings"].ToString());
+            }
 
-
-             _projManager.EditProject(updateProj);
+            _projManager.EditProject(updateProj);
             return RedirectToAction("CollectProject", "Platform", new {id = updateProj.Id});
         }
 
@@ -220,7 +234,7 @@ namespace UIMVC.Controllers
 
          #region ChangePhase
 
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
@@ -229,7 +243,8 @@ namespace UIMVC.Controllers
 
              if (phase == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 404);
+                return RedirectToAction("HandleErrorCode", "Errors", 
+                    new { statuscode = 404, path="/Project/ChangePhase/" + phaseId });
             }
 
             ViewData["Phase"] = phase;

@@ -53,8 +53,7 @@ namespace DAL.repos
 
             return dao;
         }
-
-        // XV: TODO Create a check for organisation accounts
+        
         private IdeationsDao ConvertToDao(Ideation obj)
         {
             //bool Org = obj.User.Role == Role.LOGGEDINORG;
@@ -233,38 +232,7 @@ namespace DAL.repos
             return ReadAll().ToList().FindAll(i => i.Project.Id == projectId);
         }
         #endregion
-
-        #region Media CRUD
-        // TODO: (SPRINT2?) Als we images kunnen laden enal is het bonus, geen prioriteit tegen Sprint 1.
-        /*public Media Create(Media obj)
-        {
-            //if (!mediafiles.Contains(obj))
-            //{
-            //    mediafiles.Add(obj);
-            //}
-            throw new DuplicateNameException("This MediaFile already exist!");
-        }
-
-        public Media ReadMedia(int ideationId)
-        {
-            //Media m = Read(ideationID).Media;
-            //if (m != null)
-            //{
-            //    return m;
-            //}
-            throw new KeyNotFoundException("This Media can't be found!");
-        }
-
-        public void DeleteMedia(int ideationId)
-        {
-            //Media m = ReadMedia(ideationID);
-            //if (m != null)
-            //{
-            //    mediafiles.Remove(m);
-            //}
-        } */
-        #endregion
-
+        
         #region Tag CRUD
         public string CreateTag(string obj, int moduleId)
         {
