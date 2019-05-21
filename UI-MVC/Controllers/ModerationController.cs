@@ -359,7 +359,8 @@ namespace UIMVC.Controllers
                 return View(idea);
             }
 
-            return RedirectToAction(controllerName: "Errors", actionName: "HandleErrorCode", routeValues: id);
+            return RedirectToAction("HandleErrorCode", "Errors", new {statuscode = 404,
+                    path="/Moderation/CollectIdea/" + id });
         }
 
         [HttpPost]
@@ -435,7 +436,8 @@ namespace UIMVC.Controllers
                     new {Id = thread});
             }
 
-            return RedirectToAction("HandleErrorCode", "Errors", 404);
+            return RedirectToAction("HandleErrorCode", "Errors", 
+                new { statuscode = 404, path="/Moderation/DestroyIdea/" + idea });
         }
 
 

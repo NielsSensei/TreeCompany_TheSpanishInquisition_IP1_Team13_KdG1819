@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using UIMVC.Models;
 
 namespace UIMVC.Controllers
@@ -113,7 +112,8 @@ namespace UIMVC.Controllers
 
              if (project == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 404);
+                return RedirectToAction("HandleErrorCode", "Errors", 
+                    new { statuscode = 404, path="/Project/ChangeProject/" + id });
             }
 
             ViewData["Project"] = project;
@@ -135,13 +135,8 @@ namespace UIMVC.Controllers
             {
                 updateProj.LikeVisibility = (LikeVisibility) byte.Parse(Request.Form["LikeSettings"].ToString());
             }
-            else
-            {
-                updateProj.LikeVisibility = LikeVisibility.EveryTypeOfLike;
-            }
 
-
-             _projManager.EditProject(updateProj);
+            _projManager.EditProject(updateProj);
             return RedirectToAction("CollectProject", "Platform", new {id = updateProj.Id});
         }
 
@@ -239,7 +234,7 @@ namespace UIMVC.Controllers
 
          #region ChangePhase
 
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
@@ -248,7 +243,8 @@ namespace UIMVC.Controllers
 
              if (phase == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 404);
+                return RedirectToAction("HandleErrorCode", "Errors", 
+                    new { statuscode = 404, path="/Project/ChangePhase/" + phaseId });
             }
 
             ViewData["Phase"] = phase;

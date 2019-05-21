@@ -31,14 +31,20 @@ namespace UIMVC.Controllers
         }
 
         [Route("Platform/{id}")]
-        public IActionResult Index(int id)
+        public IActionResult Index(int id, string message)
         {
             Platform platform = _platformMgr.GetPlatform(id);
             if (platform == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 404);
+                return RedirectToAction("HandleErrorCode", "Errors", 
+                    new { statuscode = 404, path="/Platform/" + id  });
             }
 
+            if (message != null)
+            {
+                ViewData["StatusMessage"] = message;  
+            }
+            
             return View(platform);
         }
 
@@ -66,7 +72,8 @@ namespace UIMVC.Controllers
             Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
             if (platform == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 404);
+                return RedirectToAction("HandleErrorCode", "Errors", 
+                    new { statuscode = 404, path="/Platform/ChangePlatform/" + id });
             }
 
             ViewData["platform"] = platform;
@@ -157,7 +164,17 @@ namespace UIMVC.Controllers
                 return View(project);
             }
 
-            return RedirectToAction("HandleErrorCode", "Errors", 404);
+            if (!project.Visible)
+            {
+                return RedirectToAction("Index", "Platform", new
+                {
+                    id = project.Platform.Id, message = "Project is niet ingesteld voor het algemene publiek!"
+                });
+            }
+
+            
+            return RedirectToAction("HandleErrorCode", "Errors", 
+                new { statuscode = 404, path="/Platform/CollectProject/" + id  });
         }
 
         #endregion

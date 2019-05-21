@@ -30,27 +30,26 @@
             <input type="text" asp-for="Status" class="form-control" value="@project.Status"/>
         </div>
         <div class="form-group col-md-12">
-            <input type="checkbox" data-val="true" id="Visible" name="Visible" value="true">
-            <input name="Visible" type="hidden" value="false">
+            <input class="form-check-input" type="checkbox" asp-for="Visible">
             <label asp-for="Visible">Zichtbaar</label>
         </div>
         <div class="form-group col-md-12">
-                     @Html.DropDownList("LikeSettings", new SelectListItem[]
-                        {
-                            new SelectListItem("Enkel Gewone Likes","0"),
-                            new SelectListItem("Enkel Facebook Likes","1"),
-                            new SelectListItem("Enkel Twitter Likes","2"),
-                            new SelectListItem("Gewone En Facebook Likes","3"),
-                            new SelectListItem("Gewone En Twitter Likes","4"),
-                            new SelectListItem("Facebook En Twitter Likes","5"),
-                            new SelectListItem("Alle Type Likes","6")
-                        }, "Welke likes mogen er getoond worden?", new { @class = "form-control" })
+            @Html.DropDownList("LikeSettings", new SelectListItem[]
+            {
+                new SelectListItem("Enkel Gewone Likes","0"),
+                new SelectListItem("Enkel Facebook Likes","1"),
+                new SelectListItem("Enkel Twitter Likes","2"),
+                new SelectListItem("Gewone En Facebook Likes","3"),
+                new SelectListItem("Gewone En Twitter Likes","4"),
+                new SelectListItem("Facebook En Twitter Likes","5"),
+                new SelectListItem("Alle Type Likes","6")
+            }, "Welke likes mogen er getoond worden?", new { @class = "form-control" })
         </div>
 
          <div class="form-group col-md-6">
-            <a class="btn btn-primary" asp-controller="Platform" asp-action="Index" asp-route-id="@project.Platform.Id">Ga terug</a> 
-
-             <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" class="btn"/>
+             <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectProject" formmethod="get"
+                asp-route-id="@project.Id">Ga terug</a>
+             <input class="btn btn-primary" type="submit" Value="Opslaan"/>
         </div>
     </div>
 
