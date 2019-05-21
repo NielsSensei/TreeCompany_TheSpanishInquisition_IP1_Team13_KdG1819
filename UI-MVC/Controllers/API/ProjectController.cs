@@ -56,6 +56,25 @@ namespace UIMVC.Controllers.API
             return Ok(project);
         }
 
+        public IActionResult SortedBy(string quota, int platformId)
+        {
+            List<Project> projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId)).ToList();
+
+            switch (quota)
+            {
+                case "Naam": return Ok(projects.OrderBy(m => m.Title));
+                    break;
+                case "Status": return Ok(projects.OrderBy(m => m.Status));
+                    break;
+                case "Likes": return Ok(projects.OrderBy(m => m.LikeCount));
+                    break;
+                case "Reacties": return Ok(projects.OrderBy(m => m.ReactionCount));
+                    break;
+                default: return Ok(projects);
+            }
+                
+        }
+
         
         // PUT api/<controller>/5
         [HttpPut("{id}")]
