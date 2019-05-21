@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UIMVC.Models;
+using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
@@ -21,24 +21,32 @@ namespace UIMVC.Controllers
         private readonly ProjectManager _projectMgr;
         private readonly IdeationQuestionManager _iqMgr;
         private readonly UserManager<UimvcUser> _userManager;
+        private readonly RoleService _roleService;
 
-        public PlatformController(UserManager<UimvcUser> userManager)
+        public PlatformController(UserManager<UimvcUser> userManager, RoleService service)
         {
             _platformMgr = new PlatformManager();
             _projectMgr = new ProjectManager();
             _iqMgr = new IdeationQuestionManager();
             _userManager = userManager;
+            _roleService = service;
         }
 
         [Route("Platform/{id}")]
-        public IActionResult Index(int id)
+        public IActionResult Index(int id, string message)
         {
             Platform platform = _platformMgr.GetPlatform(id);
             if (platform == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 404);
+                return RedirectToAction("HandleErrorCode", "Errors", 
+                    new { statuscode = 404, path="/Platform/" + id  });
             }
 
+            if (message != null)
+            {
+                ViewData["StatusMessage"] = message;  
+            }
+            
             return View(platform);
         }
 
@@ -66,7 +74,8 @@ namespace UIMVC.Controllers
             Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
             if (platform == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 404);
+                return RedirectToAction("HandleErrorCode", "Errors", 
+                    new { statuscode = 404, path="/Platform/ChangePlatform/" + id });
             }
 
             ViewData["platform"] = platform;
@@ -139,7 +148,7 @@ namespace UIMVC.Controllers
         {
             Project project = _projectMgr.GetProject(id, false);
 
-            if (project.Visible && project.Id != 0)
+            if (project.Visible && project.Id != 0 || _roleService.IsAdmin(HttpContext.User).Result)
             {
                 List<Phase> phases = (List<Phase>) _projectMgr.GetAllPhases(id);
 
@@ -159,7 +168,17 @@ namespace UIMVC.Controllers
                 return View(project);
             }
 
-            return RedirectToAction("HandleErrorCode", "Errors", 404);
+            if (!project.Visible)
+            {
+                return RedirectToAction("Index", "Platform", new
+                {
+                    id = project.Platform.Id, message = "Project is niet ingesteld voor het algemene publiek!"
+                });
+            }
+
+            
+            return RedirectToAction("HandleErrorCode", "Errors", 
+                new { statuscode = 404, path="/Platform/CollectProject/" + id  });
         }
 
         #endregion

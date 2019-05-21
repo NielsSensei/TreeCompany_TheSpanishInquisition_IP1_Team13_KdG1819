@@ -6,7 +6,7 @@
 @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
 {
     LikeCount = Model.Project.LikeCount, FbLikeCount = Model.Project.FbLikeCount,
-    TwitterLikeCount = Model.Project.TwitterLikeCount, IconStyle = 1
+    TwitterLikeCount = Model.Project.TwitterLikeCount, IconStyle = Model.Project.LikeVisibility
 })
 <p>@Model.Project.Goal</p>
 @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
