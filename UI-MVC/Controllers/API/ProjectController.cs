@@ -12,12 +12,12 @@ namespace UIMVC.Controllers.API
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProjectsController : Controller
+    public class ProjectController : Controller
     {
         private ProjectManager projMgr;
         private PlatformManager platMgr;
 
-        public ProjectsController()
+        public ProjectController()
         {
             projMgr = new ProjectManager();
             platMgr = new PlatformManager();
