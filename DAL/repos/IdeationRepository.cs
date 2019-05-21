@@ -181,6 +181,7 @@ namespace DAL.repos
                 foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
                 foundIdeation.MediaFile = newIdeation.MediaFile;
                 foundIdeation.RequiredFields = newIdeation.RequiredFields;
+                foundIdeation.UserVote = newIdeation.UserVote;
             }
 
             ModulesDao newModule = GrabModuleInformationDao(obj);

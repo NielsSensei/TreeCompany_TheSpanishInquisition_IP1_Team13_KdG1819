@@ -270,22 +270,19 @@ namespace UIMVC.Controllers
 
             ViewData["Phases"] = availablePhases;
             ViewData["PhaseCount"] = availablePhases.Count;
-
+            ViewData["Title"] = i.Title;
+            ViewData["Parent"] = _projMgr.GetPhase(i.ParentPhase.Id);
             ViewData["Ideation"] = id;
-            AlterIdeationModel aim = new AlterIdeationModel()
-            {
-                Title = i.Title,
-                ExtraInfo = i.ExtraInfo,
-                ParentPhase = _projMgr.GetPhase(i.ParentPhase.Id)
-            };
+            ViewData["ExtraInfo"] = i.ExtraInfo;
+            ViewData["UserVote"] = i.UserVote;
 
-            return View(aim);
+            return View();
         }
 
 
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult ConfirmChangeIdeation(int ideation)
+        public IActionResult ConfirmChangeIdeation(int ideation, AlterIdeationModel aim)
         {
             Ideation i = new Ideation()
             {
