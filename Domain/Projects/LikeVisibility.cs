@@ -10,6 +10,7 @@ namespace Domain.Projects
         FbLikeCountAndTwitterLikeCount = 5,
         EveryTypeOfLike = 6,
         IdeationLikes = 7,
-        IdeaLikes = 8
+        IdeaLikes = 8,
+        IdeaWithoutLikes = 9
     }
 }

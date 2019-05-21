@@ -177,6 +177,7 @@ namespace UIMVC.Controllers
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
                 User = new UimvcUser(){Id = user},
                 ModuleType = ModuleType.Ideation,
+                UserVote = cim.UserVote,
                 Title = cim.Title,
                 OnGoing = true
             };
@@ -289,15 +290,14 @@ namespace UIMVC.Controllers
             Ideation i = new Ideation()
             {
                 Id = ideation,
-                Title = Request.Form["Title"].ToString(),
-                ExtraInfo = Request.Form["ExtraInfo"].ToString()
+                Title = aim.Title,
+                ExtraInfo = aim.ExtraInfo,
+                UserVote = aim.UserVote
             };
             
-            if(!Request.Form["MediaFile"].ToString().Equals("") && 
-               Request.Form["MediaFile"].ToString().Contains("youtube.com/watch?v="))
+            if(aim.MediaFile != null && aim.MediaFile.Contains("youtube.com/watch?v="))
             {
-                i.MediaLink = "https://youtube.com/embed/" +
-                              Request.Form["MediaFile"].ToString().Split("=")[1].Split("&")[0];
+                i.MediaLink = "https://youtube.com/embed/" + aim.MediaFile.Split("=")[1].Split("&")[0];
             }
 
             try
