@@ -30,6 +30,13 @@ namespace UIMVC.Controllers.API
         {
             var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId));
 
+            foreach (Project project in projects)
+            {
+                project.Phases = projMgr.GetAllPhases(project.Id).ToList();
+                Phase curPhase = projMgr.GetPhase(project.CurrentPhase.Id);
+                project.CurrentPhase = curPhase;
+            }
+
             if (projects == null)
                 return NotFound();
 
