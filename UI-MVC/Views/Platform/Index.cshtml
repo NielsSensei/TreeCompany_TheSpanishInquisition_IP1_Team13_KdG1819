@@ -42,7 +42,8 @@
         <div class="col-7">
             <h1>Projecten</h1>
             <hr/>
-            @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())
+            @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any() || 
+                 (!(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result) && !ProjectService.CollectPlatformProjects(Model).Any(project => project.Visible)))
             {
                 <h4>Er zijn geen projecten voor dit platform</h4>
             }
@@ -50,7 +51,7 @@
             {
                 foreach (Project project in ProjectService.CollectPlatformProjects(Model))
                 {
-                    if (project.Visible || RoleService.IsAdmin(User).Result)
+                    if (project.Visible || (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result))
                     {
                         @Html.DisplayFor(m => project)
                     }
