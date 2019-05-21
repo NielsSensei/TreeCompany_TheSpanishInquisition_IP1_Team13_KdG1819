@@ -17,7 +17,7 @@ namespace UIMVC.Controllers.API
         ModuleManager modMgr;
         QuestionnaireQuestionManager qqMgr;
         IdeationQuestionManager iqMgr;
-
+        
 
         public ModuleController()
         {
@@ -27,7 +27,7 @@ namespace UIMVC.Controllers.API
             iqMgr = new IdeationQuestionManager();
         }
 
-        // GET: api/<controller>/GetModules?projectId=1
+        // GET: api/<controller>
         [HttpGet]
         [Route("GetModules")]
         public IActionResult GetModules(int projectId)
@@ -40,20 +40,29 @@ namespace UIMVC.Controllers.API
             }
 
             return Ok(modules);
+
+            
         }
 
-        // GET api/<controller>/GetQuestionnaire?projectId=1&phaseId=1
+        // GET api/<controller>/5
         [HttpGet]
         [Route("GetQuestionnaire")]
         public IActionResult GetQuestionnaire(int projectId, int phaseId)
         {
             Questionnaire q = modMgr.GetQuestionnaire(phaseId, projectId);
-            if (q == null)
+
+
+            if(q == null)
             {
                 return NotFound("Geen Questionnaire gevonden voor deze phase!");
             }
 
-            if (q.OnGoing == false) return BadRequest("Deze vragenlijst is nog niet publiek geplaatst!");
+            if(q.OnGoing == false) return BadRequest("Deze vragenlijst is nog niet publiek geplaatst!");
+           
+            
+
+
+
             return Ok(q);
         }
 
@@ -81,39 +90,40 @@ namespace UIMVC.Controllers.API
             Phase phase = projMgr.GetPhase(phaseId);
 
             Module toReturn = new Module();
-
+           
             List<Module> modules = modMgr.GetAllModules(phase.Project.Id).ToList();
 
             foreach (Module mod in modules)
             {
+
                 if (mod.ParentPhase.Id == phase.Id)
                 {
                     if (mod.ModuleType == ModuleType.Questionnaire)
                     {
                         isQuestionnaire = true;
                         //toReturnQuestionnaire = (Questionnaire)mod;
+                        
                     }
                     else
                     {
                         isQuestionnaire = false;
                         //toReturnIdeation = (Ideation)mod;
                     }
-
                     toReturn = mod;
+
                 }
             }
 
             if (isQuestionnaire)
             {
-                Questionnaire toReturnQuestionnaire = (Questionnaire) toReturn;
-
+                Questionnaire toReturnQuestionnaire = (Questionnaire)toReturn;
+                
 
                 List<QuestionnaireQuestion> qQuestions = qqMgr.GetAllByModuleId(toReturnQuestionnaire.Id);
 
                 foreach (QuestionnaireQuestion qQ in qQuestions)
                 {
-                    if (qQ.QuestionType == QuestionType.Drop || qQ.QuestionType == QuestionType.Multi ||
-                        qQ.QuestionType == QuestionType.Single)
+                    if (qQ.QuestionType == QuestionType.Drop || qQ.QuestionType == QuestionType.Multi || qQ.QuestionType == QuestionType.Single)
                     {
                         /*TODO optionlogica*/
                     }
@@ -123,9 +133,9 @@ namespace UIMVC.Controllers.API
                 return Ok(toReturnQuestionnaire);
             }
 
-            else
+            else if (!isQuestionnaire)
             {
-                Ideation toReturnIdeation = (Ideation) toReturn;
+                Ideation toReturnIdeation = (Ideation)toReturn;
 
                 List<IdeationQuestion> ideationQuestions = iqMgr.GetAllByModuleId(toReturnIdeation.Id).ToList();
 
@@ -141,42 +151,50 @@ namespace UIMVC.Controllers.API
 
 
             throw new Exception("Skipping the IF statement for some reason...");
+
+            
+
+            
+
         }
 
         // POST api/<controller>
         [HttpPost]
-        public IActionResult Post([FromBody] string value)
+        public IActionResult Post([FromBody]string value)
         {
             return null;
         }
 
         // PUT api/<controller>/5
         [HttpPut]
-        public IActionResult Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody]string value)
         {
             return null;
         }
 
-
-        //api/module/GetIdeas?id=1
-        [HttpGet("GetIdeas")]
-        public IActionResult GetIdeas(int id)
+        //DAVIDSHIZZLE TO REFACTOR
+        //moduleId
+        /*[HttpGet("{id}")]
+        public async Task<ActionResult<Idea>> GetIdea(int id)
         {
-            var ideas = iqMgr.GetIdeas(id);
-            if (ideas == null)
+
+            var idea = _idQuesMan.GetIdea(id);
+            if (idea == null)
             {
                 return NotFound();
             }
 
-            return Ok(ideas);
+            return idea;
         }
 
-        /*[HttpPost]
+        [HttpPost]
         public async Task<ActionResult<Idea>> PostIdea(Idea idea)
         {
             _idQuesMan.MakeIdea(idea);
 
-            return CreatedAtAction(nameof(GetIdea), new {id = idea.Id}, idea);
-        }#1#*/
+            return CreatedAtAction(nameof(GetIdea), new { id = idea.Id }, idea);
+        }*/
+
+
     }
 }

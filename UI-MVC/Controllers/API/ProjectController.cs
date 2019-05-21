@@ -32,6 +32,13 @@ namespace UIMVC.Controllers.API
         {
             var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId));
 
+            foreach (Project project in projects)
+            {
+                project.Phases = projMgr.GetAllPhases(project.Id).ToList();
+                Phase curPhase = projMgr.GetPhase(project.CurrentPhase.Id);
+                project.CurrentPhase = curPhase;
+            }
+
             if (projects == null)
                 return NotFound();
 
@@ -51,7 +58,26 @@ namespace UIMVC.Controllers.API
             return Ok(project);
         }
 
+        public IActionResult SortedBy(string quota, int platformId)
+        {
+            List<Project> projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId)).ToList();
 
+            switch (quota)
+            {
+                case "Naam": return Ok(projects.OrderBy(m => m.Title));
+                    break;
+                case "Status": return Ok(projects.OrderBy(m => m.Status));
+                    break;
+                case "Likes": return Ok(projects.OrderBy(m => m.LikeCount));
+                    break;
+                case "Reacties": return Ok(projects.OrderBy(m => m.ReactionCount));
+                    break;
+                default: return Ok(projects);
+            }
+                
+        }
+
+        
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, Project project)
@@ -59,6 +85,10 @@ namespace UIMVC.Controllers.API
             projMgr.EditProject(project);
 
             return NoContent();
+
+
         }
+
+       
     }
 }
