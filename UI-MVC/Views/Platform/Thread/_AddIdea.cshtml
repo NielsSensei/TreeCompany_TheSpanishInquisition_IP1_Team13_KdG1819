@@ -32,7 +32,7 @@
                 <input class="btn btn-outline-primary" type="submit" name="submit" value="Voeg jouw idee toe"/>
             </div>
             <div class="collapse collapseSettings row mt-1 col-12" id="collapseSettings">
-                <div class="col-4">
+                <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label>Geef hier een youtube link:</label>
                         @Html.TextBox("FieldVideo", "", new {@class = "form-control"})
@@ -42,7 +42,7 @@
                         @Html.TextBox("FieldImage", "", new {@class = "form-control", type = "file"})
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label>
                             Voeg hier de coordinaten toe van je map:
@@ -51,11 +51,10 @@
                             </a>
                         </label>
                         @Html.TextBox("newIdeaMapX", "Eerste coordinaat", new {@class = "form-control"})
-                        <br/>
                         @Html.TextBox("newIdeaMapY", "Tweede coordinaat", new {@class = "form-control"})
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-12 col-md-4">
                     <div class="addFieldStringsContainer" id="@Model.ParentId">
                         <div class="form-group row">
                             <label>Maak hier eventueel een opsomming</label>

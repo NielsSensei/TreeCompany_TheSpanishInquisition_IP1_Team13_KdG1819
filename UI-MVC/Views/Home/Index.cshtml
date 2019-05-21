@@ -10,9 +10,9 @@
 }
 
 <div>
-    <partial name="HomeTemplates/PlatformCarousel" model="@Model"></partial>
+    @Html.Partial("HomeTemplates/PlatformCarousel", Model)
 </div>
 <hr/>
 <div>
-    <partial name="HomeTemplates/PlatformList"/>
+    @Html.Partial("HomeTemplates/PlatformList")
 </div>

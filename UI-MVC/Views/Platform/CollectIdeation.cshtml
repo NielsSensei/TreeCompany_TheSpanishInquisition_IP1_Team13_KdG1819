@@ -29,11 +29,11 @@
         }
         else
         {
-            <div class="col-5">
+            <div class="col-12 col-md-5">
                 @Html.Partial("_IdeationHeaderPartial", Model)
             </div>
-            <div class="col-7">
-                <iframe width="600" height="400" src="@Model.MediaLink"> </iframe>
+            <div class="col-12 col-md-7 embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="@Model.MediaLink"> </iframe>
             </div>
         }
 

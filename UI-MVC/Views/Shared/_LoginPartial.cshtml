@@ -6,8 +6,11 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
+    <li class="d-none d-md-inline nav-item">
         <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hallo @UserManager.GetUserName(User)!</a>
+    </li>
+    <li class="d-inline d-md-none nav-item">
+        <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">ACCOUNT</a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Context.Request.Path">
