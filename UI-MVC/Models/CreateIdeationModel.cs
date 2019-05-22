@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Domain.Projects;
 
 namespace UIMVC.Models
@@ -10,5 +9,6 @@ namespace UIMVC.Models
         public string ModuleType { get; set; }
         public string ExtraInfo { get; set; }
         public string MediaLink { get; set; }
+        public bool UserVote { get; set; }
     }
 }

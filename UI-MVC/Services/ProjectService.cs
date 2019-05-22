@@ -42,6 +42,13 @@ namespace UIMVC.Services
             return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
         }
 
+        public bool GetVoteSettings(IdeationQuestion ideationQuestion)
+        {
+            Ideation ideation = _moduleManager.GetIdeation(ideationQuestion.Ideation.Id);
+
+            return ideation.UserVote;
+        }
+
         public IEnumerable<byte[]> CollectProjectImages(Project project)
         {
             return _projectManager.GetAllImages(project.Id);

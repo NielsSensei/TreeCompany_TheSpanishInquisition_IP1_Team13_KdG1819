@@ -27,7 +27,7 @@
            asp-route-id="@Model.Ideation.Id">
             Terug Naar Ideation
         </a>
-        
+
     </div>
     <hr/>
     <section>
@@ -49,7 +49,11 @@
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
     {
-        @Html.Partial("Thread/_CollectIdea", new IdeaViewModel() {ToView = idea, IdeaLevel = 0})
+        @Html.Partial("Thread/_CollectIdea", new IdeaViewModel()
+        {
+            ToView = idea, IdeaLevel = 0,
+            Voting = ProjectService.GetVoteSettings(Model)
+        })
         <hr/>
     }
 </div>
