@@ -1,7 +1,7 @@
 ﻿namespace DAL.Data_Access_Objects
 {
     /*
-     * @author Nathan Gijselings
+     * @author Sacha Buelens & Niels Van Zandbergen
      */
     public class IdeationQuestionsDao
     {

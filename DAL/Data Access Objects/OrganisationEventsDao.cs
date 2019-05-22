@@ -3,7 +3,7 @@
 namespace DAL.Data_Access_Objects
 {
     /*
-     * @authors Nathan Gijselings & Niels Van Zandbergen
+     * @authors Sacha Buelens & Niels Van Zandbergen
      */
     public class OrganisationEventsDao
     {

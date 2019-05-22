@@ -1,7 +1,7 @@
 ﻿namespace DAL.Data_Access_Objects
 {
     /*
-     * @authors Nathan Gijselings & Xander Veldeman
+     * @authors Sacha Buelens & Niels Van Zandbergen
      */
     public class PlatformsDao
     {

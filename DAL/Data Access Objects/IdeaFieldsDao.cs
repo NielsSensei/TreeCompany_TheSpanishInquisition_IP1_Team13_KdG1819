@@ -1,7 +1,7 @@
 ﻿namespace DAL.Data_Access_Objects
 {
     /*
-     * @authors Nathan Gijselings & Niels Van Zandbergen
+     * @authors Sacha Buelens & Niels Van Zandbergen
      * @documentation Niels Van Zandbergen
      *
      * Voor Idee zijn er 5 verschillende Fields die elk een of meerdere kolommen bevatten binnen deze tabel hier een

@@ -1,7 +1,7 @@
 ﻿namespace DAL.Data_Access_Objects
 {
     /*
-     * @author Nathan Gijselings
+     * @authors Sacha Buelens, Niels Van Zandbergen & Xander Veldeman
      * @documentation Niels Van Zandbergen
      *
      * Persistentie van een Answer. AnswerText wordt gevuld als het type QuestionnaireQuestion OPEN of MAIL is anders

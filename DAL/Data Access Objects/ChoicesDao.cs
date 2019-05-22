@@ -1,7 +1,7 @@
 ﻿namespace DAL.Data_Access_Objects
 {
     /*
-     * @author Nathan Gijselings
+     * @authors Sacha Buelens & Niels Van Zandbergen
      * @documentation Niels Van Zandbergen
      *
      * ChoicesDao is een representatie van een de table Choices en een tussentabel tussen Options en Answers. Dit is

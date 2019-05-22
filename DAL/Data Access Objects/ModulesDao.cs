@@ -1,7 +1,7 @@
 ﻿namespace DAL.Data_Access_Objects
 {
     /*
-     * @authors Nathan Gijselings & Niels Van Zandbergen
+     * @authors Sacha Buelens & Niels Van Zandbergen
      * @documenation Niels Van Zandbergen
      *
      * Omdat buiten deze properties Questionnaire geen extra properties heeft zoals Ideation wordt er geen extra

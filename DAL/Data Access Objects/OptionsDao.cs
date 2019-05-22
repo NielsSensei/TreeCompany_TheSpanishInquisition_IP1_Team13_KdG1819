@@ -1,7 +1,7 @@
 ﻿namespace DAL.Data_Access_Objects
 {
     /*
-     * @author Nathan Gijselings
+     * @authors Sacha Buelens & Niels Van Zandbergen
      * @documentation Niels Van Zandbergen
      *
      * Bij de aanmaak van een QuestionnaireQuestion met een type SINGLE, DROP of MULTI duiden op een vraag met
