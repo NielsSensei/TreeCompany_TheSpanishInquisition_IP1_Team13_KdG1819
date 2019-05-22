@@ -5,6 +5,9 @@ using Domain.UserInput;
 
 namespace BL
 {
+    /*
+     * @authors Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class QuestionnaireQuestionManager : IQuestionManager<QuestionnaireQuestion>
     {
         private QuestionnaireQuestionsRepository QuestionnaireQuestionRepo { get; }
@@ -14,6 +17,9 @@ namespace BL
             QuestionnaireQuestionRepo = new QuestionnaireQuestionsRepository();
         }
 
+        /*
+         * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region QuestionnaireQuestion
 
         public void EditQuestion(QuestionnaireQuestion question)
@@ -48,6 +54,9 @@ namespace BL
 
         #endregion
 
+        /*
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         */
         #region Answer
 
         public List<Answer> GetAnswers(int questionId)
@@ -60,6 +69,9 @@ namespace BL
             QuestionnaireQuestionRepo.Create(answer);
         }
 
+        /*
+         * @authors Xander Veldeman
+         */
         #region Option
 
         public void MakeOption(int questionId, string optionText)

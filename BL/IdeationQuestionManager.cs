@@ -5,6 +5,9 @@ using Domain.UserInput;
 
 namespace BL
 {
+    /*
+     * @authors Nathan Gijselings, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class IdeationQuestionManager : IQuestionManager<IdeationQuestion>
     {
         private IdeationQuestionsRepository IdeationQuestionRepo { get; }
@@ -15,7 +18,10 @@ namespace BL
             IdeationQuestionRepo = new IdeationQuestionsRepository();
             VoteMan = new VoteManager();
         }
-
+    
+        /*
+         * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region IdeationQuestion
         public void EditQuestion(IdeationQuestion question)
         {
@@ -47,7 +53,10 @@ namespace BL
             return IdeationQuestionRepo.ReadAll(id).ToList();
         }
         #endregion
-
+        
+        /*
+         * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Idea
         public void EditIdea(Idea idea)
         {
@@ -80,6 +89,9 @@ namespace BL
         }
         #endregion
 
+        /*
+         * @authors Nathan Gijselings, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Vote
         public void MakeVote(int feedbackId, string userId, int? deviceId, double? x, double? y)
         {
@@ -111,7 +123,10 @@ namespace BL
             VoteMan.RemoveVotes(ideaId);
         }
         #endregion
-
+        
+        /*
+         * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Field
         public void RemoveField(int ideaId)
         {
@@ -119,6 +134,9 @@ namespace BL
         }
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Report
         public void RemoveReport(int id)
         {

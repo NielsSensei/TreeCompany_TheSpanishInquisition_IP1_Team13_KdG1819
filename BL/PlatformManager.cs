@@ -5,6 +5,9 @@ using Domain.Users;
 
 namespace BL
 {
+    /*
+     * @authors Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class PlatformManager
     {
         private PlatformRepository PlatformRepo { get; }
@@ -14,6 +17,9 @@ namespace BL
             PlatformRepo = new PlatformRepository();
         }
 
+        /*
+         * @authors Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
         #region Platform
         public Platform GetPlatform(int platformId, bool details)
         {
