@@ -110,30 +110,29 @@
 
     @if (Model.IconStyle == LikeVisibility.IdeationLikes)
     {
-        <div class="container">
+        
             <div class="row justify-content-around">
-                <div class="col-2 align-items-end">
-                    <img alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="50" width="50"/>
+                <div class="col-2 align-items-center">
+                    <img class="img-fluid" alt="like" src="https://image.flaticon.com/icons/svg/181/181527.svg" height="500" width="500"/>
                     <p>@Model.LikeCount</p>
                 </div>
-                <div class="col-2 align-items-end">
-                    <img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/>
+                <div class="col-2 align-items-center">
+                    <img class="img-fluid" alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="50" width="50"/>
                     <p>@Model.FbLikeCount</p>
                 </div>
-                <div class="col-2 align-items-end">
-                    <img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/>
+                <div class="col-2 align-items-center">
+                    <img class="img-fluid" alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="50" width="50"/>
                     <p>@Model.TwitterLikeCount</p>
                 </div>
-                <div class="col-2 align-items-end">
-                    <img alt="shareCount" src="https://image.flaticon.com/icons/svg/1051/1051309.svg" height="50" width="50"/>
+                <div class="col-2 align-items-center">
+                    <img class="img-fluid" alt="shareCount" src="https://image.flaticon.com/icons/svg/1051/1051309.svg" height="50" width="50"/>
                     <p>@Model.ShareCount</p>
                 </div>
-                <div class="col-2 align-items-end">
-                    <img alt="retweetCount" src="https://image.flaticon.com/icons/svg/9/9148.svg" height="50" width="50"/>
+                <div class="col-2 align-items-center">
+                    <img class="img-fluid" alt="retweetCount" src="https://image.flaticon.com/icons/svg/9/9148.svg" height="50" width="50"/>
                     <p>@Model.RetweetCount</p>
                 </div>
             </div>
-        </div>
     }
 
     @if (Model.IconStyle == LikeVisibility.IdeaLikes)
@@ -160,20 +159,19 @@
 
 
         </div>
-    </div>
-}
+    }
 
-@if (Model.IconStyle == LikeVisibility.IdeaWithoutLikes)
-{
-    <div class="row m-1 align-content-center mx-1">
-        <div class="row m-auto px-1">
-            <img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="25" width="25"/>
-            <p>@Model.ShareCount </p>
+    @if (Model.IconStyle == LikeVisibility.IdeaWithoutLikes)
+    {
+        <div class="row m-1 align-content-center mx-1">
+            <div class="row m-auto px-1">
+                <img alt="Fblike" src="https://image.flaticon.com/icons/svg/32/32978.svg" height="25" width="25"/>
+                <p>@Model.ShareCount </p>
+            </div>
+            <div class="row m-auto px-1">
+                <img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="25" width="25"/>
+                <p>@Model.RetweetCount </p>
+            </div>
         </div>
-        <div class="row m-auto px-1">
-            <img alt="Twitterlike" src="https://image.flaticon.com/icons/svg/32/32727.svg" height="25" width="25"/>
-            <p>@Model.RetweetCount </p>
-        </div>
-    </div>
-}
+    }
 </section>
