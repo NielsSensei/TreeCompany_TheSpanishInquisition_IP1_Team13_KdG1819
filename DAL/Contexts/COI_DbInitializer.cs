@@ -2,7 +2,7 @@
 namespace DAL.Contexts
 {
     /*
-    * @author Niels Van Zandbergen
+    * @author Sacha Buelens & Niels Van Zandbergen
     */
     class COI_DbInitializer
     {

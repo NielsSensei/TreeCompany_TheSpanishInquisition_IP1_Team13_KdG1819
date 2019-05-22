@@ -10,6 +10,9 @@ using Domain.Users;
 
 namespace DAL.repos
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class ProjectRepository : IRepository<Project>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -19,8 +22,10 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Conversion Methods
-
         private Project ConvertToDomain(ProjectsDao dao)
         {
             return new Project()
@@ -102,6 +107,9 @@ namespace DAL.repos
 
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Id generation
 
         private int FindNextAvailableProjectId()
@@ -126,6 +134,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Project CRUD
 
         public Project Create(Project obj)
@@ -150,6 +161,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public Project Read(int id, bool details)
         {
             ProjectsDao projectsDao = details
@@ -207,6 +229,9 @@ namespace DAL.repos
 
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Phase CRUD
 
         public Phase Create(Phase obj)
@@ -231,6 +256,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+        * @documentation Niels Van Zandbergen
+        *
+        * @params id: Integer value die de identity van het object representeert.
+        * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+        * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+        * aangepast mogen worden.
+        *
+        * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+        * 
+        */
         public Phase ReadPhase(int phaseId, bool details)
         {
             PhasesDao phasesDao = details
@@ -281,6 +317,9 @@ namespace DAL.repos
 
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Images CRUD
         public void Create(byte[] obj, int projectId)
         {

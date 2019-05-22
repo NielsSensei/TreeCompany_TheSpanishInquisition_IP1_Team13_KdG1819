@@ -32,7 +32,7 @@ namespace UIMVC.Controllers
             Idea idea = new Idea()
             {
                 IsDeleted = false,
-                IdeaQuestion = _iqMgr.GetQuestion(ideation, false),
+                IdeaQuestion = _iqMgr.GetQuestion(ideation, true),
                 User = new UimvcUser(){ Id = user},
                 Reported = false,
                 ReviewByAdmin = false,
@@ -161,7 +161,7 @@ namespace UIMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangeIdea(IFormCollection form, int ideation, int idea, List<string> fieldStrings)
         {
-            Idea toEdit = _iqMgr.GetIdea(idea);
+            Idea toEdit = _iqMgr.GetIdea(idea, false);
             
             if (!Request.Form["FieldText"].ToString().Equals(""))
             {

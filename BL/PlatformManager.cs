@@ -15,9 +15,9 @@ namespace BL
         }
 
         #region Platform
-        public Platform GetPlatform(int platformId)
+        public Platform GetPlatform(int platformId, bool details)
         {
-            return PlatformRepo.Read(platformId, true);
+            return PlatformRepo.Read(platformId, details);
         }
 
         public Platform MakePlatform(Platform platform)

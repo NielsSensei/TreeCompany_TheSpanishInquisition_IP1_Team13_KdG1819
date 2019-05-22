@@ -54,9 +54,9 @@ namespace BL
             IdeationQuestionRepo.Update(idea);
         }
 
-        public Idea GetIdea(int ideaId)
+        public Idea GetIdea(int ideaId, bool details)
         {
-            return IdeationQuestionRepo.ReadWithFields(ideaId);
+            return IdeationQuestionRepo.ReadWithFields(ideaId, details);
         }
 
         public void MakeIdea(Idea idea)
@@ -83,7 +83,7 @@ namespace BL
         #region Vote
         public void MakeVote(int feedbackId, string userId, int? deviceId, double? x, double? y)
         {
-            Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, false);
+            Idea feedback = IdeationQuestionRepo.ReadIdea(feedbackId, true);
             if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, deviceId, x, y))
             {
                 feedback.VoteCount++;
@@ -93,7 +93,7 @@ namespace BL
 
         public bool MakeVote(int feedbackId, string userId)
         {
-            Idea feedback = GetIdea(feedbackId);
+            Idea feedback = GetIdea(feedbackId, false);
             if (VoteMan.VerifyVotingOnFeedback(feedbackId, userId, null, null, null))
             {
                 VoteMan.MakeVote(feedbackId, userId, null, null, null, true);
@@ -145,9 +145,9 @@ namespace BL
             return IdeationQuestionRepo.ReadAllReportsByIdea(ideaId);
         }
 
-        public Report GetReport(int reportId)
+        public Report GetReport(int reportId, bool details)
         {
-            return IdeationQuestionRepo.ReadReport(reportId,false);
+            return IdeationQuestionRepo.ReadReport(reportId,details);
         }
         #endregion
     }

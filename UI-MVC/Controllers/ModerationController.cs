@@ -253,7 +253,7 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult ChangeIdeation(int id)
         {
-            Ideation i = _moduleMgr.GetIdeation(id);
+            Ideation i = _moduleMgr.GetIdeation(id, true);
 
             ViewData["Project"] = i.Project.Id;
 
@@ -271,7 +271,7 @@ namespace UIMVC.Controllers
             ViewData["Phases"] = availablePhases;
             ViewData["PhaseCount"] = availablePhases.Count;
             ViewData["Title"] = i.Title;
-            ViewData["Parent"] = _projMgr.GetPhase(i.ParentPhase.Id);
+            ViewData["Parent"] = _projMgr.GetPhase(i.ParentPhase.Id, true);
             ViewData["Ideation"] = id;
             ViewData["ExtraInfo"] = i.ExtraInfo;
             ViewData["UserVote"] = i.UserVote;
@@ -301,14 +301,14 @@ namespace UIMVC.Controllers
             {
                 if (Int32.Parse(Request.Form["ParentPhase"].ToString()) != 0)
                 {
-                    i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+                    i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()), false);
                     _moduleMgr.EditIdeation(i);
                 }
 
             }catch(FormatException e)
             {
-                Ideation previous = _moduleMgr.GetIdeation(i.Id);
-                i.ParentPhase = _projMgr.GetPhase(previous.ParentPhase.Id);
+                Ideation previous = _moduleMgr.GetIdeation(i.Id, false);
+                i.ParentPhase = _projMgr.GetPhase(previous.ParentPhase.Id, true);
                 _moduleMgr.EditIdeation(i);
             }
 
@@ -319,7 +319,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult DestroyIdeation(int id)
         {
-            Ideation i = _moduleMgr.GetIdeation(id);
+            Ideation i = _moduleMgr.GetIdeation(id, false);
             
             _moduleMgr.RemoveModule(id, false);
 
@@ -347,7 +347,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult CollectIdea(int id)
         {
-            Idea idea = _ideaMgr.GetIdea(id);
+            Idea idea = _ideaMgr.GetIdea(id, true);
             idea.User = _userManager.Users.FirstOrDefault(user => user.Id == idea.User.Id);
             if (idea.Visible)
             {
@@ -364,8 +364,8 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult ReviewByAdmin(int idea, int  report)
         {
-            Idea foundIdea = _ideaMgr.GetIdea(idea);
-            Report foundReport = _ideaMgr.GetReport(report);
+            Idea foundIdea = _ideaMgr.GetIdea(idea, false);
+            Report foundReport = _ideaMgr.GetReport(report, false);
 
             foundIdea.ReviewByAdmin = true;
             foundReport.Status = ReportStatus.StatusNeedAdmin;
@@ -380,7 +380,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult ApproveReport(int report)
         {
-            Report foundReport = _ideaMgr.GetReport(report);
+            Report foundReport = _ideaMgr.GetReport(report, false);
 
             foundReport.Status = ReportStatus.StatusApproved;
 
@@ -393,7 +393,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult DenyReport(int report, int idea)
         {
-            Report foundReport = _ideaMgr.GetReport(report);
+            Report foundReport = _ideaMgr.GetReport(report, false);
             foundReport.Status = ReportStatus.StatusDenied;
             _ideaMgr.EditReport(foundReport);
 
@@ -416,7 +416,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult DestroyIdea(int idea, string from, int thread)
         {
-            Idea toDelete = _ideaMgr.GetIdea(idea);
+            Idea toDelete = _ideaMgr.GetIdea(idea, false);
             toDelete.IsDeleted = true;
 
             _ideaMgr.EditIdea(toDelete);
@@ -443,7 +443,7 @@ namespace UIMVC.Controllers
             IEnumerable<Report> remainingReports = _ideaMgr.GetAllReportsByIdea(idea);
             if (!remainingReports.Any())
             {
-                Idea foundIdea = _ideaMgr.GetIdea(idea);
+                Idea foundIdea = _ideaMgr.GetIdea(idea, false);
                 foundIdea.ReviewByAdmin = false;
                 foundIdea.Reported = false;
 

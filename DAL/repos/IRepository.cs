@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace DAL.repos
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public interface IRepository<T>
     {
         IEnumerable<T> ReadAll();

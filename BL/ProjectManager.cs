@@ -83,9 +83,9 @@ namespace BL
             return ProjectRepo.ReadAllPhases(projectId);
         }
 
-        public Phase GetPhase(int phaseId)
+        public Phase GetPhase(int phaseId, bool details)
         {
-            return ProjectRepo.ReadPhase(phaseId, false);
+            return ProjectRepo.ReadPhase(phaseId, details);
         }
 
         public void MakePhase(Phase newPhase)

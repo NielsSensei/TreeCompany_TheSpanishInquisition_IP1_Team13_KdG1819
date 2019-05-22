@@ -29,8 +29,8 @@ namespace BL
             return modules;
         }
 
-        public Ideation GetIdeation(int moduleId){
-            return IdeationRepo.ReadWithModule(moduleId);
+        public Ideation GetIdeation(int moduleId, bool details){
+            return IdeationRepo.ReadWithModule(moduleId, details);
         }
 
         public Ideation GetIdeation(int phaseId, int projectId)

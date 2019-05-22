@@ -42,7 +42,7 @@ namespace UIMVC.Services
 
         public bool GetVoteSettings(IdeationQuestion ideationQuestion)
         {
-            Ideation ideation = _moduleManager.GetIdeation(ideationQuestion.Ideation.Id);
+            Ideation ideation = _moduleManager.GetIdeation(ideationQuestion.Ideation.Id, true);
 
             return ideation.UserVote;
         }

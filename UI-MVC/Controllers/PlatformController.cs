@@ -35,7 +35,7 @@ namespace UIMVC.Controllers
         [Route("Platform/{id}")]
         public IActionResult Index(int id, string message)
         {
-            Platform platform = _platformMgr.GetPlatform(id);
+            Platform platform = _platformMgr.GetPlatform(id, true);
             if (platform == null)
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 
@@ -71,7 +71,7 @@ namespace UIMVC.Controllers
                 (await _userManager.GetUserAsync(User)).PlatformDetails != id)
                 return BadRequest("You are no admin of this platform");
 
-            Domain.Users.Platform platform = _platformMgr.GetPlatform(id);
+            Platform platform = _platformMgr.GetPlatform(id, false);
             if (platform == null)
             {
                 return RedirectToAction("HandleErrorCode", "Errors", 
@@ -129,7 +129,7 @@ namespace UIMVC.Controllers
         public async Task<IActionResult> AssignAdmin(string usermail, int platformId)
         {
             UimvcUser user = await _userManager.FindByEmailAsync(usermail);
-            Platform platform = _platformMgr.GetPlatform(platformId);
+            Platform platform = _platformMgr.GetPlatform(platformId, true);
             if (user == null) return BadRequest("Can't find user");
             if (platform == null) return BadRequest("Can't find platform");
 
@@ -146,7 +146,7 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult CollectProject(int id)
         {
-            Project project = _projectMgr.GetProject(id, false);
+            Project project = _projectMgr.GetProject(id, true);
 
             if (project.Visible && project.Id != 0 || _roleService.IsAdmin(HttpContext.User).Result)
             {
@@ -185,14 +185,14 @@ namespace UIMVC.Controllers
 
         public IActionResult CollectIdeation(int id)
         {
-            Ideation ideation = _projectMgr.ModuleMan.GetIdeation(id);
+            Ideation ideation = _projectMgr.ModuleMan.GetIdeation(id, true);
 
             return View(ideation);
         }
 
         public IActionResult CollectIdeationThread(int id, string message)
         {
-            IdeationQuestion iq = _iqMgr.GetQuestion(id, false);
+            IdeationQuestion iq = _iqMgr.GetQuestion(id, true);
 
             ViewData["Message"] = message;
             ViewData["IdeationQuestion"] = iq;
@@ -220,7 +220,7 @@ namespace UIMVC.Controllers
         [Authorize]
         public IActionResult AddReport(int idea, string flagger, int thread)
         {
-            Idea ToReport = _iqMgr.GetIdea(idea);
+            Idea ToReport = _iqMgr.GetIdea(idea, false);
 
             Report report = new Report()
             {

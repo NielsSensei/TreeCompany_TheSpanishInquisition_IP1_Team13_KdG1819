@@ -218,7 +218,7 @@ namespace UIMVC.Controllers
 
             Phase p = new Phase()
             {
-                Project = _projManager.GetProject(projectId, false),
+                Project = _projManager.GetProject(projectId, true),
                 Description = pm.Description,
                 StartDate = pm.StartDate,
                 EndDate = pm.EndDate
@@ -238,7 +238,7 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
-            Phase phase = _projManager.GetPhase(phaseId);
+            Phase phase = _projManager.GetPhase(phaseId, true);
 
 
              if (phase == null)
@@ -255,7 +255,7 @@ namespace UIMVC.Controllers
         [HttpPost]
         public IActionResult ChangePhase(PhaseModel pm, int phaseId)
         {
-            Phase updatePhase = _projManager.GetPhase(phaseId);
+            Phase updatePhase = _projManager.GetPhase(phaseId, false);
 
              updatePhase.Description = pm.Description;
             updatePhase.StartDate = pm.StartDate;
@@ -273,9 +273,9 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult SetCurrentPhase(int projectId, int phaseId)
         {
-            Project p = _projManager.GetProject(projectId, true);
+            Project p = _projManager.GetProject(projectId, false);
 
-             Phase ph = _projManager.GetPhase(phaseId);
+             Phase ph = _projManager.GetPhase(phaseId, true);
 
              p.CurrentPhase = ph;
 

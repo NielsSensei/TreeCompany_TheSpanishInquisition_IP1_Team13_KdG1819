@@ -66,8 +66,8 @@ namespace UIMVC.Controllers
                 return BadRequest("Questionnaire cannot be NULL!");
             }
 
-            Project questionnaireProject = ProjMgr.GetProject(projectId, false);
-            Phase parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+            Project questionnaireProject = ProjMgr.GetProject(projectId, true);
+            Phase parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()), false);
 
             Questionnaire newQuestionnaire = new Questionnaire
             {
@@ -131,7 +131,7 @@ namespace UIMVC.Controllers
             Questionnaire q = ModMgr.GetQuestionnaire(questionnaireId, false);
 
             List<Phase> availablePhases = new List<Phase>();
-            Phase parentPhase = ProjMgr.GetPhase(q.ParentPhase.Id);
+            Phase parentPhase = ProjMgr.GetPhase(q.ParentPhase.Id, true);
             List<QuestionnaireQuestion> questions = QqMgr.GetAllByModuleId(questionnaireId).ToList();
             foreach (QuestionnaireQuestion question in questions)
             {
@@ -174,10 +174,10 @@ namespace UIMVC.Controllers
 
             if (!parentPhaseContent.Equals(""))
             {
-                parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+                parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()), false);
                 parentPhase.Module = toBeUpdated;
 
-                Phase previousParent = ProjMgr.GetPhase(toBeUpdated.ParentPhase.Id);
+                Phase previousParent = ProjMgr.GetPhase(toBeUpdated.ParentPhase.Id, false);
                 previousParent.Module = null;
 
 
@@ -208,7 +208,7 @@ namespace UIMVC.Controllers
         {
             Questionnaire questionnaire = ModMgr.GetQuestionnaire(questionnaireid, false);
 
-            Phase parentPhase = ProjMgr.GetPhase(questionnaire.ParentPhase.Id);
+            Phase parentPhase = ProjMgr.GetPhase(questionnaire.ParentPhase.Id, false);
             parentPhase.Module = null;
             ProjMgr.EditPhase(parentPhase);
 
@@ -240,7 +240,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult DeleteQuestionnaireQuestion(int questionid)
         {
-            QuestionnaireQuestion toDelete = QqMgr.GetQuestion(questionid, true);
+            QuestionnaireQuestion toDelete = QqMgr.GetQuestion(questionid, false);
 
             if (toDelete.QuestionType == QuestionType.Drop || toDelete.QuestionType == QuestionType.Multi ||
                 toDelete.QuestionType == QuestionType.Single)

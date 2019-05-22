@@ -67,9 +67,9 @@ namespace BL
             QuestionnaireQuestionRepo.CreateOption(questionId, optionText);
         }
 
-        public string GetOption(int optionId, int questionId)
+        public string GetOption(int optionId)
         {
-            return QuestionnaireQuestionRepo.ReadOption(optionId, questionId);
+            return QuestionnaireQuestionRepo.ReadOption(optionId);
         }
 
         public int GetOptionId(string optionText, int questionId)

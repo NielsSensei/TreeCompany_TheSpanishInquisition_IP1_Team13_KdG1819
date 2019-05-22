@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DAL
 {
+    /*
+     * @author Niels Van Zandbergen
+     */
     internal static class ExtensionMethods
     {
         internal static int HasMatchingWords(string left, string right)
@@ -16,7 +20,7 @@ namespace DAL
              * een soort van ignoreLijst. -NVZ
             */
             foreach(String leftString in leftSet){
-                if (rightSet.Contains(leftString)){
+                if (rightSet.Contains(leftString) && !CommonWordDictionary().Contains(leftString)){
                     count++;
                 }
             }
@@ -56,6 +60,16 @@ namespace DAL
             }
 
             return myList;
+        }
+
+        private static string[] CommonWordDictionary()
+        {
+            return new[]
+            {
+                "aan", "af", "al", "algemeen", "alles", "als", "ander", "andere",
+                "beetje", "belangrijk", "beslissen", "bij", "bijna", "bijvoorbeeld", "bijzonder", "binnenkort",
+                "daar", "daarom", "dan", "dat", "de", "deze", "dit", "doen", "door", "dorp", "dus", 
+            };
         }
     }
 }
