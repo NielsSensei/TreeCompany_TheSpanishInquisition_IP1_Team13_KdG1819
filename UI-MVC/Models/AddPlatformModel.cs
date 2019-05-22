@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace UIMVC.Models
 {
-    public class CreatePlatformModel
+    public class AddPlatformModel
     {
         public string Name { get; set; }
         public string Url { get; set; }

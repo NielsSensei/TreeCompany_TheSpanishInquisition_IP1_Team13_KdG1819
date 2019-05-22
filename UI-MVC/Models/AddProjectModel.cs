@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Domain.Projects;
@@ -6,18 +5,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace UIMVC.Models
 {
-    public class CreateProjectModel
+    public class AddProjectModel
     {
         [Required(ErrorMessage = "Titel moet ingevuld worden")]
         [StringLength(30)]
         public string Title { get; set; }
-
-        [DataType(DataType.Date, ErrorMessage = "Vul een juiste datum in")]
-        public DateTime StartDate { get; set; }
-
-        [DataType(DataType.Date, ErrorMessage = "Vul een juiste datum in")]
-        public DateTime EndDate { get; set; }
-
+        
         public string Goal { get; set; }
 
         public string Status { get; set; }

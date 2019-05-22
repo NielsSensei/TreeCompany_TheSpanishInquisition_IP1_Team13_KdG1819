@@ -2,7 +2,7 @@ using Domain.Projects;
 
 namespace UIMVC.Models
 {
-    public class CreateIdeationModel
+    public class AddIdeationModel
     {
         public Phase Parent { get; set; }
         public string Title { get; set; }

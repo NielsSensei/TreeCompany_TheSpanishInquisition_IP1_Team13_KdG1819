@@ -43,7 +43,7 @@ namespace UIMVC.Controllers
 
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
-        public async Task<IActionResult> AddProject(CreateProjectModel pvm, int platform, string user)
+        public async Task<IActionResult> AddProject(AddProjectModel pvm, int platform, string user)
         {
             if (pvm == null)
             {
@@ -122,7 +122,7 @@ namespace UIMVC.Controllers
 
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
-        public ActionResult ChangeProject(EditProjectModel epm, int id)
+        public ActionResult ChangeProject(ChangeProjectModel epm, int id)
         {
             Project updateProj = _projManager.GetProject(id, false);
 
@@ -209,7 +209,7 @@ namespace UIMVC.Controllers
 
          [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult AddPhase(PhaseModel pm, int projectId)
+        public IActionResult AddPhase(PhaseViewModel pm, int projectId)
         {
             if (pm == null)
             {
@@ -253,7 +253,7 @@ namespace UIMVC.Controllers
 
          [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult ChangePhase(PhaseModel pm, int phaseId)
+        public IActionResult ChangePhase(PhaseViewModel pm, int phaseId)
         {
             Phase updatePhase = _projManager.GetPhase(phaseId, false);
 

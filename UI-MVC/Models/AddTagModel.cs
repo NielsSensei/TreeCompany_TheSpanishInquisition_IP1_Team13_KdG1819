@@ -1,6 +1,6 @@
 namespace UIMVC.Models
 {
-    public class CreateTagModel
+    public class AddTagModel
     {
         public string Tag { get; set; }
     }

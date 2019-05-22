@@ -2,12 +2,12 @@
 @using Domain.Users
 @using Domain.UserInput
 
-@model EditQuestionnaireModel
+@model ChangeQuestionnaireModel
 
 @{
     Project project = (Project) ViewData["Project"];
     Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
-    CreateQuestionnaireQuestionModel cqqm = (CreateQuestionnaireQuestionModel) ViewData["Cqqm"];
+    AddQuestionnaireQuestionModel cqqm = (AddQuestionnaireQuestionModel) ViewData["Cqqm"];
 }
 
 @section Scripts{

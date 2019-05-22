@@ -84,7 +84,7 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public async Task<IActionResult> ChangePlatform(CreatePlatformModel platformEdit, int platformId)
+        public async Task<IActionResult> ChangePlatform(AddPlatformModel platformEdit, int platformId)
         {
             Platform platform = new Platform()
             {

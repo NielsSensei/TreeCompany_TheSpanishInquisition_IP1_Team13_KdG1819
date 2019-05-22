@@ -59,7 +59,7 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult AddQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
+        public IActionResult AddQuestionnaire(AddQuestionnaireModel cqm, int projectId)
         {
             if (cqm == null)
             {
@@ -95,7 +95,7 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult AddQuestionnaireQuestion(int questionnaireId, CreateQuestionnaireQuestionModel cqqm)
+        public IActionResult AddQuestionnaireQuestion(int questionnaireId, AddQuestionnaireQuestionModel cqqm)
         {
             Questionnaire toAdd = ModMgr.GetQuestionnaire(questionnaireId, false);
             QuestionnaireQuestion newQuestion = new QuestionnaireQuestion
@@ -159,13 +159,13 @@ namespace UIMVC.Controllers
 
             ViewData["Project"] = q.Project;
             ViewData["Questionnaire"] = q;
-            ViewData["Cqqm"] = new CreateQuestionnaireQuestionModel();
+            ViewData["Cqqm"] = new AddQuestionnaireQuestionModel();
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult EditQuestionnaire(EditQuestionnaireModel eqm, int questionnaireid)
+        public IActionResult EditQuestionnaire(ChangeQuestionnaireModel eqm, int questionnaireid)
         {
             Questionnaire toBeUpdated = ModMgr.GetQuestionnaire(questionnaireid, false);
 
@@ -293,7 +293,7 @@ namespace UIMVC.Controllers
             ViewData["Question"] = questionnaire.Questions[0];
             ViewData["Questionnaire"] = questionnaire;
 
-            return View(new AddAnswer());
+            return View(new AddAnswerModel());
         }
 
         [HttpGet]
@@ -321,11 +321,11 @@ namespace UIMVC.Controllers
 
             ViewData["Question"] = question;
             ViewData["Questionnaire"] = questionnaire;
-            return View(new AddAnswer());
+            return View(new AddAnswerModel());
         }
 
         [HttpPost]
-        public async Task<IActionResult> AnswerQuestionnaire(AddAnswer addAnswer, int questionId, int questionnaireId)
+        public async Task<IActionResult> AnswerQuestionnaire(AddAnswerModel addAnswerModel, int questionId, int questionnaireId)
         {
             QuestionnaireQuestion question = QqMgr.GetQuestion(questionId, true);
 
@@ -339,11 +339,11 @@ namespace UIMVC.Controllers
                 user = _userService.GetAnonymousUser();
             }
 
-            if (addAnswer.MultipleAnswer?.Choices != null && addAnswer.MultipleAnswer.Choices[0] != null)
+            if (addAnswerModel.MultipleAnswer?.Choices != null && addAnswerModel.MultipleAnswer.Choices[0] != null)
             {
                 if (!question.Optional)
                 {
-                    if (addAnswer.MultipleAnswer.Choices == null || !addAnswer.MultipleAnswer.Choices.Any())
+                    if (addAnswerModel.MultipleAnswer.Choices == null || !addAnswerModel.MultipleAnswer.Choices.Any())
                     {
                         return RedirectToAction("NextQuestionnaire",
                             new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
@@ -352,18 +352,18 @@ namespace UIMVC.Controllers
 
                 MultipleAnswer answer = new MultipleAnswer()
                 {
-                    Choices = addAnswer.MultipleAnswer.Choices,
-                    DropdownList = addAnswer.MultipleAnswer.DropdownList,
+                    Choices = addAnswerModel.MultipleAnswer.Choices,
+                    DropdownList = addAnswerModel.MultipleAnswer.DropdownList,
                     Question = question,
                     User = user,
                 };
                 QqMgr.MakeAnswer(answer);
             }
-            else if (addAnswer.OpenAnswer != null)
+            else if (addAnswerModel.OpenAnswer != null)
             {
                 if (!question.Optional)
                 {
-                    if (addAnswer.OpenAnswer.AnswerText == null || !addAnswer.OpenAnswer.AnswerText.Any())
+                    if (addAnswerModel.OpenAnswer.AnswerText == null || !addAnswerModel.OpenAnswer.AnswerText.Any())
                     {
                         return RedirectToAction("NextQuestionnaire",
                             new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
@@ -371,12 +371,12 @@ namespace UIMVC.Controllers
                 }
 
                 OpenAnswer answer;
-                if (addAnswer.OpenAnswer.AnswerText == null)
+                if (addAnswerModel.OpenAnswer.AnswerText == null)
                 {
                     answer = new OpenAnswer()
                     {
                         AnswerText = "EMPTY",
-                        IsUserEmail = addAnswer.OpenAnswer.IsUserEmail,
+                        IsUserEmail = addAnswerModel.OpenAnswer.IsUserEmail,
                         Question = question,
                         User = user
                     };
@@ -385,8 +385,8 @@ namespace UIMVC.Controllers
                 {
                     answer = new OpenAnswer()
                     {
-                        AnswerText = addAnswer.OpenAnswer.AnswerText,
-                        IsUserEmail = addAnswer.OpenAnswer.IsUserEmail,
+                        AnswerText = addAnswerModel.OpenAnswer.AnswerText,
+                        IsUserEmail = addAnswerModel.OpenAnswer.IsUserEmail,
                         Question = question,
                         User = user
                     };
@@ -394,12 +394,12 @@ namespace UIMVC.Controllers
 
                 QqMgr.MakeAnswer(answer);
             }
-            else if (addAnswer.CheckboxAnswers != null)
+            else if (addAnswerModel.CheckboxAnswers != null)
             {
                 if (!question.Optional)
                 {
-                    if (addAnswer.CheckboxAnswers == null ||
-                        addAnswer.CheckboxAnswers.All(checkboxAnswer => checkboxAnswer.Checked == false))
+                    if (addAnswerModel.CheckboxAnswers == null ||
+                        addAnswerModel.CheckboxAnswers.All(checkboxAnswer => checkboxAnswer.Checked == false))
                     {
                         return RedirectToAction("NextQuestionnaire",
                             new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
@@ -408,7 +408,7 @@ namespace UIMVC.Controllers
 
                 MultipleAnswer answer = new MultipleAnswer()
                 {
-                    Choices = new List<string>(addAnswer.CheckboxAnswers.ToList()
+                    Choices = new List<string>(addAnswerModel.CheckboxAnswers.ToList()
                         .Where(checkboxAnswer => checkboxAnswer.Checked)
                         .Select(checkboxAnswer => checkboxAnswer.Value)),
                     DropdownList = false,

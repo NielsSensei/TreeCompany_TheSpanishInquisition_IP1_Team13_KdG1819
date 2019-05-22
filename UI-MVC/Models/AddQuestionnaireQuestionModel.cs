@@ -3,7 +3,7 @@ using Domain.UserInput;
 
 namespace UIMVC.Models
 {
-    public class CreateQuestionnaireQuestionModel
+    public class AddQuestionnaireQuestionModel
     {
         public QuestionType QuestionType { get; set; }
         public bool Optional { get; set; }

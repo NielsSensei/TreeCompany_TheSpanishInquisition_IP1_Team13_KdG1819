@@ -1,7 +1,6 @@
-
 namespace UIMVC.Models
 {
-    public class EditProjectModel
+    public class ChangeProjectModel
     {
         public string Title { get; set; }
         public string Goal { get; set; }

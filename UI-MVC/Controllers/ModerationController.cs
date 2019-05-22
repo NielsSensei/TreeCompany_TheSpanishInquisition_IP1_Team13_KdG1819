@@ -51,7 +51,7 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> AddPlatform(CreatePlatformModel cpm)
+        public async Task<IActionResult> AddPlatform(AddPlatformModel cpm)
         {
             if (cpm == null)
             {
@@ -164,7 +164,7 @@ namespace UIMVC.Controllers
 
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult AddIdeation(CreateIdeationModel cim, int project, string user)
+        public IActionResult AddIdeation(AddIdeationModel cim, int project, string user)
         {
             if (cim == null)
             {
@@ -228,7 +228,7 @@ namespace UIMVC.Controllers
 
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult AddCentralQuestion(CreateIdeationQuestionModel ciqm, int ideation)
+        public IActionResult AddCentralQuestion(AddIdeationQuestionModel ciqm, int ideation)
         {
             if (ciqm == null)
             {
@@ -282,7 +282,7 @@ namespace UIMVC.Controllers
 
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult ConfirmChangeIdeation(int ideation, AlterIdeationModel aim)
+        public IActionResult ConfirmChangeIdeation(int ideation, ChangeIdeationModel aim)
         {
             Ideation i = new Ideation()
             {

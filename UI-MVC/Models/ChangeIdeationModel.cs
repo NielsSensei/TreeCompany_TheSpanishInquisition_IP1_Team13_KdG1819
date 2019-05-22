@@ -2,11 +2,10 @@ using Domain.Projects;
 
 namespace UIMVC.Models
 {
-    public class AlterIdeationModel
+    public class ChangeIdeationModel
     {
         public string Title { get; set; }
         public string ExtraInfo { get; set; }
-        public Phase ParentPhase { get; set; }
         public string MediaFile { get; set; }
         public bool UserVote { get; set; }
     }
