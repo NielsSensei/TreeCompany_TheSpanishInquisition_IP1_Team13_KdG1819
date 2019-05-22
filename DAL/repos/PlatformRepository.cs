@@ -53,7 +53,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region Platform CRUD
         public Platform Create(Platform obj)
         {
@@ -77,7 +77,7 @@ namespace DAL.repos
 
         public Platform Read(int id, bool details)
         {
-            PlatformsDao platformDao = details ? _ctx.Platforms.AsNoTracking().First(p => p.PlatformId == id) : _ctx.Platforms.First(p => p.PlatformId == id);
+            PlatformsDao platformDao = details ? _ctx.Platforms.AsNoTracking().FirstOrDefault(p => p.PlatformId == id) : _ctx.Platforms.FirstOrDefault(p => p.PlatformId == id);
             ExtensionMethods.CheckForNotFound(platformDao, "Platform", id);
 
             return ConvertToDomain(platformDao);
@@ -89,11 +89,11 @@ namespace DAL.repos
             PlatformsDao foundPlatform = _ctx.Platforms.FirstOrDefault(dto => dto.PlatformId == newPlatform.PlatformId);
             if (foundPlatform != null)
             {
-                foundPlatform.Name = newPlatform.Name;
-                foundPlatform.SiteUrl = newPlatform.SiteUrl;
-                foundPlatform.IconImage = newPlatform.IconImage;
-                foundPlatform.CarouselImage = newPlatform.CarouselImage;
-                foundPlatform.FrontPageImage = newPlatform.FrontPageImage;
+                if (newPlatform.Name != null) foundPlatform.Name = newPlatform.Name;
+                if (newPlatform.SiteUrl != null) foundPlatform.SiteUrl = newPlatform.SiteUrl;
+                if (newPlatform.IconImage != null) foundPlatform.IconImage = newPlatform.IconImage;
+                if (newPlatform.CarouselImage != null) foundPlatform.CarouselImage = newPlatform.CarouselImage;
+                if (newPlatform.FrontPageImage != null) foundPlatform.FrontPageImage = newPlatform.FrontPageImage;
 
                 _ctx.Platforms.Update(foundPlatform);
             }

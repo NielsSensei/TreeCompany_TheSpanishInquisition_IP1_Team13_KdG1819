@@ -7,6 +7,5 @@ namespace Domain.UserInput
         public string CustomOption { get; set; }
         public bool DropdownList { get; set; }
         public List<string> Choices { get; set; }
-        public List<string> Options { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using UIMVC.Areas.Identity.Data;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(UimvcContext))]
+    [DbContext(typeof(CityOfIdeasDbContext))]
     [Migration("20190405091848_ExtraUserData")]
     partial class ExtraUserData
     {

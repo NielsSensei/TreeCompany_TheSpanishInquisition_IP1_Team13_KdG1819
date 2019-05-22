@@ -53,8 +53,7 @@ namespace DAL.repos
 
             return dao;
         }
-
-        // XV: TODO Create a check for organisation accounts
+        
         private IdeationsDao ConvertToDao(Ideation obj)
         {
             //bool Org = obj.User.Role == Role.LOGGEDINORG;
@@ -63,6 +62,7 @@ namespace DAL.repos
                     ModuleId = obj.Id,
                     ExtraInfo = obj.ExtraInfo,
                     MediaFile = obj.MediaLink,
+                    UserVote = obj.UserVote
             };
 
             if (obj.User != null)
@@ -78,7 +78,6 @@ namespace DAL.repos
             if (obj.Event != null)
             {
                 dao.EventId = obj.Event.Id;
-                dao.UserIdea = obj.UserIdea;
                 //DTO.Organisation = Org;
             }
 
@@ -91,7 +90,7 @@ namespace DAL.repos
             {
                 Id = dao.ModuleId,
                 User = new UimvcUser { Id = dao.UserId },
-                UserIdea = dao.UserIdea,
+                UserVote = dao.UserVote,
                 Event = new Event { Id = dao.EventId },
                 MediaLink = dao.MediaFile,
                 ExtraInfo = dao.ExtraInfo,
@@ -129,7 +128,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region Ideation CRUD
         public Ideation Create(Ideation obj)
         {
@@ -182,8 +181,9 @@ namespace DAL.repos
                 foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
                 foundIdeation.MediaFile = newIdeation.MediaFile;
                 foundIdeation.RequiredFields = newIdeation.RequiredFields;
+                foundIdeation.UserVote = newIdeation.UserVote;
             }
-            
+
             ModulesDao newModule = GrabModuleInformationDao(obj);
             ModulesDao foundModule = _ctx.Modules.FirstOrDefault(dto => dto.ModuleId == newModule.ModuleId);
             if (foundModule != null)
@@ -197,7 +197,7 @@ namespace DAL.repos
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
             }
-            
+
             if (newModule.PhaseId != foundModule.PhaseId)
             {
                 foundModule.PhaseId = newModule.PhaseId;

@@ -1,3 +1,4 @@
+@using Domain.Projects
 @model Domain.Projects.Questionnaire
 
 <div class="card text-center">
@@ -9,11 +10,12 @@
         <hr/>
         <div class="card-text">
             @Html.Partial("_ReactionNumbersPartial", new LikeViewModel() { LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount,
-                TwitterLikeCount = Model.TwitterLikeCount ,IconStyle = 1 })
+                TwitterLikeCount = Model.TwitterLikeCount , IconStyle = LikeVisibility.EveryTypeOfLike })
         </div>
     </div>
     <div class="card-footer">
-        @* TODO Doe hier de linking Sachaboy *@
-                    <input type="submit" class="btn btn-primary" value="Vul vragenlijst in!"/>
+        <a class="btn btn-primary" asp-action="AnswerQuestionnaire" asp-controller="Questionnaire" asp-route-questionnaireid="@Model.Id">
+            Vul vragenlijst in!
+        </a>
     </div>
 </div>

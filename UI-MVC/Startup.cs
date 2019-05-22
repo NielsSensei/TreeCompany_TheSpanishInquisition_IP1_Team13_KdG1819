@@ -1,9 +1,5 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Text;
-using DAL.Contexts;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using UIMVC.Services;
 
 namespace UIMVC
@@ -28,7 +22,7 @@ namespace UIMVC
         }
 
         public IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -48,7 +42,7 @@ namespace UIMVC
                 options.KnownProxies.Add(IPAddress.Parse("34.76.133.167"));
             });
 
-                 services.AddAuthentication().AddGoogle(googleOptions =>
+             services.AddAuthentication().AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
@@ -58,50 +52,20 @@ namespace UIMVC
             {
                 msOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
                 msOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
-            }); 
-            
-             // ===== Add Jwt Authentication ========
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
-            services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-                    
-                })
-                .AddJwtBearer(cfg =>
-                {
-                    cfg.RequireHttpsMetadata = false;
-                    cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = Configuration["JwtTokens:JwtIssuer"],
-                        ValidAudience = Configuration["JwtTokens:JwtIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtTokens:JwtKey"])),
-                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
-                    };
-                });
-            
-            //===
+            });
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
-            
-     
-            
-            
-        
-    
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
             services.AddTransient<ProjectService>();
             services.AddTransient<QuestionService>();
             services.AddTransient<UserService>();
             services.AddTransient<RoleService>();
+            services.AddTransient<Settings>();
         }
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -116,7 +80,7 @@ namespace UIMVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
+
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto

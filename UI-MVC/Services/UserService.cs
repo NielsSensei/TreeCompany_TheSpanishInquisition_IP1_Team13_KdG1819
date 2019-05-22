@@ -1,13 +1,15 @@
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 
 namespace UIMVC.Services
 {
     public class UserService
     {
         private readonly UserManager<UimvcUser> _usrMgr;
+
 
         public UserService(UserManager<UimvcUser> userManager)
         {
@@ -24,5 +26,30 @@ namespace UIMVC.Services
 
             return foundUser.Name;
         }
+
+        public UimvcUser GetAnonymousUser()
+        {
+            return _usrMgr.Users.FirstOrDefault(user => user.UserName == "ANONYMOUS");
+        }
+
+        #region Platforms
+
+        public async Task<int> GetUserPlatform(ClaimsPrincipal user)
+        {
+            var userFound = await _usrMgr.GetUserAsync(user);
+            if (userFound == null) return 0;
+
+            return userFound.PlatformDetails;
+        }
+
+        public async void AddUserToPlatform(ClaimsPrincipal userClaim, int platform)
+        {
+            var user = await _usrMgr.GetUserAsync(userClaim);
+            user.PlatformDetails = platform;
+
+            _usrMgr.UpdateAsync(user);
+        }
+
+        #endregion
     }
 }

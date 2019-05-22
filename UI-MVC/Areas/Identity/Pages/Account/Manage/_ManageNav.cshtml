@@ -1,21 +1,34 @@
-﻿@using UIMVC.Services
+﻿@using Domain.Users
+@using UIMVC.Services
 @using UIMVCUser = Domain.Identity.UimvcUser
 @inject SignInManager<UIMVCUser> SignInManager
 @inject RoleService RoleService
 @inject UserManager<UIMVCUser> UserManager
+@inject UserService UserService
 
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    int platformId = await UserService.GetUserPlatform(User);
 }
 <ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profiel</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Wachtwoord</a></li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profiel</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Wachtwoord</a>
+    </li>
     @if (hasExternalLogins)
     {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">Externe logins</a></li>
+        <li id="external-logins" class="nav-item">
+            <a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">Externe logins</a>
+        </li>
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authenticatie</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Persoonlijke Data</a></li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authenticatie</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Persoonlijke Data</a>
+    </li>
 
     @if (RoleService.IsModerator(User).Result)
     {
@@ -34,6 +47,13 @@
          {
              <li class="nav-item">
                  <a class="nav-link" asp-controller="Moderation" asp-action="AddPlatform">Platform Management</a>
+             </li>
+         }
+
+        @if (User.IsInRole(Role.Admin.ToString("G")) && platformId != 0)
+         {
+             <li class="nav-item">
+                 <a class="nav-link" asp-action="ChangePlatform" asp-controller="Platform" asp-route-id="@platformId">Pas je platform aan</a>
              </li>
          }
     }

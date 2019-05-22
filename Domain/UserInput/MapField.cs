@@ -2,7 +2,7 @@ namespace Domain.UserInput
 {
     public class MapField : Field
     {
-        public float LocationX { get; set; }
-        public float LocationY { get; set; }    
+        public double LocationX { get; set; }
+        public double LocationY { get; set; }
     }
 }

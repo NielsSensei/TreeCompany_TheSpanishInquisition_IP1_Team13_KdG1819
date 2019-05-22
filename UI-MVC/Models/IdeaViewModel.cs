@@ -6,5 +6,6 @@ namespace UIMVC.Models
     {
         public Idea ToView { get; set; }
         public byte IdeaLevel { get; set; }
+        public bool Voting { get; set; }
     }
 }

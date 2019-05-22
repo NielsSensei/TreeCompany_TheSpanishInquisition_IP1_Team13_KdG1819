@@ -28,5 +28,10 @@ namespace UIMVC.Controllers
         {
             return View();
         }
+
+        public IActionResult FAQ()
+        {
+            return View();
+        }
     }
 }

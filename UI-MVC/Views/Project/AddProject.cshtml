@@ -1,4 +1,5 @@
 @using Domain.Identity
+@using Domain.Projects
 @using Microsoft.AspNetCore.Identity
 @model UIMVC.Models.CreateProjectModel
 @inject UserManager<UimvcUser> UserManager
@@ -10,14 +11,14 @@
 
  @section Scripts {
     <script type="module" src="~/dist/validation.entry.js" defer></script>
-} 
+}
 
  <br>
 
  <h2>Maak een nieuw project aan</h2>
 <br>
-<form id="ProjectForm" asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model" 
-      asp-route-platform="@ViewData["platform"]" asp-route-user="@UserManager.GetUserId(User)"
+<form id="ProjectForm" asp-controller="Project" asp-action="AddProject" method="post" asp-route-pvm="@Model"
+      asp-route-platform="@ViewData["platformId"]" asp-route-user="@UserManager.GetUserId(User)"
       enctype="multipart/form-data">
 
      <div class="form-row">
@@ -40,7 +41,18 @@
             <input name="Visible" type="hidden" value="false">
             <label asp-for="Visible">Zichtbaar</label>
          </div>
-
+         <div class="form-group col-md-12">
+             @Html.DropDownList("LikeSettings", new SelectListItem[]
+                {
+                    new SelectListItem("Enkel Gewone Likes","0"),
+                    new SelectListItem("Enkel Facebook Likes","1"),
+                    new SelectListItem("Enkel Twitter Likes","2"),
+                    new SelectListItem("Gewone En Facebook Likes","3"),
+                    new SelectListItem("Gewone En Twitter Likes","4"),
+                    new SelectListItem("Facebook En Twitter Likes","5"),
+                    new SelectListItem("Alle Type Likes","6")
+                }, "Welke likes mogen er getoond worden?", new { @class = "form-control" })
+         </div>
          <div class="form-group col-md-12">
             <h4>Huidige fase:</h4>
             <label asp-for="CurrentPhase.Description">Omschrijving</label>

@@ -8,11 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UIMVC.Models;
 using UIMVC.Areas.Identity.Data;
 using DAL.Contexts;
-using UIMVC.Areas.Identity.Data;
 
 namespace UIMVC.Migrations
 {
-    [DbContext(typeof(UimvcContext))]
+    [DbContext(typeof(CityOfIdeasDbContext))]
     [Migration("20190401140142_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {

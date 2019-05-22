@@ -8,6 +8,7 @@ using Domain.UserInput;
 using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL.repos
 {
@@ -105,11 +106,12 @@ namespace DAL.repos
 
         private MultipleAnswer ConvertToDomain(AnswersDao answersDao, List<OptionsDao> chosenOptionsDao)
         {
-            MultipleAnswer ma = null;
+            MultipleAnswer ma = new MultipleAnswer();
             ma.Id = answersDao.AnswerId;
             ma.User = new UimvcUser { Id = answersDao.UserId };
             ma.Question = new QuestionnaireQuestion { Id = answersDao.QQuestionId };
             ma.DropdownList = chosenOptionsDao.Count == 1;
+            ma.Choices = new List<string>();
 
             foreach(OptionsDao dao in chosenOptionsDao)
             {
@@ -129,28 +131,36 @@ namespace DAL.repos
         }
 
         private int FindNextAvailableAnswerId()
-        {               
+        {
             if (!_ctx.Answers.Any()) return 1;
-            int newId = ReadAll().Max(answer => answer.Id)+1;
+            int newId = _ctx.Answers.ToList().Max(answer => answer.AnswerId)+1;
+            return newId;
+        }
+
+        private int FindNextAvailableOptionId()
+        {
+            if (!_ctx.Options.Any()) return 1;
+            int newId = _ctx.Options.Max(option => option.OptionId) + 1;
             return newId;
         }
         #endregion
-        
+
         #region QuestionnaireQuestion CRUD
         public QuestionnaireQuestion Create(QuestionnaireQuestion obj)
         {
             IEnumerable<QuestionnaireQuestion> qqs = ReadAllByQuestionnaireId(obj.Questionnaire.Id);
 
-            foreach (QuestionnaireQuestion qq in qqs)
+            obj.Id = FindNextAvailableQQuestionId();
+
+            if (obj.QuestionType == QuestionType.Drop || obj.QuestionType == QuestionType.Multi ||
+                obj.QuestionType == QuestionType.Single)
             {
-                if (ExtensionMethods.HasMatchingWords(obj.QuestionText, qq.QuestionText) > 0)
+                foreach (string option in obj.Options)
                 {
-                    throw new DuplicateNameException("QuestionnaireQuestion(ID=" + obj.Id + ") is een gelijkaardige vraag aan QuestionnaireQuestion(ID=" +
-                        qq.Id + ") de vraag specifiek was: " + obj.QuestionText + ".");
+                    CreateOption(obj.Id, option);
                 }
             }
 
-            obj.Id = FindNextAvailableQQuestionId();
             _ctx.QuestionnaireQuestions.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
 
@@ -202,14 +212,14 @@ namespace DAL.repos
         {
             return ReadAll().Where(c => c.Module.Id == questionnaireId);
         }
-        #endregion       
-        
+        #endregion
+
         #region Answer CRUD
         public Answer Create(Answer obj)
         {
             QuestionnaireQuestion qq = Read(obj.Question.Id, false);
             obj.Id = FindNextAvailableAnswerId();
-            
+
             if(qq.QuestionType == QuestionType.Open || qq.QuestionType == QuestionType.Mail)
             {
                 _ctx.Answers.Add(OpenConvertToDao((OpenAnswer) obj));
@@ -220,7 +230,8 @@ namespace DAL.repos
                 foreach(String s in ma.Choices)
                 {
                     int id = ReadOptionId(s, ma.Question.Id);
-                    _ctx.Choices.Add(ConvertToDao(id,ma.Id,_ctx.Choices.Count()+1));
+                    _ctx.Choices.Add(ConvertToDao(id,ma.Id,_ctx.Choices.AsNoTracking().Count()+1));
+                    _ctx.SaveChanges();
                 }
             }
 
@@ -228,6 +239,7 @@ namespace DAL.repos
 
             return obj;
         }
+
 
         public OpenAnswer ReadOpenAnswer(int answerId, bool details)
         {
@@ -245,15 +257,22 @@ namespace DAL.repos
             List<OptionsDao> optionsDaos = _ctx.Options.ToList().FindAll(o => o.QquestionId == answersDao.QQuestionId);
             List<OptionsDao> chosenOptionsDao = new List<OptionsDao>();
 
-            foreach(OptionsDao dao in optionsDaos)
-            {
-                ChoicesDao choice = _ctx.Choices.First(c => c.OptionId == dao.OptionId);
+            List<ChoicesDao> choices = _ctx.Choices.Where(dao => dao.AnswerId == answersDao.AnswerId).ToList();
 
-                if(choice.ChoiceId != null)
-                {
-                    chosenOptionsDao.Add(dao);
-                }
+            foreach (ChoicesDao choicesDao in choices)
+            {
+                chosenOptionsDao.AddRange(optionsDaos.Where(dao => dao.OptionId == choicesDao.OptionId).ToList());
             }
+
+//            foreach(OptionsDao dao in optionsDaos)
+//            {
+//                ChoicesDao choice = _ctx.Choices.ToList().FirstOrDefault(choicesDao => choicesDao.AnswerId == dao.);
+//
+//                if(choice?.ChoiceId != null)
+//                {
+//                    chosenOptionsDao.Add(dao);
+//                }
+//            }
 
             return ConvertToDomain(answersDao, chosenOptionsDao);
         }
@@ -264,13 +283,13 @@ namespace DAL.repos
 
             foreach (AnswersDao dao in _ctx.Answers.ToList().FindAll(a => a.QQuestionId == questionId))
             {
-                if (!_ctx.Choices.Where(c => c.AnswerId == dao.AnswerId).Any())
+                if (!_ctx.Choices.Any(c => c.AnswerId == dao.AnswerId) && dao.AnswerText != null)
                 {
                     myQuery.Add(ConvertToDomain(dao));
                 }
                 else
                 {
-                    MultipleAnswer toAdd = ReadMultipleAnswer(dao.AnswerId, false);
+                    MultipleAnswer toAdd = ReadMultipleAnswer(dao.AnswerId, true);
                     myQuery.Add(toAdd);
                 }
             }
@@ -278,21 +297,12 @@ namespace DAL.repos
             return myQuery;
         }
         #endregion
-        
-        #region Options CRUD
-        public string Create(int questionId, string obj)
-        {
-            IEnumerable<string> options = ReadAllOptions(questionId);
-            int newId = options.Count() + 1;
 
-            for (int i = 0; i < options.Count(); i++)
-            {
-                if (ExtensionMethods.HasMatchingWords(obj, options.ElementAt(i)) > 0)
-                {
-                    throw new DuplicateNameException("Deze Option(ID=" + newId + ") met Optiontekst: " + obj + " is gelijkaardig aan de Option(ID=" + i + 
-                        "). De Optiontekst is: " + options.ElementAt(i) + ".");
-                }
-            }
+        #region Options CRUD
+        public string CreateOption(int questionId, string obj)
+        {
+            IEnumerable<string> options = ReadAllOptionsForQuestion(questionId);
+            int newId = FindNextAvailableOptionId();
 
             _ctx.Options.Add(ConvertToDao(newId, obj, questionId));
             _ctx.SaveChanges();
@@ -307,15 +317,8 @@ namespace DAL.repos
 
         public int ReadOptionId(string optionText, int questionId)
         {
-            List<string> options = ReadAllOptions(questionId).ToList();
-            for(int i = 0; i < options.Count; i++)
-            {
-                if (options[i].Equals(optionText))
-                {
-                    return i + 1;
-                }
-            }
-            throw new DuplicateNameException("Option " + optionText + " niet gevonden voor de QuestionnaireQuestion(ID=" + questionId + ").");
+            OptionsDao option = _ctx.Options.FirstOrDefault(o => o.QquestionId == questionId && o.OptionText == optionText);
+            return option.OptionId;
         }
 
         public void DeleteOption(int optionId)
@@ -325,7 +328,19 @@ namespace DAL.repos
             _ctx.SaveChanges();
         }
 
-        public IEnumerable<string> ReadAllOptions(int questionId)
+        public IEnumerable<string> ReadAllOptions()
+        {
+            List<string> myQuery = new List<string>();
+
+            foreach(OptionsDao dao in _ctx.Options)
+            {
+                myQuery.Add(ConvertToDomain(dao));
+            }
+
+            return myQuery;
+        }
+
+        public IEnumerable<string> ReadAllOptionsForQuestion(int questionId)
         {
             List<string> myQuery = new List<string>();
 
@@ -333,7 +348,7 @@ namespace DAL.repos
             {
                 if (dao.QquestionId == questionId)
                 {
-                    myQuery.Append(ConvertToDomain(dao));
+                    myQuery.Add(ConvertToDomain(dao));
                 }
             }
 

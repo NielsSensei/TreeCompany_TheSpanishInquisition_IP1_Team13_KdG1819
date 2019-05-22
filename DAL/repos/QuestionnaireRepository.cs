@@ -66,7 +66,7 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
         #region Questionnaire CRUD
         public Questionnaire Create(Questionnaire obj)
         {
@@ -82,7 +82,8 @@ namespace DAL.repos
             }
 
             obj.Id = FindNextAvailableQuestionnaireId();
-            _ctx.Modules.Add(ConvertToDao(obj));
+            ModulesDao newModule = ConvertToDao(obj);
+            _ctx.Modules.Add(newModule);
             _ctx.SaveChanges();
 
             return obj;
@@ -136,8 +137,8 @@ namespace DAL.repos
                 if (dao.IsQuestionnaire)
                 {
                     Questionnaire toAdd = ConvertToDomain(dao);
-                    myQuery.Add(toAdd);  
-                }             
+                    myQuery.Add(toAdd);
+                }
             }
 
             return myQuery;
@@ -153,9 +154,11 @@ namespace DAL.repos
         public string CreateTag(string obj, int moduleId)
         {
             Questionnaire moduleWTags = Read(moduleId, false);
-            ModulesDao module = ConvertToDao(moduleWTags);
-            module.Tags += "," + obj;
-            _ctx.SaveChanges();
+            string oldTags = ExtensionMethods.ListToString(moduleWTags.Tags);
+            oldTags += "," + obj;
+            
+            moduleWTags.Tags = ExtensionMethods.StringToList(oldTags);
+            Update(moduleWTags);
 
             return obj;
         }

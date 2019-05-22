@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace UIMVC.Views.Admin
+namespace UIMVC.Views.Shared
 {
-    public class AddQuestionnaireQuestionModel : PageModel
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {
-            
         }
     }
 }

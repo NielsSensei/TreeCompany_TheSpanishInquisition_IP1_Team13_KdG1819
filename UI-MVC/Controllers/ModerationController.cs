@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using BL;
 using Domain.Projects;
@@ -26,8 +27,9 @@ namespace UIMVC.Controllers
         private readonly ProjectManager _projMgr;
         private readonly UserManager<UimvcUser> _userManager;
         private readonly RoleService _roleService;
+        private readonly UserService _userService;
 
-        public ModerationController(UserManager<UimvcUser> userManager, RoleService roleService)
+        public ModerationController(UserManager<UimvcUser> userManager, RoleService roleService, UserService userService)
         {
             _ideaMgr = new IdeationQuestionManager();
             _platformMgr = new PlatformManager();
@@ -35,6 +37,7 @@ namespace UIMVC.Controllers
             _projMgr = new ProjectManager();
             _userManager = userManager;
             _roleService = roleService;
+            _userService = userService;
         }
 
         #region AddPlatform
@@ -86,10 +89,53 @@ namespace UIMVC.Controllers
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<IActionResult> AssignUserToPlatform(AssignUserModel aum)
+        {
+            if (aum == null) return BadRequest("Cannot be null");
+            if (User.IsInRole(Role.Admin.ToString("G")) &&
+                (await _userManager.GetUserAsync(User)).PlatformDetails != aum.PlatformId)
+                return BadRequest("You are no admin of this platform");
+
+            UimvcUser user = await _userManager.FindByEmailAsync(aum.UserMail);
+            if (user == null) return BadRequest("Wrong user mail");
+            user.PlatformDetails = aum.PlatformId;
+
+            if (aum.Role == 0) aum.Role = AssignUserRole.MODERATOR;
+            _userManager.AddToRoleAsync(user, Enum.GetName(typeof(AssignUserRole), aum.Role));
+
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction("ChangePlatform", "Platform", new {Id = aum.PlatformId} );
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<IActionResult> RemoveUserFromPlatform(AssignUserModel aum)
+        {
+            if (aum == null)
+            {
+                return BadRequest("Cannot be null");
+            }
+
+
+            UimvcUser user = await _userManager.FindByEmailAsync(aum.UserMail);
+            if (user == null) return BadRequest("Wrong user mail");
+            user.PlatformDetails = 0;
+            if (await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Moderator"))
+            {
+                _userManager.RemoveFromRolesAsync(user, new[] {"Moderator", "Admin"});
+            }
+
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction("ChangePlatform", "Platform", new {Id = aum.PlatformId} );
+        }
+
         #endregion
 
         #region Ideation
-        //TODO sprint2 eens dat edwin klaar is met ze ding kunnen we ooit iets doen met events
         [Authorize(Roles = "SuperAdmin, Moderator, Admin")]
         [HttpGet]
         public IActionResult AddIdeation(int project)
@@ -131,6 +177,7 @@ namespace UIMVC.Controllers
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
                 User = new UimvcUser(){Id = user},
                 ModuleType = ModuleType.Ideation,
+                UserVote = cim.UserVote,
                 Title = cim.Title,
                 OnGoing = true
             };
@@ -140,9 +187,9 @@ namespace UIMVC.Controllers
                 i.ExtraInfo = cim.ExtraInfo;
             }
 
-            if (cim.MediaLink != null)
+            if (cim.MediaLink != null && cim.MediaLink.Contains("youtube.com/watch?v="))
             {
-                i.MediaLink = cim.MediaLink;
+                i.MediaLink = "https://youtube.com/embed/" + cim.MediaLink.Split("=")[1].Split("&")[0];
             }
 
             _moduleMgr.MakeIdeation(i);
@@ -151,7 +198,7 @@ namespace UIMVC.Controllers
         }
 
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult AddTag(int ideation)
+        public IActionResult AddTag(int ideation, bool questionnaire = false)
         {
             string tag = Request.Form["GetMeATag"].ToString();
 
@@ -159,8 +206,13 @@ namespace UIMVC.Controllers
             {
                 return BadRequest("Tag can't be null");
             }
+            
+            
 
-            _moduleMgr.MakeTag(tag, ideation, false);
+            _moduleMgr.MakeTag(tag, ideation, questionnaire);
+
+            if (questionnaire)
+                return RedirectToAction("EditQuestionnaire", "Questionnaire", new {questionnaireId = ideation});
 
             return RedirectToAction("CollectIdeation", "Platform",
                 new {Id = ideation});
@@ -218,30 +270,32 @@ namespace UIMVC.Controllers
 
             ViewData["Phases"] = availablePhases;
             ViewData["PhaseCount"] = availablePhases.Count;
-
+            ViewData["Title"] = i.Title;
+            ViewData["Parent"] = _projMgr.GetPhase(i.ParentPhase.Id);
             ViewData["Ideation"] = id;
-            AlterIdeationModel aim = new AlterIdeationModel()
-            {
-                Title = i.Title,
-                ExtraInfo = i.ExtraInfo,
-                ParentPhase = _projMgr.GetPhase(i.ParentPhase.Id)
-            };
+            ViewData["ExtraInfo"] = i.ExtraInfo;
+            ViewData["UserVote"] = i.UserVote;
 
-            return View(aim);
+            return View();
         }
 
 
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult ConfirmChangeIdeation(int ideation)
+        public IActionResult ConfirmChangeIdeation(int ideation, AlterIdeationModel aim)
         {
             Ideation i = new Ideation()
             {
                 Id = ideation,
-                Title = Request.Form["Title"].ToString(),
-                ExtraInfo = Request.Form["ExtraInfo"].ToString(),
-                MediaLink = Request.Form["MediaFile"].ToString()
+                Title = aim.Title,
+                ExtraInfo = aim.ExtraInfo,
+                UserVote = aim.UserVote
             };
+            
+            if(aim.MediaFile != null && aim.MediaFile.Contains("youtube.com/watch?v="))
+            {
+                i.MediaLink = "https://youtube.com/embed/" + aim.MediaFile.Split("=")[1].Split("&")[0];
+            }
 
             try
             {
@@ -250,10 +304,12 @@ namespace UIMVC.Controllers
                     i.ParentPhase = _projMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
                     _moduleMgr.EditIdeation(i);
                 }
-                
+
             }catch(FormatException e)
             {
-                _moduleMgr.EditIdeation(i);  
+                Ideation previous = _moduleMgr.GetIdeation(i.Id);
+                i.ParentPhase = _projMgr.GetPhase(previous.ParentPhase.Id);
+                _moduleMgr.EditIdeation(i);
             }
 
             return RedirectToAction("CollectIdeation", "Platform", new {Id = ideation});
@@ -264,26 +320,12 @@ namespace UIMVC.Controllers
         public IActionResult DestroyIdeation(int id)
         {
             Ideation i = _moduleMgr.GetIdeation(id);
-
-            List<IdeationQuestion> iqs = _ideaMgr.GetAllByModuleId(i.Id);
-            foreach (IdeationQuestion iq in iqs)
-            {
-                List<Idea> ideas = _ideaMgr.GetIdeas(iq.Id);
-                foreach (Idea idea in ideas)
-                {
-                    _ideaMgr.RemoveFields(idea.Id);
-                    _ideaMgr.RemoveReports(idea.Id);
-                    _ideaMgr.RemoveVotes(idea.Id);
-                    _ideaMgr.RemoveIdea(idea.Id);
-                }
-
-                _ideaMgr.RemoveQuestion(iq.Id);
-            }
-
+            
             _moduleMgr.RemoveModule(id, false);
 
             return RedirectToAction("CollectProject", "Platform", new { Id = i.Project.Id });
         }
+        
         #region Ideas
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
@@ -314,7 +356,8 @@ namespace UIMVC.Controllers
                 return View(idea);
             }
 
-            return RedirectToAction(controllerName: "Errors", actionName: "HandleErrorCode", routeValues: id);
+            return RedirectToAction("HandleErrorCode", "Errors", new {statuscode = 404,
+                    path="/Moderation/CollectIdea/" + id });
         }
 
         [HttpPost]
@@ -369,8 +412,7 @@ namespace UIMVC.Controllers
 
             return RedirectToAction(controllerName: "Moderation", actionName: "CollectAllIdeas" , routeValues: "report");
         }
-
-        [HttpPost]
+        
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult DestroyIdea(int idea, string from, int thread)
         {
@@ -391,7 +433,8 @@ namespace UIMVC.Controllers
                     new {Id = thread});
             }
 
-            return RedirectToAction("HandleErrorCode", "Errors", 404);
+            return RedirectToAction("HandleErrorCode", "Errors", 
+                new { statuscode = 404, path="/Moderation/DestroyIdea/" + idea });
         }
 
 
@@ -413,7 +456,7 @@ namespace UIMVC.Controllers
         #region UIMVCUser
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
-        public IActionResult CollectAllUsers(string sortOrder, string searchString)
+        public async Task<IActionResult> CollectAllUsers(string sortOrder, string searchString)
         {
 
             ViewData["CurrentFilter"] = searchString;
@@ -422,6 +465,11 @@ namespace UIMVC.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 users = users.Where(u => u.Name.ToUpper().Contains(searchString.ToUpper()));
+            }
+            if (!User.IsInRole(Role.SuperAdmin.ToString("G")))
+            {
+                UimvcUser user = await _userManager.GetUserAsync(User);
+                users = users.Where(u => u.PlatformDetails == user.PlatformDetails);
             }
 
             switch (sortOrder)
@@ -473,8 +521,7 @@ namespace UIMVC.Controllers
             Object roleParse = null;
             if (!Enum.TryParse(typeof(Role), roletext, out roleParse)) return RedirectToAction("CollectAllUsers", "Moderation");
             var role = (Role) roleParse;
-
-            // TODO Send a message to the user stating that the role could not be added
+            
             if (!await _roleService.IsSameRoleOrLower(User, role))
             {
                 if (await _userManager.IsInRoleAsync(user, roletext))

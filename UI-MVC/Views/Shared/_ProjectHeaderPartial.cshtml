@@ -6,16 +6,16 @@
 @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
 {
     LikeCount = Model.Project.LikeCount, FbLikeCount = Model.Project.FbLikeCount,
-    TwitterLikeCount = Model.Project.TwitterLikeCount, IconStyle = 1
+    TwitterLikeCount = Model.Project.TwitterLikeCount, IconStyle = Model.Project.LikeVisibility
 })
 <p>@Model.Project.Goal</p>
 @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
 {
-    <div class="project-actions">
-        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#addImage"> 
-            Voeg een Image Toe            
+    <div class="project-actions row justify-content-around">
+        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#addImage">
+            Voeg een Image Toe
         </button>
-        <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject" 
+        <a class="btn btn-light" asp-controller="Project" asp-action="ChangeProject"
            asp-route-id="@Model.Project.Id">
             Wijzig project
         </a>
@@ -23,7 +23,8 @@
         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProject">
             Wis project
         </button>
-    </div>  
+    </div>
+    <hr class="d-md-inline d-lg-none"/>
 }
 
 <div class="modal fade" id="addImage" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -37,7 +38,7 @@
                             <p>Geef hier een foto:</p>
                             @Html.TextBoxFor(m => m.File, new {type = "file"})
                         </div>
-                    </div>  
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Opslaan</button>
@@ -69,7 +70,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyProject" 
+                <a class="btn btn-primary" asp-controller="Project" asp-action="DestroyProject"
                    asp-route-id="@Model.Project.Id">
                     Verwijder
                 </a><br/>

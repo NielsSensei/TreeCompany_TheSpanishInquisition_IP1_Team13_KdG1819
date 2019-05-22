@@ -21,7 +21,7 @@ namespace UIMVC.Areas.Identity
                 services.AddDbContext<DAL.Contexts.CityOfIdeasDbContext>(options =>
                     options.UseSqlite(
                         context.Configuration.GetConnectionString("UIMVCContextConnection")));
-                
+
                 services.AddDefaultIdentity<UimvcUser>(
                     config => { config.SignIn.RequireConfirmedEmail = true; })
                     .AddRoles<IdentityRole>()

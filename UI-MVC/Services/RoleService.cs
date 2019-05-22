@@ -188,7 +188,7 @@ namespace UIMVC.Services
             return false;
 
         }
-        
+
         public async Task<bool> IsModerator(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Moderator") ||
@@ -201,7 +201,7 @@ namespace UIMVC.Services
             return false;
 
         }
-        
+
         public async Task<bool> IsAdmin(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Admin") ||
@@ -212,7 +212,7 @@ namespace UIMVC.Services
 
             return false;
         }
-        
+
         public async Task<bool> IsSuperAdmin(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SuperAdmin"))
@@ -241,8 +241,8 @@ namespace UIMVC.Services
                 Role role = (Role) Enum.Parse(typeof(Role), roleString);
                 userCompareRoles.Add(role);
             }
-            
-            
+
+
             if (appUserRoles.Any() && userCompareRoles.Any())
             {
                 int appUserRoleHighest = (int) appUserRoles.Max(role => role);
@@ -273,7 +273,7 @@ namespace UIMVC.Services
         public async Task<bool> IsSameRoleOrLower(ClaimsPrincipal userClaim, Role roleCheck)
         {
             UimvcUser user = await _userManager.GetUserAsync(userClaim);
-            
+
             IEnumerable<string> userCompareRolesString = await _userManager.GetRolesAsync(user);
             List<Role> userCompareRoles = new List<Role>();
 
@@ -292,6 +292,39 @@ namespace UIMVC.Services
 
             return false;
         }
+        #endregion
+
+        #region Users
+
+
+        public async Task<IEnumerable<UimvcUser>> GetAllAdmins(int platformId)
+        {
+            List<UimvcUser> users = new List<UimvcUser>();
+            foreach (UimvcUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
+            {
+                if (await _userManager.IsInRoleAsync(user, "ADMIN"))
+                {
+                    users.Add(user);
+                }
+            }
+
+            return users;
+        }
+
+        public async Task<IEnumerable<UimvcUser>> GetAllModerators(int platformId)
+        {
+            List<UimvcUser> users = new List<UimvcUser>();
+            foreach (UimvcUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
+            {
+                if (await _userManager.IsInRoleAsync(user, "MODERATOR"))
+                {
+                    users.Add(user);
+                }
+            }
+
+            return users;
+        }
+
         #endregion
     }
 }

@@ -1,5 +1,3 @@
-@* TODO dat je ideation op basis van event kan maken *@
-
 @using Domain.Identity
 @using Microsoft.AspNetCore.Identity
 @model UIMVC.Models.CreateIdeationModel
@@ -35,11 +33,18 @@
                     <input asp-for="ExtraInfo" class="form-control"/>
                 </div>
                 <div class="form-group">
-                    <label asp-for="MediaLink">Geef hier een filmpje eventueel: </label>
+                    <label asp-for="MediaLink">Geef hier een youtube filmpje eventueel: </label>
                     <input asp-for="MediaLink" class="form-control"/>
-                    @Html.ValidationMessage("MediaLink", 
-                        "De link moet embed zijn, bijvoorbeeld: youtube.com/embed/abc123def", 
-                        new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-10">
+                           <label asp-for="UserVote">Mogen gebruikers stemmen op de ideeën? </label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="UserVote" class="form-check-input"/>
+                        </div>
+                    </div>
                 </div>
                 <br/>
                 <div class="row">
