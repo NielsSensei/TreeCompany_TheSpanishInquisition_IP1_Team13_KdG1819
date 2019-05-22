@@ -59,9 +59,7 @@
                         ?
                     </button>
                 </div>
-
             </div>
-
             <hr/>
             @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any() ||
                  (!(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result) && !ProjectService.CollectPlatformProjects(Model).Any(project => project.Visible)))
