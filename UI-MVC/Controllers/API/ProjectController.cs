@@ -29,18 +29,21 @@ namespace UIMVC.Controllers.API
         public IActionResult GetAllByPlatform(int platformId)
         {
             var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId));
-
+            var visibleProjects = new List<Project>();
+            
             foreach (Project project in projects)
             {
+                if (!project.Visible) continue;
                 project.Phases = projMgr.GetAllPhases(project.Id).ToList();
-                Phase curPhase = projMgr.GetPhase(project.CurrentPhase.Id);
+                var curPhase = projMgr.GetPhase(project.CurrentPhase.Id);
                 project.CurrentPhase = curPhase;
+                visibleProjects.Add(project);
             }
 
             if (projects == null)
                 return NotFound();
 
-            return Ok(projects);
+            return Ok(visibleProjects);
         }
 
         // GET api/<controller>/5
@@ -55,20 +58,22 @@ namespace UIMVC.Controllers.API
 
             return Ok(project);
         }
-
-        public IActionResult SortedBy(string quota, int platformId)
+        
+        [HttpGet]
+        [Route("SortedBy")]
+        public IActionResult SortedBy(int quota, int platformId)
         {
             List<Project> projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId)).ToList();
 
             switch (quota)
             {
-                case "Naam": return Ok(projects.OrderBy(m => m.Title));
+                case 1: return Ok(projects.OrderBy(m => m.Title));
                     break;
-                case "Status": return Ok(projects.OrderBy(m => m.Status));
+                case 2: return Ok(projects.OrderBy(m => m.Status));
                     break;
-                case "Likes": return Ok(projects.OrderBy(m => m.LikeCount));
+                case 3: return Ok(projects.OrderBy(m => m.LikeCount));
                     break;
-                case "Reacties": return Ok(projects.OrderBy(m => m.ReactionCount));
+                case 4: return Ok(projects.OrderBy(m => m.ReactionCount));
                     break;
                 default: return Ok(projects);
             }
