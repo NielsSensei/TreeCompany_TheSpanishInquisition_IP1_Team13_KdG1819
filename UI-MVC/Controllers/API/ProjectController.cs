@@ -65,19 +65,29 @@ namespace UIMVC.Controllers.API
         [Route("SortedBy")]
         public IActionResult SortedBy(int quota, int platformId)
         {
-            List<Project> projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId)).ToList();
+            var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId));
+            var visibleProjects = new List<Project>();
+            
+            foreach (Project project in projects)
+            {
+                if (!project.Visible) continue;
+                project.Phases = projMgr.GetAllPhases(project.Id).ToList();
+                var curPhase = projMgr.GetPhase(project.CurrentPhase.Id);
+                project.CurrentPhase = curPhase;
+                visibleProjects.Add(project);
+            }
 
             switch (quota)
             {
-                case 1: return Ok(projects.OrderBy(m => m.Title));
+                case 1: return Ok(visibleProjects.OrderBy(m => m.Title));
                     break;
-                case 2: return Ok(projects.OrderBy(m => m.Status));
+                case 2: return Ok(visibleProjects.OrderBy(m => m.Status));
                     break;
-                case 3: return Ok(projects.OrderBy(m => m.LikeCount));
+                case 3: return Ok(visibleProjects.OrderBy(m => m.LikeCount));
                     break;
-                case 4: return Ok(projects.OrderBy(m => m.ReactionCount));
+                case 4: return Ok(visibleProjects.OrderBy(m => m.ReactionCount));
                     break;
-                default: return Ok(projects);
+                default: return Ok(visibleProjects);
             }
                 
         }

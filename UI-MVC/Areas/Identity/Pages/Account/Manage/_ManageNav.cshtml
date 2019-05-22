@@ -50,7 +50,7 @@
              </li>
          }
 
-        @if (User.IsInRole(Role.Admin.ToString("G")) && platformId != 0)
+        if (User.IsInRole(Role.Admin.ToString("G")) && platformId != 0)
          {
              <li class="nav-item">
                  <a class="nav-link" asp-action="ChangePlatform" asp-controller="Platform" asp-route-id="@platformId">Pas je platform aan</a>
