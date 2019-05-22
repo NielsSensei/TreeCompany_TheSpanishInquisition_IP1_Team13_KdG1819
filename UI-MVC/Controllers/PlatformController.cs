@@ -27,6 +27,12 @@ namespace UIMVC.Controllers
             _roleService = service;
         }
 
+        /**
+         * @Author Xander Veldeman, Niels Van Zandbergen
+         *
+         * Shows the platform
+         * @Param message: simple status messages
+         */
         [Route("Platform/{id}")]
         public IActionResult Index(int id, string message)
         {
@@ -45,8 +51,16 @@ namespace UIMVC.Controllers
             return View(platform);
         }
 
+        /**
+         * @Author Xander Veldeman
+         */
         #region Platform
 
+        /**
+         * @Author Xander Veldeman
+         *
+         * Search for a platform based on it's name and URL
+         */
         public IActionResult Search(string search)
         {
             ViewData["search"] = search;
@@ -56,6 +70,9 @@ namespace UIMVC.Controllers
 
         #endregion
 
+        /**
+         * @Author Xander Veldeman
+         */
         #region Change
 
         [HttpGet]
@@ -76,7 +93,6 @@ namespace UIMVC.Controllers
             ViewData["platform"] = platform;
             return View();
         }
-
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> ChangePlatform(AddPlatformModel platformEdit, int platformId)
@@ -136,6 +152,9 @@ namespace UIMVC.Controllers
 
         #endregion
 
+        /**
+         * @Author Xander Veldeman, Niels Van Zandbergen
+         */
         #region AddPlatform
         [HttpGet]
         [Authorize(Roles = "SuperAdmin")]
@@ -145,6 +164,11 @@ namespace UIMVC.Controllers
             return View();
         }
 
+        /**
+         * @Documentation Xander Veldeman
+         *
+         * Images get taken from the AddPlatformModel as IFormFile and are converted to a byte array for storage
+         */
         [HttpPost]
         [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> AddPlatform(AddPlatformModel cpm)
@@ -185,6 +209,13 @@ namespace UIMVC.Controllers
             return RedirectToAction("Index", "Platform", new {Id = newPlatform.Id} );
         }
 
+        /**
+         * @Author Xander Veldeman
+         * @Documentation Xander Veldeman
+         *
+         * A superadmin can assign any user to a platform.
+         * An admin can only assign users of his own platform.
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> AssignUserToPlatform(AssignUserModel aum)
@@ -206,6 +237,9 @@ namespace UIMVC.Controllers
             return RedirectToAction("ChangePlatform", "Platform", new {Id = aum.PlatformId} );
         }
 
+        /**
+         * @Author Xander Veldeman
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> RemoveUserFromPlatform(AssignUserModel aum)
@@ -231,7 +265,17 @@ namespace UIMVC.Controllers
 
         #endregion
 
+        /**
+         * @Author Xander Veldeman, Edwin Kai Yin Tam
+         */
         #region UIMVCUser
+        
+        /**
+         * @Documentation Xander Veldeman
+         *
+         * If the user is an admin or moderator, this will return the users of their platform.
+         * If the user is a superadmin, it will display ALL users.
+         */
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public async Task<IActionResult> CollectAllUsers(string sortOrder, string searchString)

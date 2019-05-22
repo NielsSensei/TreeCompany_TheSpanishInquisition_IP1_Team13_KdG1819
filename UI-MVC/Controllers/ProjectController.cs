@@ -27,7 +27,14 @@ namespace UIMVC.Controllers
             _roleService = service;
         }
 
+        /**
+         * @Author Xander Veldeman, David Matei, Niels Van Zandbergen
+         */
          #region Project
+         
+         /**
+          * @Author Xander Veldeman
+          */
          [HttpGet]
          public IActionResult CollectProject(int id)
          {
@@ -64,6 +71,9 @@ namespace UIMVC.Controllers
                  new { statuscode = 404, path="/Platform/CollectProject/" + id  });
          }
          
+         /**
+          * @Author Xander Veldeman, Niels Van Zandbergen
+          */
          #region Add
          [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
@@ -134,8 +144,14 @@ namespace UIMVC.Controllers
         }
          #endregion
 
+         /**
+          * @Author Niels Van Zandbergen
+          */
          #region ChangeProject
 
+         /**
+          * @Author Xander Veldeman, Niels Van Zandbergen
+          */
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangeProject(int id)
@@ -152,6 +168,9 @@ namespace UIMVC.Controllers
             return View();
         }
 
+        /**
+          * @Author Niels Van Zandbergen, Xander Veldeman
+          */
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public ActionResult ChangeProject(ChangeProjectModel epm, int id)
@@ -175,6 +194,9 @@ namespace UIMVC.Controllers
          #endregion
 
 
+         /**
+          * @Author Sacha Beulens
+          */
          #region DestroyProject
 
         [Authorize(Roles ="Admin, SuperAdmin")]
@@ -224,6 +246,9 @@ namespace UIMVC.Controllers
 
          #endregion
 
+         /**
+          * @Author David Matei, Niels Van Zandbergen
+          */
          #region Phase
          #region AddPhase
          [Authorize(Roles ="Admin, SuperAdmin")]
@@ -324,6 +349,9 @@ namespace UIMVC.Controllers
 
          #endregion
          
+         /**
+          * @Author Niels Van Zandbergen
+          */
          #region Tags
          [Authorize(Roles = "Admin, SuperAdmin")]
          public IActionResult AddTag(int ideation, bool questionnaire = false)

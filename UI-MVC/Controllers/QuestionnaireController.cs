@@ -31,6 +31,9 @@ namespace UIMVC.Controllers
             _userService = userService;
         }
 
+        /**
+         * @Author Sacha Beulens
+         */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaire(int projectId)
@@ -54,7 +57,9 @@ namespace UIMVC.Controllers
             return View();
         }
 
-
+        /**
+         * @Author Sacha Beulens
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaire(AddQuestionnaireModel cqm, int projectId)
@@ -91,6 +96,9 @@ namespace UIMVC.Controllers
             return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = newQuestionnaire.Id});
         }
 
+        /**
+         * @Author Sacha Beulens
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaireQuestion(int questionnaireId, AddQuestionnaireQuestionModel cqqm)
@@ -121,7 +129,11 @@ namespace UIMVC.Controllers
 
             return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = toAdd.Id});
         }
+        
 
+        /**
+         * @Author Sacha Beulens
+         */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult ChangeQuestionnaire(int questionnaireId)
@@ -161,6 +173,9 @@ namespace UIMVC.Controllers
             return View();
         }
 
+        /**
+         * @Author Sacha Beulens
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult ChangeQuestionnaire(ChangeQuestionnaireModel eqm, int questionnaireid)
@@ -200,6 +215,9 @@ namespace UIMVC.Controllers
             return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = questionnaireid});
         }
 
+        /**
+         * @Author Sacha Beulens
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult DeleteQuestionnaire(int questionnaireid)
@@ -234,6 +252,9 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectProject", "Project", new {id = questionnaire.Project.Id});
         }
 
+        /**
+         * @Author Sacha Beulens
+         */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult DeleteQuestionnaireQuestion(int questionid)
@@ -262,11 +283,14 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult EditQuestionnaireQuestion(int questionid)
         {
-            throw new NotImplementedException("Work In Progress");
+            throw new NotImplementedException("Scrapped");
         }
 
         #region AnswerQuestionnaire
 
+        /**
+         * @Author Xander Veldeman
+         */
         [HttpGet]
         public IActionResult AnswerQuestionnaire(int questionnaireid)
         {
@@ -294,6 +318,9 @@ namespace UIMVC.Controllers
             return View(new AddAnswerModel());
         }
 
+        /**
+         * @Author Xander Veldeman
+         */
         [HttpGet]
         public IActionResult NextQuestionnaire(int questionid, int questionnaireid, bool invalid = false)
         {
@@ -324,6 +351,14 @@ namespace UIMVC.Controllers
             return View(new AddAnswerModel());
         }
 
+        /**
+         * @Author Xander Veldeman
+         * @Documentation Xander Veldeman
+         *
+         * Answers a questionnaire using the AddAnswerModel which contains either an OpenAnswer, a MultipleAnswer with choices or
+         * a list with Checkbox answers. This model should always have one of these three values. If it doesn't, the
+         * application will ask the question again.
+         */
         [HttpPost]
         public async Task<IActionResult> AnswerQuestionnaire(AddAnswerModel addAnswerModel, int questionId, int questionnaireId)
         {
@@ -431,6 +466,9 @@ namespace UIMVC.Controllers
         }
 
 
+        /**
+         * @Author Xander Veldeman
+         */
         private QuestionnaireQuestion GetNextQuestion(int questionnaireId, int questionId)
         {
             var questions = QqMgr.GetAllByModuleId(questionnaireId);
@@ -448,6 +486,9 @@ namespace UIMVC.Controllers
             return question;
         }
 
+        /**
+         * @Author Xander Veldeman
+         */
         public IActionResult FinishedQuestionnaire(int questionnaireId)
         {
             var questionnaire = ModMgr.GetQuestionnaire(questionnaireId, true);

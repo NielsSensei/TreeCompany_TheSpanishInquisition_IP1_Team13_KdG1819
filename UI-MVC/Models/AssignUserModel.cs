@@ -1,5 +1,8 @@
 namespace UIMVC.Models
 {
+    /**
+     * @Author Xander Veldeman
+     */
     public class AssignUserModel
     {
         public string UserMail { get; set; }

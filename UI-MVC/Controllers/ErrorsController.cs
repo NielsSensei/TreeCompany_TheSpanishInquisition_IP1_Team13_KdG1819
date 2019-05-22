@@ -7,12 +7,24 @@ namespace UIMVC.Controllers
 {
     public class ErrorsController : Controller
     {
+        /**
+         * @Author Identity
+         *
+         * Standard Identity Error Handler
+         */
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
+        
+        /**
+         * @Author Xander Veldeman
+         *
+         * Custom error handler to a custom model
+         * @Param path: path given by MVC
+         * @Param statuscode: statuscode given by MVC
+         */
         [Route("Error/{statuscode}")]
         public IActionResult HandleErrorCode(int statuscode, string path)
         {
@@ -26,11 +38,20 @@ namespace UIMVC.Controllers
                     ViewBag.ErrorMessage = "Er is blijkbaar iets misgelopen langs onze kant";
                     ViewBag.RouteOfException = path;
                     break;
+                default:
+                    ViewBag.ErrorMessage = "Er is iets fout gelopen";
+                    ViewBag.RouteOfException = path;
+                    break;
             }
 
             return View();
         }
 
+        /**
+         * @Author Xander Veldeman
+         *
+         * Simple redirect for the Identity/Sendgrid email verification
+         */
         [Route("ConfirmAccount")]
         public IActionResult ConfirmAccount()
         {

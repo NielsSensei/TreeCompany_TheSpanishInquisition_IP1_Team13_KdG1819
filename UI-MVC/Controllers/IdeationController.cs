@@ -34,6 +34,9 @@ namespace UIMVC.Controllers
             _roleService = roleService;
         }
 
+        /**
+         * @Author Niels Van Zandbergen, Xander Veldeman
+         */
         #region Ideation
         #region Add
         [Authorize(Roles = "SuperAdmin, Moderator, Admin")]
@@ -527,6 +530,9 @@ namespace UIMVC.Controllers
         }
         #endregion
         
+        /**
+         * @Author Niels Van Zandbergen
+         */
         #region Report
         [HttpPost]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
