@@ -23,31 +23,6 @@ namespace UIMVC.Controllers.API
             platMgr = new PlatformManager();
         }
 
-
-
-        // GET: api/<controller>/GetAllByPlatform?platformId=1
-        [HttpGet]
-        [Route("GetAllByPlatform")]
-        public IActionResult GetAllByPlatform(int platformId)
-        {
-            var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId));
-            var visibleProjects = new List<Project>();
-            
-            foreach (Project project in projects)
-            {
-                if (!project.Visible) continue;
-                project.Phases = projMgr.GetAllPhases(project.Id).ToList();
-                var curPhase = projMgr.GetPhase(project.CurrentPhase.Id);
-                project.CurrentPhase = curPhase;
-                visibleProjects.Add(project);
-            }
-
-            if (projects == null)
-                return NotFound();
-
-            return Ok(visibleProjects);
-        }
-
         // GET api/<controller>/GetById?projectId=1
         [HttpGet]
         [Route("GetById")]
