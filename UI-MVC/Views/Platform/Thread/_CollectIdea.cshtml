@@ -96,7 +96,7 @@ else
                         </button>
                     }
 
-                    @if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && Model.Voting)
+                    @if (User.Identity.IsAuthenticated && !UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && Model.Voting)
                     {
                         <a class="btn btn-primary m-1" asp-controller="Platform" asp-action="AddVote"
                            asp-route-idea="@Model.ToView.Id"
@@ -106,7 +106,7 @@ else
                         </a>
                     }
 
-                    @if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
+                    @if (User.Identity.IsAuthenticated && !UserManager.GetUserId(User).Equals(Model.ToView.User.Id))
                     {
                         <a data-toggle="modal" data-target="#makeReportModal@(Model.ToView.Id)">
                             <img alt="reportflag" src="https://image.flaticon.com/icons/svg/148/148882.svg"
