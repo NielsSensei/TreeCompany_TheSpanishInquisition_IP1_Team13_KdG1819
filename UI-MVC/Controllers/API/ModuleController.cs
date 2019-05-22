@@ -38,6 +38,7 @@ namespace UIMVC.Controllers.API
             {
                 return NotFound("Geen modules gevonden voor project: " + projectId);
             }
+
             return Ok(modules);
 
             
@@ -65,6 +66,7 @@ namespace UIMVC.Controllers.API
             return Ok(q);
         }
 
+        // GET api/<controller>/GetIdeation?projectId=1&phaseId=1
         [HttpGet]
         [Route("GetIdeation")]
         public IActionResult GetIdeation(int projectId, int phaseId)
@@ -78,6 +80,7 @@ namespace UIMVC.Controllers.API
             return Ok(i);
         }
 
+        // GET api/<controller>/GetModuleForPhase?phaseId=1
         [HttpGet]
         [Route("GetModuleForPhase")]
         public IActionResult GetModuleForPhase(int phaseId)
@@ -107,7 +110,7 @@ namespace UIMVC.Controllers.API
                         //toReturnIdeation = (Ideation)mod;
                     }
                     toReturn = mod;
-                    
+
                 }
             }
 
@@ -148,8 +151,6 @@ namespace UIMVC.Controllers.API
 
 
             throw new Exception("Skipping the IF statement for some reason...");
-
-           
 
             
 

@@ -23,7 +23,9 @@ namespace UIMVC.Controllers.API
             platMgr = new PlatformManager();
         }
 
-        // GET: api/<controller>
+
+
+        // GET: api/<controller>/GetAllByPlatform?platformId=1
         [HttpGet]
         [Route("GetAllByPlatform")]
         public IActionResult GetAllByPlatform(int platformId)
@@ -46,7 +48,7 @@ namespace UIMVC.Controllers.API
             return Ok(visibleProjects);
         }
 
-        // GET api/<controller>/5
+        // GET api/<controller>/GetById?projectId=1
         [HttpGet]
         [Route("GetById")]
         public IActionResult GetById(int projectId)
