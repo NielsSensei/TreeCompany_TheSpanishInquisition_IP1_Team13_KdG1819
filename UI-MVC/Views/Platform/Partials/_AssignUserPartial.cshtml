@@ -1,6 +1,6 @@
 @model AssignUserModel
 
- @using (Html.BeginForm("AssignUserToPlatform", "Moderation", FormMethod.Post))
+ @using (Html.BeginForm("AssignUserToPlatform", "Platform", FormMethod.Post))
 {
      <div class="form-group">
          @Html.HiddenFor(m => m.PlatformId, "PlatformId")

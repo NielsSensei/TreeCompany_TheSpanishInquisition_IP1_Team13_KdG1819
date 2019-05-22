@@ -55,7 +55,7 @@
             </div>
             @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
             {
-                <a class="btn btn-primary h-25" method="get" asp-controller="Moderation" asp-action="AddCentralQuestion"
+                <a class="btn btn-primary h-25" method="get" asp-controller="Ideation" asp-action="AddCentralQuestion"
                    asp-route-ideation="@Model.Id">
                     Stel een nieuwe centrale vraag
                 </a>
@@ -74,7 +74,7 @@
                         }
                     </div>
                     <div class="card-footer text-center">
-                        <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
+                        <a class="btn btn-primary" asp-controller="Ideation" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
                     </div>
                 </div>
             }
@@ -86,7 +86,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <a class="btn btn-primary" formmethod="get" asp-controller="Moderation" asp-action="ChangeIdeation"
+                <a class="btn btn-primary" formmethod="get" asp-controller="Ideation" asp-action="ChangeIdeation"
                     asp-route-id="@Model.Id">Pas deze ideation aan.</a>
             </div>
             <div class="col-md-6">
@@ -106,7 +106,7 @@
                 <h5>Ben je zeker dat je deze ideation wil verwijderen?</h5>
             </div>
             <div class=modal-body>
-                <a type="button" class="btn btn-primary" asp-controller="Moderation"
+                <a type="button" class="btn btn-primary" asp-controller="Ideation"
                         asp-action="DestroyIdeation" asp-route-id="@Model.Id">Bevestig</a>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -119,7 +119,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class=modal-body>
-                <form asp-controller="Moderation" asp-action="AddTag" asp-route-ideation="@Model.Id">
+                <form asp-controller="Project" asp-action="AddTag" asp-route-ideation="@Model.Id">
                     <div class="form-group">
                         <label>IdeationID</label>
                         <input disabled value="@Model.Id" class="form-control"/>

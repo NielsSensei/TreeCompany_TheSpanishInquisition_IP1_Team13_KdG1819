@@ -11,7 +11,7 @@
 
 <div class="container">
     <div class="row" id="changeIdea">
-        @using (Html.BeginForm("ChangeIdea", "Thread", new { idea = @Model.Idea.Id,
+        @using (Html.BeginForm("ChangeIdea", "Ideation", new { idea = @Model.Idea.Id,
             ideation = Model.IdeationQuestionId, form = @Model.FormCollection, fieldStrings = @Model.FieldStrings }, 
             FormMethod.Post, null, new { enctype = "multipart/form-data", @class = "row" }))
         { 

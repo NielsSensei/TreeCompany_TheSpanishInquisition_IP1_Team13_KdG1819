@@ -48,7 +48,7 @@
             {
                 <tr>
                     <td>@idea.Id</td>
-                    <td><a asp-controller="Platform" asp-action="CollectIdeationThread"
+                    <td><a asp-controller="Ideation" asp-action="CollectIdeationThread"
                            asp-route-id="@idea.IdeaQuestion.Id">@idea.IdeaQuestion.Id</a></td>
                     <td>@UserService.CollectUserName(idea.User.Id)</td>
                     <td>@idea.Reported</td>
@@ -57,7 +57,7 @@
                     <td>@idea.VoteCount</td>
                     <td>@idea.ShareCount</td>
                     <td>@idea.RetweetCount</td>
-                    <td><a asp-controller="Moderation" asp-action="CollectIdea" asp-route-id="@idea.Id">Bekijk Idee</a></td>
+                    <td><a asp-controller="Ideation" asp-action="CollectIdeaDetails" asp-route-id="@idea.Id">Bekijk Idee</a></td>
                 </tr>
             }
         }

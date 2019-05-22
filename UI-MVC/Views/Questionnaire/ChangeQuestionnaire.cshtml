@@ -19,7 +19,7 @@
 }
 
 <h1>Vragenlijst beheren</h1>
-<form asp-controller="Questionnaire" asp-action="EditQuestionnaire" method="post" asp-route-eqm="@Model" asp-route-questionnaireid="@questionnaire.Id">
+<form asp-controller="Questionnaire" asp-action="ChangeQuestionnaire" method="post" asp-route-eqm="@Model" asp-route-questionnaireid="@questionnaire.Id">
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" label-for="Title">Titel</label>
         <div class="col-sm-10">
@@ -102,7 +102,7 @@ else
                 <td>@qQ.Answers.Count() Antwoorden</td>
                 <td>
                     <a class="btn btn-danger" asp-action="DeleteQuestionnaireQuestion" asp-controller="Questionnaire" asp-route-questionid="@qQ.Id" method="post">Verwijderen</a>
-                    @Html.Partial("Partials/QuestionResultPartial", qQ)
+                    @Html.Partial("Partials/_QuestionResultPartial", qQ)
                 </td>
             </tr>
         }
@@ -162,7 +162,7 @@ else
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class=modal-body>
-                <form asp-controller="Moderation" asp-action="AddTag" asp-route-ideation="@questionnaire.Id" asp-route-questionnaire="true">
+                <form asp-controller="Project" asp-action="AddTag" asp-route-ideation="@questionnaire.Id" asp-route-questionnaire="true">
                     <div class="form-group">
                         <label>QuestionnaireID</label>
                         <input disabled value="@questionnaire.Id" class="form-control"/>

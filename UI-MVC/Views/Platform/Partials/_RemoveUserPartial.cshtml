@@ -1,6 +1,6 @@
 @model AssignUserModel
 
- @using (Html.BeginForm("RemoveUserFromPlatform", "Moderation", FormMethod.Post))
+ @using (Html.BeginForm("RemoveUserFromPlatform", "Platform", FormMethod.Post))
 {
     @Html.HiddenFor(m => m.PlatformId, "PlatformId")
     @Html.HiddenFor(m => m.UserMail, "UserMail")

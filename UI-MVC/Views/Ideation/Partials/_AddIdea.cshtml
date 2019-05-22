@@ -10,7 +10,7 @@
 
 <div class="container">
     <div class="row" id="newIdea">
-        @using (Html.BeginForm("AddIdea", "Thread", new { user = UserManager.GetUserId(User),
+        @using (Html.BeginForm("AddIdea", "Ideation", new { user = UserManager.GetUserId(User),
             parent = Model.ParentId, ideation = Model.IdeationQuestionId, form = @Model.FormCollection, fieldStrings = @Model.FieldStrings }, 
             FormMethod.Post, null, new { enctype = "multipart/form-data", @class = "row" }))
         { 

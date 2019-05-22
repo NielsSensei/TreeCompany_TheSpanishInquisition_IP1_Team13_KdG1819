@@ -94,7 +94,7 @@ else
 
                     @if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && Model.Voting)
                     {
-                        <a class="btn btn-primary" asp-controller="Platform" asp-action="AddVote"
+                        <a class="btn btn-primary" asp-controller="Ideation" asp-action="AddVote"
                            asp-route-idea="@Model.ToView.Id"
                            asp-route-user="@UserManager.GetUserId(User)"
                            asp-route-thread="@Model.ToView.IdeaQuestion.Id">
@@ -163,7 +163,7 @@ else
                 <h5>Ben je zeker dat je je idee wil verwijderen?</h5>
             </div>
             <div class="modal-body">
-                <a type="button" class="btn btn-primary" asp-controller="Moderation"
+                <a type="button" class="btn btn-primary" asp-controller="Ideation"
                         asp-action="DestroyIdea" asp-route-idea="@Model.ToView.Id"
                         asp-route-from="IdeationThread"
                         asp-route-thread="@Model.ToView.IdeaQuestion.Id">Bevestig
@@ -195,7 +195,7 @@ else
 <section class="modal fade" id="makeReportModal@(Model.ToView.Id)" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form asp-controller="Platform" asp-action="AddReport" type="button"
+            <form asp-controller="Ideation" asp-action="AddReport" type="button"
                   asp-route-flagger="@UserManager.GetUserId(User)" asp-route-thread="@Model.ToView.IdeaQuestion.Id"
                   asp-route-idea="@Model.ToView.Id">
                 <div class="modal-body m-auto">

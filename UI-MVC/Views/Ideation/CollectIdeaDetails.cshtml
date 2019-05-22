@@ -60,7 +60,7 @@
                 <p><span style="font-weight: bold">Image Field:</span></p>
                 <img alt="ImageField" src="data:image/png;base64,@System.Convert.ToBase64String(@Model.Ifield.UploadedImage)"/>
             }
-            <form asp-controller="Moderation" asp-action="DestroyIdea" asp-route-idea="@Model.Id"
+            <form asp-controller="Ideation" asp-action="DestroyIdea" asp-route-idea="@Model.Id"
                   asp-route-from="ModerationPanel">
                 <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Verwijder Idee" />
             </form>
@@ -82,7 +82,7 @@
                     <h2>Actions</h2>
                     if (r.Status == ReportStatus.StatusNotViewed)
                     {
-                        <form asp-controller="Moderation" asp-action="ReviewByAdmin" asp-route-idea="@Model.Id"
+                        <form asp-controller="Ideation" asp-action="ReviewByAdmin" asp-route-idea="@Model.Id"
                               asp-route-report="@r.Id" method="post">
                             <input id="ReportHandlerButton" class="btn btn-primary"type="submit" value="Vraag Review door Admin" />
                         </form>
@@ -93,13 +93,13 @@
                     {
                         <div class="container">
                             <div class="row">
-                                <form asp-controller="Moderation" asp-action="ApproveReport" asp-route-report="@r.Id" method="post"
+                                <form asp-controller="Ideation" asp-action="ApproveReport" asp-route-report="@r.Id" method="post"
                                       asp-route-idea="@Model.Id">
                                     <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Rapport Goedkeuren"/>
                                 </form>
                             </div>
                             <div class="row">
-                                <form asp-controller="Moderation" asp-action="DenyReport" asp-route-report="@r.Id" method="post"
+                                <form asp-controller="Ideation" asp-action="DenyReport" asp-route-report="@r.Id" method="post"
                                       asp-route-idea="@Model.Id">
                                     <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Negeer Rapport"/>
                                 </form>
@@ -114,7 +114,7 @@
 
                     if (r.Status == ReportStatus.StatusDenied)
                     {
-                        <form asp-controller="Moderation" asp-action="DestroyReport" asp-route-report="@r.Id" method="post"
+                        <form asp-controller="Ideation" asp-action="DestroyReport" asp-route-report="@r.Id" method="post"
                               asp-route-idea="@Model.Id">
                             <input class="btn btn-primary" id="ReportHandlerButton" type="submit" value="Verwijder Rapport"/>
                         </form>

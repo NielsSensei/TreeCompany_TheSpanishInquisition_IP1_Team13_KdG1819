@@ -19,9 +19,7 @@ namespace UIMVC.Controllers
         private ModuleManager ModMgr { get; }
         private ProjectManager ProjMgr { get; }
         private QuestionnaireQuestionManager QqMgr { get; }
-
         private UserManager<UimvcUser> _userManager;
-
         private UserService _userService;
 
         public QuestionnaireController(UserManager<UimvcUser> userManager, UserService userService)
@@ -90,7 +88,7 @@ namespace UIMVC.Controllers
             newQuestionnaire.Phases.Add(parentPhase);
             ModMgr.MakeQuestionnaire(newQuestionnaire);
 
-            return RedirectToAction("EditQuestionnaire", new {questionnaireId = newQuestionnaire.Id});
+            return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = newQuestionnaire.Id});
         }
 
         [HttpPost]
@@ -121,12 +119,12 @@ namespace UIMVC.Controllers
             QqMgr.MakeQuestion(newQuestion, toAdd.Id);
             ModMgr.EditQuestionnaire(toAdd);
 
-            return RedirectToAction("EditQuestionnaire", new {questionnaireId = toAdd.Id});
+            return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = toAdd.Id});
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult EditQuestionnaire(int questionnaireId)
+        public IActionResult ChangeQuestionnaire(int questionnaireId)
         {
             Questionnaire q = ModMgr.GetQuestionnaire(questionnaireId, false);
 
@@ -165,7 +163,7 @@ namespace UIMVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult EditQuestionnaire(ChangeQuestionnaireModel eqm, int questionnaireid)
+        public IActionResult ChangeQuestionnaire(ChangeQuestionnaireModel eqm, int questionnaireid)
         {
             Questionnaire toBeUpdated = ModMgr.GetQuestionnaire(questionnaireid, false);
 
@@ -199,7 +197,7 @@ namespace UIMVC.Controllers
 
             ModMgr.EditQuestionnaire(toBeUpdated);
 
-            return RedirectToAction("EditQuestionnaire", new {questionnaireId = questionnaireid});
+            return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = questionnaireid});
         }
 
         [HttpPost]
@@ -233,7 +231,7 @@ namespace UIMVC.Controllers
 
             ModMgr.RemoveModule(questionnaireid, true);
 
-            return RedirectToAction("CollectProject", "Platform", new {id = questionnaire.Project.Id});
+            return RedirectToAction("CollectProject", "Project", new {id = questionnaire.Project.Id});
         }
 
         [HttpGet]
@@ -257,7 +255,7 @@ namespace UIMVC.Controllers
             }
 
             QqMgr.RemoveQuestion(questionid);
-            return RedirectToAction("EditQuestionnaire", new {questionnaireid = toDelete.Module.Id});
+            return RedirectToAction("ChangeQuestionnaire", new {questionnaireid = toDelete.Module.Id});
         }
 
         [HttpPost]
