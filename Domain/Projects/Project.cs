@@ -4,6 +4,9 @@ using Domain.Users;
 
 namespace Domain.Projects
 {
+    /*
+     * @authors Nathan Gijselings, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class Project
     {
         public int Id { get; set; }
