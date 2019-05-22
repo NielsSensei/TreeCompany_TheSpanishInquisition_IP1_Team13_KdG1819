@@ -4,14 +4,40 @@
 }
 
 @section Scripts
-    {
+{
     <script type="module" src="~/dist/index.entry.js" defer></script>
     <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
 }
 
+<h1 class="text-center">Welkom bij <em>City of Ideas</em> !</h1>
+<hr/>
 <div>
     @Html.Partial("HomeTemplates/PlatformCarousel", Model)
 </div>
+<hr/>
+<section>
+
+    <div class="row">
+        <div class="col-12 col-md-6 card">
+            <div class="card-body">
+                <h3 class="text-center">Waarom ?</h3>
+                <hr/>
+                <p class="text-justify">Burgers betrekken bij beleid is heel erg belangrijk om beter beleid te kunnen maken en een groter draagvlak te vinden voor beslissingen. Burgers zijn expert in hun eigen buurt, interesses en activiteiten. Maar het is een uitdaging voor elke overheid en organisaties om een breed publiek te bereiken en niet telkens dezelfde burgers te laten deelnemen.</p>
+
+            </div>
+        </div>
+        <div class="col-12 col-md-6 card">
+            <div class="card-body">
+                <h3 class="text-center">Hoe?</h3>
+                <hr/>
+                <p class="text-justify"><em>City of Ideas</em> is een app waarbij burgers sneller hun mening kunnen laten horen. Een gemeente of organisatie kan projecten aanmaken met vragenlijsten of ideations, waarbij je zelf ideeën kan geven.</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
 <hr/>
 <div>
     @Html.Partial("HomeTemplates/PlatformList")

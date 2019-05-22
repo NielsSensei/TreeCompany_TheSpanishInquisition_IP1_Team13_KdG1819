@@ -9,6 +9,11 @@
     ViewData["Platform"] = Model;
 }
 
+@section Scripts
+{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
 <br/>
 <section class="container">
     <div class="row">
@@ -47,7 +52,16 @@
             <p class="text-info">@ViewData["StatusMessage"]</p>
         </div>
         <div class="col-md-12 col-lg-7">
-            <h1>Projecten</h1>
+            <div class="row m-1 mb-0 align-items-center">
+                <h1>Projecten</h1>
+                <div class="col">
+                    <button type="button" class="close align-self-end" data-toggle="modal" data-target="#projectUitlegModal">
+                        ?
+                    </button>
+                </div>
+
+            </div>
+
             <hr/>
             @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any() ||
                  (!(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result) && !ProjectService.CollectPlatformProjects(Model).Any(project => project.Visible)))
@@ -67,3 +81,20 @@
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="projectUitlegModal" tabindex="-1" role="dialog" aria-labelledby="projectUitlegModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Wat zijn projecten</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Een project is een manier om info te verzamelen over jullie meningen. Dit kan met zowel ideeën als ideations. Elk project heeft zijn centrale thema.</p>
+                <p>Dit zijn alle projecten voor @Model.Name</p>
+            </div>
+        </div>
+    </div>
+</div>
