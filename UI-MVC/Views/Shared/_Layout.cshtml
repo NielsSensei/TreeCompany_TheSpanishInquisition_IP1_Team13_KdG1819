@@ -34,14 +34,14 @@
                          Project project = (Project) ViewData["Project"];
                          <li class="nav-item layouttitle nav-link">></li>
                          <li class="nav-item layouttitle">
-                             <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@project.Id">@project.Title</a>
+                             <a class="nav-link test" asp-area="" asp-controller="Project" asp-action="CollectProject" asp-route-id="@project.Id">@project.Title</a>
                          </li>
                          @if (ViewData["Module"] != null && ViewData["Module"].GetType() == typeof(Ideation))
                           {
                               Ideation ideation = (Ideation) ViewData["Module"];
                               <li class="nav-item layouttitle nav-link">></li>
                               <li class="nav-item layouttitle">
-                                  <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectIdeation" asp-route-id="@ideation.Id">@ideation.Title</a>
+                                  <a class="nav-link test" asp-area="" asp-controller="Ideation" asp-action="CollectIdeation" asp-route-id="@ideation.Id">@ideation.Title</a>
                               </li>
                           }
                          @if (ViewData["Module"] != null && ViewData["Module"].GetType() == typeof(Questionnaire))

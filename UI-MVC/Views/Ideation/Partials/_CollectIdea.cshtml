@@ -31,7 +31,7 @@
                         @foreach (Idea child in ProjectService.CollectThreadIdeas(
                             Model.ToView.IdeaQuestion).Where(i => i.ParentIdea.Id == Model.ToView.Id))
                         {
-                            @Html.Partial("Thread/_CollectIdea", new IdeaViewModel()
+                            @Html.Partial("_CollectIdea", new IdeaViewModel()
                             {
                                 ToView = child,
                                 IdeaLevel = (byte) (Model.IdeaLevel + 1)
@@ -66,7 +66,7 @@ else
         </div>
         <div class="card-body pb-0">
             <div class="container">
-                @Html.Partial("Thread/_IdeaFields", Model.ToView)
+                @Html.Partial("Partials/_IdeaFields", Model.ToView)
             </div>
             <hr/>
             <section class="row justify-content-between align-items-center m-auto">
@@ -133,7 +133,7 @@ else
                 @foreach (Idea child in ProjectService.CollectThreadIdeas(Model.ToView.IdeaQuestion).Where(
                     i => i.ParentIdea.Id == Model.ToView.Id))
                 {
-                    @Html.Partial("Thread/_CollectIdea", new IdeaViewModel()
+                    @Html.Partial("Partials/_CollectIdea", new IdeaViewModel()
                     {
                         ToView = child, IdeaLevel =
                             (byte) (Model.IdeaLevel + 1)
@@ -153,8 +153,8 @@ else
                 </h5>
             </div>
 
-            <div class="modal-body m-auto">
-                @Html.Partial("Thread/_AddIdea", new AddIdeaModel()
+            <div class="modal-body">
+                @Html.Partial("Partials/_AddIdea", new AddIdeaModel()
                 {
                     IdeationQuestionId = Model.ToView.IdeaQuestion.Id,
                     ParentId = Model.ToView.Id
@@ -199,7 +199,7 @@ else
                 </button>
             </div>
             <div class="modal-body">
-                @Html.Partial("Thread/_ChangeIdea", new ChangeIdeaModel()
+                @Html.Partial("Partials/_ChangeIdea", new ChangeIdeaModel()
                 {
                     Idea = Model.ToView,
                     ParentId = Model.ToView.ParentIdea.Id, IdeationQuestionId = Model.ToView.IdeaQuestion.Id

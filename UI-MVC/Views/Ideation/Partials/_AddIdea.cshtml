@@ -8,13 +8,13 @@
     <script type="module" src="~/dist/closedfield.entry.js" defer></script>
 }
 
-<div class="container">
-    <div class="row" id="newIdea">
+<div>
+    <div id="newIdea">
         @using (Html.BeginForm("AddIdea", "Ideation", new { user = UserManager.GetUserId(User),
             parent = Model.ParentId, ideation = Model.IdeationQuestionId, form = @Model.FormCollection, fieldStrings = @Model.FieldStrings },
             FormMethod.Post, null, new { enctype = "multipart/form-data", @class = "row" }))
         {
-            <div class="col-4">
+            <div class="col-12">
                 <div class="form-group">
                     <label>Titel:</label>
                     @Html.TextBox("Title", "", new {@class = "form-control"})
