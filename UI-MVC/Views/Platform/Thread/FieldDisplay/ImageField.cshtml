@@ -1,3 +1,3 @@
 @model Domain.UserInput.ImageField
 
-<img alt="ImageField" src="data:image/png;base64,@System.Convert.ToBase64String(@Model.UploadedImage)"/>
+<img alt="ImageField" class="img-fluid rounded" src="data:image/png;base64,@System.Convert.ToBase64String(@Model.UploadedImage)"/>

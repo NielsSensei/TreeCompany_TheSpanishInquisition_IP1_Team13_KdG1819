@@ -12,12 +12,14 @@ namespace UIMVC.Services
         private readonly ProjectManager _projectManager;
         private readonly ModuleManager _moduleManager;
         private readonly IdeationQuestionManager _ideationQuestionManager;
+        private readonly PlatformManager _platformManager;
 
         public ProjectService()
         {
             _projectManager = new ProjectManager();
             _moduleManager = new ModuleManager();
             _ideationQuestionManager = new IdeationQuestionManager();
+            _platformManager = new PlatformManager();
         }
 
         public IEnumerable<Project> CollectPlatformProjects(Platform platform)
@@ -51,5 +53,45 @@ namespace UIMVC.Services
         {
             return _projectManager.GetAllImages(project.Id);
         }
+        
+        
+        #region Breadcrumbs
+
+        public Platform GetPlatform(Module moduleIn)
+        {
+            Module module = null;
+            if (moduleIn.GetType() == typeof(Questionnaire))
+            {
+                module = _moduleManager.GetQuestionnaire(moduleIn.Id, false);
+            }
+            else if (moduleIn.GetType() == typeof(Ideation))
+            {
+                module = _moduleManager.GetIdeation(moduleIn.Id);
+            }
+            
+            Project project = _projectManager.GetProject(module.Project.Id, false);
+            return _platformManager.GetPlatform(project.Platform.Id);
+        }
+
+        public Project GetProject(Module moduleIn)
+        {
+            Module module = null;
+            if (moduleIn.GetType() == typeof(Questionnaire))
+            {
+                module = _moduleManager.GetQuestionnaire(moduleIn.Id, false);
+            }
+            else if (moduleIn.GetType() == typeof(Ideation))
+            {
+                module = _moduleManager.GetIdeation(moduleIn.Id);
+            }
+            return _projectManager.GetProject(module.Project.Id, false);
+        }
+
+        public Ideation GetIdeation(IdeationQuestion ideationQuestion)
+        {
+            return _moduleManager.GetIdeation(ideationQuestion.Ideation.Id);
+        }
+
+        #endregion
     }
 }

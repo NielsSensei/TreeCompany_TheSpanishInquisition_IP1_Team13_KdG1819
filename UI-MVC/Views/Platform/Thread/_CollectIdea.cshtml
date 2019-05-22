@@ -15,7 +15,7 @@
 
 @if (Model.ToView.IsDeleted)
 {
-    <section class="card">
+    <section class="card" id="comment@(Model.ToView.Id)">
         <div class="card-header pb-0">
             <div class="card-title">
                 <div class="row justify-content-center-between m-auto">
@@ -31,8 +31,11 @@
                         @foreach (Idea child in ProjectService.CollectThreadIdeas(
                             Model.ToView.IdeaQuestion).Where(i => i.ParentIdea.Id == Model.ToView.Id))
                         {
-                            @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = child,
-                                            IdeaLevel = (byte)(Model.IdeaLevel+1) })
+                            @Html.Partial("Thread/_CollectIdea", new IdeaViewModel()
+                            {
+                                ToView = child,
+                                IdeaLevel = (byte) (Model.IdeaLevel + 1)
+                            })
                         }
                     </div>
                 }
@@ -46,7 +49,7 @@ else
         <div class="card-header pb-0">
             <div class="card-title ">
                 <div class="row justify-content-between m-auto">
-                    <h4>@Model.ToView.Title</h4>
+                    <h4 class="text-truncate">@Model.ToView.Title</h4>
                     <div>
                         @if (Model.ToView.VerifiedUser)
                         {
@@ -66,35 +69,36 @@ else
                 @Html.Partial("Thread/_IdeaFields", Model.ToView)
             </div>
             <hr/>
-            <section class="row justify-content-between m-auto">
+            <section class="row justify-content-between align-items-center m-auto">
                 @if (Model.Voting)
                 {
                     @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
                     {
-                        IconStyle = LikeVisibility.IdeaLikes, LikeCount = Model.ToView.VoteCount, 
+                        IconStyle = LikeVisibility.IdeaLikes, LikeCount = Model.ToView.VoteCount,
                         ShareCount = Model.ToView.ShareCount, RetweetCount = Model.ToView.RetweetCount
-                    })  
+                    })
                 }
                 else
                 {
                     @Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
                     {
-                        IconStyle = LikeVisibility.IdeaWithoutLikes, LikeCount = Model.ToView.VoteCount, 
+                        IconStyle = LikeVisibility.IdeaWithoutLikes, LikeCount = Model.ToView.VoteCount,
                         ShareCount = Model.ToView.ShareCount, RetweetCount = Model.ToView.RetweetCount
                     })
                 }
-                
-                <div>
+
+                <div class="row justify-content-around">
                     @if (Model.IdeaLevel < 3)
                     {
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#makeCommentModal@(Model.ToView.Id)">Reageren
+                        <button type="button" class="btn btn-primary m-1" data-toggle="modal"
+                                data-target="#makeCommentModal@(Model.ToView.Id)">
+                            Reageren
                         </button>
                     }
 
                     @if (!UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && Model.Voting)
                     {
-                        <a class="btn btn-primary" asp-controller="Platform" asp-action="AddVote"
+                        <a class="btn btn-primary m-1" asp-controller="Platform" asp-action="AddVote"
                            asp-route-idea="@Model.ToView.Id"
                            asp-route-user="@UserManager.GetUserId(User)"
                            asp-route-thread="@Model.ToView.IdeaQuestion.Id">
@@ -112,11 +116,12 @@ else
 
                     @if (User.Identity.IsAuthenticated && UserManager.GetUserId(User).Equals(Model.ToView.User.Id) && !Model.ToView.IsDeleted)
                     {
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editIdeaModal@(Model.ToView.Id)">
+                        <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#editIdeaModal@(Model.ToView.Id)">
                             Idee Aanpassen
                         </button>
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#deleteIdeaModal@(Model.ToView.Id)">Idee Verwijderen
+                        <button type="button" class="btn btn-primary m-1" data-toggle="modal"
+                                data-target="#deleteIdeaModal@(Model.ToView.Id)">
+                            Idee Verwijderen
                         </button>
                     }
                 </div>
@@ -128,11 +133,13 @@ else
                 @foreach (Idea child in ProjectService.CollectThreadIdeas(Model.ToView.IdeaQuestion).Where(
                     i => i.ParentIdea.Id == Model.ToView.Id))
                 {
-                    @Html.Partial("Thread/_CollectIdea", new IdeaViewModel(){ ToView = child, IdeaLevel =
-                        (byte)(Model.IdeaLevel+1) })
+                    @Html.Partial("Thread/_CollectIdea", new IdeaViewModel()
+                    {
+                        ToView = child, IdeaLevel =
+                            (byte) (Model.IdeaLevel + 1)
+                    })
                 }
             </div>
-
         }
     </section>
 }
@@ -141,12 +148,17 @@ else
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                Reageren op @Model.ToView.Title
+                <h5>
+                    Reageren op @Model.ToView.Title
+                </h5>
             </div>
 
             <div class="modal-body m-auto">
-                @Html.Partial("Thread/_AddIdea", new AddIdeaModel() {IdeationQuestionId = Model.ToView.IdeaQuestion.Id,
-                    ParentId = Model.ToView.Id})
+                @Html.Partial("Thread/_AddIdea", new AddIdeaModel()
+                {
+                    IdeationQuestionId = Model.ToView.IdeaQuestion.Id,
+                    ParentId = Model.ToView.Id
+                })
             </div>
 
             <div class="modal-footer">
@@ -161,12 +173,16 @@ else
         <div class="modal-content">
             <div class="modal-header">
                 <h5>Ben je zeker dat je je idee wil verwijderen?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <a type="button" class="btn btn-primary" asp-controller="Moderation"
-                        asp-action="DestroyIdea" asp-route-idea="@Model.ToView.Id"
-                        asp-route-from="IdeationThread"
-                        asp-route-thread="@Model.ToView.IdeaQuestion.Id">Bevestig
+                   asp-action="DestroyIdea" asp-route-idea="@Model.ToView.Id"
+                   asp-route-from="IdeationThread"
+                   asp-route-thread="@Model.ToView.IdeaQuestion.Id">
+                    Bevestig
                 </a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
             </div>
@@ -175,18 +191,20 @@ else
 </section>
 
 <section class="modal fade" id="editIdeaModal@(Model.ToView.Id)" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5>Idee aanpassen: @Model.ToView.Title </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                @Html.Partial("Thread/_ChangeIdea", new ChangeIdeaModel() { Idea = Model.ToView, 
+                @Html.Partial("Thread/_ChangeIdea", new ChangeIdeaModel()
+                {
+                    Idea = Model.ToView,
                     ParentId = Model.ToView.ParentIdea.Id, IdeationQuestionId = Model.ToView.IdeaQuestion.Id
-                })                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>   
+                })
             </div>
         </div>
     </div>
@@ -194,6 +212,12 @@ else
 
 <section class="modal fade" id="makeReportModal@(Model.ToView.Id)" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
+        <div class="modal-header">
+            <h5>Rapporteren</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         <div class="modal-content">
             <form asp-controller="Platform" asp-action="AddReport" type="button"
                   asp-route-flagger="@UserManager.GetUserId(User)" asp-route-thread="@Model.ToView.IdeaQuestion.Id"
