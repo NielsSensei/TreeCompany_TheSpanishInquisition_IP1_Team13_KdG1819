@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Domain.Projects
+@using Domain.UserInput
+@using Domain.Users
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -11,13 +15,52 @@
     <link rel="stylesheet" href="~/dist/site.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+<nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="container">
         <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
+            <ul class="d-none d-lg-flex navbar-nav mr-auto">
                 <li class="nav-item layouttitle">
                     <a class="nav-link test" asp-area="" asp-controller="Home" asp-action="Index">City of Ideas</a>
                 </li>
+                @if (ViewData["Platform"] != null)
+                {
+                    Platform platform = (Platform) ViewData["Platform"];
+                    <li class="nav-item layouttitle nav-link">></li>
+                    <li class="nav-item layouttitle">
+                        <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="Index" asp-route-id="@platform.Id">@platform.Name</a>
+                    </li>
+                    @if (ViewData["Project"] != null)
+                     {
+                         Project project = (Project) ViewData["Project"];
+                         <li class="nav-item layouttitle nav-link">></li>
+                         <li class="nav-item layouttitle">
+                             <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@project.Id">@project.Title</a>
+                         </li>
+                         @if (ViewData["Module"] != null && ViewData["Module"].GetType() == typeof(Ideation))
+                          {
+                              Ideation ideation = (Ideation) ViewData["Module"];
+                              <li class="nav-item layouttitle nav-link">></li>
+                              <li class="nav-item layouttitle">
+                                  <a class="nav-link test" asp-area="" asp-controller="Platform" asp-action="CollectIdeation" asp-route-id="@ideation.Id">@ideation.Title</a>
+                              </li>
+                          }
+                         @if (ViewData["Module"] != null && ViewData["Module"].GetType() == typeof(Questionnaire))
+                          {
+                              Questionnaire questionnaire = (Questionnaire) ViewData["Module"];
+                              <li class="nav-item layouttitle nav-link">></li>
+                              <li class="nav-item layouttitle">
+                                  <a class="nav-link test" asp-area="" asp-controller="Questionnaire" asp-action="AnswerQuestionnaire" asp-route-questionnaireId="@questionnaire.Id"
+                                     asp-route-questionId="@questionnaire.Questions[0].Id">
+                                      @questionnaire.Title</a>
+                              </li>
+                          }
+                     }
+                }
+            </ul>
+            <ul class="d-flex d-lg-none d-xl-none navbar-nav mr-auto">
+            <li class="nav-item layouttitle">
+                <a class="nav-link test" asp-area="" asp-controller="Home" asp-action="Index">City of Ideas</a>
+            </li>
             </ul>
             <partial name="_LoginPartial"/>
         </div>
@@ -36,7 +79,7 @@
         <p>Project voor de Karel de Grote Hogeschool, Treecompany en District Antwerpen.</p>
         <p class="font-italic">Team #13 ~ The Spanish Inquisition</p>
     </div>
-    <ul class="col-md-3">
+    <ul class="d-none d-md-inline col-md-3">
         <li class="font-weight-bold">City of Ideas</li>
         <li>
             <a asp-controller="Home" asp-action="About">Over ons</a>
@@ -48,7 +91,7 @@
             <a asp-controller="Home" asp-action="FAQ">Veelgestelde vragen</a>
         </li>
     </ul>
-    <ul class="col-md-3">
+    <ul class="d-none d-md-inline col-md-3">
         <li class="font-weight-bold">Contact</li>
         <li>Email: <a href="mailto:fake@@student.kdg.be">fake@@student.kdg.be</a></li>
         <li>Tel: 012/34.56.78</li>

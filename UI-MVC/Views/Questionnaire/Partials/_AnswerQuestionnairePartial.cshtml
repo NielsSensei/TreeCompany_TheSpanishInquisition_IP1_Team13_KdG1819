@@ -6,7 +6,6 @@
     QuestionnaireQuestion question = (QuestionnaireQuestion) ViewData["Question"];
     Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
 }
-
 <form asp-action="AnswerQuestionnaire" asp-controller="Questionnaire" method="post" asp-route-questionId="@question.Id" asp-route-questionnaireId="@questionnaire.Id"
       class="row justify-content-center">
     @switch (question.QuestionType)

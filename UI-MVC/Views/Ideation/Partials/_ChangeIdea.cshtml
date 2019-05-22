@@ -15,7 +15,7 @@
             ideation = Model.IdeationQuestionId, form = @Model.FormCollection, fieldStrings = @Model.FieldStrings }, 
             FormMethod.Post, null, new { enctype = "multipart/form-data", @class = "row" }))
         { 
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <div class="form-group">
                     <label>Text:</label>
                     @if (Model.Idea.Field != null)
@@ -39,9 +39,8 @@
                         @Html.TextBox("FieldVideo", "", new { @class = "form-control" })  
                     }
                 </div>
-                <input class="btn btn-outline-primary" type="submit" name="submit" value="Opslaan" />
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <div class="form-group">
                     <label>Voeg hier de coordinaten toe van je map: <a href="@Url.Action("FAQ", "Home")">
                         Hoe vind ik deze? </a></label>
@@ -65,7 +64,7 @@
                     @Html.TextBox("FieldImage", "", new { @class = "form-control", type="file" })
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <div class="editFieldStringsContainer" id="@Model.Idea.Id">
                     <div class="form-group row">
                         <label>Maak hier eventueel een opsomming</label>
@@ -94,6 +93,8 @@
                     </div>
                 </div>
             </div>
+            <input class="btn btn-primary d-none d-md-inline" type="submit" name="submit" value="Opslaan" />
+            <input class="btn btn-primary w-100 d-inline d-md-none" type="submit" name="submit" value="Opslaan" />
         }
     </div>    
 </div>

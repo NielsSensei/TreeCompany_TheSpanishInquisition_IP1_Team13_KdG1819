@@ -69,7 +69,7 @@ namespace UIMVC.Controllers
         [HttpGet]
         public IActionResult AddProject(int platform)
         {
-            ViewData["platform"] = platform;
+            ViewData["platformId"] = platform;
             
             return View();
         }

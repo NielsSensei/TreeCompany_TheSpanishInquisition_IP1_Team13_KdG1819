@@ -1,9 +1,14 @@
+@using Domain.Projects
 @using Domain.UserInput
 @model Domain.UserInput.IdeationQuestion
 @inject UIMVC.Services.ProjectService ProjectService
 
 @{
+    Ideation ideation = ProjectService.GetIdeation(Model);
     ViewData["Title"] = Model.QuestionTitle;
+    ViewData["Platform"] = ProjectService.GetPlatform(Model.Ideation);
+    ViewData["Project"] = ProjectService.GetProject(Model.Ideation);
+    ViewData["Module"] = ideation;
 }
 
 @section Scripts
@@ -14,28 +19,32 @@
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h1>Ideation Thread</h1>
-            <p class="font-weight-bold">@Model.QuestionTitle</p>
-            <p>@Model.Description</p>
-            @if (Model.SiteUrl != null)
-            {
-                <p>Lees meer: <a href="">@Model.SiteUrl</a></p>
-            }
-            <br/>
-            <a class="btn btn-primary" asp-controller="Ideation" asp-action="CollectIdeation"
-               asp-route-id="@Model.Ideation.Id">Terug Naar Ideation</a>
+    <div class="row align-items-center">
+        <div class="col-12 col-md-10">
+            <h1 class="font-weight-bold">@ideation.Title: @Model.QuestionTitle</h1>
         </div>
+        <a class="btn btn-primary col-12 col-md-2 h-25" asp-controller="Ideation" asp-action="CollectIdeation"
+           asp-route-id="@Model.Ideation.Id">
+            Terug Naar Ideation
+        </a>
+
     </div>
     <hr/>
-    <div class="row">
+    <section>
+        <p>@Model.Description</p>
+        @if (Model.SiteUrl != null)
+        {
+            <p>Lees meer: <a href="">@Model.SiteUrl</a></p>
+        }
+        <hr/>
+    </section>
+
+    <div>
         <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
-        @Html.Partial("Thread/_AddIdea", new AddIdeaModel(){ IdeationQuestionId = Model.Id, ParentId = 0 })
+        @Html.Partial("Thread/_AddIdea", new AddIdeaModel() {IdeationQuestionId = Model.Id, ParentId = 0})
     </div>
-    <br/>
     <div class="row">
-        <p class="text-info">@ViewData["Message"]</p> 
+        <p class="text-info">@ViewData["Message"]</p>
     </div>
     <hr/>
     @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))

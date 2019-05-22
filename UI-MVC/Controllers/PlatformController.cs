@@ -33,15 +33,15 @@ namespace UIMVC.Controllers
             Platform platform = _platformMgr.GetPlatform(id, true);
             if (platform == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 
+                return RedirectToAction("HandleErrorCode", "Errors",
                     new { statuscode = 404, path="/Platform/" + id  });
             }
 
             if (message != null)
             {
-                ViewData["StatusMessage"] = message;  
+                ViewData["StatusMessage"] = message;
             }
-            
+
             return View(platform);
         }
 
@@ -69,7 +69,7 @@ namespace UIMVC.Controllers
             Platform platform = _platformMgr.GetPlatform(id, false);
             if (platform == null)
             {
-                return RedirectToAction("HandleErrorCode", "Errors", 
+                return RedirectToAction("HandleErrorCode", "Errors",
                     new { statuscode = 404, path="/Platform/ChangePlatform/" + id });
             }
 
@@ -135,7 +135,7 @@ namespace UIMVC.Controllers
         }
 
         #endregion
-        
+
         #region AddPlatform
         [HttpGet]
         [Authorize(Roles = "SuperAdmin")]
@@ -230,7 +230,7 @@ namespace UIMVC.Controllers
         }
 
         #endregion
-        
+
         #region UIMVCUser
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
@@ -290,10 +290,10 @@ namespace UIMVC.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             string roletext = Request.Form["Role"];
             Object roleParse = null;
-            if (!Enum.TryParse(typeof(Role), roletext, out roleParse)) return RedirectToAction("CollectAllUsers", 
+            if (!Enum.TryParse(typeof(Role), roletext, out roleParse)) return RedirectToAction("CollectAllUsers",
                 "Platform");
             var role = (Role) roleParse;
-            
+
             if (!await _roleService.IsSameRoleOrLower(User, role))
             {
                 if (await _userManager.IsInRoleAsync(user, roletext))
