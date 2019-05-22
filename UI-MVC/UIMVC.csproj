@@ -85,6 +85,8 @@
     <_ContentIncludedByDefault Remove="Views\Platform\DisplayTemplates\Phase.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Platform\DisplayTemplates\Project.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Platform\DisplayTemplates\Questionnaire.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Moderation\ModerationTemplates\AssignRolePartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Moderation\ModerationTemplates\SidebarView.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -22,13 +22,13 @@
         @if (!ProjectService.CollectProjectImages(Model).Any())
         {
             <div class="col-12">
-               @Html.Partial("_ProjectHeaderPartial", new AddImageModel(){ Project = Model })
+               @Html.Partial("Partials/_ProjectHeaderPartial", new AddImageModel(){ Project = Model })
             </div>
         }
         else
         {
             <div class="col-4">
-                @Html.Partial("_ProjectHeaderPartial", new AddImageModel(){ Project = Model })
+                @Html.Partial("Partials/_ProjectHeaderPartial", new AddImageModel(){ Project = Model })
             </div>
             <div class="col-8">
                 @if (ProjectService.CollectProjectImages(Model).Count() == 1)

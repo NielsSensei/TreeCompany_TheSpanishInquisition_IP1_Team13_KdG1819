@@ -20,13 +20,13 @@
         @if (@Model.MediaLink == null)
         {
             <div class="col-12">
-                @Html.Partial("_IdeationHeaderPartial", Model)
+                @Html.Partial("Partials/_IdeationHeaderPartial", Model)
             </div>
         }
         else
         {
             <div class="col-5">
-                @Html.Partial("_IdeationHeaderPartial", Model)
+                @Html.Partial("Partials/_IdeationHeaderPartial", Model)
             </div>
             <div class="col-7">
                 <iframe width="600" height="400" src="@Model.MediaLink"> </iframe>
