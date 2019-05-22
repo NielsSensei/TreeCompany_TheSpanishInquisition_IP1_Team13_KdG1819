@@ -1,5 +1,8 @@
 ﻿namespace DAL.Data_Access_Objects
 {
+    /*
+     * @authors Nathan Gijselings & Niels Van Zandbergen
+     */
     public class IdeationsDao
     {
         public int ModuleId { get; set; }

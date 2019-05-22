@@ -2,6 +2,9 @@
 
 namespace DAL.Data_Access_Objects
 {
+    /*
+     * @authors Nathan Gijselings & Niels Van Zandbergen
+     */
     public class OrganisationEventsDao
     {
         public int EventId { get; set; }

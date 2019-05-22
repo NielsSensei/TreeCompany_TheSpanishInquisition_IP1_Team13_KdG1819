@@ -34,7 +34,7 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
                 Tags = ExtensionMethods.ListToString(obj.Tags),
-                IsQuestionnaire = obj.ModuleType == ModuleType.Questionnaire
+                ModuleType = (byte) obj.ModuleType
             };
         }
 
@@ -134,7 +134,7 @@ namespace DAL.repos
 
             foreach (ModulesDao dao in _ctx.Modules)
             {
-                if (dao.IsQuestionnaire)
+                if (dao.ModuleType == 0)
                 {
                     Questionnaire toAdd = ConvertToDomain(dao);
                     myQuery.Add(toAdd);

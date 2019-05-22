@@ -2,6 +2,9 @@
 
 namespace DAL.Data_Access_Objects
 {
+    /*
+     * @author Nathan Gijselings
+     */
     public class PhasesDao
     {
         public int PhaseId { get; set; }

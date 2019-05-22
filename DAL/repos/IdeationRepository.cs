@@ -33,7 +33,7 @@ namespace DAL.repos
                 TwitterLikeCount = obj.TwitterLikeCount,
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
-                IsQuestionnaire = obj.ModuleType == ModuleType.Questionnaire
+                ModuleType = (byte) obj.ModuleType
             };
 
             if (obj.Tags != null)

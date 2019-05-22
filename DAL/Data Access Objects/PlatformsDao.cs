@@ -1,5 +1,8 @@
 ﻿namespace DAL.Data_Access_Objects
 {
+    /*
+     * @authors Nathan Gijselings & Xander Veldeman
+     */
     public class PlatformsDao
     {
         public int PlatformId { get; set; }
