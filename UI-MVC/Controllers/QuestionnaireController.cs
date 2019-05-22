@@ -336,7 +336,7 @@ namespace UIMVC.Controllers
             }
             else
             {
-                user = _userService.GetAnonymousUser();
+                user = _userService.CollectAnonymousUser();
             }
 
             if (addAnswerModel.MultipleAnswer?.Choices != null && addAnswerModel.MultipleAnswer.Choices[0] != null)

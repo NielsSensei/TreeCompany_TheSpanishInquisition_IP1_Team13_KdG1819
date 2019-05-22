@@ -23,13 +23,13 @@ namespace UIMVC.Services
             _userManager = userManager;
             _configuration = configuration;
 
-            CreateRoles();
-            CreateTestUsers();
+            AddRoles();
+            AddTestUsers();
         }
 
         #region TestUser
 
-        private async void CreateTestUsers()
+        private async void AddTestUsers()
         {
             if (await _userManager.FindByEmailAsync(_configuration["SuperAdmin:Email"]) == null)
             {
@@ -140,8 +140,8 @@ namespace UIMVC.Services
 
         #endregion
 
-        #region CreateRoles
-        private async void CreateRoles()
+        #region AddRoles
+        private async void AddRoles()
         {
             foreach (Role role in Enum.GetValues(typeof(Role)))
             {
@@ -154,7 +154,6 @@ namespace UIMVC.Services
         #endregion
 
         #region AddRole
-
         public async void  AssignToRole(UimvcUser user, Role role)
         {
             if (!await _roleManager.RoleExistsAsync(role.ToString())) return;
@@ -165,8 +164,8 @@ namespace UIMVC.Services
 
         #endregion
 
-        #region GetRolesUser
-        public async Task<IEnumerable<string>> GetRolesForUser(UimvcUser user)
+        #region CollectUserRoles
+        public async Task<IEnumerable<string>> CollectUserRoles(UimvcUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
             return roles;
@@ -267,9 +266,7 @@ namespace UIMVC.Services
 
             throw new Exception("You shouldn't be able to get here");
         }
-        #endregion
-
-        #region Auhorization
+        
         public async Task<bool> IsSameRoleOrLower(ClaimsPrincipal userClaim, Role roleCheck)
         {
             UimvcUser user = await _userManager.GetUserAsync(userClaim);
@@ -295,9 +292,7 @@ namespace UIMVC.Services
         #endregion
 
         #region Users
-
-
-        public async Task<IEnumerable<UimvcUser>> GetAllAdmins(int platformId)
+        public async Task<IEnumerable<UimvcUser>> CollectAdmins(int platformId)
         {
             List<UimvcUser> users = new List<UimvcUser>();
             foreach (UimvcUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
@@ -311,7 +306,7 @@ namespace UIMVC.Services
             return users;
         }
 
-        public async Task<IEnumerable<UimvcUser>> GetAllModerators(int platformId)
+        public async Task<IEnumerable<UimvcUser>> CollectModerators(int platformId)
         {
             List<UimvcUser> users = new List<UimvcUser>();
             foreach (UimvcUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
@@ -324,7 +319,6 @@ namespace UIMVC.Services
 
             return users;
         }
-
         #endregion
     }
 }

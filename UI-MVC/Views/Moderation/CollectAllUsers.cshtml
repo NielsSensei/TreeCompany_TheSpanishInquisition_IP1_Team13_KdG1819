@@ -50,7 +50,7 @@
             <td>@user.Name</td>
             <td>@user.DateOfBirth.ToString("dd-MM-yyyy")</td>
             <td>
-                @foreach (string role in await RoleService.GetRolesForUser(user))
+                @foreach (string role in await RoleService.CollectUserRoles(user))
                 {
                     <pre>@role</pre>
                 }

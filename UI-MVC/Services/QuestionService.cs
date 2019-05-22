@@ -21,7 +21,7 @@ namespace UIMVC.Services
             return _iqMgr.GetAllByModuleId(ideationId);
         }
 
-        public int CalculateTotalAnswers(QuestionnaireQuestion question)
+        public int CollectTotalAnswerCount(QuestionnaireQuestion question)
         {
             if (question.QuestionType != QuestionType.Multi && !question.Answers.Any() &&
                 question.Answers[0].GetType() != typeof(MultipleAnswer)) return question.Answers.Count;

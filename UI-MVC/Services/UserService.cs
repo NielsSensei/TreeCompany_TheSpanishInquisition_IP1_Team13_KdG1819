@@ -27,14 +27,14 @@ namespace UIMVC.Services
             return foundUser.Name;
         }
 
-        public UimvcUser GetAnonymousUser()
+        public UimvcUser CollectAnonymousUser()
         {
             return _usrMgr.Users.FirstOrDefault(user => user.UserName == "ANONYMOUS");
         }
 
         #region Platforms
 
-        public async Task<int> GetUserPlatform(ClaimsPrincipal user)
+        public async Task<int> CollectUserPlatform(ClaimsPrincipal user)
         {
             var userFound = await _usrMgr.GetUserAsync(user);
             if (userFound == null) return 0;

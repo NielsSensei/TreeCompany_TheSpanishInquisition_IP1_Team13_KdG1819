@@ -8,7 +8,7 @@
 
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
-    int platformId = await UserService.GetUserPlatform(User);
+    int platformId = await UserService.CollectUserPlatform(User);
 }
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">

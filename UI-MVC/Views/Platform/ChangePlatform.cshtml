@@ -15,8 +15,8 @@
     ViewBag.Title = "Edit: " + platform.Name;
     Layout = "_Layout";
 
-    IEnumerable<UimvcUser> admins = await RoleService.GetAllAdmins(platform.Id);
-    IEnumerable<UimvcUser> mods = await RoleService.GetAllModerators(platform.Id);
+    IEnumerable<UimvcUser> admins = await RoleService.CollectAdmins(platform.Id);
+    IEnumerable<UimvcUser> mods = await RoleService.CollectModerators(platform.Id);
 }
 
 <h2>Aanpassen van @platform.Name</h2>
