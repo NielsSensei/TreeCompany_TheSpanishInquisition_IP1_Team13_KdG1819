@@ -6,6 +6,9 @@ using Domain.Users;
 
 namespace BL
 {
+    /*
+     * @authors Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class ProjectManager
     {
         private ProjectRepository ProjectRepo { get; }
@@ -17,13 +20,16 @@ namespace BL
             ModuleMan = new ModuleManager();
         }
 
+        /*
+         * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Project
 
         public void EditProject(Project project)
         {
             ProjectRepo.Update(project);
         }
-
+        
         public Project GetProject(int projectId, bool details)
         {
             Project project = ProjectRepo.Read(projectId, details);
@@ -72,6 +78,9 @@ namespace BL
         }
         #endregion
 
+        /*
+         * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Phase
         public void EditPhase(Phase phase)
         {
@@ -83,9 +92,9 @@ namespace BL
             return ProjectRepo.ReadAllPhases(projectId);
         }
 
-        public Phase GetPhase(int phaseId)
+        public Phase GetPhase(int phaseId, bool details)
         {
-            return ProjectRepo.ReadPhase(phaseId, false);
+            return ProjectRepo.ReadPhase(phaseId, details);
         }
 
         public void MakePhase(Phase newPhase)
@@ -99,6 +108,9 @@ namespace BL
         }
         #endregion
 
+        /*
+         * @author Xander Veldeman
+         */
         #region PlatformMethods
         public IEnumerable<Project> GetPlatformProjects(Platform platform)
         {

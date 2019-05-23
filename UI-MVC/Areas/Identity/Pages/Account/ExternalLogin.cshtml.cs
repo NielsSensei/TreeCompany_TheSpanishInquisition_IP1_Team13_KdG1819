@@ -11,6 +11,9 @@ using UimvcUser = Domain.Identity.UimvcUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account
 {
+    /*
+     * @author Xander Veldeman
+     */
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {

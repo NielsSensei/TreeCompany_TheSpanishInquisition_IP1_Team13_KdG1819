@@ -1,5 +1,8 @@
 namespace Domain.Projects
 {
+    /*
+     * @author Niels Van Zandbergen
+     */
     public enum LikeVisibility
     {
         OnlyLikeCount = 0,

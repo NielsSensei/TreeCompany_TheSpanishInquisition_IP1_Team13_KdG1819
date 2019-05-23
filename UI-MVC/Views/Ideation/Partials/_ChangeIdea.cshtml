@@ -1,0 +1,100 @@
+@using Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<UimvcUser> UserManager
+@model UIMVC.Models.ChangeIdeaModel
+
+@section Scripts
+{
+    <script type="module" src="~/dist/closedfield.entry.js" defer></script>
+    <script type="module" src="~/dist/changeclosedfield.entry.js" defer></script>
+}
+
+<div class="container">
+    <div class="row" id="changeIdea">
+        @using (Html.BeginForm("ChangeIdea", "Ideation", new { idea = @Model.Idea.Id,
+            ideation = Model.IdeationQuestionId, form = @Model.FormCollection, fieldStrings = @Model.FieldStrings }, 
+            FormMethod.Post, null, new { enctype = "multipart/form-data", @class = "row" }))
+        { 
+            <div class="col-12 col-md-4">
+                <div class="form-group">
+                    <label>Text:</label>
+                    @if (Model.Idea.Field != null)
+                    {
+                        @Html.TextBox("FieldText", @Model.Idea.Field.Text, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBox("FieldText", "", new { @class = "form-control" }) 
+                    }
+                </div>
+                <div class="form-group">
+                    <label>Geef hier een youtube link:</label>
+                    @if (Model.Idea.Vfield != null)
+                    {
+                        @Html.TextBox("FieldVideo", @Model.Idea.Vfield.VideoLink, 
+                            new { @class = "form-control" })   
+                    }
+                    else
+                    {
+                        @Html.TextBox("FieldVideo", "", new { @class = "form-control" })  
+                    }
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="form-group">
+                    <label>Voeg hier de coordinaten toe van je map: <a href="@Url.Action("FAQ", "Home")">
+                        Hoe vind ik deze? </a></label>
+                    @if (Model.Idea.Mfield != null)
+                    {
+                        @Html.TextBox("newIdeaMapX", @Model.Idea.Mfield.LocationX.ToString().Replace(
+                            ",","."), new {@class = "form-control"})
+                        <br/>
+                        @Html.TextBox("newIdeaMapY", @Model.Idea.Mfield.LocationY.ToString().Replace(
+                            ",","."), new {@class = "form-control"})  
+                    }
+                    else
+                    {
+                        @Html.TextBox("newIdeaMapX", "", new {@class = "form-control"})
+                        <br/>
+                        @Html.TextBox("newIdeaMapY", "", new {@class = "form-control"}) 
+                    }
+                </div> 
+                <div class="form-group">
+                    <label>Geef hier een foto:</label>
+                    @Html.TextBox("FieldImage", "", new { @class = "form-control", type="file" })
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="editFieldStringsContainer" id="@Model.Idea.Id">
+                    <div class="form-group row">
+                        <label>Maak hier eventueel een opsomming</label>
+                        <div class="editContainer" id="@Model.Idea.Id">
+                            @if (Model.Idea.Cfield != null)
+                            {
+                                <div class="editStringContainer" id="@Model.Idea.Id">
+                                    @for (int i = 0; i < Model.Idea.Cfield.Options.Count; i++)
+                                    {
+                                        <div class="editcontainerRow row" id="@i">
+                                            <div class="editcontainerColumn col-6">
+                                                <input type="text" id="@i" class="form-control editStringsInput" name="FieldStrings[@i]"
+                                                       value="@Model.Idea.Cfield.Options[i]"/>
+                                            </div>
+                                            <div class="editContainerColumn col-6">
+                                                <a class="btn btn-danger destroyEditString" id="@i" idea="@Model.Idea.Id">X</a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group row editfieldStringButton" id="@Model.Idea.Id">
+                        <a class="btn btn-primary newFieldStringsButton" id="@Model.Idea.Id">Item Toevoegen</a>
+                    </div>
+                </div>
+            </div>
+            <input class="btn btn-primary d-none d-md-inline" type="submit" name="submit" value="Opslaan" />
+            <input class="btn btn-primary w-100 d-inline d-md-none" type="submit" name="submit" value="Opslaan" />
+        }
+    </div>    
+</div>

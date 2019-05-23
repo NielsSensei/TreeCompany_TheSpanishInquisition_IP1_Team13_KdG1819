@@ -1,5 +1,5 @@
 @using Domain.Projects
-@model PhaseModel
+@model PhaseViewModel
 
 @{
     ViewBag.Title = "title";
@@ -34,7 +34,7 @@
         </div>
 
         <div class="form-group col-md-5">
-            <a class="btn btn-primary" asp-controller="Platform" asp-action="CollectProject" asp-route-id="@phase.Project.Id">Ga terug</a>
+            <a class="btn btn-primary" asp-controller="Project" asp-action="CollectProject" asp-route-id="@phase.Project.Id">Ga terug</a>
 
             <input id="Submit" class="btn btn-primary" type="submit" value="Opslaan" class="btn"/>
         </div>

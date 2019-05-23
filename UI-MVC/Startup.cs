@@ -59,6 +59,11 @@ namespace UIMVC
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            /**
+             * @author Xander Veldeman, Niels Van Zandbergen
+             *
+             * Adding the services to the application
+             */
             services.AddTransient<ProjectService>();
             services.AddTransient<QuestionService>();
             services.AddTransient<UserService>();

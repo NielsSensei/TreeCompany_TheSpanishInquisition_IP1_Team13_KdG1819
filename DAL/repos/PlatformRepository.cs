@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.repos
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class PlatformRepository : IRepository<Platform>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -17,6 +20,9 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         */
         #region Conversion Methods
         private PlatformsDao ConvertToDao(Platform p)
         {
@@ -45,6 +51,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @author Xander Veldeman
+         */
         #region Id generation
         private int FindNextAvailablePlatformId()
         {
@@ -54,6 +63,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
         #region Platform CRUD
         public Platform Create(Platform obj)
         {
@@ -75,6 +87,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public Platform Read(int id, bool details)
         {
             PlatformsDao platformDao = details ? _ctx.Platforms.AsNoTracking().FirstOrDefault(p => p.PlatformId == id) : _ctx.Platforms.FirstOrDefault(p => p.PlatformId == id);

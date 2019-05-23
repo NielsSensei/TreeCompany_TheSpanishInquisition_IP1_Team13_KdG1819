@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Domain.UserInput
 {
+    /*
+     * @authors Nathan Gijselings, David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class IdeationQuestion : Question
     {
         public string Description { get; set; }

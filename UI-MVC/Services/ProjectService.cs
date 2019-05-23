@@ -7,6 +7,11 @@ using Domain.Users;
 
 namespace UIMVC.Services
 {
+    /**
+     * @author Xander Veldeman, Niels Van Zandbergen
+     *
+     * Used as a way to get information from projects in views
+     */
     public class ProjectService
     {
         private readonly ProjectManager _projectManager;
@@ -42,9 +47,9 @@ namespace UIMVC.Services
             return _ideationQuestionManager.GetIdeas(ideationQuestion.Id);
         }
 
-        public bool GetVoteSettings(IdeationQuestion ideationQuestion)
+        public bool CollectVoteSettings(IdeationQuestion ideationQuestion)
         {
-            Ideation ideation = _moduleManager.GetIdeation(ideationQuestion.Ideation.Id);
+            Ideation ideation = _moduleManager.GetIdeation(ideationQuestion.Ideation.Id, true);
 
             return ideation.UserVote;
         }
@@ -66,11 +71,16 @@ namespace UIMVC.Services
             }
             else if (moduleIn.GetType() == typeof(Ideation))
             {
-                module = _moduleManager.GetIdeation(moduleIn.Id);
+                module = _moduleManager.GetIdeation(moduleIn.Id, false);
             }
             
             Project project = _projectManager.GetProject(module.Project.Id, false);
-            return _platformManager.GetPlatform(project.Platform.Id);
+            return _platformManager.GetPlatform(project.Platform.Id, false);
+        }
+
+        public Platform GetPlatform(Project project)
+        {
+            return _platformManager.GetPlatform(project.Platform.Id, false);
         }
 
         public Project GetProject(Module moduleIn)
@@ -82,14 +92,14 @@ namespace UIMVC.Services
             }
             else if (moduleIn.GetType() == typeof(Ideation))
             {
-                module = _moduleManager.GetIdeation(moduleIn.Id);
+                module = _moduleManager.GetIdeation(moduleIn.Id, false);
             }
             return _projectManager.GetProject(module.Project.Id, false);
         }
 
         public Ideation GetIdeation(IdeationQuestion ideationQuestion)
         {
-            return _moduleManager.GetIdeation(ideationQuestion.Ideation.Id);
+            return _moduleManager.GetIdeation(ideationQuestion.Ideation.Id, false);
         }
 
         #endregion

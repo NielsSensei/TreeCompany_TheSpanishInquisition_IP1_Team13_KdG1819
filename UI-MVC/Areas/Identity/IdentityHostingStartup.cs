@@ -8,6 +8,9 @@ using UimvcUser = Domain.Identity.UimvcUser;
 [assembly: HostingStartup(typeof(UIMVC.Areas.Identity.IdentityHostingStartup))]
 namespace UIMVC.Areas.Identity
 {
+    /*
+     * @author Xander Veldeman
+     */
     public class IdentityHostingStartup : IHostingStartup
     {
         public void Configure(IWebHostBuilder builder)
