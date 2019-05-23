@@ -62,7 +62,7 @@ namespace UIMVC.Services
         
         #region Breadcrumbs
 
-        public Platform GetPlatform(Module moduleIn)
+        public Platform CollectPlatformForModule(Module moduleIn)
         {
             Module module = null;
             if (moduleIn.GetType() == typeof(Questionnaire))
@@ -78,12 +78,12 @@ namespace UIMVC.Services
             return _platformManager.GetPlatform(project.Platform.Id, false);
         }
 
-        public Platform GetPlatform(Project project)
+        public Platform CollectPlatformForProject(Project project)
         {
             return _platformManager.GetPlatform(project.Platform.Id, false);
         }
 
-        public Project GetProject(Module moduleIn)
+        public Project CollectProjectForModule(Module moduleIn)
         {
             Module module = null;
             if (moduleIn.GetType() == typeof(Questionnaire))
@@ -97,7 +97,7 @@ namespace UIMVC.Services
             return _projectManager.GetProject(module.Project.Id, false);
         }
 
-        public Ideation GetIdeation(IdeationQuestion ideationQuestion)
+        public Ideation CollectIdeationForQuestion(IdeationQuestion ideationQuestion)
         {
             return _moduleManager.GetIdeation(ideationQuestion.Ideation.Id, false);
         }

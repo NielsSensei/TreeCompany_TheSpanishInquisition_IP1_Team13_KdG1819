@@ -9,8 +9,8 @@
     QuestionnaireQuestion question = (QuestionnaireQuestion) ViewData["Question"];
     Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
     
-    ViewData["Platform"] = ProjectService.GetPlatform(questionnaire);
-    ViewData["Project"] = ProjectService.GetProject(questionnaire);
+    ViewData["Platform"] = ProjectService.CollectPlatformForModule(questionnaire);
+    ViewData["Project"] = ProjectService.CollectProjectForModule(questionnaire);
     ViewData["Module"] = questionnaire;
 
     bool invalid = (bool) ViewData["InValid"];

@@ -1,0 +1,15 @@
+@model UIMVC.Models.AddEventModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Organiseer Een Eventement</h2>
+
+<form asp-controller="Platform" asp-action="AddEvent" method="post" asp-route-aem="@Model">
+
+    <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" />
+</form>
+
+<p>@ViewData["FailMessage"]</p>

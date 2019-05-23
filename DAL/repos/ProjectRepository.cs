@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -188,15 +189,15 @@ namespace DAL.repos
             ProjectsDao foundProj = _ctx.Projects.First(p => p.ProjectId == obj.Id);
             if (foundProj != null)
             {
-                foundProj.Title = newProj.Title;
-                foundProj.Goal = newProj.Goal;
-                foundProj.CurrentPhaseId = newProj.CurrentPhaseId;
-                foundProj.Status = newProj.Status;
-                foundProj.Visible = newProj.Visible;
-                foundProj.ReactionCount = newProj.ReactionCount;
-                foundProj.LikeCount = newProj.LikeCount;
-                foundProj.FbLikeCount = newProj.FbLikeCount;
-                foundProj.TwitterLikeCount = newProj.TwitterLikeCount;
+                if(!String.IsNullOrEmpty(newProj.Title)) foundProj.Title = newProj.Title;
+                if(!String.IsNullOrEmpty(newProj.Goal)) foundProj.Goal = newProj.Goal;
+                if(newProj.CurrentPhaseId != 0) foundProj.CurrentPhaseId = newProj.CurrentPhaseId;
+                if(!String.IsNullOrEmpty(newProj.Status)) foundProj.Status = newProj.Status;
+                if(!String.IsNullOrEmpty(newProj.Visible.ToString())) foundProj.Visible = newProj.Visible;
+                if(newProj.ReactionCount != 0) foundProj.ReactionCount = newProj.ReactionCount;
+                if(newProj.LikeCount != 0) foundProj.LikeCount = newProj.LikeCount;
+                if(newProj.FbLikeCount != 0) foundProj.FbLikeCount = newProj.FbLikeCount;
+                if(newProj.TwitterLikeCount != 0) foundProj.TwitterLikeCount = newProj.TwitterLikeCount;
                 foundProj.LikeVisibility = newProj.LikeVisibility;
             }
 
@@ -283,9 +284,9 @@ namespace DAL.repos
             PhasesDao foundPhase = _ctx.Phases.First(p => p.PhaseId == obj.Id);
             if (foundPhase != null)
             {
-                foundPhase.Description = newPhase.Description;
-                foundPhase.StartDate = newPhase.StartDate;
-                foundPhase.EndDate = newPhase.EndDate;
+                if(!String.IsNullOrEmpty(newPhase.Description)) foundPhase.Description = newPhase.Description;
+                if(newPhase.StartDate != DateTime.MinValue) foundPhase.StartDate = newPhase.StartDate;
+                if(newPhase.EndDate != DateTime.MinValue) foundPhase.EndDate = newPhase.EndDate;
             }
 
             _ctx.SaveChanges();

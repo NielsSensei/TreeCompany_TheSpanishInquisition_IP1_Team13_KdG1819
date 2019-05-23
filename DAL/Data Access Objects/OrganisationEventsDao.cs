@@ -14,6 +14,6 @@ namespace DAL.Data_Access_Objects
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public Platform Platform { get; set; }
+        public int PlatformId { get; set; }
     }
 }

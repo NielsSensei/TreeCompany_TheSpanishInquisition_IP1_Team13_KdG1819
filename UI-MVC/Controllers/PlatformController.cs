@@ -390,5 +390,28 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectAllUsers", "Platform");
         }
         #endregion
+
+        #region Event
+        [HttpGet]
+        [Authorize(Roles = "Organisation, Moderator, Admin, SuperAdmin")]
+        public IActionResult AddEvent()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Organisation, Moderator, Admin, SuperAdmin")]
+        public IActionResult AddEvent(AddEventModel aem, string org)
+        {
+            
+            
+            Event e = new Event()
+            {
+                Organisation = new Organisation(){ Id = org }
+            };
+
+            return RedirectToAction("Index", "Platform");
+        }
+        #endregion
     }
 }

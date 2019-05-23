@@ -224,29 +224,29 @@ namespace DAL.repos
             IdeationsDao foundIdeation = _ctx.Ideations.FirstOrDefault(dto => dto.ModuleId == newIdeation.ModuleId);
             if (foundIdeation != null)
             {
-                foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
-                foundIdeation.MediaFile = newIdeation.MediaFile;
-                foundIdeation.RequiredFields = newIdeation.RequiredFields;
-                foundIdeation.UserVote = newIdeation.UserVote;
+                if(!String.IsNullOrEmpty(newIdeation.ExtraInfo)) foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
+                if(!String.IsNullOrEmpty(newIdeation.MediaFile)) foundIdeation.MediaFile = newIdeation.MediaFile;
+                if(newIdeation.RequiredFields != 0) foundIdeation.RequiredFields = newIdeation.RequiredFields;
+                if(!String.IsNullOrEmpty(newIdeation.UserVote.ToString())) foundIdeation.UserVote = newIdeation.UserVote;
             }
 
             ModulesDao newModule = GrabModuleInformationDao(obj);
             ModulesDao foundModule = _ctx.Modules.FirstOrDefault(dto => dto.ModuleId == newModule.ModuleId);
             if (foundModule != null)
             {
-                foundModule.OnGoing = newModule.OnGoing;
-                foundModule.Title = newModule.Title;
-                foundModule.LikeCount = newModule.LikeCount;
-                foundModule.FbLikeCount = newModule.FbLikeCount;
-                foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
-                foundModule.ShareCount = newModule.ShareCount;
-                foundModule.RetweetCount = newModule.RetweetCount;
-                foundModule.Tags = newModule.Tags;
+                if(!String.IsNullOrEmpty(newModule.OnGoing.ToString())) foundModule.OnGoing = newModule.OnGoing;
+                if(!String.IsNullOrEmpty(newModule.Title)) foundModule.Title = newModule.Title;
+                if(newModule.LikeCount != 0) foundModule.LikeCount = newModule.LikeCount;
+                if(newModule.FbLikeCount != 0) foundModule.FbLikeCount = newModule.FbLikeCount;
+                if(newModule.TwitterLikeCount != 0) foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
+                if(newModule.ShareCount != 0) foundModule.ShareCount = newModule.ShareCount;
+                if(newModule.RetweetCount != 0) foundModule.RetweetCount = newModule.RetweetCount;
+                if(!String.IsNullOrEmpty(newModule.Tags)) foundModule.Tags = newModule.Tags;
             }
 
             if (newModule.PhaseId != foundModule.PhaseId)
             {
-                foundModule.PhaseId = newModule.PhaseId;
+                if(newModule.PhaseId != 0) foundModule.PhaseId = newModule.PhaseId;
             }
 
             _ctx.SaveChanges();

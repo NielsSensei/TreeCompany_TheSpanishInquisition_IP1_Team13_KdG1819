@@ -99,8 +99,15 @@ let addedFieldStrings = 0;
 
 /**
  * @author Niels Van Zandbergen
- * @param index
+ * @documentation Niels Van Zandbergen
+ * 
+ * @param index: Index is hier gelijkgesteld met de ParentIdea van het aan te maken idee. Als het via de thread pagina is
+ * in plaats van het modalscherm is dit 0 anders heeft dit een andere Id. 
+ * 
+ * Deze row met index is ook het aanspreek punt voor de andere functies.
+ * 
  * @returns {HTMLDivElement}
+ * 
  */
 function addDivRow(index){
     let out = document.createElement("div");
@@ -113,7 +120,9 @@ function addDivRow(index){
 
 /**
  * @author Niels Van Zandbergen
+ * 
  * @returns {HTMLDivElement}
+ * 
  */
 function addDivColumn(){
     let out = document.createElement("div");
@@ -125,8 +134,13 @@ function addDivColumn(){
 
 /**
  * @author Niels Van Zandbergen
- * @param index
+ * @documentation Niels Van Zandbergen
+ * 
+ * @param index: Index is hier gelijkgesteld met de ParentIdea van het aan te maken idee. Als het via de thread pagina is
+ * in plaats van het modalscherm is dit 0 anders heeft dit een andere Id.
+ * 
  * @returns {HTMLInputElement}
+ * 
  */
 function addInputPart(index){
     let out = document.createElement("input");
@@ -141,8 +155,13 @@ function addInputPart(index){
 
 /**
  * @author Niels Van Zandbergen
- * @param index
+ * @documentation Niels Van Zandbergen
+ * 
+ * @param index: Index is hier gelijkgesteld met de ParentIdea van het aan te maken idee. Als het via de thread pagina is
+ * in plaats van het modalscherm is dit 0 anders heeft dit een andere Id.
+ * 
  * @returns {HTMLAnchorElement}
+ * 
  */
 function addRemoveButton(index){
     let out = document.createElement("a");
@@ -157,8 +176,17 @@ function addRemoveButton(index){
 
 /**
  * @author Niels Van Zandbergen
- * @param Parent
- * @returns {undefined}
+ * @documentation Niels Van Zandbergen
+ * 
+ * @param Parent: Parent is hier gelijkgesteld met de ParentIdea van het aan te maken idee. Als het via de thread pagina is
+ * in plaats van het modalscherm is dit 0 anders heeft dit een andere Id. 
+ * 
+ * Hier halen we de row van de addDivRow mee op.
+ * 
+ * @see closedfield.js.addDivRow.
+ *
+ * @returns {HTMLDivElement}
+ * 
  */
 function collectContainer(Parent){
     let containers = document.querySelectorAll(".fieldStringContainer");
@@ -174,8 +202,16 @@ function collectContainer(Parent){
 }
 
 /**
- * @author Niels Van Zandbergen
- * @param Parent
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ * 
+ * @param Parent: Parent is hier gelijkgesteld met de ParentIdea van het aan te maken idee. Als het via de thread pagina is
+ * in plaats van het modalscherm is dit 0 anders heeft dit een andere Id. 
+ * 
+ * Net zoals assignIndexes herziet hem alle indexen binnen dezelfde container om Exceptions te voorkomen.
+ * 
+ * @see addQuestionnaireQuestion.js.assignIndexes
+ * 
  */
 function redoIndexes(Parent){
     let container = collectContainer(Parent);
@@ -199,9 +235,14 @@ function redoIndexes(Parent){
 }
 
 /**
- * @author Niels Van Zandbergen
- * @param Parent
- * @param index
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ * 
+ * @param Parent: Parent is hier gelijkgesteld met de ParentIdea van het aan te maken idee. Als het via de thread pagina is
+ * in plaats van het modalscherm is dit 0 anders heeft dit een andere Id. Dit is ook het aanspreekpunt voor de container
+ * waar we de closedfieldoption gaan verwijderen.
+ * @param index: Dit is de index binnen de container.
+ * 
  */
 function destroyClosedFieldPart(Parent, index){
     console.log("Removing element: " + Parent + "." + index);
@@ -218,8 +259,13 @@ function destroyClosedFieldPart(Parent, index){
 }
 
 /**
- * @author Niels Van Zandbergen
- * @param Parent
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Parent: Parent is hier gelijkgesteld met de ParentIdea van het aan te maken idee. Als het via de thread pagina is
+ * in plaats van het modalscherm is dit 0 anders heeft dit een andere Id. Dit is ook het aanspreekpunt voor de container
+ * waar we de closedfieldoption gaan toevoegen.
+ * 
  */
 function addClosedFieldPart(Parent){
     let container = collectContainer(Parent);
@@ -245,10 +291,6 @@ function addClosedFieldPart(Parent){
     console.log("New Part added for: " + Parent);
 }
 
-/**
- * @author Niels Van Zandbergen
- * @type {NodeListOf<Element>}
- */
 const buttons = document.querySelectorAll(".addFieldStringsButton");
 for(let i = 0; i < buttons.length; i++){
     buttons[i].addEventListener("click", function(){

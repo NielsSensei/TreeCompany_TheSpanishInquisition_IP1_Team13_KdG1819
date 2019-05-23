@@ -186,14 +186,15 @@ namespace UIMVC.Services
         #endregion
 
         /**
-         * @author Xander Veldeman
+         * @authors Niels Van Zandbergen & Xander Veldeman
          * 
-         * Checks if the user is in a role or a higher role
+         * Verificatie of de gebruiker in een bepaalde role zit.
          */
         #region Authorization
         public async Task<bool> IsVerified(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "LoggedInVerified") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "LoggedInOrg") ||
                 await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Moderator") ||
                 await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Admin") ||
                 await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SuperAdmin"))
@@ -205,6 +206,19 @@ namespace UIMVC.Services
 
         }
 
+        public async Task<bool> IsOrganisation(ClaimsPrincipal user)
+        {
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "LoggedInOrg") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Moderator") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Admin") ||
+                await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "SuperAdmin"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        
         public async Task<bool> IsModerator(ClaimsPrincipal user)
         {
             if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(user), "Moderator") ||
