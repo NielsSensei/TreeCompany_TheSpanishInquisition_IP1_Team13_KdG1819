@@ -42,6 +42,7 @@ CREATE TABLE OrganisationEvents(
 	Description NVARCHAR(255) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
+	PlatformID INT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_OrganisationEvents PRIMARY KEY(EventID),

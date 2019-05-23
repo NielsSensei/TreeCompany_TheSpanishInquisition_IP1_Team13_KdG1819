@@ -1,6 +1,6 @@
 ﻿/* Organisationevents */
-INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate)
-VALUES(1,5,'The Inquisition','Een conferentie over hoe we Antwerpen kunnen introduceren tot de Spaanse cultuur','2019-03-31','2019-04-1')
+INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate, PlatformID)
+VALUES(1,5,'The Inquisition','Een conferentie over hoe we Antwerpen kunnen introduceren tot de Spaanse cultuur','2019-03-31','2019-04-1',1)
 
 /* Projects
 Status: Niet gestart/Phase naam/Afgesloten
