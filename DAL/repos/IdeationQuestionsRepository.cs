@@ -10,6 +10,9 @@ using Domain.Projects;
 
 namespace DAL.repos
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class IdeationQuestionsRepository : IRepository<IdeationQuestion>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -19,6 +22,9 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Conversion Methods
         private IdeationQuestionsDao ConvertToDao(IdeationQuestion obj)
         {
@@ -75,31 +81,26 @@ namespace DAL.repos
 
             if (idea.Field != null)
             {
-                ifd.FieldId = idea.Field.Id;
                 ifd.FieldText = idea.Field.Text;
             }
 
             if (idea.Cfield != null)
             {
-                ifd.FieldId = idea.Cfield.Id;
                 ifd.FieldStrings = ExtensionMethods.ListToString(idea.Cfield.Options);
             }
 
             if (idea.Ifield != null)
             {
-                ifd.FieldId = idea.Ifield.Id;
                 ifd.UploadedImage = idea.Ifield.UploadedImage;
             }
 
             if (idea.Vfield != null)
             {
-                ifd.FieldId = idea.Vfield.Id;
                 ifd.MediaLink = idea.Vfield.VideoLink;
             }
 
             if (idea.Mfield != null)
             {
-                ifd.FieldId = idea.Mfield.Id;
                 ifd.LocationX = idea.Mfield.LocationX;
                 ifd.LocationY = idea.Mfield.LocationY; 
             }
@@ -168,6 +169,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Id Generation
         private int FindNextAvailableIQuestionId()
         {
@@ -198,6 +202,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region IdeationQuestion CRUD
         public IdeationQuestion Create(IdeationQuestion obj)
         {
@@ -219,6 +226,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public IdeationQuestion Read(int id, bool details)
         {
             IdeationQuestionsDao ideationQuestionDao = details ? _ctx.IdeationQuestions.AsNoTracking().First(i => i.IquestionId == id) : _ctx.IdeationQuestions.First(i => i.IquestionId == id);
@@ -267,6 +285,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Idea CRUD
         public Idea Create(Idea idea)
         {
@@ -293,6 +314,17 @@ namespace DAL.repos
             return idea;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params ideaId: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public Idea ReadIdea(int ideaId, bool details)
         {
             IdeasDao ideasDao = details ? _ctx.Ideas.AsNoTracking().First(i => i.IdeaId == ideaId) : _ctx.Ideas.First(i => i.IdeaId == ideaId);
@@ -301,10 +333,21 @@ namespace DAL.repos
             return ConvertToDomain(ideasDao);
         }
 
-        public Idea ReadWithFields(int id)
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
+        public Idea ReadWithFields(int id, bool details)
         {
-            Idea idea = ReadIdea(id, true);
-            IdeaFieldsDao field = _ctx.IdeaFields.First(i => i.IdeaId == id);
+            Idea idea = ReadIdea(id, details);
+            IdeaFieldsDao field = details ? _ctx.IdeaFields.AsNoTracking().First(i => i.IdeaId == id) : _ctx.IdeaFields.First(i => i.IdeaId == id);
 
             if (field.FieldText != null)
             {
@@ -386,7 +429,7 @@ namespace DAL.repos
 
             foreach (IdeasDao dao in _ctx.Ideas)
             {
-                Idea idea = ReadWithFields(dao.IdeaId);
+                Idea idea = ReadWithFields(dao.IdeaId, true);
                 myQuery.Add(idea);
             }
 
@@ -398,6 +441,9 @@ namespace DAL.repos
             return ReadAllIdeas().ToList().FindAll(i => i.IdeaQuestion.Id == questionId);
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Field CRUD
         public void DeleteField(int ideaId)
         {
@@ -408,20 +454,12 @@ namespace DAL.repos
         #endregion
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Report CRUD
         public Report Create(Report obj)
         {
-            IEnumerable<Report> rs = ReadAllReportsByIdea(obj.Idea.Id);
-
-            foreach (Report r in rs)
-            {
-                if (ExtensionMethods.HasMatchingWords(obj.Reason ,r.Reason) > 0)
-                {
-                    throw new DuplicateNameException("Dit Idee heeft al een gelijkaardig rapport. Het gevonden Rapport(ID= " + r.Id + ") met tekst: " + r.Reason + "is gelijkaardig" +
-                                                     " aan het gegeven Rapport(ID= " + obj.Id + ") met tekst: " + obj.Reason + ".");
-                }
-            }
-
             obj.Id = FindNextAvailableReportId();
             _ctx.Reports.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
@@ -429,6 +467,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public Report ReadReport(int id, bool details)
         {
             ReportsDao reportsDao = details ? _ctx.Reports.AsNoTracking().First(i => i.ReportId == id) : _ctx.Reports.First(i => i.ReportId == id);

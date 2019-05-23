@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using DAL.Contexts;
 using DAL.Data_Access_Objects;
@@ -8,10 +7,12 @@ using Domain.UserInput;
 using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Projects;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL.repos
 {
+    /*
+     * @authors Sacha Buelens, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class QuestionnaireQuestionsRepository : IRepository<QuestionnaireQuestion>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -21,6 +22,9 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @authors Sacha Buelens, Niels Van Zandbergen & Xander Veldeman
+         */
         #region Conversion Methods
         private QuestionnaireQuestionsDao ConvertToDao(QuestionnaireQuestion obj)
         {
@@ -122,6 +126,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Id generation
         private int FindNextAvailableQQuestionId()
         {
@@ -145,6 +152,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors Sacha Buelens, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
         #region QuestionnaireQuestion CRUD
         public QuestionnaireQuestion Create(QuestionnaireQuestion obj)
         {
@@ -167,6 +177,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public QuestionnaireQuestion Read(int id, bool details)
         {
             QuestionnaireQuestionsDao questionnaireQuestionDao = details ? _ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QquestionId == id) : _ctx.QuestionnaireQuestions.First(q => q.QquestionId == id);
@@ -214,10 +235,13 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors Sacha Buelens, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
         #region Answer CRUD
         public Answer Create(Answer obj)
         {
-            QuestionnaireQuestion qq = Read(obj.Question.Id, false);
+            QuestionnaireQuestion qq = Read(obj.Question.Id, true);
             obj.Id = FindNextAvailableAnswerId();
 
             if(qq.QuestionType == QuestionType.Open || qq.QuestionType == QuestionType.Mail)
@@ -240,7 +264,17 @@ namespace DAL.repos
             return obj;
         }
 
-
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params answerId: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public OpenAnswer ReadOpenAnswer(int answerId, bool details)
         {
             AnswersDao answersDao = details ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId) : _ctx.Answers.First(i => i.AnswerId == answerId);
@@ -249,6 +283,17 @@ namespace DAL.repos
             return ConvertToDomain(answersDao);
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params answerId: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public MultipleAnswer ReadMultipleAnswer(int answerId, bool details)
         {
             AnswersDao answersDao = details ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId) : _ctx.Answers.First(i => i.AnswerId == answerId);
@@ -263,17 +308,7 @@ namespace DAL.repos
             {
                 chosenOptionsDao.AddRange(optionsDaos.Where(dao => dao.OptionId == choicesDao.OptionId).ToList());
             }
-
-//            foreach(OptionsDao dao in optionsDaos)
-//            {
-//                ChoicesDao choice = _ctx.Choices.ToList().FirstOrDefault(choicesDao => choicesDao.AnswerId == dao.);
-//
-//                if(choice?.ChoiceId != null)
-//                {
-//                    chosenOptionsDao.Add(dao);
-//                }
-//            }
-
+            
             return ConvertToDomain(answersDao, chosenOptionsDao);
         }
 
@@ -298,6 +333,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors Sacha Buelens, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
         #region Options CRUD
         public string CreateOption(int questionId, string obj)
         {
@@ -309,12 +347,12 @@ namespace DAL.repos
 
             return obj;
         }
-
-        public String ReadOption(int optionId, int questionID)
+        
+        public String ReadOption(int optionId)
         {
             return ConvertToDomain(_ctx.Options.Find(optionId));
         }
-
+        
         public int ReadOptionId(string optionText, int questionId)
         {
             OptionsDao option = _ctx.Options.FirstOrDefault(o => o.QquestionId == questionId && o.OptionText == optionText);

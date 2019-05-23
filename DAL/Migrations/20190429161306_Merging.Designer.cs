@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
+    /*
+     * @author Xander Veldeman
+     */
     [DbContext(typeof(CityOfIdeasDbContext))]
     [Migration("20190429161306_Merging")]
     partial class Merging

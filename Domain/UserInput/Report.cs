@@ -2,6 +2,9 @@ using Domain.Identity;
 
 namespace Domain.UserInput
 {
+    /*
+     * @author Niels Van Zandbergen
+     */
     public class Report
     {
         public int Id { get; set; }

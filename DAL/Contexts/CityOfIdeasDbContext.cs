@@ -5,8 +5,16 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DAL.Contexts
 {
+    /*
+     * @authors Sacha Buelens & Niels Van Zandbergen
+     */
     public class CityOfIdeasDbContext : IdentityDbContext<UimvcUser>
     {
+        public CityOfIdeasDbContext()
+        {
+            COI_DbInitializer.Initialize(this, false);
+        }
+
         /*
          * Naar deployment toe is dit wel nuttig. Options wordt wel vaak gebruikt voor de connectionstring mee te geven als deze in een aparte
          * file zit. Je hebt de optie om ou db te linken via de onconfiguring de .usedataprovider (in ons geval .usesqlserver) te gebruiken. Of
@@ -16,12 +24,7 @@ namespace DAL.Contexts
         {
             COI_DbInitializer.Initialize(this, false);
         }
-
-        public CityOfIdeasDbContext()
-        {
-            COI_DbInitializer.Initialize(this, false);
-        }
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -29,7 +32,6 @@ namespace DAL.Contexts
                 optionsBuilder.UseSqlite("Data Source=TheSpanishDatabase.db");
                 optionsBuilder.EnableSensitiveDataLogging();
             }
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

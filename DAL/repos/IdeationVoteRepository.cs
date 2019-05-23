@@ -9,6 +9,9 @@ using Domain.Identity;
 
 namespace DAL.repos
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class IdeationVoteRepository : IRepository<Vote>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -18,7 +21,20 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Conversion Methods
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @param obj: Dit is onze Vote die we willen persisteren.
+         * 
+         * Er was een kleine onenigheid binnen het team over op welke dingen we allemaal kunnen stemmen. We
+         * hebben dit uiteindelijk besloten om dit te beperken naar Idee door dit zo op te lossen maar het is
+         * modulair genoeg om aangepast te worden naar de wens van TreeCompany.
+         *
+         */
         private VotesDao ConvertToDao(Vote obj)
         {
             VotesDao v = new VotesDao
@@ -26,7 +42,7 @@ namespace DAL.repos
                 VoteId = obj.Id,
                 InputId = obj.Idea.Id,
                 UserId = obj.User.Id,
-                InputType = 2, //Voorlopig Idee
+                InputType = 2, 
                 UserMail = obj.UserMail,
                 LocationX = obj.LocationX,
                 LocationY = obj.LocationY,
@@ -83,6 +99,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Id generation
         private int FindNextAvailableVoteId()
         {
@@ -99,6 +118,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Vote CRUD
         public Vote Create(Vote obj)
         {
@@ -123,6 +145,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public Vote Read(int id, bool details)
         {
             VotesDao voteDao = details ? _ctx.Votes.AsNoTracking().First(p => p.VoteId == id) : _ctx.Votes.First(p => p.VoteId == id);
@@ -185,6 +218,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Devices CRUD
         public IotDevice Create(IotDevice obj)
         {
@@ -206,6 +242,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params deviceId: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public IotDevice ReadDevice(int deviceId, bool details)
         {
             DevicesDao deviceDao = details ? _ctx.Devices.AsNoTracking().First(d => d.DeviceId == deviceId) : _ctx.Devices.First(d => d.DeviceId == deviceId);

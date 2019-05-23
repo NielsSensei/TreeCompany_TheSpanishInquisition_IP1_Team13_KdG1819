@@ -5,6 +5,9 @@ using Domain.Users;
 
 namespace Domain.Projects
 {
+    /*
+     * @authors Nathan Gijselings, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Niels Van Zandbergen
+     */
     public class Ideation : Module
     {
         public UimvcUser User { get; set; }

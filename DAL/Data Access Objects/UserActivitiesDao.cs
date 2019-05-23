@@ -1,9 +1,12 @@
 ﻿namespace DAL.Data_Access_Objects
 {
+    /*
+     * @authors Sacha Buelens & Niels Van Zandbergen
+     */
     public class UserActivitiesDao
     {
         public int ActivityId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int PlatformId { get; set; }
         public int? ProjectId { get; set; }
         public int? VoteId { get; set; }
