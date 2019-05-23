@@ -25,7 +25,6 @@
     <Content Include="wwwroot\js\addQuestionnaireQuestion.js" />
     <Content Include="wwwroot\js\changeclosedfield.js" />
     <Content Include="wwwroot\js\closedfield.js" />
-    <Content Include="wwwroot\js\changeplatform.js" />
     <None Remove="$(WWWRoot)**" />
     <None Include="$(WWWRoot)**" Exclude="$(WWWRoot)dist\**" />
     <None Include="app.yaml" CopyToOutputDirectory="PreserveNewest" />
