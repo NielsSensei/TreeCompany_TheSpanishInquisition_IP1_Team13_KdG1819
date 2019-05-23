@@ -8,6 +8,8 @@ namespace UIMVC.Models
         public OpenAnswer OpenAnswer { get; set; }
         public MultipleAnswer MultipleAnswer { get; set; }
         public IList<CheckboxAnswer> CheckboxAnswers { get; set; }
+        
+        public CheckboxAnswer CustomAnswer { get; set; }
     }
 
     public class CheckboxAnswer

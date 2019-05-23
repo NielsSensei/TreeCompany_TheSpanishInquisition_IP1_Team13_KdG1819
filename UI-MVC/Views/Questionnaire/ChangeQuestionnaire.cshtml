@@ -5,6 +5,7 @@
 @model ChangeQuestionnaireModel
 
 @{
+    ViewData["Title"] = "Aanpassen van Questionnaire";
     Project project = (Project) ViewData["Project"];
     Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
     AddQuestionnaireQuestionModel cqqm = (AddQuestionnaireQuestionModel) ViewData["Cqqm"];

@@ -177,7 +177,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @author Sacha Beulens
+         * @author Sacha Beulens, Xander Veldeman
          */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -392,6 +392,7 @@ namespace UIMVC.Controllers
                     DropdownList = addAnswerModel.MultipleAnswer.DropdownList,
                     Question = question,
                     User = user,
+                    CustomOption = null
                 };
                 QqMgr.MakeAnswer(answer);
             }
@@ -434,8 +435,11 @@ namespace UIMVC.Controllers
             {
                 if (!question.Optional)
                 {
-                    if (addAnswerModel.CheckboxAnswers == null ||
-                        addAnswerModel.CheckboxAnswers.All(checkboxAnswer => checkboxAnswer.Checked == false))
+                    if ((addAnswerModel.CheckboxAnswers == null ||
+                        addAnswerModel.CheckboxAnswers.All(checkboxAnswer => checkboxAnswer.Checked == false)) &&
+                        (addAnswerModel.CustomAnswer == null ||
+                         addAnswerModel.CustomAnswer.Checked && addAnswerModel.CustomAnswer.Value == null ||
+                         addAnswerModel.CustomAnswer.Checked == false))
                     {
                         return RedirectToAction("NextQuestionnaire",
                             new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
@@ -451,6 +455,10 @@ namespace UIMVC.Controllers
                     Question = question,
                     User = user
                 };
+                if (addAnswerModel.CustomAnswer.Checked)
+                {
+                    answer.CustomOption = addAnswerModel.CustomAnswer.Value;
+                }
                 QqMgr.MakeAnswer(answer);
             }
             else if (!question.Optional)

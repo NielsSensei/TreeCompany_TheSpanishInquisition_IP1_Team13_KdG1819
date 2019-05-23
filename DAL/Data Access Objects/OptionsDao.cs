@@ -21,5 +21,7 @@
         public int OptionId { get; set; }
         public string OptionText { get; set; }
         public int QquestionId { get; set; }
+
+        public bool IsCustom { get; set; }
     }
 }

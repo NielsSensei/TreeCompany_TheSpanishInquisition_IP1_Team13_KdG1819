@@ -11,10 +11,12 @@ namespace UIMVC.Services
     public class QuestionService
     {
         private readonly IdeationQuestionManager _iqMgr;
+        private readonly QuestionnaireQuestionManager _qqMgr;
 
         public QuestionService()
         {
             _iqMgr = new IdeationQuestionManager();
+            _qqMgr = new QuestionnaireQuestionManager();
         }
 
         public List<IdeationQuestion> CollectIdeationQuestions(int ideationId)
@@ -34,6 +36,11 @@ namespace UIMVC.Services
             }
 
             return count;
+        }
+
+        public IEnumerable<string> GetCustomOptions(QuestionnaireQuestion question)
+        {
+            return _qqMgr.GetAllOptionsForQuestion(question.Id, true);
         }
     }
 }
