@@ -99,11 +99,14 @@ let addedFieldStrings = 0;
 
 /**
  * @author Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param index: Index is hier gelijkgesteld aan het aan te passen idee. 
  * 
- * Creates a bootstrap row div
- * 
- * @param index
+ * Deze row met index is ook het aanspreek punt voor de andere functies.
+ *
  * @returns {HTMLDivElement}
+ *
  */
 function addDivRow(index){
     let out = document.createElement("div");
@@ -114,11 +117,12 @@ function addDivRow(index){
     return out;
 }
 
+
 /**
  * @author Niels Van Zandbergen
- * 
- * creates a bootstrap column div
+ *
  * @returns {HTMLDivElement}
+ *
  */
 function addDivColumn(){
     let out = document.createElement("div");
@@ -130,11 +134,12 @@ function addDivColumn(){
 
 /**
  * @author Niels Van Zandbergen
- * 
- * creates a bootstrap form-control input
- * 
- * @param index
+ * @documentation Niels Van Zandbergen
+ *
+ * @param index: Index is hier gelijkgesteld aan het aan te passen idee.
+ *
  * @returns {HTMLInputElement}
+ *
  */
 function addInputPart(index){
     let out = document.createElement("input");
@@ -149,11 +154,12 @@ function addInputPart(index){
 
 /**
  * @author Niels Van Zandbergen
- * 
- * Creates a remove button
- * 
- * @param index
+ * @documentation Niels Van Zandbergen
+ *
+ * @param index: Index is hier gelijkgesteld aan het aan te passen idee.
+ *
  * @returns {HTMLAnchorElement}
+ *
  */
 function addRemoveButton(index){
     let out = document.createElement("a");
@@ -168,11 +174,16 @@ function addRemoveButton(index){
 
 /**
  * @author Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Idea: Idea is hier gelijkgesteld aan het aan te passen idee. 
  * 
- * Gets all the elements with class editcontainer
- * 
- * @param Idea
- * @returns {undefined}
+ * Hier halen we de row van de addDivRow mee op.
+ *
+ * @see changeclosedfield.js.addDivRow.
+ *
+ * @returns {HTMLDivElement}
+ *
  */
 function collectContainer(Idea){
     let containers = document.querySelectorAll(".editContainer");
@@ -189,11 +200,15 @@ function collectContainer(Idea){
 }
 
 /**
- * @author Niels Van Zandbergen
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Idea: Idea is hier gelijkgesteld aan het aan te passen idee.
  * 
- * sets the id's of the inputs, removebuttons and rows
- * 
- * @param Idea
+ * Net zoals assignIndexes herziet hem alle indexen binnen dezelfde container om Exceptions te voorkomen.
+ *
+ * @see addQuestionnaireQuestion.js.assignIndexes
+ *
  */
 function redoIndexes(Idea){
     let container = collectContainer(Idea);
@@ -217,12 +232,13 @@ function redoIndexes(Idea){
 }
 
 /**
- * @author Niels Van Zandbergen
- * 
- * Removes the elements from the .editcontainerrow and redoes the indexes
- * 
- * @param Idea
- * @param index
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Idea: Idea is hier gelijkgesteld aan het aan te passen idee. Dit is ook het aanspreekpunt voor de container
+ * waar we de closedfieldoption gaan verwijderen.
+ * @param index: Dit is de index binnen de container.
+ *
  */
 function destroyClosedFieldPart(Idea, index){
     // console.log("Removing element: " + Idea + "." + index);
@@ -239,11 +255,16 @@ function destroyClosedFieldPart(Idea, index){
 }
 
 /**
- * @author Niels Van Zandbergen
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Idea: Idea is hier gelijkgesteld aan het aan te passen idee. Dit is ook het aanspreekpunt voor de container
+ * waar we de closedfieldoption gaan toevoegen. 
  * 
- * Add a closedfield for options
- * 
- * @param Idea
+ * Waarom worden er voor elke destroybutton nog eens de eventhandlers toegevoegd? Goede vraag, de reden hiervoor is dat als we 
+ * de modal ophalen voor EditIdea we voor elke option deze ook toevoegen aan de lijst in uniforme stijl met de deze javascript 
+ * maar deze buttons deden voordien niets. 
+ *
  */
 function addClosedFieldPart(Idea){
     let container = collectContainer(Idea);
@@ -269,13 +290,6 @@ function addClosedFieldPart(Idea){
     console.log("New Part added for: " + Idea);
 }
 
-/**
- * @author Niels Van Zandbergen
- * 
- * Adds the event listeners to the add field buttons
- * 
- * @type {NodeListOf<Element>}
- */
 const buttons = document.querySelectorAll(".newFieldStringsButton");
 for(let i = 0; i < buttons.length; i++){
     buttons[i].addEventListener("click", function(){
@@ -285,13 +299,6 @@ for(let i = 0; i < buttons.length; i++){
     });
 }
 
-/**
- * @author Niels Van Zandbergen
- * 
- * adds the event listeners for all of the remove field buttons
- * 
- * @type {NodeListOf<Element>}
- */
 const destroybuttons = document.querySelectorAll(".destroyEditString");
 for(let i = 0; i < destroybuttons.length; i++){
     destroybuttons[i].addEventListener("click", function (){
