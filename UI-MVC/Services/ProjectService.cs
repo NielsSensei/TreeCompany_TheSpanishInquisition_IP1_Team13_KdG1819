@@ -7,6 +7,11 @@ using Domain.Users;
 
 namespace UIMVC.Services
 {
+    /**
+     * @author Xander Veldeman, Niels Van Zandbergen
+     *
+     * Used as a way to get information from projects in views
+     */
     public class ProjectService
     {
         private readonly ProjectManager _projectManager;

@@ -28,7 +28,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman, Niels Van Zandbergen
+         * @author Xander Veldeman, Niels Van Zandbergen
          *
          * Shows the platform
          * @Param message: simple status messages
@@ -52,12 +52,12 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         #region Platform
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          *
          * Search for a platform based on it's name and URL
          */
@@ -71,7 +71,7 @@ namespace UIMVC.Controllers
         #endregion
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         #region Change
 
@@ -153,7 +153,7 @@ namespace UIMVC.Controllers
         #endregion
 
         /**
-         * @Author Xander Veldeman, Niels Van Zandbergen
+         * @author Xander Veldeman, Niels Van Zandbergen
          */
         #region AddPlatform
         [HttpGet]
@@ -210,7 +210,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          * @Documentation Xander Veldeman
          *
          * A superadmin can assign any user to a platform.
@@ -238,7 +238,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -266,7 +266,7 @@ namespace UIMVC.Controllers
         #endregion
 
         /**
-         * @Author Xander Veldeman, Edwin Kai Yin Tam
+         * @author Xander Veldeman, Edwin Kai Yin Tam
          */
         #region UIMVCUser
         

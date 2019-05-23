@@ -95,10 +95,17 @@
 
 ﻿console.log('Confirmemail has been loaded');
 
-var count = 10;
-var redirect = "~/";
-var element = document.getElementById('countdown');
+let count = 10;
+let redirect = "~/";
+let element = document.getElementById('countdown');
 
+/**
+ * @author Xander Veldeman
+ * 
+ * Simples 10s timer
+ * 
+ * @returns {Promise<void>}
+ */
 window.onload = async function () {
     //console.log(count);
     for (; count > 0; count--) {
@@ -107,7 +114,7 @@ window.onload = async function () {
         await sleep(1000);
     }
     window.location.href = "/Identity/Account/Login";
-}
+};
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

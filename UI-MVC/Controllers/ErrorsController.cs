@@ -8,7 +8,7 @@ namespace UIMVC.Controllers
     public class ErrorsController : Controller
     {
         /**
-         * @Author Identity
+         * @author Identity
          *
          * Standard Identity Error Handler
          */
@@ -19,7 +19,7 @@ namespace UIMVC.Controllers
         }
         
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          *
          * Custom error handler to a custom model
          * @Param path: path given by MVC
@@ -48,7 +48,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          *
          * Simple redirect for the Identity/Sendgrid email verification
          */

@@ -28,12 +28,12 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman, David Matei, Niels Van Zandbergen
+         * @author Xander Veldeman, David Matei, Niels Van Zandbergen
          */
          #region Project
          
          /**
-          * @Author Xander Veldeman
+          * @author Xander Veldeman
           */
          [HttpGet]
          public IActionResult CollectProject(int id)
@@ -72,7 +72,7 @@ namespace UIMVC.Controllers
          }
          
          /**
-          * @Author Xander Veldeman, Niels Van Zandbergen
+          * @author Xander Veldeman, Niels Van Zandbergen
           */
          #region Add
          [Authorize(Roles ="Admin, SuperAdmin")]
@@ -145,12 +145,12 @@ namespace UIMVC.Controllers
          #endregion
 
          /**
-          * @Author Niels Van Zandbergen
+          * @author Niels Van Zandbergen
           */
          #region ChangeProject
 
          /**
-          * @Author Xander Veldeman, Niels Van Zandbergen
+          * @author Xander Veldeman, Niels Van Zandbergen
           */
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
@@ -169,7 +169,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-          * @Author Niels Van Zandbergen, Xander Veldeman
+          * @author Niels Van Zandbergen, Xander Veldeman
           */
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
@@ -195,7 +195,7 @@ namespace UIMVC.Controllers
 
 
          /**
-          * @Author Sacha Beulens
+          * @author Sacha Beulens
           */
          #region DestroyProject
 
@@ -247,7 +247,7 @@ namespace UIMVC.Controllers
          #endregion
 
          /**
-          * @Author David Matei, Niels Van Zandbergen
+          * @author David Matei, Niels Van Zandbergen
           */
          #region Phase
          #region AddPhase
@@ -350,7 +350,7 @@ namespace UIMVC.Controllers
          #endregion
          
          /**
-          * @Author Niels Van Zandbergen
+          * @author Niels Van Zandbergen
           */
          #region Tags
          [Authorize(Roles = "Admin, SuperAdmin")]

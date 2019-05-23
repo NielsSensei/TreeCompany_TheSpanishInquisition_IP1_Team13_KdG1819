@@ -1,7 +1,12 @@
-console.log("closedfield active!");
+//console.log("closedfield active!");
 
 let addedFieldStrings = 0;
 
+/**
+ * @author Niels Van Zandbergen
+ * @param index
+ * @returns {HTMLDivElement}
+ */
 function addDivRow(index){
     let out = document.createElement("div");
     out.classList.add("inputcontainerRow");
@@ -11,6 +16,10 @@ function addDivRow(index){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @returns {HTMLDivElement}
+ */
 function addDivColumn(){
     let out = document.createElement("div");
     out.classList.add("inputcontainerColumn");
@@ -19,6 +28,11 @@ function addDivColumn(){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @param index
+ * @returns {HTMLInputElement}
+ */
 function addInputPart(index){
     let out = document.createElement("input");
     out.setAttribute("type", "text");
@@ -30,6 +44,11 @@ function addInputPart(index){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @param index
+ * @returns {HTMLAnchorElement}
+ */
 function addRemoveButton(index){
     let out = document.createElement("a");
     out.classList.add("btn");
@@ -41,6 +60,11 @@ function addRemoveButton(index){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @param Parent
+ * @returns {undefined}
+ */
 function collectContainer(Parent){
     let containers = document.querySelectorAll(".fieldStringContainer");
     let out = undefined;
@@ -54,6 +78,10 @@ function collectContainer(Parent){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @param Parent
+ */
 function redoIndexes(Parent){
     let container = collectContainer(Parent);
     addedFieldStrings = 0;
@@ -75,6 +103,11 @@ function redoIndexes(Parent){
     
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @param Parent
+ * @param index
+ */
 function destroyClosedFieldPart(Parent, index){
     console.log("Removing element: " + Parent + "." + index);
     
@@ -89,6 +122,10 @@ function destroyClosedFieldPart(Parent, index){
     redoIndexes(Parent);
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @param Parent
+ */
 function addClosedFieldPart(Parent){
     let container = collectContainer(Parent);
     
@@ -113,6 +150,10 @@ function addClosedFieldPart(Parent){
     console.log("New Part added for: " + Parent);
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @type {NodeListOf<Element>}
+ */
 const buttons = document.querySelectorAll(".addFieldStringsButton");
 for(let i = 0; i < buttons.length; i++){
     buttons[i].addEventListener("click", function(){

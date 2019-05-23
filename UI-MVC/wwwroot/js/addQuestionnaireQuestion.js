@@ -6,9 +6,14 @@ let optionsButton = document.querySelector(".optionsButton");
 let containerToPutOptionsIn = document.querySelector(".optionsContainer");
 let addedOptions = 0;
 
-console.log("AddQuestionnaireQuestion active!");
-console.log(dropdownvalue);
+//console.log("AddQuestionnaireQuestion active!");
+//console.log(dropdownvalue);
 
+/**
+ * @author Sacha Beulens
+ * 
+ * Checks which dropdownvalue was selected and adds the "add option" button
+ */
 function requiresOptions() {
     dropdownvalue = dropdown.options[dropdown.selectedIndex].value;
 
@@ -24,6 +29,11 @@ function requiresOptions() {
     }
 }
 
+/**
+ * @author Sacha Beulens
+ * 
+ * Add the inputs
+ */
 function reassignIndex() {
     addedOptions = 0;
 
@@ -43,6 +53,11 @@ function reassignIndex() {
     addedOptions = allInputs.length;
 }
 
+/**
+ * @author Sacha Beulens
+ * 
+ * Remove an option when the buttion is ticked
+ */
 function removeOption() {
     console.log("Removing element: " + this.getAttribute("data-option"));
 
@@ -60,7 +75,11 @@ function removeOption() {
     reassignIndex();
 }
 
-
+/**
+ * @author Sacha Beulens
+ * 
+ * adds an option when clicked on the add option button
+ */
 function addOption() {
     console.log("Adding option: " + addedOptions);
     let input = document.createElement("input");

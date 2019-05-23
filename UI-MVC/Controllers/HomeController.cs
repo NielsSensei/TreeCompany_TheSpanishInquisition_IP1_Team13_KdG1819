@@ -13,7 +13,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         public IActionResult Index()
         {
@@ -23,7 +23,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         public IActionResult About()
         {
@@ -31,7 +31,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         public IActionResult Privacy()
         {
@@ -39,7 +39,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Niels Van Zandbergen
+         * @author Niels Van Zandbergen
          */
         public IActionResult FAQ()
         {

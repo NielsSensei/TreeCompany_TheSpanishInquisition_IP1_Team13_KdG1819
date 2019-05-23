@@ -1,7 +1,15 @@
-console.log("changeclosedfield active!");
+//console.log("changeclosedfield active!");
 
 let addedFieldStrings = 0;
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * Creates a bootstrap row div
+ * 
+ * @param index
+ * @returns {HTMLDivElement}
+ */
 function addDivRow(index){
     let out = document.createElement("div");
     out.classList.add("editcontainerRow");
@@ -11,6 +19,12 @@ function addDivRow(index){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * creates a bootstrap column div
+ * @returns {HTMLDivElement}
+ */
 function addDivColumn(){
     let out = document.createElement("div");
     out.classList.add("editcontainerColumn");
@@ -19,6 +33,14 @@ function addDivColumn(){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * creates a bootstrap form-control input
+ * 
+ * @param index
+ * @returns {HTMLInputElement}
+ */
 function addInputPart(index){
     let out = document.createElement("input");
     out.setAttribute("type", "text");
@@ -30,6 +52,14 @@ function addInputPart(index){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * Creates a remove button
+ * 
+ * @param index
+ * @returns {HTMLAnchorElement}
+ */
 function addRemoveButton(index){
     let out = document.createElement("a");
     out.classList.add("btn");
@@ -41,6 +71,14 @@ function addRemoveButton(index){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * Gets all the elements with class editcontainer
+ * 
+ * @param Idea
+ * @returns {undefined}
+ */
 function collectContainer(Idea){
     let containers = document.querySelectorAll(".editContainer");
     let out = undefined;
@@ -55,6 +93,13 @@ function collectContainer(Idea){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * sets the id's of the inputs, removebuttons and rows
+ * 
+ * @param Idea
+ */
 function redoIndexes(Idea){
     let container = collectContainer(Idea);
     addedFieldStrings = 0;
@@ -76,8 +121,16 @@ function redoIndexes(Idea){
 
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * Removes the elements from the .editcontainerrow and redoes the indexes
+ * 
+ * @param Idea
+ * @param index
+ */
 function destroyClosedFieldPart(Idea, index){
-    console.log("Removing element: " + Idea + "." + index);
+    // console.log("Removing element: " + Idea + "." + index);
 
     let containerrows = document.querySelectorAll(".editcontainerRow");
 
@@ -90,6 +143,13 @@ function destroyClosedFieldPart(Idea, index){
     redoIndexes(Idea);
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * Add a closedfield for options
+ * 
+ * @param Idea
+ */
 function addClosedFieldPart(Idea){
     let container = collectContainer(Idea);
 
@@ -114,6 +174,13 @@ function addClosedFieldPart(Idea){
     console.log("New Part added for: " + Idea);
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * Adds the event listeners to the add field buttons
+ * 
+ * @type {NodeListOf<Element>}
+ */
 const buttons = document.querySelectorAll(".newFieldStringsButton");
 for(let i = 0; i < buttons.length; i++){
     buttons[i].addEventListener("click", function(){
@@ -123,6 +190,13 @@ for(let i = 0; i < buttons.length; i++){
     });
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * 
+ * adds the event listeners for all of the remove field buttons
+ * 
+ * @type {NodeListOf<Element>}
+ */
 const destroybuttons = document.querySelectorAll(".destroyEditString");
 for(let i = 0; i < destroybuttons.length; i++){
     destroybuttons[i].addEventListener("click", function (){

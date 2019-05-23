@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace UIMVC.Services
 {
+    /**
+     * @author Xander Veldeman
+     */
     public class UserService
     {
         private readonly UserManager<UimvcUser> _usrMgr;

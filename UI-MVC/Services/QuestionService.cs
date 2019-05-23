@@ -5,15 +5,16 @@ using Domain.UserInput;
 
 namespace UIMVC.Services
 {
+    /**
+     * @author Xander Veldeman
+     */
     public class QuestionService
     {
         private readonly IdeationQuestionManager _iqMgr;
-        private readonly QuestionnaireQuestionManager _qqMgr;
 
         public QuestionService()
         {
             _iqMgr = new IdeationQuestionManager();
-            _qqMgr = new QuestionnaireQuestionManager();
         }
 
         public List<IdeationQuestion> CollectIdeationQuestions(int ideationId)

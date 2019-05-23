@@ -35,7 +35,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Niels Van Zandbergen, Xander Veldeman
+         * @author Niels Van Zandbergen, Xander Veldeman
          */
         #region Ideation
         #region Add
@@ -531,7 +531,7 @@ namespace UIMVC.Controllers
         #endregion
         
         /**
-         * @Author Niels Van Zandbergen
+         * @author Niels Van Zandbergen
          */
         #region Report
         [HttpPost]

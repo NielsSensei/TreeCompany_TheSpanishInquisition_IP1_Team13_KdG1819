@@ -32,7 +32,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Sacha Beulens
+         * @author Sacha Beulens
          */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -58,7 +58,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Sacha Beulens
+         * @author Sacha Beulens
          */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -97,7 +97,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Sacha Beulens
+         * @author Sacha Beulens
          */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -132,7 +132,7 @@ namespace UIMVC.Controllers
         
 
         /**
-         * @Author Sacha Beulens
+         * @author Sacha Beulens
          */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -174,7 +174,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Sacha Beulens
+         * @author Sacha Beulens
          */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -216,7 +216,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Sacha Beulens
+         * @author Sacha Beulens
          */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -253,7 +253,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Sacha Beulens
+         * @author Sacha Beulens
          */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -289,7 +289,7 @@ namespace UIMVC.Controllers
         #region AnswerQuestionnaire
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         [HttpGet]
         public IActionResult AnswerQuestionnaire(int questionnaireid)
@@ -319,7 +319,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         [HttpGet]
         public IActionResult NextQuestionnaire(int questionid, int questionnaireid, bool invalid = false)
@@ -352,7 +352,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          * @Documentation Xander Veldeman
          *
          * Answers a questionnaire using the AddAnswerModel which contains either an OpenAnswer, a MultipleAnswer with choices or
@@ -467,7 +467,7 @@ namespace UIMVC.Controllers
 
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         private QuestionnaireQuestion GetNextQuestion(int questionnaireId, int questionId)
         {
@@ -487,7 +487,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Author Xander Veldeman
+         * @author Xander Veldeman
          */
         public IActionResult FinishedQuestionnaire(int questionnaireId)
         {
