@@ -150,7 +150,7 @@ namespace DAL.repos
                     throw new DuplicateNameException(
                         "Dit project bestaat al of is misschien gelijkaardig. Project(ID=" + obj.Id +
                         ") dat je wil aanmaken: " +
-                        obj.Title + ". Project(ID=" + p.Title + ") dat al bestaat: " + p.Title + ".");
+                        obj.Title + ". Project(ID=" + p.Id + ") dat al bestaat: " + p.Title + ".");
                 }
             }
 
