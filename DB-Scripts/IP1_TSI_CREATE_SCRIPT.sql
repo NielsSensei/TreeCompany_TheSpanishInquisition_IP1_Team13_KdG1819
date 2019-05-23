@@ -191,6 +191,7 @@ CREATE TABLE Options(
 	OptionID INT IDENTITY,
 	OptionText NVARCHAR(150) NOT NULL,
 	QQuestionID INT NOT NULL,
+	IsCustom BIT,
 
 	/*Constraints*/
 	CONSTRAINT pk_Options PRIMARY KEY(OptionID)
