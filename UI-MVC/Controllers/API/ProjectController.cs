@@ -40,14 +40,14 @@ namespace UIMVC.Controllers.API
         [Route("SortedBy")]
         public IActionResult SortedBy(int quota, int platformId)
         {
-            var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId));
+            var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId, true));
             var visibleProjects = new List<Project>();
             
             foreach (Project project in projects)
             {
                 if (!project.Visible) continue;
                 project.Phases = projMgr.GetAllPhases(project.Id).ToList();
-                var curPhase = projMgr.GetPhase(project.CurrentPhase.Id);
+                var curPhase = projMgr.GetPhase(project.CurrentPhase.Id, true);
                 project.CurrentPhase = curPhase;
                 visibleProjects.Add(project);
             }

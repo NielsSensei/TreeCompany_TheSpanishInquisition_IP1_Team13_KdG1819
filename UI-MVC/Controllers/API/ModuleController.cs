@@ -87,7 +87,7 @@ namespace UIMVC.Controllers.API
         {
             bool isQuestionnaire = false;
 
-            Phase phase = projMgr.GetPhase(phaseId);
+            Phase phase = projMgr.GetPhase(phaseId, true);
 
             Module toReturn = new Module();
            
