@@ -17,8 +17,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using UIMVC.Services;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace UIMVC.Controllers.API
 {
     [Route("api/[controller]/[action]")]
