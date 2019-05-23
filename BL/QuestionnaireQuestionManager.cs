@@ -99,9 +99,9 @@ namespace BL
             return QuestionnaireQuestionRepo.ReadAllOptions();
         }
 
-        public IEnumerable<string> GetAllOptionsForQuestion(int questionId)
+        public IEnumerable<string> GetAllOptionsForQuestion(int questionId, bool custom = false)
         {
-            return QuestionnaireQuestionRepo.ReadAllOptionsForQuestion(questionId);
+            return QuestionnaireQuestionRepo.ReadAllOptionsForQuestion(questionId, custom);
         }
 
         #endregion

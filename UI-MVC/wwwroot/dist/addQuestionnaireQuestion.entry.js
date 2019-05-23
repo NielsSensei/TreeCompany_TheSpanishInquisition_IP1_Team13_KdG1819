@@ -106,8 +106,14 @@ let addedOptions = 0;
 
 /**
  * @author Sacha Beulens
+ * @documentation Xander Veldeman
  * 
- * Checks which dropdownvalue was selected and adds the "add option" button
+ * Kijkt welke dropdownvalue geselecteerd heeft als een vraag SINGLE, DROP of MULTI is voegt hij de addOptie toe waardoor
+ * de rest van de javascriptfile kan getriggered worden.
+ *
+ * @see Domain.UserInput.QuestionnaireQuestion
+ * @see Domain.UserInput.QuestionType
+ * 
  */
 function requiresOptions() {
     dropdownvalue = dropdown.options[dropdown.selectedIndex].value;
@@ -126,8 +132,11 @@ function requiresOptions() {
 
 /**
  * @author Sacha Beulens
+ * @documentatie Niels van Zandbergen & Xander Veldeman
  * 
- * Add the inputs
+ * Als er een Optie verwijdert wordt bijvoorbeeld de eerste (index 0) dan zorgt deze functie ervoor dat er geen
+ * ArgumentOutOfBoundsException gebeurd en kent de functie voor elk element dat nog bestaande is in de container een
+ * nieuwe ID toe.
  */
 function reassignIndex() {
     addedOptions = 0;
@@ -150,6 +159,11 @@ function reassignIndex() {
 
 /**
  * @author Sacha Beulens
+ * @documentatie Xander Veldeman
+ * 
+ * Simpele verwijdering van een optie, deze functie wordt gekoppeld aan een button die bijgevoegd is aan addOption.
+ * 
+ * @see addQuestionnaireQuestion.js.AddOption
  * 
  * Remove an option when the buttion is ticked
  */
@@ -172,8 +186,11 @@ function removeOption() {
 
 /**
  * @author Sacha Beulens
+ * @documenation Xander Veldeman
  * 
- * adds an option when clicked on the add option button
+ * Voegt een optie toe aan de modal die de gebruiker kan invullen en wordt mee gepersisteerd als optie van 
+ * QuestionnaireQuestion.
+ * 
  */
 function addOption() {
     console.log("Adding option: " + addedOptions);
