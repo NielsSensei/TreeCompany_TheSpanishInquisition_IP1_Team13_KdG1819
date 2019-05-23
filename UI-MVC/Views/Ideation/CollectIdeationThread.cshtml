@@ -1,0 +1,59 @@
+@using Domain.Projects
+@using Domain.UserInput
+@model Domain.UserInput.IdeationQuestion
+@inject UIMVC.Services.ProjectService ProjectService
+
+@{
+    Ideation ideation = ProjectService.GetIdeation(Model);
+    ViewData["Title"] = Model.QuestionTitle;
+    ViewData["Platform"] = ProjectService.GetPlatform(Model.Ideation);
+    ViewData["Project"] = ProjectService.GetProject(Model.Ideation);
+    ViewData["Module"] = ideation;
+}
+
+@section Scripts
+{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+    <script type="module" src="~/dist/closedfield.entry.js" defer></script>
+    <script type="module" src="~/dist/changeclosedfield.entry.js" defer></script>
+}
+
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col-12 col-md-10">
+            <h1 class="font-weight-bold">@ideation.Title: @Model.QuestionTitle</h1>
+        </div>
+        <a class="btn btn-primary col-12 col-md-2 h-25" asp-controller="Ideation" asp-action="CollectIdeation"
+           asp-route-id="@Model.Ideation.Id">
+            Terug Naar Ideation
+        </a>
+
+    </div>
+    <hr/>
+    <section>
+        <p>@Model.Description</p>
+        @if (Model.SiteUrl != null)
+        {
+            <p>Lees meer: <a href="">@Model.SiteUrl</a></p>
+        }
+        <hr/>
+    </section>
+
+    <div class="col-12 w-100">
+        <p>@ProjectService.CollectThreadIdeas(Model).Count() ideeën, heb jij er nog een?</p>
+        @Html.Partial("Partials/_AddIdea", new AddIdeaModel() {IdeationQuestionId = Model.Id, ParentId = 0})
+    </div>
+    <div class="row">
+        <p class="text-info">@ViewData["Message"]</p>
+    </div>
+    <hr/>
+    @foreach (Idea idea in ProjectService.CollectThreadIdeas(Model).Where(i => i.ParentIdea.Id == 0))
+    {
+        @Html.Partial("Partials/_CollectIdea", new IdeaViewModel()
+        {
+            ToView = idea, IdeaLevel = 0,
+            Voting = ProjectService.CollectVoteSettings(Model)
+        })
+        <hr/>
+    }
+</div>

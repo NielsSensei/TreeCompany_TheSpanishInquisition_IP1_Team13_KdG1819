@@ -15,11 +15,18 @@ namespace UIMVC.Services
 
         public AuthMessageSenderOptions Options { get; } //set only via Secret Manager
 
+        /**
+        * @author Xander Veldeman
+         * Send an email
+        */
         public Task SendEmailAsync(string email, string subject, string message)
         {
             return Execute(Options.SendGridKey, subject, message, email);
         }
 
+        /**
+         * Send an email using SendGrid
+         */
         public Task Execute(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);

@@ -4,6 +4,9 @@ using Domain.Projects;
 
 namespace Domain.Users
 {
+    /*
+     * @authors Nathan David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class Organisation : UimvcUser
     {
         public string NewOrgName { get; set; }

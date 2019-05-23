@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace UIMVC.Areas.Identity.Data
 {
+    /*
+     * @author Xander Veldeman
+     */
     public class UimvcUser : IdentityUser
     {
         [PersonalData]

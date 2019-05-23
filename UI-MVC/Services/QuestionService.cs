@@ -5,15 +5,16 @@ using Domain.UserInput;
 
 namespace UIMVC.Services
 {
+    /**
+     * @author Xander Veldeman
+     */
     public class QuestionService
     {
         private readonly IdeationQuestionManager _iqMgr;
-        private readonly QuestionnaireQuestionManager _qqMgr;
 
         public QuestionService()
         {
             _iqMgr = new IdeationQuestionManager();
-            _qqMgr = new QuestionnaireQuestionManager();
         }
 
         public List<IdeationQuestion> CollectIdeationQuestions(int ideationId)
@@ -21,7 +22,7 @@ namespace UIMVC.Services
             return _iqMgr.GetAllByModuleId(ideationId);
         }
 
-        public int CalculateTotalAnswers(QuestionnaireQuestion question)
+        public int CollectTotalAnswerCount(QuestionnaireQuestion question)
         {
             if (question.QuestionType != QuestionType.Multi && !question.Answers.Any() &&
                 question.Answers[0].GetType() != typeof(MultipleAnswer)) return question.Answers.Count;

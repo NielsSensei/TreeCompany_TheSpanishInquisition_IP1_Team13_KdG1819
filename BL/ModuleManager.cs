@@ -6,6 +6,9 @@ using Domain.UserInput;
 
 namespace BL
 {
+    /*
+     * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class ModuleManager
     {
         private IdeationRepository IdeationRepo { get; }
@@ -19,6 +22,9 @@ namespace BL
             _ideaMgr = new IdeationQuestionManager();
         }
 
+        /*
+         * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Ideation
         public IEnumerable<Ideation> GetIdeations(int projectId)
         {
@@ -29,8 +35,8 @@ namespace BL
             return modules;
         }
 
-        public Ideation GetIdeation(int moduleId){
-            return IdeationRepo.ReadWithModule(moduleId);
+        public Ideation GetIdeation(int moduleId, bool details){
+            return IdeationRepo.ReadWithModule(moduleId, details);
         }
 
         public Ideation GetIdeation(int phaseId, int projectId)
@@ -49,6 +55,9 @@ namespace BL
         }
         #endregion
 
+        /*
+         * @authors Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Questionnaire
         public Questionnaire GetQuestionnaire(int moduleId, bool details)
         {
@@ -80,15 +89,18 @@ namespace BL
         }
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region General Module Methods
-        public void MakeTag(string tag, int moduleId, bool questionnaire)
+        public void MakeTag(string tag, int moduleId, ModuleType type)
         {
-            if (questionnaire)
+            if (type == ModuleType.Questionnaire)
             {
                 QuestionnaireRepo.CreateTag(tag, moduleId);
             }
 
-            if (!questionnaire)
+            if (type == ModuleType.Ideation)
             {
                 IdeationRepo.CreateTag(tag, moduleId);
             }

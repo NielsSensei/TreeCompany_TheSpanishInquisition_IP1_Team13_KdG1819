@@ -1,5 +1,8 @@
 ﻿namespace DAL.Data_Access_Objects
 {
+    /*
+     * @authors Sacha Buelens, Niels Van Zandbergen & Xander Veldeman
+     */
     public class VotesDao
     {
         public int VoteId { get; set; }

@@ -26,7 +26,6 @@
     <Content Include="wwwroot\js\addQuestionnaireQuestion.js" />
     <Content Include="wwwroot\js\changeclosedfield.js" />
     <Content Include="wwwroot\js\closedfield.js" />
-    <Content Include="wwwroot\js\changeplatform.js" />
     <None Remove="$(WWWRoot)**" />
     <None Include="$(WWWRoot)**" Exclude="$(WWWRoot)dist\**" />
     <None Include="app.yaml" CopyToOutputDirectory="PreserveNewest" />
@@ -68,6 +67,26 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Data" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Moderation\ModerationTemplates\AssignRolePartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Moderation\ModerationTemplates\SidebarView.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\FieldDisplay\ClosedField.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\FieldDisplay\Field.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\FieldDisplay\ImageField.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\FieldDisplay\MapField.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\FieldDisplay\VideoField.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\_AddIdea.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\_ChangeIdea.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\_CollectIdea.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Thread\_IdeaFields.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\DisplayTemplates\Ideation.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\DisplayTemplates\Phase.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\DisplayTemplates\Project.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\DisplayTemplates\Questionnaire.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Moderation\ModerationTemplates\AssignRolePartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Platform\Moderation\ModerationTemplates\SidebarView.cshtml" />
   </ItemGroup>
 
 </Project>

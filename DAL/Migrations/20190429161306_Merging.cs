@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
+    /*
+     * @author Xander Veldeman
+     */
     public partial class Merging : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

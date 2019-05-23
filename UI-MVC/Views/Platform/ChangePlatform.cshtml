@@ -1,8 +1,7 @@
 @using Domain.Identity
-@using Domain.Projects
 @using Domain.Users
 @using UIMVC.Services
-@model CreatePlatformModel
+@model AddPlatformModel
 @inject RoleService RoleService
 
 @section Scripts
@@ -15,8 +14,8 @@
     ViewBag.Title = "Edit: " + platform.Name;
     Layout = "_Layout";
 
-    IEnumerable<UimvcUser> admins = await RoleService.GetAllAdmins(platform.Id);
-    IEnumerable<UimvcUser> mods = await RoleService.GetAllModerators(platform.Id);
+    IEnumerable<UimvcUser> admins = await RoleService.CollectAdmins(platform.Id);
+    IEnumerable<UimvcUser> mods = await RoleService.CollectModerators(platform.Id);
 }
 
 <h2>Aanpassen van @platform.Name</h2>
@@ -72,12 +71,12 @@
             @if (User.IsInRole(Role.SuperAdmin.ToString("G")))
             {
                 <h2>Wijs een admin of moderator toe aan het project</h2>
-                @Html.Partial("Partials/AssignUserPartial", new AssignUserModel() {PlatformId = platform.Id})
+                @Html.Partial("Partials/_AssignUserPartial", new AssignUserModel() {PlatformId = platform.Id})
             }
             else
             {
                 <h2>Wijs een moderator toe aan het project</h2>
-                @Html.Partial("Partials/AssignModPartial", new AssignUserModel() {PlatformId = platform.Id})
+                @Html.Partial("Partials/_AssignModPartial", new AssignUserModel() {PlatformId = platform.Id})
             }
 
         </div>
@@ -91,7 +90,7 @@
                         <div class="col-2">
                             @if (User.IsInRole(Role.SuperAdmin.ToString("G")))
                             {
-                                @Html.Partial("Partials/RemoveUserPartial", new AssignUserModel() {PlatformId = platform.Id, UserMail = admin.Email})
+                                @Html.Partial("Partials/_RemoveUserPartial", new AssignUserModel() {PlatformId = platform.Id, UserMail = admin.Email})
                             }
                             
                         </div>
@@ -114,7 +113,7 @@
                 {
                     <div class="row">
                         <div class="col-2">
-                            @Html.Partial("Partials/RemoveUserPartial", new AssignUserModel() {PlatformId = platform.Id, UserMail = mod.Email})
+                            @Html.Partial("Partials/_RemoveUserPartial", new AssignUserModel() {PlatformId = platform.Id, UserMail = mod.Email})
                         </div>
                         <div class="col-10">
                             <p class="mb-0">@mod.Name</p>

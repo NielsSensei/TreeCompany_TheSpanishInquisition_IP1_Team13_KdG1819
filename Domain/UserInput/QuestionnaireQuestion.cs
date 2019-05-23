@@ -3,6 +3,9 @@ using Domain.Projects;
 
 namespace Domain.UserInput
 {
+    /*
+     * @authors Nathan Gijselings, David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class QuestionnaireQuestion : Question
     {
         public QuestionType QuestionType { get; set; }

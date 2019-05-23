@@ -2,6 +2,9 @@
 
 namespace Domain.Projects
 {
+    /*
+     * @authors Nathan Gijselings, David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class Phase
     {
         public int Id { get; set; }

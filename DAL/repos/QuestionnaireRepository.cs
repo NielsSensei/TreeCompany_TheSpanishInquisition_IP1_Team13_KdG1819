@@ -9,6 +9,9 @@ using DAL.Data_Access_Objects;
 
 namespace DAL.repos
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class QuestionnaireRepository : IRepository<Questionnaire>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -18,6 +21,9 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Conversion Methods
         private ModulesDao ConvertToDao(Questionnaire obj)
         {
@@ -34,7 +40,7 @@ namespace DAL.repos
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
                 Tags = ExtensionMethods.ListToString(obj.Tags),
-                IsQuestionnaire = obj.ModuleType == ModuleType.Questionnaire
+                ModuleType = (byte) obj.ModuleType
             };
         }
 
@@ -58,6 +64,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Id generation
         private int FindNextAvailableQuestionnaireId()
         {
@@ -67,7 +76,22 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
         #region Questionnaire CRUD
+        /*
+        * @documentation Niels Van Zandbergen
+        *
+        * Bij de meeste Create Methodes wordt er tussen een textveld vergeleken, hier is dit niet zo. Hier vergelijken we op ParentPhase, het object,
+        * want een Module - lees Ideation of Questionnaire - heeft maar een Phase waar het is in opgestart en aan gekoppeld mag worden. Moest het toch
+        * zijn dat er iets misloopt en toch twee Modules dezelfde Phase proberen te claimen dan wordt deze exception getriggered. Merk ook op dat we
+        * hier twee tabellen moet aanspreken voor Ideation CRUD. 
+        *
+        * @see Domain.Projects.Module
+        * @see Domain.Projects.Phase
+        * 
+        */
         public Questionnaire Create(Questionnaire obj)
         {
             IEnumerable<Questionnaire> questionnaires = ReadAll(obj.Project.Id);
@@ -89,6 +113,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public Questionnaire Read(int id, bool details)
         {
             ModulesDao moduleDao = details ? _ctx.Modules.AsNoTracking().First(m => m.ModuleId == id) : _ctx.Modules.First(m => m.ModuleId == id);
@@ -134,7 +169,7 @@ namespace DAL.repos
 
             foreach (ModulesDao dao in _ctx.Modules)
             {
-                if (dao.IsQuestionnaire)
+                if (dao.ModuleType == 0)
                 {
                     Questionnaire toAdd = ConvertToDomain(dao);
                     myQuery.Add(toAdd);
@@ -150,6 +185,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Tag CRUD
         public string CreateTag(string obj, int moduleId)
         {
@@ -175,7 +213,7 @@ namespace DAL.repos
 
         public IEnumerable<String> ReadAllTags(int moduleId)
         {
-            return Read(moduleId, true).Tags;
+            return Read(moduleId, false).Tags;
         }
         #endregion
     }
