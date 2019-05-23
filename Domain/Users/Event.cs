@@ -2,6 +2,9 @@ using System;
 
 namespace Domain.Users
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class Event
     {
         public int Id { get; set; }

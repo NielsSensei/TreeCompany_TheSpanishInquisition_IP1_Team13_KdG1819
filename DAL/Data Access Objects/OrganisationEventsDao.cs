@@ -3,6 +3,9 @@ using Domain.Users;
 
 namespace DAL.Data_Access_Objects
 {
+    /*
+     * @authors Sacha Buelens & Niels Van Zandbergen
+     */
     public class OrganisationEventsDao
     {
         public int EventId { get; set; }

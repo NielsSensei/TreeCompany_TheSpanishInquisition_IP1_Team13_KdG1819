@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
+    /*
+     * @author Xander Veldeman
+     */
     [DbContext(typeof(CityOfIdeasDbContext))]
     partial class CityOfIdeasDbContextModelSnapshot : ModelSnapshot
     {

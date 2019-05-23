@@ -33,11 +33,11 @@ INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
 VALUES(5,1,'Begin van de vergroening van district Deurne','2019-07-01','2019-07-31')
 
 /* Modules */
-INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
-VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1,0,0,0,0,0,'Hoe pakken we de Groenplaats aan, onze gedachten')
+INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,ModuleType,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
+VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',0,0,0,0,0,0,'Hoe pakken we de Groenplaats aan, onze gedachten')
 
-INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
-VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0,0,0,0,0,0,'Geef uw alternatief!')
+INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,ModuleType,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
+VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',1,0,0,0,0,0,'Geef uw alternatief!')
 
 /* QuestionnaireQuestions
 0 = open

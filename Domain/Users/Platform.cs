@@ -3,6 +3,9 @@ using Domain.Identity;
 
 namespace Domain.Users
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class Platform
     {
         public int Id { get; set; }

@@ -11,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace UIMVC.Services
 {
+    /**
+     * @author Xander Veldeman
+     */
     public class RoleService
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -23,13 +26,17 @@ namespace UIMVC.Services
             _userManager = userManager;
             _configuration = configuration;
 
-            CreateRoles();
-            CreateTestUsers();
+            AddRoles();
+            AddTestUsers();
         }
 
         #region TestUser
 
-        private async void CreateTestUsers()
+        /**
+         * @author Xander Veldeman
+         * Creates the testusers for a project
+         */
+        private async void AddTestUsers()
         {
             if (await _userManager.FindByEmailAsync(_configuration["SuperAdmin:Email"]) == null)
             {
@@ -140,8 +147,13 @@ namespace UIMVC.Services
 
         #endregion
 
-        #region CreateRoles
-        private async void CreateRoles()
+        #region AddRoles
+        /**
+         * @author Xander Veldeman
+         *
+         * Creates the roles based on the Enum Domain.Users.Role
+         */
+        private async void AddRoles()
         {
             foreach (Role role in Enum.GetValues(typeof(Role)))
             {
@@ -154,7 +166,6 @@ namespace UIMVC.Services
         #endregion
 
         #region AddRole
-
         public async void  AssignToRole(UimvcUser user, Role role)
         {
             if (!await _roleManager.RoleExistsAsync(role.ToString())) return;
@@ -165,8 +176,8 @@ namespace UIMVC.Services
 
         #endregion
 
-        #region GetRolesUser
-        public async Task<IEnumerable<string>> GetRolesForUser(UimvcUser user)
+        #region CollectUserRoles
+        public async Task<IEnumerable<string>> CollectUserRoles(UimvcUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
             return roles;
@@ -174,6 +185,11 @@ namespace UIMVC.Services
 
         #endregion
 
+        /**
+         * @author Xander Veldeman
+         * 
+         * Checks if the user is in a role or a higher role
+         */
         #region Authorization
         public async Task<bool> IsVerified(ClaimsPrincipal user)
         {
@@ -222,7 +238,7 @@ namespace UIMVC.Services
 
             return false;
         }
-
+        
         public async Task<bool> IsSameRoleOrHigher(ClaimsPrincipal appUserClaim, UimvcUser userCompare)
         {
             UimvcUser appUser = await _userManager.GetUserAsync(appUserClaim);
@@ -267,9 +283,7 @@ namespace UIMVC.Services
 
             throw new Exception("You shouldn't be able to get here");
         }
-        #endregion
-
-        #region Auhorization
+        
         public async Task<bool> IsSameRoleOrLower(ClaimsPrincipal userClaim, Role roleCheck)
         {
             UimvcUser user = await _userManager.GetUserAsync(userClaim);
@@ -294,10 +308,13 @@ namespace UIMVC.Services
         }
         #endregion
 
+        /**
+         * @author Xander Veldeman
+         *
+         * Get all users of a certain type
+         */
         #region Users
-
-
-        public async Task<IEnumerable<UimvcUser>> GetAllAdmins(int platformId)
+        public async Task<IEnumerable<UimvcUser>> CollectAdmins(int platformId)
         {
             List<UimvcUser> users = new List<UimvcUser>();
             foreach (UimvcUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
@@ -311,7 +328,7 @@ namespace UIMVC.Services
             return users;
         }
 
-        public async Task<IEnumerable<UimvcUser>> GetAllModerators(int platformId)
+        public async Task<IEnumerable<UimvcUser>> CollectModerators(int platformId)
         {
             List<UimvcUser> users = new List<UimvcUser>();
             foreach (UimvcUser user in _userManager.Users.Where(user => user.PlatformDetails == platformId))
@@ -324,7 +341,6 @@ namespace UIMVC.Services
 
             return users;
         }
-
         #endregion
     }
 }

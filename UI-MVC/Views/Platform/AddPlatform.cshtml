@@ -1,0 +1,95 @@
+﻿@using Domain.Users
+@model AddPlatformModel
+@{
+    ViewData["Title"] = "Platforms";
+    IEnumerable<Platform> platforms = (IEnumerable<Platform>) ViewData["platforms"];
+}
+
+@section Scripts
+{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
+<div class="container createPlatform">
+    <div class="row">
+        <div class="col-md-9">
+            <h2>Alle beschikbare platformen</h2>
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-target="#makePlatformModal"> Maak een platform
+            </button>
+        </div>
+    </div>
+    <div>
+        @if (platforms == null || !platforms.Any())
+        {
+            <h4>Er zijn geen platforms :(</h4>
+        }
+        else
+        {
+            <table class="table">
+                <tr>
+                    <th>PlatformId</th>
+                    <th>Eigenaar</th>
+                    <th>Aanpassen</th>
+                </tr>
+                @foreach (Platform platform in platforms)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="Index" asp-controller="Platform" asp-route-id="@platform.Id">@platform.Name</a>
+                        </td>
+                        <td>Owner</td>
+                        <td>
+                            <a asp-action="ChangePlatform" asp-controller="Platform" asp-route-id="@platform.Id">Aanpassen</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="makePlatformModal" tabindex="-1" role="dialog"
+     aria-labelledby="makePlatformModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form asp-controller="Platform" asp-action="AddPlatform" method="post" enctype="multipart/form-data">
+                <div class="modal-body m-auto">
+                    <div class="form-group">
+                        <label asp-for="Name">Naam van het platform</label>
+                        <input asp-for="Name" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Url">Een verkorte URL</label>
+                        <input asp-for="Url" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <p>Geef hier het icoontje</p>
+                            @Html.TextBoxFor(m => m.IconImage, new { type = "file" })
+                            @Html.ValidationMessageFor(m => m.IconImage)
+                            <hr/>
+                        </div>
+                        <div class="col-md-10">
+                            <p>Geef hier de foto voor de voorpagina van het platform</p>
+                            @Html.TextBoxFor(m => m.FrontPageImage, new { type = "file" })
+                            @Html.ValidationMessageFor(m => m.FrontPageImage)
+                            <hr/>
+                        </div>
+                        <div class="col-md-10">
+                            <p>Geef hier de foto voor de startpagina van de website</p>
+                            @Html.TextBoxFor(m => m.CarouselImage, new { type = "file" })
+                            @Html.ValidationMessageFor(m => m.CarouselImage)
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Maak dit platform aan"/>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+@using Domain.UserInput
+@using UIMVC.Services
+@model Domain.UserInput.QuestionnaireQuestion
+@inject UserService UserService
+@inject QuestionService QuestionService
+
+<button type="button" class="btn btn-primary" data-toggle="modal"
+        data-target="#questionResultModal@(Model.Id)">
+    Resultaten
+</button>
+
+<section class="modal fade" id="questionResultModal@(Model.Id)" role="dialog" aria-hidden="true" aria-labelledby="questionResultModal">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Resultaat van @Model.Id: @Model.QuestionText</h3>
+            </div>
+            <div class="modal-body">
+                @if (Model.QuestionType == QuestionType.Open || Model.QuestionType == QuestionType.Mail)
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Gebruiker</th>
+                            <th>Antwoord</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var answer in Model.Answers)
+                        {
+                            <tr>
+                                <td>@UserService.CollectUserName((answer as OpenAnswer)?.User.Id) </td>
+                                <td>@((answer as OpenAnswer)?.AnswerText)</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                @if (Model.QuestionType == QuestionType.Single || Model.QuestionType == QuestionType.Drop)
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Optie</th>
+                            <th>#</th>
+                            <th>%</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @for (int i = 0; i < Model.Options.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.Options[i]</td>
+                                @if (Model.Answers != null && Model.Answers.Any())
+                                {
+                                    <td>@Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i])</td>
+                                    <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer)?.Choices[0] == Model.Options[i]) / (double) Model.Answers.Count) * 100, 2)%</td>
+                                }
+                                else
+                                {
+                                    <td>Geen antwoorden</td>
+                                }
+
+                            </tr>
+                        }
+
+                        </tbody>
+                    </table>
+                }
+                @if (Model.QuestionType == QuestionType.Multi)
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Optie</th>
+                            <th>#</th>
+                            <th>%</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @for (int i = 0; i < Model.Options.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.Options[i]</td>
+                                @if (Model.Answers != null && Model.Answers.Any())
+                                {
+                                    <td>@Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(Model.Options[i]))</td>
+                                    <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(Model.Options[i])) / (double) QuestionService.CollectTotalAnswerCount(Model)) * 100, 2)%</td>
+                                }
+                                else
+                                {
+                                    <td>Geen antwoorden</td>
+                                }
+                            </tr>
+                        }
+
+                        </tbody>
+                    </table>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+            </div>
+        </div>
+    </div>
+</section>

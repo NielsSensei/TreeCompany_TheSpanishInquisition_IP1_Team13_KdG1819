@@ -1,5 +1,8 @@
 ﻿namespace DAL.Data_Access_Objects
 {
+    /*
+     * @authors Sacha Buelens & Niels Van Zandbergen
+     */
     public class QuestionnaireQuestionsDao
     {
         public int QquestionId { get; set; }

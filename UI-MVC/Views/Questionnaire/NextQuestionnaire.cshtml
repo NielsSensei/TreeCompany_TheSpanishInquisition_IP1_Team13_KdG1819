@@ -2,7 +2,7 @@
 @using Domain.Projects
 @using Domain.UserInput
 @using UIMVC.Services
-@model AddAnswer
+@model AddAnswerModel
 @inject RoleService RoleService
 @inject ProjectService ProjectService
 @{
@@ -22,7 +22,7 @@
     {
         <div class="row align-items-center">
             <h1 class="col-10">@questionnaire.Title</h1>
-            <a class="btn btn-primary col-2 h-25" asp-controller="Questionnaire" asp-action="EditQuestionnaire" asp-route-questionnaireid="@questionnaire.Id">Pas aan</a>
+            <a class="btn btn-primary col-2 h-25" asp-controller="Questionnaire" asp-action="ChangeQuestionnaire" asp-route-questionnaireid="@questionnaire.Id">Pas aan</a>
         </div>
     }
     else
@@ -40,7 +40,7 @@
 }
 @if (questionnaire.OnGoing)
 {
-    @Html.Partial("Partials/AnswerQuestionnairePartial")
+    @Html.Partial("Partials/_AnswerQuestionnairePartial")
 }
 else
 {

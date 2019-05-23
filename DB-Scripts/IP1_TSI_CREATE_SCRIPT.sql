@@ -96,7 +96,7 @@ CREATE TABLE Modules(
 	ShareCount INT,
 	RetweetCount INT,
 	Tags VARCHAR(255),
-	IsQuestionnaire BIT NOT NULL,
+	ModuleType TINYINT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Modules PRIMARY KEY(ModuleID)

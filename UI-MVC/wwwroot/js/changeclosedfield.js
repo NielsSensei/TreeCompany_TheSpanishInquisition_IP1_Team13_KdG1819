@@ -1,7 +1,18 @@
-console.log("changeclosedfield active!");
+//console.log("changeclosedfield active!");
 
 let addedFieldStrings = 0;
 
+/**
+ * @author Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param index: Index is hier gelijkgesteld aan het aan te passen idee. 
+ * 
+ * Deze row met index is ook het aanspreek punt voor de andere functies.
+ *
+ * @returns {HTMLDivElement}
+ *
+ */
 function addDivRow(index){
     let out = document.createElement("div");
     out.classList.add("editcontainerRow");
@@ -11,6 +22,13 @@ function addDivRow(index){
     return out;
 }
 
+
+/**
+ * @author Niels Van Zandbergen
+ *
+ * @returns {HTMLDivElement}
+ *
+ */
 function addDivColumn(){
     let out = document.createElement("div");
     out.classList.add("editcontainerColumn");
@@ -19,6 +37,15 @@ function addDivColumn(){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param index: Index is hier gelijkgesteld aan het aan te passen idee.
+ *
+ * @returns {HTMLInputElement}
+ *
+ */
 function addInputPart(index){
     let out = document.createElement("input");
     out.setAttribute("type", "text");
@@ -30,6 +57,15 @@ function addInputPart(index){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param index: Index is hier gelijkgesteld aan het aan te passen idee.
+ *
+ * @returns {HTMLAnchorElement}
+ *
+ */
 function addRemoveButton(index){
     let out = document.createElement("a");
     out.classList.add("btn");
@@ -41,6 +77,19 @@ function addRemoveButton(index){
     return out;
 }
 
+/**
+ * @author Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Idea: Idea is hier gelijkgesteld aan het aan te passen idee. 
+ * 
+ * Hier halen we de row van de addDivRow mee op.
+ *
+ * @see changeclosedfield.js.addDivRow.
+ *
+ * @returns {HTMLDivElement}
+ *
+ */
 function collectContainer(Idea){
     let containers = document.querySelectorAll(".editContainer");
     let out = undefined;
@@ -55,6 +104,17 @@ function collectContainer(Idea){
     return out;
 }
 
+/**
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Idea: Idea is hier gelijkgesteld aan het aan te passen idee.
+ * 
+ * Net zoals assignIndexes herziet hem alle indexen binnen dezelfde container om Exceptions te voorkomen.
+ *
+ * @see addQuestionnaireQuestion.js.assignIndexes
+ *
+ */
 function redoIndexes(Idea){
     let container = collectContainer(Idea);
     addedFieldStrings = 0;
@@ -76,8 +136,17 @@ function redoIndexes(Idea){
 
 }
 
+/**
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Idea: Idea is hier gelijkgesteld aan het aan te passen idee. Dit is ook het aanspreekpunt voor de container
+ * waar we de closedfieldoption gaan verwijderen.
+ * @param index: Dit is de index binnen de container.
+ *
+ */
 function destroyClosedFieldPart(Idea, index){
-    console.log("Removing element: " + Idea + "." + index);
+    // console.log("Removing element: " + Idea + "." + index);
 
     let containerrows = document.querySelectorAll(".editcontainerRow");
 
@@ -90,6 +159,18 @@ function destroyClosedFieldPart(Idea, index){
     redoIndexes(Idea);
 }
 
+/**
+ * @authors Sacha Buelens & Niels Van Zandbergen
+ * @documentation Niels Van Zandbergen
+ *
+ * @param Idea: Idea is hier gelijkgesteld aan het aan te passen idee. Dit is ook het aanspreekpunt voor de container
+ * waar we de closedfieldoption gaan toevoegen. 
+ * 
+ * Waarom worden er voor elke destroybutton nog eens de eventhandlers toegevoegd? Goede vraag, de reden hiervoor is dat als we 
+ * de modal ophalen voor EditIdea we voor elke option deze ook toevoegen aan de lijst in uniforme stijl met de deze javascript 
+ * maar deze buttons deden voordien niets. 
+ *
+ */
 function addClosedFieldPart(Idea){
     let container = collectContainer(Idea);
 

@@ -8,7 +8,7 @@
 
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
-    int platformId = await UserService.GetUserPlatform(User);
+    int platformId = await UserService.CollectUserPlatform(User);
 }
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
@@ -37,16 +37,16 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" asp-controller="Moderation" asp-action="CollectAllUsers">Toon alle gebruikers</a>
+            <a class="nav-link" asp-controller="Platform" asp-action="CollectAllUsers">Toon alle gebruikers</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" asp-controller="Moderation" asp-action="CollectAllIdeas">Toon alle ideeën</a>
+            <a class="nav-link" asp-controller="Ideation" asp-action="CollectAllIdeas">Toon alle ideeën</a>
         </li>
 
         @if (RoleService.IsSuperAdmin(User).Result)
          {
              <li class="nav-item">
-                 <a class="nav-link" asp-controller="Moderation" asp-action="AddPlatform">Platform Management</a>
+                 <a class="nav-link" asp-controller="Platform" asp-action="AddPlatform">Platform Management</a>
              </li>
          }
 

@@ -1,5 +1,8 @@
 namespace Domain.Users
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public enum Role
     {
         Anonymous     = 1,

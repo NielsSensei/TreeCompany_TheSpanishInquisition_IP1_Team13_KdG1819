@@ -14,14 +14,15 @@ using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
+    /*
+     * @authors Sacha Buelens & Xander Veldeman
+     */
     public class QuestionnaireController : Controller
     {
         private ModuleManager ModMgr { get; }
         private ProjectManager ProjMgr { get; }
         private QuestionnaireQuestionManager QqMgr { get; }
-
         private UserManager<UimvcUser> _userManager;
-
         private UserService _userService;
 
         public QuestionnaireController(UserManager<UimvcUser> userManager, UserService userService)
@@ -33,6 +34,9 @@ namespace UIMVC.Controllers
             _userService = userService;
         }
 
+        /**
+         * @author Sacha Beulens
+         */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult AddQuestionnaire(int projectId)
@@ -56,18 +60,20 @@ namespace UIMVC.Controllers
             return View();
         }
 
-
+        /**
+         * @author Sacha Beulens
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult AddQuestionnaire(CreateQuestionnaireModel cqm, int projectId)
+        public IActionResult AddQuestionnaire(AddQuestionnaireModel cqm, int projectId)
         {
             if (cqm == null)
             {
                 return BadRequest("Questionnaire cannot be NULL!");
             }
 
-            Project questionnaireProject = ProjMgr.GetProject(projectId, false);
-            Phase parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+            Project questionnaireProject = ProjMgr.GetProject(projectId, true);
+            Phase parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()), false);
 
             Questionnaire newQuestionnaire = new Questionnaire
             {
@@ -90,12 +96,15 @@ namespace UIMVC.Controllers
             newQuestionnaire.Phases.Add(parentPhase);
             ModMgr.MakeQuestionnaire(newQuestionnaire);
 
-            return RedirectToAction("EditQuestionnaire", new {questionnaireId = newQuestionnaire.Id});
+            return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = newQuestionnaire.Id});
         }
 
+        /**
+         * @author Sacha Beulens
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult AddQuestionnaireQuestion(int questionnaireId, CreateQuestionnaireQuestionModel cqqm)
+        public IActionResult AddQuestionnaireQuestion(int questionnaireId, AddQuestionnaireQuestionModel cqqm)
         {
             Questionnaire toAdd = ModMgr.GetQuestionnaire(questionnaireId, false);
             QuestionnaireQuestion newQuestion = new QuestionnaireQuestion
@@ -121,17 +130,21 @@ namespace UIMVC.Controllers
             QqMgr.MakeQuestion(newQuestion, toAdd.Id);
             ModMgr.EditQuestionnaire(toAdd);
 
-            return RedirectToAction("EditQuestionnaire", new {questionnaireId = toAdd.Id});
+            return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = toAdd.Id});
         }
+        
 
+        /**
+         * @author Sacha Beulens
+         */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult EditQuestionnaire(int questionnaireId)
+        public IActionResult ChangeQuestionnaire(int questionnaireId)
         {
             Questionnaire q = ModMgr.GetQuestionnaire(questionnaireId, false);
 
             List<Phase> availablePhases = new List<Phase>();
-            Phase parentPhase = ProjMgr.GetPhase(q.ParentPhase.Id);
+            Phase parentPhase = ProjMgr.GetPhase(q.ParentPhase.Id, true);
             List<QuestionnaireQuestion> questions = QqMgr.GetAllByModuleId(questionnaireId).ToList();
             foreach (QuestionnaireQuestion question in questions)
             {
@@ -159,13 +172,16 @@ namespace UIMVC.Controllers
 
             ViewData["Project"] = q.Project;
             ViewData["Questionnaire"] = q;
-            ViewData["Cqqm"] = new CreateQuestionnaireQuestionModel();
+            ViewData["Cqqm"] = new AddQuestionnaireQuestionModel();
             return View();
         }
 
+        /**
+         * @author Sacha Beulens
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult EditQuestionnaire(EditQuestionnaireModel eqm, int questionnaireid)
+        public IActionResult ChangeQuestionnaire(ChangeQuestionnaireModel eqm, int questionnaireid)
         {
             Questionnaire toBeUpdated = ModMgr.GetQuestionnaire(questionnaireid, false);
 
@@ -174,10 +190,10 @@ namespace UIMVC.Controllers
 
             if (!parentPhaseContent.Equals(""))
             {
-                parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()));
+                parentPhase = ProjMgr.GetPhase(Int32.Parse(Request.Form["ParentPhase"].ToString()), false);
                 parentPhase.Module = toBeUpdated;
 
-                Phase previousParent = ProjMgr.GetPhase(toBeUpdated.ParentPhase.Id);
+                Phase previousParent = ProjMgr.GetPhase(toBeUpdated.ParentPhase.Id, false);
                 previousParent.Module = null;
 
 
@@ -199,16 +215,19 @@ namespace UIMVC.Controllers
 
             ModMgr.EditQuestionnaire(toBeUpdated);
 
-            return RedirectToAction("EditQuestionnaire", new {questionnaireId = questionnaireid});
+            return RedirectToAction("ChangeQuestionnaire", new {questionnaireId = questionnaireid});
         }
 
+        /**
+         * @author Sacha Beulens
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult DeleteQuestionnaire(int questionnaireid)
         {
             Questionnaire questionnaire = ModMgr.GetQuestionnaire(questionnaireid, false);
 
-            Phase parentPhase = ProjMgr.GetPhase(questionnaire.ParentPhase.Id);
+            Phase parentPhase = ProjMgr.GetPhase(questionnaire.ParentPhase.Id, false);
             parentPhase.Module = null;
             ProjMgr.EditPhase(parentPhase);
 
@@ -233,14 +252,17 @@ namespace UIMVC.Controllers
 
             ModMgr.RemoveModule(questionnaireid, true);
 
-            return RedirectToAction("CollectProject", "Platform", new {id = questionnaire.Project.Id});
+            return RedirectToAction("CollectProject", "Project", new {id = questionnaire.Project.Id});
         }
 
+        /**
+         * @author Sacha Beulens
+         */
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult DeleteQuestionnaireQuestion(int questionid)
         {
-            QuestionnaireQuestion toDelete = QqMgr.GetQuestion(questionid, true);
+            QuestionnaireQuestion toDelete = QqMgr.GetQuestion(questionid, false);
 
             if (toDelete.QuestionType == QuestionType.Drop || toDelete.QuestionType == QuestionType.Multi ||
                 toDelete.QuestionType == QuestionType.Single)
@@ -257,18 +279,14 @@ namespace UIMVC.Controllers
             }
 
             QqMgr.RemoveQuestion(questionid);
-            return RedirectToAction("EditQuestionnaire", new {questionnaireid = toDelete.Module.Id});
+            return RedirectToAction("ChangeQuestionnaire", new {questionnaireid = toDelete.Module.Id});
         }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult EditQuestionnaireQuestion(int questionid)
-        {
-            throw new NotImplementedException("Work In Progress");
-        }
-
+        
         #region AnswerQuestionnaire
 
+        /**
+         * @author Xander Veldeman
+         */
         [HttpGet]
         public IActionResult AnswerQuestionnaire(int questionnaireid)
         {
@@ -293,9 +311,12 @@ namespace UIMVC.Controllers
             ViewData["Question"] = questionnaire.Questions[0];
             ViewData["Questionnaire"] = questionnaire;
 
-            return View(new AddAnswer());
+            return View(new AddAnswerModel());
         }
 
+        /**
+         * @author Xander Veldeman
+         */
         [HttpGet]
         public IActionResult NextQuestionnaire(int questionid, int questionnaireid, bool invalid = false)
         {
@@ -323,11 +344,24 @@ namespace UIMVC.Controllers
 
             ViewData["Question"] = question;
             ViewData["Questionnaire"] = questionnaire;
-            return View(new AddAnswer());
+            return View(new AddAnswerModel());
         }
 
+        /**
+         * @author Xander Veldeman
+         * @documentation Xander Veldeman
+         *
+         * @params AddAnswerModel: voorziet een antwoord op een questionnaire met een OpenAnswer, MultipleAnswer of een
+         * lijst van Checkbox antwoorden. Het model heeft zoizo een van deze 3 type properties. Indien het niet zo is,
+         * worden de antwoorden invalide verklaart.
+         *
+         * @see UIMVC.Models.AddAnswerModel
+         * @see Domain.UserInput.MultipleAnswer
+         * @see Domain.UserInput.OpenAnswer
+         * 
+         */
         [HttpPost]
-        public async Task<IActionResult> AnswerQuestionnaire(AddAnswer addAnswer, int questionId, int questionnaireId)
+        public async Task<IActionResult> AnswerQuestionnaire(AddAnswerModel addAnswerModel, int questionId, int questionnaireId)
         {
             QuestionnaireQuestion question = QqMgr.GetQuestion(questionId, true);
 
@@ -338,14 +372,14 @@ namespace UIMVC.Controllers
             }
             else
             {
-                user = _userService.GetAnonymousUser();
+                user = _userService.CollectAnonymousUser();
             }
 
-            if (addAnswer.MultipleAnswer?.Choices != null && addAnswer.MultipleAnswer.Choices[0] != null)
+            if (addAnswerModel.MultipleAnswer?.Choices != null && addAnswerModel.MultipleAnswer.Choices[0] != null)
             {
                 if (!question.Optional)
                 {
-                    if (addAnswer.MultipleAnswer.Choices == null || !addAnswer.MultipleAnswer.Choices.Any())
+                    if (addAnswerModel.MultipleAnswer.Choices == null || !addAnswerModel.MultipleAnswer.Choices.Any())
                     {
                         return RedirectToAction("NextQuestionnaire",
                             new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
@@ -354,18 +388,18 @@ namespace UIMVC.Controllers
 
                 MultipleAnswer answer = new MultipleAnswer()
                 {
-                    Choices = addAnswer.MultipleAnswer.Choices,
-                    DropdownList = addAnswer.MultipleAnswer.DropdownList,
+                    Choices = addAnswerModel.MultipleAnswer.Choices,
+                    DropdownList = addAnswerModel.MultipleAnswer.DropdownList,
                     Question = question,
                     User = user,
                 };
                 QqMgr.MakeAnswer(answer);
             }
-            else if (addAnswer.OpenAnswer != null)
+            else if (addAnswerModel.OpenAnswer != null)
             {
                 if (!question.Optional)
                 {
-                    if (addAnswer.OpenAnswer.AnswerText == null || !addAnswer.OpenAnswer.AnswerText.Any())
+                    if (addAnswerModel.OpenAnswer.AnswerText == null || !addAnswerModel.OpenAnswer.AnswerText.Any())
                     {
                         return RedirectToAction("NextQuestionnaire",
                             new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
@@ -373,12 +407,12 @@ namespace UIMVC.Controllers
                 }
 
                 OpenAnswer answer;
-                if (addAnswer.OpenAnswer.AnswerText == null)
+                if (addAnswerModel.OpenAnswer.AnswerText == null)
                 {
                     answer = new OpenAnswer()
                     {
                         AnswerText = "EMPTY",
-                        IsUserEmail = addAnswer.OpenAnswer.IsUserEmail,
+                        IsUserEmail = addAnswerModel.OpenAnswer.IsUserEmail,
                         Question = question,
                         User = user
                     };
@@ -387,8 +421,8 @@ namespace UIMVC.Controllers
                 {
                     answer = new OpenAnswer()
                     {
-                        AnswerText = addAnswer.OpenAnswer.AnswerText,
-                        IsUserEmail = addAnswer.OpenAnswer.IsUserEmail,
+                        AnswerText = addAnswerModel.OpenAnswer.AnswerText,
+                        IsUserEmail = addAnswerModel.OpenAnswer.IsUserEmail,
                         Question = question,
                         User = user
                     };
@@ -396,12 +430,12 @@ namespace UIMVC.Controllers
 
                 QqMgr.MakeAnswer(answer);
             }
-            else if (addAnswer.CheckboxAnswers != null)
+            else if (addAnswerModel.CheckboxAnswers != null)
             {
                 if (!question.Optional)
                 {
-                    if (addAnswer.CheckboxAnswers == null ||
-                        addAnswer.CheckboxAnswers.All(checkboxAnswer => checkboxAnswer.Checked == false))
+                    if (addAnswerModel.CheckboxAnswers == null ||
+                        addAnswerModel.CheckboxAnswers.All(checkboxAnswer => checkboxAnswer.Checked == false))
                     {
                         return RedirectToAction("NextQuestionnaire",
                             new {questionId = questionId, questionnaireId = questionnaireId, invalid = true});
@@ -410,7 +444,7 @@ namespace UIMVC.Controllers
 
                 MultipleAnswer answer = new MultipleAnswer()
                 {
-                    Choices = new List<string>(addAnswer.CheckboxAnswers.ToList()
+                    Choices = new List<string>(addAnswerModel.CheckboxAnswers.ToList()
                         .Where(checkboxAnswer => checkboxAnswer.Checked)
                         .Select(checkboxAnswer => checkboxAnswer.Value)),
                     DropdownList = false,
@@ -433,6 +467,9 @@ namespace UIMVC.Controllers
         }
 
 
+        /**
+         * @author Xander Veldeman
+         */
         private QuestionnaireQuestion GetNextQuestion(int questionnaireId, int questionId)
         {
             var questions = QqMgr.GetAllByModuleId(questionnaireId);
@@ -450,6 +487,9 @@ namespace UIMVC.Controllers
             return question;
         }
 
+        /**
+         * @author Xander Veldeman
+         */
         public IActionResult FinishedQuestionnaire(int questionnaireId)
         {
             var questionnaire = ModMgr.GetQuestionnaire(questionnaireId, true);
