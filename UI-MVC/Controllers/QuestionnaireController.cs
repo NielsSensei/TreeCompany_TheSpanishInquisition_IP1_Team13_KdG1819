@@ -14,6 +14,9 @@ using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
+    /*
+     * @authors Sacha Buelens & Xander Veldeman
+     */
     public class QuestionnaireController : Controller
     {
         private ModuleManager ModMgr { get; }
@@ -278,14 +281,7 @@ namespace UIMVC.Controllers
             QqMgr.RemoveQuestion(questionid);
             return RedirectToAction("ChangeQuestionnaire", new {questionnaireid = toDelete.Module.Id});
         }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin, SuperAdmin")]
-        public IActionResult EditQuestionnaireQuestion(int questionid)
-        {
-            throw new NotImplementedException("Scrapped");
-        }
-
+        
         #region AnswerQuestionnaire
 
         /**
@@ -353,11 +349,16 @@ namespace UIMVC.Controllers
 
         /**
          * @author Xander Veldeman
-         * @Documentation Xander Veldeman
+         * @documentation Xander Veldeman
          *
-         * Answers a questionnaire using the AddAnswerModel which contains either an OpenAnswer, a MultipleAnswer with choices or
-         * a list with Checkbox answers. This model should always have one of these three values. If it doesn't, the
-         * application will ask the question again.
+         * @params AddAnswerModel: voorziet een antwoord op een questionnaire met een OpenAnswer, MultipleAnswer of een
+         * lijst van Checkbox antwoorden. Het model heeft zoizo een van deze 3 type properties. Indien het niet zo is,
+         * worden de antwoorden invalide verklaart.
+         *
+         * @see UIMVC.Models.AddAnswerModel
+         * @see Domain.UserInput.MultipleAnswer
+         * @see Domain.UserInput.OpenAnswer
+         * 
          */
         [HttpPost]
         public async Task<IActionResult> AnswerQuestionnaire(AddAnswerModel addAnswerModel, int questionId, int questionnaireId)

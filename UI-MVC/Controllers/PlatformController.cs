@@ -14,6 +14,9 @@ using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
+    /*
+     * @authors Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class PlatformController : Controller
     {
         private readonly PlatformManager _platformMgr;
@@ -28,10 +31,14 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @author Xander Veldeman, Niels Van Zandbergen
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         * @documenation Xander Veldeman
          *
-         * Shows the platform
-         * @Param message: simple status messages
+         * @params id: representatie van een Platform
+         * @params message: simpele status berichtjes
+         *
+         * Voorpagina van het platform.
+         * 
          */
         [Route("Platform/{id}")]
         public IActionResult Index(int id, string message)
@@ -50,16 +57,14 @@ namespace UIMVC.Controllers
 
             return View(platform);
         }
-
-        /**
-         * @author Xander Veldeman
-         */
+        
         #region Platform
-
         /**
          * @author Xander Veldeman
+         * documenation Xander Veldeman
          *
-         * Search for a platform based on it's name and URL
+         * Zoekfunctie naar een platform op basis van de websiteUrl en de naam.
+         * 
          */
         public IActionResult Search(string search)
         {
@@ -69,12 +74,11 @@ namespace UIMVC.Controllers
         }
 
         #endregion
-
+        
+        #region Change
         /**
          * @author Xander Veldeman
          */
-        #region Change
-
         [HttpGet]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> ChangePlatform(int id)
@@ -93,6 +97,22 @@ namespace UIMVC.Controllers
             ViewData["platform"] = platform;
             return View();
         }
+        
+        /**
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         * @documentation Xander Veldeman
+         *
+         * @params platformId: Id representatie van het Platformobject, wordt gebruikt voor het juiste platform aan te
+         * passen.
+         * @params cpm: een AddPlatformModel met representatie van Platform voor te tonen en aan te passen, wat uniek is
+         * is dat de PlatformImages gestockeerd worden in een IFormFile en geconverteerd naar een byte array die
+         * gepersisteerd wordt. Merk ook op dat dit een async methode is omdat deze images asyncroon worden toegevoegd
+         * aan de byte array zodat er geen enkele byte overgeslagen heeft.
+         *
+         * @see IFormFile
+         * @see MemoryStream
+         * 
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> ChangePlatform(AddPlatformModel platformEdit, int platformId)
@@ -135,6 +155,9 @@ namespace UIMVC.Controllers
             return RedirectToAction("ChangePlatform", new {id = platform.Id});
         }
 
+        /**
+         * @author Xander Veldeman
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> AssignAdmin(string usermail, int platformId)
@@ -149,13 +172,12 @@ namespace UIMVC.Controllers
 
             return Ok(user);
         }
-
         #endregion
-
-        /**
-         * @author Xander Veldeman, Niels Van Zandbergen
-         */
+        
         #region AddPlatform
+        /**
+         * @author Xander Veldeman
+         */
         [HttpGet]
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult AddPlatform()
@@ -165,9 +187,17 @@ namespace UIMVC.Controllers
         }
 
         /**
-         * @Documentation Xander Veldeman
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         * @documentation Xander Veldeman
          *
-         * Images get taken from the AddPlatformModel as IFormFile and are converted to a byte array for storage
+         * @params cpm: een AddPlatformModel met representatie van Platform voor te tonen en aan te passen, wat uniek is
+         * is dat de PlatformImages gestockeerd worden in een IFormFile en geconverteerd naar een byte array die
+         * gepersisteerd wordt. Merk ook op dat dit een async methode is omdat deze images asyncroon worden toegevoegd
+         * aan de byte array zodat er geen enkele byte overgeslagen heeft.
+         *
+         * @see IFormFile
+         * @see MemoryStream
+         *
          */
         [HttpPost]
         [Authorize(Roles = "SuperAdmin")]
@@ -211,10 +241,11 @@ namespace UIMVC.Controllers
 
         /**
          * @author Xander Veldeman
-         * @Documentation Xander Veldeman
+         * @documentation Xander Veldeman
          *
-         * A superadmin can assign any user to a platform.
-         * An admin can only assign users of his own platform.
+         * Een superadmin kan elke user aan een platform toekennen. Bij een admin is dit enkel beperkt tot zijn/haar
+         * eigen platform.
+         * 
          */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
@@ -264,23 +295,20 @@ namespace UIMVC.Controllers
         }
 
         #endregion
-
-        /**
-         * @author Xander Veldeman, Edwin Kai Yin Tam
-         */
-        #region UIMVCUser
         
+        #region UIMVCUser
         /**
-         * @Documentation Xander Veldeman
+         * @authors Edwin Kai Yin Tam & Xander Veldeman
+         * @documentation Xander Veldeman
          *
-         * If the user is an admin or moderator, this will return the users of their platform.
-         * If the user is a superadmin, it will display ALL users.
+         * Als een user superadmin is worden alle gebruikers opgeroepen, bij admin of moderator is het hier weer beperkt tot
+         * hun eigen platform.
+         * 
          */
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public async Task<IActionResult> CollectAllUsers(string sortOrder, string searchString)
         {
-
             ViewData["CurrentFilter"] = searchString;
             var users = (IEnumerable<UimvcUser>)_userManager.Users;
 
@@ -308,6 +336,9 @@ namespace UIMVC.Controllers
             return View(users);
         }
 
+        /*
+         * @authors Edwin Kai Yin Tam & Xander Veldeman
+         */
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public async Task<IActionResult> ToggleBanUser(string userId)
@@ -328,6 +359,9 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectAllUsers");
         }
 
+        /*
+         * @author Xander Veldeman
+         */
         [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> SetRole(AssignRoleModel arm, string userId)
         {

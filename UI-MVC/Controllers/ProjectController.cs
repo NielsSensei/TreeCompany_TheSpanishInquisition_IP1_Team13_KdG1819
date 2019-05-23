@@ -14,6 +14,9 @@ using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
+    /*
+     * @author Sacha Buelens, David Matei, Niels Van Zandbergen & Xander Veldeman
+     */
     public class ProjectController : Controller
     {
         private ProjectManager _projManager;
@@ -26,10 +29,7 @@ namespace UIMVC.Controllers
             _projManager = new ProjectManager();
             _roleService = service;
         }
-
-        /**
-         * @author Xander Veldeman, David Matei, Niels Van Zandbergen
-         */
+        
          #region Project
          
          /**
@@ -72,7 +72,7 @@ namespace UIMVC.Controllers
          }
          
          /**
-          * @author Xander Veldeman, Niels Van Zandbergen
+          * @authors David Matei, Niels Van Zandbergen & Xander Veldeman
           */
          #region Add
          [Authorize(Roles ="Admin, SuperAdmin")]
@@ -84,6 +84,9 @@ namespace UIMVC.Controllers
             return View();
         }
 
+        /**
+          * @authors David Matei, Niels Van Zandbergen & Xander Veldeman
+          */
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> AddProject(AddProjectModel pvm, int platform, string user)
@@ -130,6 +133,9 @@ namespace UIMVC.Controllers
             return RedirectToAction("Index", "Platform", new {id = platform });
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles ="Admin, SuperAdmin")]
         public async Task<IActionResult> AddImage(IFormFile file, int projectId)
         {
@@ -143,14 +149,11 @@ namespace UIMVC.Controllers
                 new {id = projectId});
         }
          #endregion
-
-         /**
-          * @author Niels Van Zandbergen
-          */
+         
          #region ChangeProject
 
          /**
-          * @author Xander Veldeman, Niels Van Zandbergen
+          * @authors David Matei & Niels Van Zandbergen
           */
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
@@ -169,7 +172,7 @@ namespace UIMVC.Controllers
         }
 
         /**
-          * @author Niels Van Zandbergen, Xander Veldeman
+          * @author David Matei & Niels Van Zandbergen
           */
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
@@ -195,7 +198,7 @@ namespace UIMVC.Controllers
 
 
          /**
-          * @author Sacha Beulens
+          * @authors Sacha Beulens, David Matei & Niels Van Zandbergen
           */
          #region DestroyProject
 
@@ -245,12 +248,12 @@ namespace UIMVC.Controllers
          #endregion
 
          #endregion
-
-         /**
-          * @author David Matei, Niels Van Zandbergen
-          */
+         
          #region Phase
          #region AddPhase
+         /**
+          * @authors David Matei & Niels Van Zandbergen
+          */
          [Authorize(Roles ="Admin, SuperAdmin")]
          [HttpGet]
         public IActionResult AddPhase(int projectId)
@@ -260,8 +263,11 @@ namespace UIMVC.Controllers
              return View();
         }
         
+        /**
+          * @authors David Matei & Niels Van Zandbergen
+          */
          [Authorize(Roles ="Admin, SuperAdmin")]
-        [HttpPost]
+         [HttpPost]
         public IActionResult AddPhase(PhaseViewModel pm, int projectId)
         {
             if (pm == null)
@@ -285,7 +291,10 @@ namespace UIMVC.Controllers
          #endregion
          
          #region ChangePhase
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        /*
+         * @authors Sacha Buelens & David Matei
+         */
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangePhase(int phaseId)
         {
@@ -302,7 +311,10 @@ namespace UIMVC.Controllers
             return View();
         }
 
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        /*
+         * @authors Sacha Buelens & David Matei
+         */
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpPost]
         public IActionResult ChangePhase(PhaseViewModel pm, int phaseId)
         {
@@ -318,7 +330,10 @@ namespace UIMVC.Controllers
 
          #endregion
          
-         [Authorize(Roles ="Admin, SuperAdmin")]
+        /*
+         * @authors Sacha Buelens & David Matei
+         */
+        [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult SetCurrentPhase(int projectId, int phaseId)
         {
@@ -333,9 +348,10 @@ namespace UIMVC.Controllers
              return RedirectToAction("CollectProject", "Project", new {id = projectId});
         }
 
-         #region DestroyPhase
-
-
+        #region DestroyPhase
+        /*
+         * @authors Sacha Buelens & David Matei
+         */
         [Authorize(Roles ="Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult DestroyPhase(int phaseId, int projectId)
@@ -349,12 +365,13 @@ namespace UIMVC.Controllers
 
          #endregion
          
+         #region Tags
          /**
           * @author Niels Van Zandbergen
+          * 
           */
-         #region Tags
          [Authorize(Roles = "Admin, SuperAdmin")]
-         public IActionResult AddTag(int ideation, bool questionnaire = false)
+         public IActionResult AddTag(int module, ModuleType moduleType)
          {
              string tag = Request.Form["GetMeATag"].ToString();
 
@@ -363,12 +380,12 @@ namespace UIMVC.Controllers
                  return BadRequest("Tag can't be null");
              }
             
-             _modManager.MakeTag(tag, ideation, questionnaire);
+             _modManager.MakeTag(tag, module, moduleType);
 
-             if (questionnaire)
-                 return RedirectToAction("ChangeQuestionnaire", "Questionnaire", new {questionnaireId = ideation});
+             if (moduleType == ModuleType.Questionnaire)
+                 return RedirectToAction("ChangeQuestionnaire", "Questionnaire", new {questionnaireId = module});
 
-             return RedirectToAction("CollectIdeation", "Ideation", new {Id = ideation});
+             return RedirectToAction("CollectIdeation", "Ideation", new {Id = module});
          }
          #endregion
     }

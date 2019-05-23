@@ -20,6 +20,7 @@ namespace UIMVC.Controllers
         
         /**
          * @author Xander Veldeman
+         * @documentation Xander Veldeman
          *
          * Custom error handler to a custom model
          * @Param path: path given by MVC
@@ -49,6 +50,7 @@ namespace UIMVC.Controllers
 
         /**
          * @author Xander Veldeman
+         * @documentation Xander Veldeman
          *
          * Simple redirect for the Identity/Sendgrid email verification
          */

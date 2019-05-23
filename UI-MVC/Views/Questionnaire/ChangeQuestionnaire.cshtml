@@ -162,7 +162,8 @@ else
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class=modal-body>
-                <form asp-controller="Project" asp-action="AddTag" asp-route-ideation="@questionnaire.Id" asp-route-questionnaire="true">
+                <form asp-controller="Project" asp-action="AddTag" asp-route-module="@questionnaire.Id" 
+                      asp-route-moduletype="@ModuleType.Questionnaire">
                     <div class="form-group">
                         <label>QuestionnaireID</label>
                         <input disabled value="@questionnaire.Id" class="form-control"/>

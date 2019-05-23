@@ -17,6 +17,9 @@ using UIMVC.Services;
 
 namespace UIMVC.Controllers
 {
+    /*
+     * @authors Niels Van Zandbergen & Xander Veldeman
+     */
     public class IdeationController : Controller
     {
         private readonly IdeationQuestionManager _ideaMgr;
@@ -33,12 +36,12 @@ namespace UIMVC.Controllers
             _userManager = userManager;
             _roleService = roleService;
         }
-
-        /**
-         * @author Niels Van Zandbergen, Xander Veldeman
-         */
+        
         #region Ideation
         #region Add
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles = "SuperAdmin, Moderator, Admin")]
         [HttpGet]
         public IActionResult AddIdeation(int project)
@@ -65,6 +68,9 @@ namespace UIMVC.Controllers
             return View();
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
         public IActionResult AddIdeation(AddIdeationModel cim, int project, string user)
@@ -102,6 +108,9 @@ namespace UIMVC.Controllers
         #endregion
         
         #region Change
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult ChangeIdeation(int id)
@@ -132,6 +141,9 @@ namespace UIMVC.Controllers
             return View();
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
         public IActionResult ConfirmChangeIdeation(int ideation, ChangeIdeationModel aim)
@@ -168,6 +180,9 @@ namespace UIMVC.Controllers
         }
         #endregion
         
+        /*
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         */
         public IActionResult CollectIdeation(int id)
         {
             Ideation ideation = _projMgr.ModuleMan.GetIdeation(id, true);
@@ -175,6 +190,9 @@ namespace UIMVC.Controllers
             return View(ideation);
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult DestroyIdeation(int id)
         {
@@ -187,6 +205,9 @@ namespace UIMVC.Controllers
         #endregion
         
         #region CentralQuestion
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet]
         public IActionResult AddCentralQuestion(int ideation)
@@ -195,6 +216,9 @@ namespace UIMVC.Controllers
             return View();
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
         public IActionResult AddCentralQuestion(AddIdeationQuestionModel ciqm, int ideation)
@@ -217,6 +241,9 @@ namespace UIMVC.Controllers
             return RedirectToAction("CollectIdeation", "Ideation", new {Id = ideation});
         }
         
+        /*
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         */
         public IActionResult CollectIdeationThread(int id, string message)
         {
             IdeationQuestion iq = _ideaMgr.GetQuestion(id, true);
@@ -229,6 +256,9 @@ namespace UIMVC.Controllers
         #endregion
         
         #region Idea
+        /*
+         * @author Niels Van Zandbergen
+         */
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult CollectAllIdeas(string filter = "all")
@@ -245,6 +275,9 @@ namespace UIMVC.Controllers
             return View(ideas);
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult CollectIdeaDetails(int id)
@@ -262,6 +295,9 @@ namespace UIMVC.Controllers
                 path="/Moderation/CollectIdea/" + id });
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult DestroyIdea(int idea, string from, int thread)
         {
@@ -287,7 +323,10 @@ namespace UIMVC.Controllers
         }
         
         #region AddIdea
-                [Authorize]
+        /*
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         */
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddIdea(string user, IFormCollection form, int ideation, int parent, List<string> fieldStrings)
         {
@@ -421,7 +460,10 @@ namespace UIMVC.Controllers
         #endregion
         
         #region ChangeIdea
-                [Authorize]
+        /*
+         * @authors Niels Van Zandbergen & Xander Veldeman
+         */
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangeIdea(IFormCollection form, int ideation, int idea, List<string> fieldStrings)
         {
@@ -516,6 +558,9 @@ namespace UIMVC.Controllers
         }
         #endregion
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize]
         public IActionResult AddVote(int idea, string user, int thread)
         {
@@ -530,10 +575,10 @@ namespace UIMVC.Controllers
         }
         #endregion
         
-        /**
+        #region Report
+        /*
          * @author Niels Van Zandbergen
          */
-        #region Report
         [HttpPost]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult ReviewByAdmin(int idea, int  report)
@@ -550,6 +595,9 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Ideation", actionName: "CollectAllIdeas", routeValues: "admin");
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [HttpPost]
         [Authorize(Roles = "Admin, SuperAdmin")]
         public IActionResult ApproveReport(int report)
@@ -563,6 +611,9 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Ideation", actionName: "CollectAllIdeas", routeValues: "report");
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         [HttpPost]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult DenyReport(int report, int idea)
@@ -576,6 +627,9 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Ideation", actionName: "CollectAllIdeas", routeValues: "report");
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         [HttpPost]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
         public IActionResult DestroyReport(int report, int idea)
@@ -587,6 +641,9 @@ namespace UIMVC.Controllers
             return RedirectToAction(controllerName: "Ideation", actionName: "CollectAllIdeas" , routeValues: "report");
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         private void HandleRemainingReports(int idea)
         {
             IEnumerable<Report> remainingReports = _ideaMgr.GetAllReportsByIdea(idea);
@@ -600,6 +657,9 @@ namespace UIMVC.Controllers
             }
         }
         
+        /*
+         * @author Niels Van Zandbergen
+         */
         [Authorize]
         public IActionResult AddReport(int idea, string flagger, int thread)
         {

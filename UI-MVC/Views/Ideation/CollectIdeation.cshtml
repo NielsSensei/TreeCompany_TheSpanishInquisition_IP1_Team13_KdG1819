@@ -1,3 +1,4 @@
+@using Domain.Projects
 @using Domain.UserInput
 @using UIMVC.Services
 @model Domain.Projects.Ideation
@@ -124,7 +125,8 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class=modal-body>
-                <form asp-controller="Project" asp-action="AddTag" asp-route-ideation="@Model.Id">
+                <form asp-controller="Project" asp-action="AddTag" asp-route-module="@Model.Id" 
+                      asp-route-moduleType="@ModuleType.Ideation">
                     <div class="form-group">
                         <label>IdeationID</label>
                         <input disabled value="@Model.Id" class="form-control"/>

@@ -93,14 +93,14 @@ namespace BL
          * @author Niels Van Zandbergen
          */
         #region General Module Methods
-        public void MakeTag(string tag, int moduleId, bool questionnaire)
+        public void MakeTag(string tag, int moduleId, ModuleType type)
         {
-            if (questionnaire)
+            if (type == ModuleType.Questionnaire)
             {
                 QuestionnaireRepo.CreateTag(tag, moduleId);
             }
 
-            if (!questionnaire)
+            if (type == ModuleType.Ideation)
             {
                 IdeationRepo.CreateTag(tag, moduleId);
             }
