@@ -70,6 +70,7 @@
                 }
                 @if (Model.QuestionType == QuestionType.Multi)
                 {
+                    List<string> customAnswers = QuestionService.GetCustomOptions(Model).ToList();
                     <table class="table">
                         <thead>
                         <tr>
@@ -98,6 +99,43 @@
 
                         </tbody>
                     </table>
+                    <hr/>
+                    <h4>Antwoorden van gebruikers</h4>
+                    if (!customAnswers.Any())
+                    {
+                        <p>Geen antwoorden gevonden</p>
+                    }
+                    else
+                    {
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Optie</th>
+                                <th>#</th>
+                                <th>%</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            @for (int i = 0; i < customAnswers.Count(); i++)
+                            {
+                                <tr>
+                                    <td>@customAnswers[i]</td>
+                                    @if (Model.Answers != null && Model.Answers.Any())
+                                    {
+                                        <td>@Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(customAnswers[i]))</td>
+                                        <td>@Math.Round((Model.Answers.Count(answer => (answer as MultipleAnswer).Choices.Contains(customAnswers[i])) / (double) QuestionService.CollectTotalAnswerCount(Model)) * 100, 2)%</td>
+                                    }
+                                    else
+                                    {
+                                        <td>Geen antwoorden</td>
+                                    }
+                                </tr>
+                            }
+
+                            </tbody>
+                        </table>
+                    }
                 }
             </div>
             <div class="modal-footer">

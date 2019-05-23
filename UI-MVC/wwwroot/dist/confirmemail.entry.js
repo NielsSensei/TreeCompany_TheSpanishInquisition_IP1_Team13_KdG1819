@@ -101,8 +101,9 @@ let element = document.getElementById('countdown');
 
 /**
  * @author Xander Veldeman
+ * @documentation Xander  Veldeman
  * 
- * Simples 10s timer
+ * Timer van 10 seconden voor een redirect.
  * 
  * @returns {Promise<void>}
  */
