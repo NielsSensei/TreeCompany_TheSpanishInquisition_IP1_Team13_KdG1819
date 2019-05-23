@@ -275,6 +275,7 @@ namespace UIMVC.Controllers
             ViewData["Ideation"] = id;
             ViewData["ExtraInfo"] = i.ExtraInfo;
             ViewData["UserVote"] = i.UserVote;
+            ViewData["Video"] = i.MediaLink.Replace("https://youtube.com/embed/", "https://www.youtube.com/watch?v=");
 
             return View();
         }

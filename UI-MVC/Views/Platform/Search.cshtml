@@ -10,28 +10,51 @@
 {
     <section class="row align-items-center">
         <h2 class="col-10">Sorry geen platformen gevonden voor <em>@ViewData["search"]</em></h2>
-            <a class="btn btn-primary col-2 h-25" asp-action="Index" asp-controller="Home">Terug naar home</a>
+        <a class="btn btn-primary col-2 h-25" asp-action="Index" asp-controller="Home">Terug naar home</a>
     </section>
-    
 }
 else
 {
-    <h2>Gevonden platformen voor <em>@ViewData["search"]</em>:</h2>
-    <table class="table">
-        <tr>
-            <th>PlatformId</th>
-            <th>URL</th>
-        </tr>
-        @foreach (Platform platform in Model)
-        {
+    if (ViewData["search"] == null)
+    {
+        <h2>Alle platformen:</h2>
+        <table class="table">
             <tr>
-                <td>
-                    <a asp-action="Index" asp-controller="Platform" asp-route-id="@platform.Id">@platform.Name</a>
-                </td>
-                <td>
-                    <p>@platform.Url</p>
-                </td>
+                <th>PlatformId</th>
+                <th>URL</th>
             </tr>
-        }
-    </table>
+            @foreach (Platform platform in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Index" asp-controller="Platform" asp-route-id="@platform.Id">@platform.Name</a>
+                    </td>
+                    <td>
+                        <p>@platform.Url</p>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <h2>Gevonden platformen voor <em>@ViewData["search"]</em>:</h2>
+        <table class="table">
+            <tr>
+                <th>PlatformId</th>
+                <th>URL</th>
+            </tr>
+            @foreach (Platform platform in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Index" asp-controller="Platform" asp-route-id="@platform.Id">@platform.Name</a>
+                    </td>
+                    <td>
+                        <p>@platform.Url</p>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
 }

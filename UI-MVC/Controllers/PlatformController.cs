@@ -54,6 +54,10 @@ namespace UIMVC.Controllers
 
         public IActionResult Search(string search)
         {
+            if (search == null)
+            {
+                return View(_platformMgr.ReadAllPlatforms());
+            }
             ViewData["search"] = search;
             var platforms = _platformMgr.SearchPlatforms(search);
             return View(platforms);
