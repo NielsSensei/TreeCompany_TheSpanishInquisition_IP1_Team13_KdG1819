@@ -78,31 +78,31 @@ INSERT INTO Answers(AnswerID,QQuestionID,UserID,AnswerText)
 VALUES(5,5,1,'voorbeeldigeantwerpenaar@nva.be')
 
 /* Options */
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(1,'Geen tram 4 meer op de groenplaats.',2,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(2,'Verkeer afsluiten op de groenplaats.',2,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(3,'De groenplaats vervangen door klein bos.',2,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(4,'Ja',3,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(5,'Nee',3,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(6,'10m�',4,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(7,'20m�',4,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(8,'30m�',4,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(9,'40m�',4,0)
 
 /* Choices */

@@ -8,7 +8,7 @@ using Domain.Users;
 namespace UIMVC.Services
 {
     /**
-     * @author Xander Veldeman, Niels Van Zandbergen
+     * @authors Niels Van Zandbergen & Xander Veldeman
      *
      * Used as a way to get information from projects in views
      */
@@ -26,7 +26,7 @@ namespace UIMVC.Services
             _ideationQuestionManager = new IdeationQuestionManager();
             _platformManager = new PlatformManager();
         }
-
+        
         public IEnumerable<Project> CollectPlatformProjects(Platform platform)
         {
             return _projectManager.GetPlatformProjects(platform);

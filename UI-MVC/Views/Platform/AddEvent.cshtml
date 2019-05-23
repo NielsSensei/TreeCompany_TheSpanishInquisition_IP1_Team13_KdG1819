@@ -8,7 +8,12 @@
 <h2>Organiseer Een Eventement</h2>
 
 <form asp-controller="Platform" asp-action="AddEvent" method="post" asp-route-aem="@Model">
-
+    @Html.DropDownList("Parent", new SelectList((System.Collections.IEnumerable) ViewData["Platforms"],
+        "Id","Name"),
+        "Kies een Platform om het evenement te publiceren",
+        new { @class = "form-control" })
+                            
+                            
     <input id="Submit" class="btn btn-primary" type="submit" onvalue="Opslaan" />
 </form>
 

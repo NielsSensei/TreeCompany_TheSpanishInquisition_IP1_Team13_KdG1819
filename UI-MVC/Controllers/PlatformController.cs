@@ -70,7 +70,7 @@ namespace UIMVC.Controllers
         {
             if (search == null)
             {
-                return View(_platformMgr.ReadAllPlatforms());
+                return View(_platformMgr.GetAllPlatforms());
             }
             ViewData["search"] = search;
             var platforms = _platformMgr.SearchPlatforms(search);
@@ -186,7 +186,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult AddPlatform()
         {
-            ViewData["platforms"] = _platformMgr.ReadAllPlatforms();
+            ViewData["platforms"] = _platformMgr.GetAllPlatforms();
             return View();
         }
 
@@ -394,8 +394,15 @@ namespace UIMVC.Controllers
         #region Event
         [HttpGet]
         [Authorize(Roles = "Organisation, Moderator, Admin, SuperAdmin")]
-        public IActionResult AddEvent()
+        public IActionResult AddEvent(string message = "")
         {
+            ViewData["Platforms"] = _platformMgr.GetAllPlatforms();
+            
+            if (!message.Equals(""))
+            {
+                ViewData["FailMessage"] = message;
+            }
+            
             return View();
         }
 
@@ -403,14 +410,21 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "Organisation, Moderator, Admin, SuperAdmin")]
         public IActionResult AddEvent(AddEventModel aem, string org)
         {
-            
-            
-            Event e = new Event()
+            try
             {
-                Organisation = new Organisation(){ Id = org }
-            };
+                Event e = new Event()
+                {
+                    Organisation = new Organisation() {Id = org},
+                    Platform = new Platform() { Id = Int32.Parse(Request.Form["Platform"].ToString())}
+                };
 
-            return RedirectToAction("Index", "Platform");
+                return RedirectToAction("Index", "Platform");
+            }
+            catch (FormatException)
+            {
+                return RedirectToAction("AddEvent", "Platform", 
+                    new { message = "Er is geen platform gekozen!"});
+            }
         }
         #endregion
     }

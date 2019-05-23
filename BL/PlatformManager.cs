@@ -41,7 +41,7 @@ namespace BL
             PlatformRepo.Delete(platformId);
         }
 
-        public IEnumerable<Platform> ReadAllPlatforms()
+        public IEnumerable<Platform> GetAllPlatforms()
         {
             return PlatformRepo.ReadAll();
         }
