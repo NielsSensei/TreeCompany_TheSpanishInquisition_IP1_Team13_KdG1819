@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace UIMVC.Migrations
@@ -61,3 +62,4 @@ namespace UIMVC.Migrations
         }
     }
 }
+*/

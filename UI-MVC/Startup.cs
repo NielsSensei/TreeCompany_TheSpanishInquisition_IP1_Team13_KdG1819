@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using UIMVC.Services;
 
 namespace UIMVC
@@ -54,6 +56,43 @@ namespace UIMVC
                 msOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
             });
 
+
+            //add JWT services
+
+            services.AddAuthentication().AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = Configuration["JwtTokens:JwtIssuer"],
+                    ValidAudience = Configuration["JwtTokens:JwtIssuer"],
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtTokens:JwtKey"])),
+                    ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                };
+
+                /*.AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                        
+                    /*var tokenSettings = new TokenService();
+                    Configuration.Bind("Token", tokenSettings);#1#
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                       
+                        ValidIssuer = tokenSettings.Issuer,
+                        ValidAudience = tokenSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                    };*/
+            });
+
+
+            /*
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+              options.TokenLifespan = TimeSpan.FromHours(2));
+            */
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
@@ -85,15 +124,12 @@ namespace UIMVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-
             app.UseAuthentication();
             app.UseCookiePolicy();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
