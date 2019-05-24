@@ -3,29 +3,21 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Identity
 {
-    public class  UimvcUser : IdentityUser
+    public class UimvcUser : IdentityUser
     {
-        
-        [PersonalData]
-        public string Name { get; set; }
+        [PersonalData] public string Name { get; set; }
 
-        [PersonalData]
-        public string Zipcode { get; set; }
+        [PersonalData] public string Zipcode { get; set; }
 
-        [PersonalData]
-        public bool Gender { get; set; }
+        [PersonalData] public bool Gender { get; set; }
 
-        [PersonalData]
-        public DateTime DateOfBirth { get; set; }
-        
-        [PersonalData]
-        public int PlatformDetails { get; set; }
-        
-        [PersonalData]
-        public string OrgName { get; set; }
-        
-        [PersonalData]
-        public string Description { get; set; }
+        [PersonalData] public DateTime DateOfBirth { get; set; }
+
+        [PersonalData] public int PlatformDetails { get; set; }
+
+        [PersonalData] public string OrgName { get; set; }
+
+        [PersonalData] public string Description { get; set; }
 
         public bool Banned { get; set; }
 
