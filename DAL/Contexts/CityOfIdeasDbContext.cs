@@ -54,6 +54,7 @@ namespace DAL.Contexts
             modelBuilder.Entity<UserActivitiesDao>().HasKey(u => u.ActivityId);
             modelBuilder.Entity<VotesDao>().HasKey(v => v.VoteId);
             modelBuilder.Entity<ReportsDao>().HasKey(r => r.ReportId);
+            modelBuilder.Entity<IdeationSettingsDao>().HasKey(r => r.ModuleId);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -64,6 +65,7 @@ namespace DAL.Contexts
         public DbSet<IdeasDao> Ideas { get; set; }
         public DbSet<IdeationQuestionsDao> IdeationQuestions { get; set; }
         public DbSet<IdeationsDao> Ideations { get; set; }
+        public DbSet<IdeationSettingsDao> IdeationSettings { get; set; }
         public DbSet<ModulesDao> Modules { get; set; }
         public DbSet<OptionsDao> Options { get; set; }
         public DbSet<OrganisationEventsDao> OrganisationEvents { get; set; }

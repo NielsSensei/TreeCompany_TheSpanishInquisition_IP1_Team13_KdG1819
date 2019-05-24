@@ -3,6 +3,7 @@
 
 @{
     Phase parent = (Phase) @ViewData["Parent"];
+    IdeationSettings ideationSettings = (IdeationSettings) ViewData["Settings"];
 }
 
 <div class="container">
@@ -59,6 +60,49 @@
                         </div>
                         <div class="col-2">
                             <input asp-for="UserVote" class="form-check-input" checked="@((bool) ViewData["UserVote"])"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h6>Geef hier mee welke velden verplicht zijn:</h6>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="Field">Tekstveld</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="Field" class="form-check-input" checked="@ideationSettings.Field"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="ClosedField">Opsomming</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="ClosedField" class="form-check-input" checked="@ideationSettings.ClosedField"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="MapField">Map</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="MapField" class="form-check-input" checked="@ideationSettings.MapField"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="VideoField">Filmpje</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="VideoField" class="form-check-input" checked="@ideationSettings.VideoField"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="ImageField">Foto</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="ImageField" class="form-check-input" checked="@ideationSettings.ImageField"/>
                         </div>
                     </div>
                 </div>

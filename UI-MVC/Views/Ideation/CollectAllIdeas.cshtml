@@ -22,7 +22,7 @@
                     new SelectListItem() { Text = "Geraporteerde ideeen", Value = "report" },
                     new SelectListItem() { Text = "Ideeen waar een admin nodig is", Value = "admin" }
                 },
-                    new { @class = "form-control", @onchange= "document.location.href = '/Moderation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;" })
+                    new { @class = "form-control", @onchange= "document.location.href = '/Ideation/CollectAllIdeas?filter=' + this.options[this.selectedIndex].value;" })
             </div>
         </div>
     </div>

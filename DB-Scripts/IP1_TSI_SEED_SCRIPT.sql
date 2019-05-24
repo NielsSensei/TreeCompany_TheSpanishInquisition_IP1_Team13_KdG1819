@@ -53,10 +53,10 @@ INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Requi
 VALUES(2,1,'Welke aanpassing wil je het liefst?',1,1)
 
 INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Required)
-VALUES(3,1,'Vind je dat er ook een bloementuin op de Groenplaats past?',2,1)
+VALUES(3,1,'Hoeveel m2 aan gras moet er aangelegd worden?',2,1)
 
 INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Required)
-VALUES(4,1,'Hoeveel m2 aan gras moet er aangelegd worden?',3,1)
+VALUES(4,1,'Vind je dat er ook een bloementuin op de Groenplaats past?',3,1)
 
 INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Required)
 VALUES(5,1,'Gelieve u email adres achter te halen als u updates wilt over het project',4,0)
@@ -88,22 +88,22 @@ INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(3,'De groenplaats vervangen door klein bos.',2,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
-VALUES(4,'Ja',3,0)
+VALUES(4,'10 vierkante meter',3,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
-VALUES(5,'Nee',3,0)
+VALUES(5,'20 vierkante meter',3,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
-VALUES(6,'10m�',4,0)
+VALUES(6,'30 vierkante meter',3,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
-VALUES(7,'20m�',4,0)
+VALUES(7,'40 vierkante meter',3,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
-VALUES(8,'30m�',4,0)
+VALUES(8,'Ja',4,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
-VALUES(9,'40m�',4,0)
+VALUES(9,'Nee',4,0)
 
 /* Choices */
 INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
@@ -119,8 +119,12 @@ INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
 VALUES(4,4,9)
 
 /* Ideations */
-INSERT INTO Ideations(ModuleID,UserID,Organisation,UserVote,RequiredFields,EventID,extraInfo)
-VALUES(2,7,0,1,41,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
+INSERT INTO Ideations(ModuleID,UserID,Organisation,UserVote,EventID,extraInfo)
+VALUES(2,7,0,1,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
+
+/* IdeationSettings */
+INSERT INTO IdeationSettings(ModuleID, Field, ClosedField, MapField, VideoField, ImageField)
+VALUES(2,1,1,1,1,1)
 
 /* Ideationquestions */
 INSERT INTO IdeationQuestions(IQuestionID,ModuleID,QuestionTitle,Description,WebsiteLink)
