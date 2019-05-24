@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -252,9 +253,9 @@ namespace DAL.repos
 
             if (foundIdeationQuestion != null)
             {
-                foundIdeationQuestion.QuestionTitle = newIdeationQuestion.QuestionTitle;
-                foundIdeationQuestion.Description = newIdeationQuestion.Description;
-                foundIdeationQuestion.WebsiteLink = newIdeationQuestion.WebsiteLink;
+                if(!String.IsNullOrEmpty(newIdeationQuestion.QuestionTitle)) foundIdeationQuestion.QuestionTitle = newIdeationQuestion.QuestionTitle;
+                if(!String.IsNullOrEmpty(newIdeationQuestion.Description)) foundIdeationQuestion.Description = newIdeationQuestion.Description;
+                if(!String.IsNullOrEmpty(newIdeationQuestion.WebsiteLink)) foundIdeationQuestion.WebsiteLink = newIdeationQuestion.WebsiteLink;
             }
 
             _ctx.SaveChanges();
@@ -386,17 +387,17 @@ namespace DAL.repos
             IdeasDao foundIdea = _ctx.Ideas.FirstOrDefault(i => i.IdeaId == obj.Id);
             if (foundIdea != null)
             {
-                foundIdea.Title = newIdea.Title;
-                foundIdea.Reported = newIdea.Reported;
-                foundIdea.ReviewByAdmin = newIdea.ReviewByAdmin;
-                foundIdea.Visible = newIdea.Visible;
-                foundIdea.VoteCount = newIdea.VoteCount;
-                foundIdea.RetweetCount = newIdea.RetweetCount;
-                foundIdea.ShareCount = newIdea.ShareCount;
-                foundIdea.Status = newIdea.Status;
-                foundIdea.VerifiedUser = newIdea.VerifiedUser;
-                foundIdea.DeviceId = newIdea.DeviceId;
-                foundIdea.IsDeleted = newIdea.IsDeleted;
+                if(!String.IsNullOrEmpty(newIdea.Title)) foundIdea.Title = newIdea.Title;
+                if(!String.IsNullOrEmpty(foundIdea.Reported.ToString())) foundIdea.Reported = newIdea.Reported;
+                if(!String.IsNullOrEmpty(newIdea.ReviewByAdmin.ToString())) foundIdea.ReviewByAdmin = newIdea.ReviewByAdmin;
+                if(!String.IsNullOrEmpty(newIdea.Visible.ToString())) foundIdea.Visible = newIdea.Visible;
+                if(newIdea.VoteCount != 0) foundIdea.VoteCount = newIdea.VoteCount;
+                if(newIdea.RetweetCount != 0) foundIdea.RetweetCount = newIdea.RetweetCount;
+                if(newIdea.ShareCount != 0) foundIdea.ShareCount = newIdea.ShareCount;
+                if(!String.IsNullOrEmpty(newIdea.Status)) foundIdea.Status = newIdea.Status;
+                if(!String.IsNullOrEmpty(newIdea.VerifiedUser.ToString())) foundIdea.VerifiedUser = newIdea.VerifiedUser;
+                if(newIdea.DeviceId != 0) foundIdea.DeviceId = newIdea.DeviceId;
+                if(!String.IsNullOrEmpty(newIdea.IsDeleted.ToString())) foundIdea.IsDeleted = newIdea.IsDeleted;
                 _ctx.Ideas.Update(foundIdea);
             }
 
@@ -404,12 +405,12 @@ namespace DAL.repos
             IdeaFieldsDao foundIdeaFields = _ctx.IdeaFields.FirstOrDefault(f => f.IdeaId == obj.Id);
             if (foundIdeaFields != null)
             {
-                foundIdeaFields.FieldText = newIdeaFields.FieldText;
-                foundIdeaFields.FieldStrings = newIdeaFields.FieldStrings;
-                foundIdeaFields.LocationX = newIdeaFields.LocationX;
-                foundIdeaFields.LocationY = newIdeaFields.LocationY;
-                foundIdeaFields.UploadedImage = newIdeaFields.UploadedImage;
-                foundIdeaFields.MediaLink = newIdeaFields.MediaLink;
+                if(!String.IsNullOrEmpty(newIdeaFields.FieldText)) foundIdeaFields.FieldText = newIdeaFields.FieldText;
+                if(!String.IsNullOrEmpty(newIdeaFields.FieldStrings)) foundIdeaFields.FieldStrings = newIdeaFields.FieldStrings;
+                if(newIdeaFields.LocationX != 0) foundIdeaFields.LocationX = newIdeaFields.LocationX;
+                if(newIdeaFields.LocationY != 0) foundIdeaFields.LocationY = newIdeaFields.LocationY;
+                if(newIdeaFields.UploadedImage != null) foundIdeaFields.UploadedImage = newIdeaFields.UploadedImage;
+                if(!String.IsNullOrEmpty(newIdeaFields.MediaLink)) foundIdeaFields.MediaLink = newIdeaFields.MediaLink;
                 _ctx.IdeaFields.Update(foundIdeaFields);
             }
             
@@ -492,8 +493,8 @@ namespace DAL.repos
             ReportsDao foundReport = _ctx.Reports.First(r => r.ReportId == obj.Id);
             if (foundReport != null)
             {
-                foundReport.Reason = newReport.Reason;
-                foundReport.ReportApproved = newReport.ReportApproved;
+                if(!String.IsNullOrEmpty(newReport.Reason)) foundReport.Reason = newReport.Reason;
+                if(newReport.ReportApproved != 0) foundReport.ReportApproved = newReport.ReportApproved;
                 _ctx.Reports.Update(foundReport);
             }
 

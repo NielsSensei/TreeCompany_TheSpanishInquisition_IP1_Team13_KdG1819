@@ -11,8 +11,8 @@
     QuestionnaireQuestion question = (QuestionnaireQuestion) ViewData["Question"];
     Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
     ViewBag.Title = question.QuestionText;
-    ViewData["Platform"] = ProjectService.GetPlatform(questionnaire);
-    ViewData["Project"] = ProjectService.GetProject(questionnaire);
+    ViewData["Platform"] = ProjectService.CollectPlatformForModule(questionnaire);
+    ViewData["Project"] = ProjectService.CollectProjectForModule(questionnaire);
     ViewData["Module"] = questionnaire;
     
 }

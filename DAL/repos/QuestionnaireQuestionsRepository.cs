@@ -214,9 +214,9 @@ namespace DAL.repos
                 _ctx.QuestionnaireQuestions.First(qq => qq.QquestionId == obj.Id);
             if (foundQuestionnaireQuestion != null)
             {
-                foundQuestionnaireQuestion.QuestionText = newQuestionnaireQuestion.QuestionText;
-                foundQuestionnaireQuestion.QType = newQuestionnaireQuestion.QType;
-                foundQuestionnaireQuestion.Required = newQuestionnaireQuestion.Required;
+                if(!String.IsNullOrEmpty(newQuestionnaireQuestion.QuestionText)) foundQuestionnaireQuestion.QuestionText = newQuestionnaireQuestion.QuestionText;
+                if(newQuestionnaireQuestion.QType != 0) foundQuestionnaireQuestion.QType = newQuestionnaireQuestion.QType;
+                if(!String.IsNullOrEmpty(newQuestionnaireQuestion.Required.ToString())) foundQuestionnaireQuestion.Required = newQuestionnaireQuestion.Required;
             }
 
             _ctx.SaveChanges();

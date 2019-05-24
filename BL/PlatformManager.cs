@@ -41,7 +41,7 @@ namespace BL
             PlatformRepo.Delete(platformId);
         }
 
-        public IEnumerable<Platform> ReadAllPlatforms()
+        public IEnumerable<Platform> GetAllPlatforms()
         {
             return PlatformRepo.ReadAll();
         }
@@ -50,6 +50,21 @@ namespace BL
         {
             return PlatformRepo.ReadAll()
                 .Where(platform => platform.Name.ToLower().Contains(search.ToLower()) || platform.Url.ToLower().Contains(search.ToLower()));
+        }
+        #endregion
+        
+        /*
+         * @author Niels Van Zandbergen
+         */
+        #region Event
+        public IEnumerable<Event> GetAllEvents(int platformId)
+        {
+            return PlatformRepo.ReadAllEvents(platformId);
+        }
+
+        public Event MakeEvent(Event obj)
+        {
+            return PlatformRepo.Create(obj);
         }
         #endregion
     }

@@ -138,19 +138,19 @@ namespace DAL.repos
             ModulesDao foundModule = _ctx.Modules.First(q => q.ModuleId == obj.Id);
             if (foundModule != null)
             {
-                foundModule.OnGoing = newModule.OnGoing;
-                foundModule.LikeCount = newModule.LikeCount;
-                foundModule.Title = newModule.Title;
-                foundModule.FbLikeCount = newModule.FbLikeCount;
-                foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
-                foundModule.ShareCount = newModule.ShareCount;
-                foundModule.RetweetCount = newModule.RetweetCount;
-                foundModule.Tags = newModule.Tags;
+                if(!String.IsNullOrEmpty(newModule.OnGoing.ToString())) foundModule.OnGoing = newModule.OnGoing;
+                if(!String.IsNullOrEmpty(newModule.Title)) foundModule.Title = newModule.Title;
+                if(newModule.LikeCount != 0) foundModule.LikeCount = newModule.LikeCount;
+                if(newModule.FbLikeCount != 0) foundModule.FbLikeCount = newModule.FbLikeCount;
+                if(newModule.TwitterLikeCount != 0) foundModule.TwitterLikeCount = newModule.TwitterLikeCount;
+                if(newModule.ShareCount != 0) foundModule.ShareCount = newModule.ShareCount;
+                if(newModule.RetweetCount != 0) foundModule.RetweetCount = newModule.RetweetCount;
+                if(!String.IsNullOrEmpty(newModule.Tags)) foundModule.Tags = newModule.Tags;
             }
 
             if (newModule.PhaseId != foundModule.PhaseId)
             {
-                foundModule.PhaseId = newModule.PhaseId;
+                if(newModule.PhaseId != 0) foundModule.PhaseId = newModule.PhaseId;
             }
 
             _ctx.SaveChanges();
