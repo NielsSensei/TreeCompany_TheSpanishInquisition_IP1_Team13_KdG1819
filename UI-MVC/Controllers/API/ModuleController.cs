@@ -10,9 +10,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace UIMVC.Controllers.API
 {
+    //Controller API for everything related to modules
+    //Author: Sacha Buelens
+    //Edited by: Edwin Kai-Yin Tam, David Matei
+
     [Route("api/[controller]")]
     public class ModuleController : Controller
     {
+        //Getting managers to get modules from our database
+        //Required managers are : project, module, questionnairequestion and ideationquestion
+        //to get all the info we need from our database
+
         private readonly ProjectManager _projMgr;
         private readonly ModuleManager _modMgr;
         private readonly QuestionnaireQuestionManager _qqMgr;
@@ -26,6 +34,8 @@ namespace UIMVC.Controllers.API
             _iqMgr = new IdeationQuestionManager();
         }
 
+
+        //Currently unused method to get all modules for a project, by its Id
         // GET: api/<controller>/getModules?projectId=1
         /*[HttpGet]
         [Route("GetModules")]
@@ -44,6 +54,7 @@ namespace UIMVC.Controllers.API
 
         //GET api/<controller>/GetIdeas?ideationQuestionId=1
 
+        //Method to get all ideas for an ideationquestion, filtered by its Id
         [HttpGet]
         [Route("GetIdeas")]
         public IActionResult GetIdeas(int ideationQuestionId)
@@ -59,6 +70,8 @@ namespace UIMVC.Controllers.API
 
 
         // GET api/<controller>/5
+
+         //Method to get a questionnaire for a project and a specific phase of that project (projectid, phaseid)
         [HttpGet]
         [Route("GetQuestionnaire")]
         public IActionResult GetQuestionnaire(int projectId, int phaseId)
@@ -75,6 +88,8 @@ namespace UIMVC.Controllers.API
         }
 
 
+        //Method to get all questionnaires for a project, filtered by its ID
+
         [HttpGet]
         [Route("GetQuestionnaires")]
         public IActionResult GetQuestionnaires(int projectId)
@@ -85,6 +100,7 @@ namespace UIMVC.Controllers.API
         }
 
         // GET api/<controller>/GetIdeation?projectId=1&phaseId=1
+        //Method to get an ideation of a specific phase of a project, filtered by their ID's
         [
             HttpGet]
         [Route("GetIdeation")]
@@ -99,6 +115,7 @@ namespace UIMVC.Controllers.API
             return Ok(i);
         }
 
+        //Method to get all ideationquestions for an ideation
 
         [HttpGet]
         [Route("GetIdeationQuestions")]
@@ -110,7 +127,7 @@ namespace UIMVC.Controllers.API
             return Ok(questions);
         }
 
-
+        //method to get aan idea, by its ID
         [HttpGet]
         [Route("GetIdea")]
         public IActionResult GetIdea(int ideaId)
@@ -121,6 +138,7 @@ namespace UIMVC.Controllers.API
             return Ok(i);
         }
 
+        //Method to get an ideation by its Id
         [HttpGet]
         [Route("GetIdeation")]
         public IActionResult GetIdeation(int moduleId)
@@ -131,7 +149,7 @@ namespace UIMVC.Controllers.API
             return Ok(i);
         }
 
-        // f
+        // Method to get an ideation for a specific phase of a project
         [HttpGet]
         [Route("GetIdeation")]
         public IActionResult GetIdeationForPhase(int projectId, int phaseId)
@@ -142,6 +160,8 @@ namespace UIMVC.Controllers.API
             return Ok(i);
         }
 
+
+        //Method to get all ideations for a project
         [
             HttpGet]
         [Route("GetIdeations")]
@@ -155,19 +175,28 @@ namespace UIMVC.Controllers.API
 
         // GET api/<controller>/GetModuleForPhase?phaseId=1
 
-        /*
+            
+        //This method gets a module for a specific phase
+        //It looks what type the module is and loads the according info with it
         [HttpGet]
         [Route("GetModuleForPhase")]
         public IActionResult GetModuleForPhase(int phaseId)
         {
+
+            //boolean to determine the module type
             bool isQuestionnaire = false;
 
-            Phase phase = projMgr.GetPhase(phaseId, false);
 
+            //Gets a phase by its ID
+            Phase phase = _projMgr.GetPhase(phaseId, false);
+
+            //This is the module that's supposed to be returned, after the type is determined
             Module toReturn = new Module();
 
-            List<Module> modules = modMgr.GetAllModules(phase.Project.Id).ToList();
+            //Gets all modules for the project that belongs to the phase 
+            List<Module> modules = _modMgr.GetAllModules(phase.Project.Id).ToList();
 
+            //Checks if the module type is a questionnaire or ideation
             foreach (Module mod in modules)
             {
                 if (mod.ParentPhase.Id == phase.Id)
@@ -187,19 +216,21 @@ namespace UIMVC.Controllers.API
                 }
             }
 
+
+            //For all the questionnaires -> it will get all child attributes that are not values(questions, answers, options etc)
             if (isQuestionnaire)
             {
                 Questionnaire toReturnQuestionnaire = (Questionnaire) toReturn;
 
 
-                List<QuestionnaireQuestion> qQuestions = qqMgr.GetAllByModuleId(toReturnQuestionnaire.Id);
+                List<QuestionnaireQuestion> qQuestions = _qqMgr.GetAllByModuleId(toReturnQuestionnaire.Id);
 
                 foreach (QuestionnaireQuestion qQ in qQuestions)
                 {
                     if (qQ.QuestionType == QuestionType.Drop || qQ.QuestionType == QuestionType.Multi ||
                         qQ.QuestionType == QuestionType.Single)
                     {
-                        /*TODO optionlogica#1#
+                        //TODO optionlogica#1#
                     }
                 }
 
@@ -207,15 +238,17 @@ namespace UIMVC.Controllers.API
                 return Ok(toReturnQuestionnaire);
             }
 
+            //For every Ideation it gets all the ideas, answers to ideas etc
+
             else if (!isQuestionnaire)
             {
                 Ideation toReturnIdeation = (Ideation) toReturn;
 
-                List<IdeationQuestion> ideationQuestions = iqMgr.GetAllByModuleId(toReturnIdeation.Id).ToList();
+                List<IdeationQuestion> ideationQuestions = _iqMgr.GetAllByModuleId(toReturnIdeation.Id).ToList();
 
                 foreach (IdeationQuestion ideationQ in ideationQuestions)
                 {
-                    List<Idea> ideas = iqMgr.GetIdeas(ideationQ.Id);
+                    List<Idea> ideas = _iqMgr.GetIdeas(ideationQ.Id);
                 }
 
                 toReturnIdeation.CentralQuestions = ideationQuestions;
@@ -226,8 +259,9 @@ namespace UIMVC.Controllers.API
 
             throw new Exception("Skipping the IF statement for some reason...");
         }
-        */
+        
 
+        //Post methods that are supposed to let us fill in questionnaires on the android device
 
         // POST api/<controller>
         [HttpPost]
@@ -253,7 +287,7 @@ namespace UIMVC.Controllers.API
             return
                 Ok(idea);
         }
-*/
+
 
         //moduleId
         /*[HttpGet("{id}")]
@@ -297,32 +331,7 @@ namespace UIMVC.Controllers.API
         return null;
     }
 
-    //DAVIDSHIZZLE TO REFACTOR
-    //moduleId
-    /*[HttpGet("{id}")]
-    public async Task<ActionResult<Idea>> GetIdea(int id)
-    {
-
-        var idea = _idQuesMan.GetIdea(id);
-        if (idea == null)
-        {
-            _idQuesMan.MakeIdea(idea);
-
-            return CreatedAtAction(nameof(GetIdea), new { id = idea.Id }, idea);
-        }*/
-
-
-        /*HttpPost]
-
-        public async Task<ActionResult<Idea>> PostIdea(Idea idea)
-        {
-            _idQuesMan.MakeIdea(idea);
-            return CreatedAtAction(nameof(GetIdea), new
-            {
-                id = idea.Id
-            }, idea);
-        }
-
-        #1#*/
+    */
+    
     }
 }
