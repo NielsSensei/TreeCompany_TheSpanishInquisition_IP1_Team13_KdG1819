@@ -26,7 +26,7 @@ namespace UIMVC.Controllers.API
         [Route("GetPlatforms")]
         public IActionResult GetPlatforms()
         {
-            var platforms = platMgr.ReadAllPlatforms();
+            var platforms = platMgr.GetAllPlatforms();
 
             if (platforms == null)
                 return NotFound();
