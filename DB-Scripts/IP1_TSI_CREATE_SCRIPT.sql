@@ -171,7 +171,7 @@ CREATE TABLE QuestionnaireQuestions(
 	QQuestionID INT IDENTITY,
 	ModuleID INT NOT NULL,
 	QuestionText NVARCHAR(100) NOT NULL,
-	QType BIT NOT NULL,
+	QType TINYINT NOT NULL,
 	Required BIT NOT NULL,
 
 	/*Constraints*/
