@@ -191,7 +191,7 @@ namespace DAL.repos
 
             foreach (Event e in events)
             {
-                if (e.StartDate > obj.StartDate && e.EndDate < obj.EndDate)
+                if (ExtensionMethods.VerifyOverlap(e.StartDate, e.EndDate, obj.StartDate, obj.EndDate))
                 {
                     throw new DuplicateNameException("Deze Event met ID " + obj.Id + " (Start: " + obj.StartDate +
                                                      ", Einde: " + obj.EndDate + ") overlapt" +

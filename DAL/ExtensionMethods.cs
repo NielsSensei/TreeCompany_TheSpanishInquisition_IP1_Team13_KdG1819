@@ -71,6 +71,12 @@ namespace DAL
             return myList;
         }
 
+        internal static bool VerifyOverlap(DateTime firstStart, DateTime firstEnd, DateTime secondStart, DateTime secondEnd)
+        {
+            return firstStart == secondStart || firstEnd == secondEnd || firstStart == secondEnd ||
+                   firstEnd == secondStart;
+        }
+        
         private static string[] CommonWordDictionary()
         {
             return new[]

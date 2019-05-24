@@ -241,7 +241,7 @@ namespace DAL.repos
 
             foreach (Phase p in phases)
             {
-                if (p.StartDate > obj.StartDate && p.EndDate < obj.EndDate)
+                if (ExtensionMethods.VerifyOverlap(p.StartDate, p.EndDate, obj.StartDate, obj.EndDate))
                 {
                     throw new DuplicateNameException("Deze phase met ID " + obj.Id + " (Start: " + obj.StartDate +
                                                      ", Einde: " + obj.EndDate + ") overlapt" +

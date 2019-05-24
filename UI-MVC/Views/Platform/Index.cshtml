@@ -1,4 +1,5 @@
 ﻿@using Domain.Projects
+@using Domain.Users
 @using UIMVC.Services
 @model Domain.Users.Platform
 @inject ProjectService ProjectService
@@ -78,6 +79,57 @@
             }
         </div>
     </div>
+</section>
+<section class="container">
+    @if (ProjectService.CollectPlatformEvents(Model) != null)
+    {
+        @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.StartDate < DateTime.Today && e.EndDate > DateTime.Today
+            || e.StartDate == DateTime.Today))
+        {
+            <div class="row">
+                <h3>Evenementen die nu bezig zijn:</h3>  
+            </div>
+            <div class="row">
+                @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(
+                e => e.StartDate < DateTime.Today && e.EndDate > DateTime.Today || e.StartDate == DateTime.Today))
+                {
+                    <div class="col-4">
+                        @Html.Partial("Partials/_CollectEvent", e)
+                    </div>
+                }
+            </div> 
+        }
+        <br/>
+        @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.StartDate > DateTime.Today))
+        {
+            <div class="row">
+                <h3>Aankomende Evenementen:</h3>  
+            </div>
+            <div class="row">
+                @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(e => e.StartDate > DateTime.Today))
+                {
+                    <div class="col-4">
+                        @Html.Partial("Partials/_CollectEvent", e)
+                    </div>
+                }
+            </div>
+        }
+        <br/>
+        @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.EndDate < DateTime.Today))
+        {
+            <div class="row">
+                <h3>Afgelopen Evenementen:</h3>  
+            </div>
+            <div class="row">
+                @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(e => e.EndDate < DateTime.Today))
+                {
+                    <div class="col-4">
+                        @Html.Partial("Partials/_CollectEvent", e)
+                    </div>
+                }
+            </div>
+        }
+    }
 </section>
 
 <div class="modal fade" id="projectUitlegModal" tabindex="-1" role="dialog" aria-labelledby="projectUitlegModalLabel" aria-hidden="true">

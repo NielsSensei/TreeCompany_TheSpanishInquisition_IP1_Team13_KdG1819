@@ -26,7 +26,7 @@ namespace UIMVC.Services
             _ideationQuestionManager = new IdeationQuestionManager();
             _platformManager = new PlatformManager();
         }
-        
+
         public IEnumerable<Project> CollectPlatformProjects(Platform platform)
         {
             return _projectManager.GetPlatformProjects(platform);
@@ -58,8 +58,12 @@ namespace UIMVC.Services
         {
             return _projectManager.GetAllImages(project.Id);
         }
-        
-        
+
+        public IEnumerable<Event> CollectPlatformEvents(Platform platform)
+        {
+            return _platformManager.GetAllEvents(platform.Id);
+        }
+
         #region Breadcrumbs
 
         public Platform CollectPlatformForModule(Module moduleIn)
