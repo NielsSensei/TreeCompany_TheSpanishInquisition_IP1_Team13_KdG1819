@@ -150,6 +150,7 @@ namespace UIMVC.Controllers
             ViewData["Ideation"] = id;
             ViewData["ExtraInfo"] = i.ExtraInfo;
             ViewData["UserVote"] = i.UserVote;
+            ViewData["Settings"] = i.Settings;
 
             return View();
         }

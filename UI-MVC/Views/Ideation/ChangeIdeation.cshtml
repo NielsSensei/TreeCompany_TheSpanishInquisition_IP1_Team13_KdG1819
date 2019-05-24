@@ -3,6 +3,7 @@
 
 @{
     Phase parent = (Phase) @ViewData["Parent"];
+    IdeationSettings ideationSettings = (IdeationSettings) ViewData["Settings"];
 }
 
 <div class="container">
@@ -69,7 +70,7 @@
                             <label asp-for="Field">Tekstveld</label> 
                         </div>
                         <div class="col-2">
-                            <input asp-for="Field" class="form-check-input"/>
+                            <input asp-for="Field" class="form-check-input" checked="@ideationSettings.Field"/>
                         </div>
                     </div>
                     <div class="row">
@@ -77,7 +78,7 @@
                             <label asp-for="ClosedField">Opsomming</label> 
                         </div>
                         <div class="col-2">
-                            <input asp-for="ClosedField" class="form-check-input"/>
+                            <input asp-for="ClosedField" class="form-check-input" checked="@ideationSettings.ClosedField"/>
                         </div>
                     </div>
                     <div class="row">
@@ -85,7 +86,7 @@
                             <label asp-for="MapField">Map</label> 
                         </div>
                         <div class="col-2">
-                            <input asp-for="MapField" class="form-check-input"/>
+                            <input asp-for="MapField" class="form-check-input" checked="@ideationSettings.MapField"/>
                         </div>
                     </div>
                     <div class="row">
@@ -93,7 +94,7 @@
                             <label asp-for="VideoField">Filmpje</label> 
                         </div>
                         <div class="col-2">
-                            <input asp-for="VideoField" class="form-check-input"/>
+                            <input asp-for="VideoField" class="form-check-input" checked="@ideationSettings.VideoField"/>
                         </div>
                     </div>
                     <div class="row">
@@ -101,7 +102,7 @@
                             <label asp-for="ImageField">Foto</label> 
                         </div>
                         <div class="col-2">
-                            <input asp-for="ImageField" class="form-check-input"/>
+                            <input asp-for="ImageField" class="form-check-input" checked="@ideationSettings.ImageField"/>
                         </div>
                     </div>
                 </div>
