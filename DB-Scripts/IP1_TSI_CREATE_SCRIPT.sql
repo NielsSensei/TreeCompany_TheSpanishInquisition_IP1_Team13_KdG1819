@@ -1,6 +1,7 @@
 /*         CREATE SCRIPT IP1 VERSIE 5          */
 /*TABLES DROPPEN*/
 DROP TABLE IF EXISTS Ideations
+DROP TABLE IF EXISTS IdeationSettings
 DROP TABLE IF EXISTS Answers
 DROP TABLE IF EXISTS Ideationquestions
 DROP TABLE IF EXISTS Ideas
@@ -160,11 +161,22 @@ CREATE TABLE Ideations (
 	EventID INT,
 	UserVote BIT NOT NULL,
 	MediaFile VARCHAR(255),
-	RequiredFields tinyint NOT NULL,
 	ExtraInfo NVARCHAR(100),
 
 	/*Constraints*/
 	CONSTRAINT pk_Ideations PRIMARY KEY(ModuleID)
+)
+
+CREATE TABLE IdeationSettings(
+	ModuleID INT NOT NULL,
+	Field BIT NOT NULL,
+	ClosedField BIT NOT NULL,
+	MapField BIT NOT NULL,
+	VideoField BIT NOT NULL,
+	ImageField BIT NOT NULL,
+	
+	/*Constraints*/
+	CONSTRAINT pk_IdeationSettings PRIMARY KEY(ModuleID)
 )
 
 CREATE TABLE QuestionnaireQuestions(

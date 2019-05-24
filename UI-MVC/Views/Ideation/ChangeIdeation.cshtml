@@ -62,6 +62,49 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <h6>Geef hier mee welke velden verplicht zijn:</h6>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="Field">Tekstveld</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="Field" class="form-check-input"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="ClosedField">Opsomming</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="ClosedField" class="form-check-input"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="MapField">Map</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="MapField" class="form-check-input"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="VideoField">Filmpje</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="VideoField" class="form-check-input"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="ImageField">Foto</label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="ImageField" class="form-check-input"/>
+                        </div>
+                    </div>
+                </div>
                 <br/>
                 <div class="row">
                     <button class="btn btn-primary" type="submit">Bevestig</button>

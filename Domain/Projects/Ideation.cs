@@ -15,7 +15,8 @@ namespace Domain.Projects
         public Event Event{ get; set; }
         public string MediaLink { get; set; }
         public string ExtraInfo { get; set; }
-        public int RequiredFields { get; set; }
+        public IdeationSettings Settings { get; set; }
         public List<IdeationQuestion> CentralQuestions { get; set; }
+        
     }
 }

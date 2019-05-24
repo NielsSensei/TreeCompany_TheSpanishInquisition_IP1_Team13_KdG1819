@@ -1,6 +1,8 @@
 @using Domain.Identity
 @using Microsoft.AspNetCore.Identity
+@using UIMVC.Services
 @inject UserManager<UimvcUser> UserManager
+@inject ProjectService Service
 @model UIMVC.Models.AddIdeaModel
 
 @section Scripts
@@ -22,7 +24,7 @@
                 <div class="form-group">
                     <label>Text:</label>
                     @Html.TextArea("FieldText", "", new {@class = "form-control"})
-                </div>
+                </div> 
                 <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target=".collapseSettings" aria-expanded="false" aria-controls="collapseSettings">
                     Meer opties
                 </button>
@@ -33,11 +35,11 @@
                     <div class="form-group">
                         <label>Geef hier een youtube link:</label>
                         @Html.TextBox("FieldVideo", "", new {@class = "form-control"})
-                    </div>
+                    </div>  
                     <div class="form-group">
                         <label>Geef hier een foto:</label>
                         @Html.TextBox("FieldImage", "", new {@class = "form-control", type = "file"})
-                    </div>
+                    </div> 
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
@@ -49,10 +51,10 @@
                         </label>
                         @Html.TextBox("newIdeaMapX", "Eerste coordinaat", new {@class = "form-control"})
                         @Html.TextBox("newIdeaMapY", "Tweede coordinaat", new {@class = "form-control"})
-                    </div>
+                    </div>  
                 </div>
                 <div class="col-12 col-md-4">
-                    <div class="addFieldStringsContainer" id="@Model.ParentId">
+                     <div class="addFieldStringsContainer" id="@Model.ParentId">
                         <div class="form-group row">
                             <label>Maak hier eventueel een opsomming</label>
                             <div class="fieldStringContainer" id="@Model.ParentId">
@@ -61,7 +63,7 @@
                         <div class="form-group row fieldStringButton" id="@Model.ParentId">
                             <a class="btn btn-primary addFieldStringsButton" id="@Model.ParentId">Item Toevoegen</a>
                         </div>
-                    </div>
+                     </div>
                 </div>
             </div>
         }

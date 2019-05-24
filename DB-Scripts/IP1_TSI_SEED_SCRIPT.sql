@@ -119,8 +119,12 @@ INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
 VALUES(4,4,9)
 
 /* Ideations */
-INSERT INTO Ideations(ModuleID,UserID,Organisation,UserVote,RequiredFields,EventID,extraInfo)
-VALUES(2,7,0,1,41,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
+INSERT INTO Ideations(ModuleID,UserID,Organisation,UserVote,EventID,extraInfo)
+VALUES(2,7,0,1,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
+
+/* IdeationSettings */
+INSERT INTO IdeationSettings(ModuleID, Field, ClosedField, MapField, VideoField, ImageField)
+VALUES(2,1,1,1,1,1)
 
 /* Ideationquestions */
 INSERT INTO IdeationQuestions(IQuestionID,ModuleID,QuestionTitle,Description,WebsiteLink)

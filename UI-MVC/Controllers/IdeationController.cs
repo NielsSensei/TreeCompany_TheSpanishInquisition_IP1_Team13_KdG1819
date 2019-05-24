@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using UIMVC.Models;
 using UIMVC.Services;
 
@@ -73,9 +74,9 @@ namespace UIMVC.Controllers
          */
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult AddIdeation(AddIdeationModel cim, int project, string user)
+        public IActionResult AddIdeation(AddIdeationModel aim, int project, string user)
         {
-            if (cim == null)
+            if (aim == null)
             {
                 return BadRequest("Ideation can't be null");
             }
@@ -86,19 +87,31 @@ namespace UIMVC.Controllers
                 ParentPhase = new Phase() {Id = Int32.Parse(Request.Form["Parent"].ToString())},
                 User = new UimvcUser(){Id = user},
                 ModuleType = ModuleType.Ideation,
-                UserVote = cim.UserVote,
-                Title = cim.Title,
+                UserVote = aim.UserVote,
+                Title = aim.Title,
                 OnGoing = true
             };
-
-            if (cim.ExtraInfo != null)
+            
+            IdeationSettings settings = new IdeationSettings()
             {
-                i.ExtraInfo = cim.ExtraInfo;
+                Field = aim.Field,
+                ClosedField = aim.ClosedField,
+                MapField = aim.MapField,
+                VideoField = aim.VideoField,
+                ImageField = aim.ImageField
+            };
+
+            i.Settings = settings;
+            i.Settings.Ideation = i;
+
+            if (aim.ExtraInfo != null)
+            {
+                i.ExtraInfo = aim.ExtraInfo;
             }
 
-            if (cim.MediaLink != null && cim.MediaLink.Contains("youtube.com/watch?v="))
+            if (aim.MediaLink != null && aim.MediaLink.Contains("youtube.com/watch?v="))
             {
-                i.MediaLink = "https://youtube.com/embed/" + cim.MediaLink.Split("=")[1].Split("&")[0];
+                i.MediaLink = "https://youtube.com/embed/" + aim.MediaLink.Split("=")[1].Split("&")[0];
             }
 
             _moduleMgr.MakeIdeation(i);
@@ -146,19 +159,31 @@ namespace UIMVC.Controllers
          */
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost]
-        public IActionResult ConfirmChangeIdeation(int ideation, ChangeIdeationModel aim)
+        public IActionResult ConfirmChangeIdeation(int ideation, ChangeIdeationModel cim)
         {
             Ideation i = new Ideation()
             {
                 Id = ideation,
-                Title = aim.Title,
-                ExtraInfo = aim.ExtraInfo,
-                UserVote = aim.UserVote
+                Title = cim.Title,
+                ExtraInfo = cim.ExtraInfo,
+                UserVote = cim.UserVote
             };
             
-            if(aim.MediaFile != null && aim.MediaFile.Contains("youtube.com/watch?v="))
+            IdeationSettings settings = new IdeationSettings()
             {
-                i.MediaLink = "https://youtube.com/embed/" + aim.MediaFile.Split("=")[1].Split("&")[0];
+                Field = cim.Field,
+                ClosedField = cim.ClosedField,
+                MapField = cim.MapField,
+                VideoField = cim.VideoField,
+                ImageField = cim.ImageField
+            };
+
+            i.Settings = settings;
+            i.Settings.Ideation = i;
+            
+            if(cim.MediaFile != null && cim.MediaFile.Contains("youtube.com/watch?v="))
+            {
+                i.MediaLink = "https://youtube.com/embed/" + cim.MediaFile.Split("=")[1].Split("&")[0];
             }
 
             try
@@ -364,6 +389,9 @@ namespace UIMVC.Controllers
                     });
             }
 
+            List<string> error = new List<string>();
+            IdeationSettings settings = _moduleMgr.GetIdeation(idea.IdeaQuestion.Ideation.Id, true).Settings;
+            
             if (!Request.Form["FieldText"].ToString().Equals(""))
             {
                 Field field = new Field()
@@ -375,6 +403,13 @@ namespace UIMVC.Controllers
                 field.TextLength = field.Text.Length;
 
                 idea.Field = field;
+            }
+            else
+            {
+                if (settings.Field)
+                {
+                    error.Add("Tekst");
+                }
             }
 
             if (!Request.Form["newIdeaMapX"].ToString().Equals("Eerste coordinaat") &&
@@ -392,6 +427,13 @@ namespace UIMVC.Controllers
 
                 idea.Mfield = field;
             }
+            else
+            {
+                if (settings.MapField)
+                {
+                    error.Add("Map");
+                }
+            }
 
             if (!Request.Form["FieldVideo"].ToString().Equals(""))
             {
@@ -400,9 +442,16 @@ namespace UIMVC.Controllers
                     Idea = idea
                 };
 
-                field.VideoLink = "https://www.youtube.com/embed/" + 
+                field.VideoLink = "https://www.youtube.com/embed/" +
                                   Request.Form["FieldVideo"].ToString().Split("=")[1].Split("&")[0];
                 idea.Vfield = field;
+            }
+            else
+            {
+                if (settings.VideoField)
+                {
+                    error.Add("Filmpje");
+                }
             }
 
             if (form.Files.Any())
@@ -420,6 +469,13 @@ namespace UIMVC.Controllers
 
                 idea.Ifield = field;
             }
+            else
+            {
+                if (settings.ImageField)
+                {
+                    error.Add("Foto");
+                }
+            }
 
             if (fieldStrings.Any())
             {
@@ -436,9 +492,15 @@ namespace UIMVC.Controllers
 
                 idea.Cfield = field;
             }
-            
-            if (idea.Field != null || idea.Cfield != null || idea.Mfield != null || idea.Vfield != null
-                || idea.Ifield != null)
+            else
+            {
+                if (settings.ClosedField)
+                {
+                    error.Add("Opsomming");
+                }
+            }
+
+            if (!error.Any())
             {
                 try
                 {
@@ -450,11 +512,27 @@ namespace UIMVC.Controllers
                         new
                         {
                             Id = ideation, message = "Dit idee heeft iemand anders al eens " +
-                                                             "bedacht, je kan er wel op reageren."
+                                                     "bedacht, je kan er wel op reageren."
                         });
-                }
+                }   
             }
+            else
+            {
+                String myString = "";
 
+                if (error.Any())
+                {
+                    for(int i = 0; i < error.Count; i++)
+                    {
+                        myString += error[i];
+                        if (i != error.Count - 1) myString += ", ";
+                    }
+                }
+                
+                return RedirectToAction("CollectIdeationThread", "Ideation", 
+                    new { Id = ideation, message = "Volgende items ontbreken: " + myString }); 
+            }
+            
             return RedirectToAction("CollectIdeationThread", "Ideation", new { Id = ideation});
         }
         #endregion

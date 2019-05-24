@@ -62,7 +62,6 @@ namespace DAL.repos
         
         private IdeationsDao ConvertToDao(Ideation obj)
         {
-            //bool Org = obj.User.Role == Role.LOGGEDINORG;
             IdeationsDao dao = new IdeationsDao()
             {
                     ModuleId = obj.Id,
@@ -75,18 +74,7 @@ namespace DAL.repos
             {
                 dao.UserId = obj.User.Id;
             }
-
-            if (obj.RequiredFields > 0)
-            {
-                dao.RequiredFields = (byte) obj.RequiredFields;
-            }
-
-            if (obj.Event != null)
-            {
-                dao.EventId = obj.Event.Id;
-                //DTO.Organisation = Org;
-            }
-
+            
             return dao;
         }
 
@@ -99,8 +87,7 @@ namespace DAL.repos
                 UserVote = dao.UserVote,
                 Event = new Event { Id = dao.EventId },
                 MediaLink = dao.MediaFile,
-                ExtraInfo = dao.ExtraInfo,
-                RequiredFields = dao.RequiredFields
+                ExtraInfo = dao.ExtraInfo
             };
         }
 
@@ -123,6 +110,32 @@ namespace DAL.repos
                 ideation.Tags = ExtensionMethods.StringToList(dao.Tags);
             }
             return ideation;
+        }
+
+        private IdeationSettingsDao ConvertToDao(IdeationSettings settings)
+        {
+            return new IdeationSettingsDao()
+            {
+                ModuleId = settings.Ideation.Id,
+                Field = settings.Field,
+                ClosedField = settings.ClosedField,
+                ImageField = settings.ImageField,
+                VideoField = settings.VideoField,
+                MapField = settings.MapField
+            };
+        }
+
+        private IdeationSettings ConvertToDomain(IdeationSettingsDao dao)
+        {
+            return new IdeationSettings()
+            {
+                Ideation = new Ideation(){ Id = dao.ModuleId },
+                Field = dao.Field,
+                ClosedField = dao.ClosedField,
+                ImageField = dao.ImageField,
+                MapField = dao.MapField,
+                VideoField = dao.VideoField
+            };
         }
         #endregion
 
@@ -170,9 +183,13 @@ namespace DAL.repos
             obj.Id = FindNextAvailableIdeationId();
             ModulesDao newModule = GrabModuleInformationDao(obj);
             IdeationsDao newIdeation = ConvertToDao(obj);
+            IdeationSettings settings = obj.Settings;
+            settings.Ideation = obj;
+            IdeationSettingsDao newSettings = ConvertToDao(settings);
 
             _ctx.Modules.Add(newModule);
             _ctx.Ideations.Add(newIdeation);
+            _ctx.IdeationSettings.Add(newSettings);
             _ctx.SaveChanges();
 
             return obj;
@@ -194,7 +211,13 @@ namespace DAL.repos
             IdeationsDao ideationDao = details ? _ctx.Ideations.AsNoTracking().First(m => m.ModuleId == id) : _ctx.Ideations.First(m => m.ModuleId == id);
             ExtensionMethods.CheckForNotFound(ideationDao, "Ideation", id);
 
-            return ConvertToDomain(ideationDao);
+            Ideation readIdeation = ConvertToDomain(ideationDao);
+            IdeationSettingsDao settings = details
+                ? _ctx.IdeationSettings.AsNoTracking().First(s => s.ModuleId == id)
+                : _ctx.IdeationSettings.First(s => s.ModuleId == id);
+            readIdeation.Settings = ConvertToDomain(settings);
+
+            return readIdeation;
         }
 
         /*
@@ -226,8 +249,18 @@ namespace DAL.repos
             {
                 if(!String.IsNullOrEmpty(newIdeation.ExtraInfo)) foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
                 if(!String.IsNullOrEmpty(newIdeation.MediaFile)) foundIdeation.MediaFile = newIdeation.MediaFile;
-                if(newIdeation.RequiredFields != 0) foundIdeation.RequiredFields = newIdeation.RequiredFields;
                 if(!String.IsNullOrEmpty(newIdeation.UserVote.ToString())) foundIdeation.UserVote = newIdeation.UserVote;
+            }
+
+            IdeationSettingsDao newSettings = ConvertToDao(obj.Settings);
+            IdeationSettingsDao foundSettings = _ctx.IdeationSettings.FirstOrDefault(s => s.ModuleId == obj.Id);
+            if (foundSettings != null)
+            {
+                if (!String.IsNullOrEmpty(newSettings.Field.ToString())) foundSettings.Field = newSettings.Field;
+                if (!String.IsNullOrEmpty(newSettings.ClosedField.ToString())) foundSettings.ClosedField = newSettings.ClosedField;
+                if (!String.IsNullOrEmpty(newSettings.MapField.ToString())) foundSettings.MapField = newSettings.MapField;
+                if (!String.IsNullOrEmpty(newSettings.VideoField.ToString())) foundSettings.VideoField = newSettings.VideoField;
+                if (!String.IsNullOrEmpty(newSettings.ImageField.ToString())) foundSettings.ImageField = newSettings.ImageField;
             }
 
             ModulesDao newModule = GrabModuleInformationDao(obj);
@@ -258,6 +291,9 @@ namespace DAL.repos
             _ctx.Modules.Remove(toDeleteModule);
             IdeationsDao toDelete = _ctx.Ideations.First(r => r.ModuleId == id);
             _ctx.Ideations.Remove(toDelete);
+            IdeationSettingsDao toDeleteSettings = _ctx.IdeationSettings.First(r => r.ModuleId == id);
+            _ctx.IdeationSettings.Remove(toDeleteSettings);
+            
             _ctx.SaveChanges();
         }
 

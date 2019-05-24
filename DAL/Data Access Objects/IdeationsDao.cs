@@ -12,6 +12,5 @@
         public int EventId { get; set; }
         public bool UserVote { get; set; }
         public string MediaFile { get; set; }
-        public byte RequiredFields { get; set; }
     }
 }
