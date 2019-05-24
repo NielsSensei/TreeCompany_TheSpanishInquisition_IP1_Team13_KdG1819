@@ -50,6 +50,62 @@
                 }
 
             </section>
+            <section>
+                @if (ProjectService.CollectPlatformEvents(Model) != null)
+                {
+                    @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.StartDate < DateTime.Today && e.EndDate > DateTime.Today
+                                                                              || e.StartDate == DateTime.Today))
+                     {
+                         <div class="row">
+                             <h3 class="ml-3 mt-3">Evenementen die nu bezig zijn:</h3>
+            
+                         </div>
+                         <hr/>
+                         <div class="row">
+                             @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(
+                                 e => e.StartDate < DateTime.Today && e.EndDate > DateTime.Today || e.StartDate == DateTime.Today))
+                             {
+                                 <div class="col-12">
+                                     @Html.Partial("Partials/_CollectEvent", e)
+                                 </div>
+                             }
+                         </div>
+                     }
+                    <div class="d-none d-lg-inline">
+                        @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.StartDate > DateTime.Today))
+                        {
+                            <div class="row">
+                                <h3 class="ml-3 mt-3">Aankomende Evenementen:</h3>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(e => e.StartDate > DateTime.Today))
+                                {
+                                    <div class="col-12">
+                                        @Html.Partial("Partials/_CollectEvent", e)
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.EndDate < DateTime.Today))
+                        {
+                            <div class="row">
+                                <h3 class="ml-3 mt-3">Afgelopen Evenementen:</h3>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(e => e.EndDate < DateTime.Today))
+                                {
+                                    <div class="col-12">
+                                        @Html.Partial("Partials/_CollectEvent", e)
+                                    </div>
+                                }
+                            </div>
+                        }
+                        
+                    </div>
+                }
+            </section>
             <p class="text-info">@ViewData["StatusMessage"]</p>
         </div>
         <div class="col-md-12 col-lg-7">
@@ -80,57 +136,7 @@
         </div>
     </div>
 </section>
-<section class="container">
-    @if (ProjectService.CollectPlatformEvents(Model) != null)
-    {
-        @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.StartDate < DateTime.Today && e.EndDate > DateTime.Today
-            || e.StartDate == DateTime.Today))
-        {
-            <div class="row">
-                <h3>Evenementen die nu bezig zijn:</h3>  
-            </div>
-            <div class="row">
-                @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(
-                e => e.StartDate < DateTime.Today && e.EndDate > DateTime.Today || e.StartDate == DateTime.Today))
-                {
-                    <div class="col-4">
-                        @Html.Partial("Partials/_CollectEvent", e)
-                    </div>
-                }
-            </div> 
-        }
-        <br/>
-        @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.StartDate > DateTime.Today))
-        {
-            <div class="row">
-                <h3>Aankomende Evenementen:</h3>  
-            </div>
-            <div class="row">
-                @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(e => e.StartDate > DateTime.Today))
-                {
-                    <div class="col-4">
-                        @Html.Partial("Partials/_CollectEvent", e)
-                    </div>
-                }
-            </div>
-        }
-        <br/>
-        @if (ProjectService.CollectPlatformEvents(Model).Any(e => e.EndDate < DateTime.Today))
-        {
-            <div class="row">
-                <h3>Afgelopen Evenementen:</h3>  
-            </div>
-            <div class="row">
-                @foreach (Event e in ProjectService.CollectPlatformEvents(Model).Where(e => e.EndDate < DateTime.Today))
-                {
-                    <div class="col-4">
-                        @Html.Partial("Partials/_CollectEvent", e)
-                    </div>
-                }
-            </div>
-        }
-    }
-</section>
+
 
 <div class="modal fade" id="projectUitlegModal" tabindex="-1" role="dialog" aria-labelledby="projectUitlegModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
