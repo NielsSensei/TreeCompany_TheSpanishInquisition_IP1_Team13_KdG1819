@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.repos
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class IdeationRepository : IRepository<Ideation>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -20,6 +23,9 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Conversion Methods
         private ModulesDao GrabModuleInformationDao(Ideation obj)
         {
@@ -33,7 +39,7 @@ namespace DAL.repos
                 TwitterLikeCount = obj.TwitterLikeCount,
                 ShareCount = obj.ShareCount,
                 RetweetCount = obj.RetweetCount,
-                IsQuestionnaire = obj.ModuleType == ModuleType.Questionnaire
+                ModuleType = (byte) obj.ModuleType
             };
 
             if (obj.Tags != null)
@@ -53,8 +59,7 @@ namespace DAL.repos
 
             return dao;
         }
-
-        // XV: TODO Create a check for organisation accounts
+        
         private IdeationsDao ConvertToDao(Ideation obj)
         {
             //bool Org = obj.User.Role == Role.LOGGEDINORG;
@@ -63,6 +68,7 @@ namespace DAL.repos
                     ModuleId = obj.Id,
                     ExtraInfo = obj.ExtraInfo,
                     MediaFile = obj.MediaLink,
+                    UserVote = obj.UserVote
             };
 
             if (obj.User != null)
@@ -78,7 +84,6 @@ namespace DAL.repos
             if (obj.Event != null)
             {
                 dao.EventId = obj.Event.Id;
-                dao.UserIdea = obj.UserIdea;
                 //DTO.Organisation = Org;
             }
 
@@ -91,7 +96,7 @@ namespace DAL.repos
             {
                 Id = dao.ModuleId,
                 User = new UimvcUser { Id = dao.UserId },
-                UserIdea = dao.UserIdea,
+                UserVote = dao.UserVote,
                 Event = new Event { Id = dao.EventId },
                 MediaLink = dao.MediaFile,
                 ExtraInfo = dao.ExtraInfo,
@@ -121,6 +126,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Id generation
         private int FindNextAvailableIdeationId()
         {
@@ -129,8 +137,23 @@ namespace DAL.repos
             return newId;
         }
         #endregion
-        
+
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Ideation CRUD
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * Bij de meeste Create Methodes wordt er tussen een textveld vergeleken, hier is dit niet zo. Hier vergelijken we op ParentPhase, het object,
+         * want een Module - lees Ideation of Questionnaire - heeft maar een Phase waar het is in opgestart en aan gekoppeld mag worden. Moest het toch
+         * zijn dat er iets misloopt en toch twee Modules dezelfde Phase proberen te claimen dan wordt deze exception getriggered. Merk ook op dat we
+         * hier twee tabellen moet aanspreken voor Ideation CRUD. 
+         *
+         * @see Domain.Projects.Module
+         * @see Domain.Projects.Phase
+         * 
+         */
         public Ideation Create(Ideation obj)
         {
             IEnumerable<Ideation> ideations = ReadAll(obj.Project.Id);
@@ -155,6 +178,17 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public Ideation Read(int id, bool details)
         {
             IdeationsDao ideationDao = details ? _ctx.Ideations.AsNoTracking().First(m => m.ModuleId == id) : _ctx.Ideations.First(m => m.ModuleId == id);
@@ -163,10 +197,21 @@ namespace DAL.repos
             return ConvertToDomain(ideationDao);
         }
 
-        public Ideation ReadWithModule(int id)
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
+        public Ideation ReadWithModule(int id, bool details)
         {
-            Ideation ideation = Read(id, true);
-            ModulesDao dao = _ctx.Modules.First(m => m.ModuleId == id);
+            Ideation ideation = Read(id, details);
+            ModulesDao dao = details ? _ctx.Modules.AsNoTracking().First(m => m.ModuleId == id) : _ctx.Modules.First(m => m.ModuleId == id);
 
             ideation = IdeationWithModules(ideation, dao);
 
@@ -182,8 +227,9 @@ namespace DAL.repos
                 foundIdeation.ExtraInfo = newIdeation.ExtraInfo;
                 foundIdeation.MediaFile = newIdeation.MediaFile;
                 foundIdeation.RequiredFields = newIdeation.RequiredFields;
+                foundIdeation.UserVote = newIdeation.UserVote;
             }
-            
+
             ModulesDao newModule = GrabModuleInformationDao(obj);
             ModulesDao foundModule = _ctx.Modules.FirstOrDefault(dto => dto.ModuleId == newModule.ModuleId);
             if (foundModule != null)
@@ -197,7 +243,7 @@ namespace DAL.repos
                 foundModule.RetweetCount = newModule.RetweetCount;
                 foundModule.Tags = newModule.Tags;
             }
-            
+
             if (newModule.PhaseId != foundModule.PhaseId)
             {
                 foundModule.PhaseId = newModule.PhaseId;
@@ -221,7 +267,7 @@ namespace DAL.repos
 
             foreach (IdeationsDao dao in _ctx.Ideations)
             {
-                Ideation toAdd = ReadWithModule(dao.ModuleId);
+                Ideation toAdd = ReadWithModule(dao.ModuleId, false);
                 myQuery.Add(toAdd);
             }
 
@@ -234,10 +280,13 @@ namespace DAL.repos
         }
         #endregion
         
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Tag CRUD
         public string CreateTag(string obj, int moduleId)
         {
-            Ideation ideationWTags = ReadWithModule(moduleId);
+            Ideation ideationWTags = ReadWithModule(moduleId, false);
             string oldTags = ExtensionMethods.ListToString(ideationWTags.Tags);
             oldTags += "," + obj;
 

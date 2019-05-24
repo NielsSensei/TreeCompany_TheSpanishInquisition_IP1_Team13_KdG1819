@@ -13,6 +13,9 @@ using UimvcUser = Domain.Identity.UimvcUser;
 [assembly: HostingStartup(typeof(UIMVC.Areas.Identity.IdentityHostingStartup))]
 namespace UIMVC.Areas.Identity
 {
+    /*
+     * @author Xander Veldeman
+     */
     public class IdentityHostingStartup : IHostingStartup
     {
         public void Configure(IWebHostBuilder builder)
@@ -21,7 +24,7 @@ namespace UIMVC.Areas.Identity
                 services.AddDbContext<DAL.Contexts.CityOfIdeasDbContext>(options =>
                     options.UseSqlite(
                         context.Configuration.GetConnectionString("UIMVCContextConnection")));
-                
+
                 services.AddDefaultIdentity<UimvcUser>(
                     config => { config.SignIn.RequireConfirmedEmail = true; })
                     .AddRoles<IdentityRole>()

@@ -33,11 +33,11 @@ INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
 VALUES(5,1,'Begin van de vergroening van district Deurne','2019-07-01','2019-07-31')
 
 /* Modules */
-INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
-VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',1,0,0,0,0,0,'Hoe pakken we de Groenplaats aan, onze gedachten')
+INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,ModuleType,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
+VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',0,0,0,0,0,0,'Hoe pakken we de Groenplaats aan, onze gedachten')
 
-INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,IsQuestionnaire,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
-VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',0,0,0,0,0,0,'Geef uw alternatief!')
+INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,ModuleType,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
+VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',1,0,0,0,0,0,'Geef uw alternatief!')
 
 /* QuestionnaireQuestions
 0 = open
@@ -79,31 +79,31 @@ VALUES(5,5,1,'voorbeeldigeantwerpenaar@nva.be')
 
 /* Options */
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(1,'Geen tram 4 meer op de groenplaats.',2)
+VALUES(1,'Geen tram 4 meer op de groenplaats.',2,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(2,'Verkeer afsluiten op de groenplaats.',2)
+VALUES(2,'Verkeer afsluiten op de groenplaats.',2,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(3,'De groenplaats vervangen door klein bos.',2)
+VALUES(3,'De groenplaats vervangen door klein bos.',2,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(4,'Ja',3)
+VALUES(4,'Ja',3,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(5,'Nee',3)
+VALUES(5,'Nee',3,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(6,'10m�',4)
+VALUES(6,'10m�',4,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(7,'20m�',4)
+VALUES(7,'20m�',4,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(8,'30m�',4)
+VALUES(8,'30m�',4,0)
 
 INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(9,'40m�',4)
+VALUES(9,'40m�',4,0)
 
 /* Choices */
 INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
@@ -119,7 +119,7 @@ INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
 VALUES(4,4,9)
 
 /* Ideations */
-INSERT INTO Ideations(ModuleID,UserID,Organisation,UserIdea,RequiredFields,EventID,extraInfo)
+INSERT INTO Ideations(ModuleID,UserID,Organisation,UserVote,RequiredFields,EventID,extraInfo)
 VALUES(2,7,0,1,41,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
 
 /* Ideationquestions */
@@ -146,20 +146,18 @@ VALUES(5,1,1,1,0,1,'SPA','NIET GESELECTEERD',0,0,0,0,0,0,0)
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
 VALUES(1,1,'We maken een grote haag van bomen en struiken rond de Groenplaats om de grijze beton erbuiten te houden!',0,0)
 
-INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
-VALUES(2,2,'Maken een aantal graspleintjes en bloembakken aan met stenen wandelpaden en een pleintje in het midden rond het standbeeld :)',0,0)
-
-INSERT INTO IdeaFields(FieldID,IdeaID,fieldStrings,LocationX,LocationY)
-VALUES(3,2,'I see a gray square and I want to paint it green - Rolling Stoned',0,0)
+INSERT INTO IdeaFields(FieldID,IdeaID,FieldText, FieldStrings, LocationX,LocationY)
+VALUES(2,2,'Maken een aantal graspleintjes en bloembakken aan met stenen wandelpaden en een pleintje in het midden rond het standbeeld :)',
+'I see a gray square and I want to paint it green - Rolling Stoned',0,0)
 
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
-VALUES(4,3,'Een locatie zo nabij het oude centrum moet evenveel cultuur hebben als het centrum zelf. Dus stel ik voor om hier regelmatige theater voorstelling te houden, zodat we de jongeren echte cultuur kunnen aanleren.',0,0)
+VALUES(3,3,'Een locatie zo nabij het oude centrum moet evenveel cultuur hebben als het centrum zelf. Dus stel ik voor om hier regelmatige theater voorstelling te houden, zodat we de jongeren echte cultuur kunnen aanleren.',0,0)
 
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
-VALUES(5,4,'Nope, dom idee. Wij wille gewoon goeie films kunne zien, buiten op de Groenplaats. Ff pintje op caf�, laatste nieve film om middernacht opt gras buite. Der woont tog niemand, dus ook geen lawaaid overlast.',0,0)
+VALUES(4,4,'Nope, dom idee. Wij wille gewoon goeie films kunne zien, buiten op de Groenplaats. Ff pintje op caf�, laatste nieve film om middernacht opt gras buite. Der woont tog niemand, dus ook geen lawaaid overlast.',0,0)
 
 INSERT INTO IdeaFields(FieldID,IdeaID,FieldText,LocationX,LocationY)
-VALUES(6,5,'30 jaar geleden was de groenplaats nog groen toen dat SPA aan het roer hing in antwerpen. Sinds de NVA zich kwam moeien is er een echte vergrijzing in de stad!',0,0)
+VALUES(5,5,'30 jaar geleden was de groenplaats nog groen toen dat SPA aan het roer hing in antwerpen. Sinds de NVA zich kwam moeien is er een echte vergrijzing in de stad!',0,0)
 
 /* Devices */
 INSERT INTO Devices(DeviceID,LocationX,LocationY)

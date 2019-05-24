@@ -3,53 +3,96 @@
 @model Domain.Users.Platform
 @inject ProjectService ProjectService
 @inject RoleService RoleService
+@inject UserService UserService
 @{
     ViewData["Title"] = Model.Name;
+    ViewData["Platform"] = Model;
+}
+
+@section Scripts
+{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
 }
 
 <br/>
 <section class="container">
-   <div class="row">
-       <div class="col-5">
-           <section class="card">
-               <div class="card-header pb-0">
-                   <div class="card-title">
-                       <div class="row">
-                           <div class="col-8">
-                               <h1>@Model.Name</h1>
-                           </div>
-                           <div class="col-4">
-                               <img alt="Icon" width="100" height="100"
-                               src="data:image/png;base64, @System.Convert.ToBase64String(Model.IconImage)"/>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <div class="card-body">
-                   <img alt="FrontPage"
-                        src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
-               </div>
-               <div class="card-footer">
-                   <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject"
-                      asp-route-platform="@Model.Id">Maak nieuw project aan</a>
-               </div>
-           </section>
-       </div>
-       <div class="col-7">
-           @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any())
-           {
-                       <h4>Er zijn geen projecten voor dit platform</h4>
-           }
-           else
-           {
+    <div class="row">
+        <div class="col-md-12 col-lg-5">
+            <section class="card">
+                <div class="card-header pb-0">
+                    <div class="card-title">
+                        <div class="row">
+                            <div class="col-8">
+                                <h1>@Model.Name</h1>
+                            </div>
+                            <div class="col-4">
+                                <img alt="Icon" class="img-fluid rounded float-right" width="100" height="100"
+                                     src="data:image/png;base64, @System.Convert.ToBase64String(Model.IconImage)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <img alt="FrontPage" class="card-img"
+                         src="data:image/png;base64, @System.Convert.ToBase64String(Model.FrontPageImage)"/>
+                </div>
+                @if (User.Identity.IsAuthenticated && await RoleService.IsAdmin(User))
+                {
+                    <div class="card-footer">
+                        <div class="row justify-content-center">
+                            <a class="btn btn-primary" asp-controller="Project" asp-action="AddProject"
+                               asp-route-platform="@Model.Id">
+                                Maak nieuw project aan
+                            </a>
+                        </div>
+                    </div>
+                }
+
+            </section>
+            <p class="text-info">@ViewData["StatusMessage"]</p>
+        </div>
+        <div class="col-md-12 col-lg-7">
+            <div class="row m-1 mb-0 align-items-center">
+                <h1>Projecten</h1>
+                <div class="col">
+                    <button type="button" class="close align-self-end" data-toggle="modal" data-target="#projectUitlegModal">
+                        ?
+                    </button>
+                </div>
+            </div>
+            <hr/>
+            @if (ProjectService == null || !ProjectService.CollectPlatformProjects(Model).Any() ||
+                 (!(User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result) && !ProjectService.CollectPlatformProjects(Model).Any(project => project.Visible)))
+            {
+                <h4>Er zijn geen projecten voor dit platform</h4>
+            }
+            else
+            {
                 foreach (Project project in ProjectService.CollectPlatformProjects(Model))
                 {
-                    if (project.Visible)
+                    if (project.Visible || (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result))
                     {
                         @Html.DisplayFor(m => project)
                     }
                 }
-           }
-       </div>
-   </div>
+            }
+        </div>
+    </div>
 </section>
+
+<div class="modal fade" id="projectUitlegModal" tabindex="-1" role="dialog" aria-labelledby="projectUitlegModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Wat zijn projecten</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Een project is een manier om info te verzamelen over jullie meningen. Dit kan met zowel ideeën als ideations. Elk project heeft zijn centrale thema.</p>
+                <p>Dit zijn alle projecten voor @Model.Name</p>
+            </div>
+        </div>
+    </div>
+</div>

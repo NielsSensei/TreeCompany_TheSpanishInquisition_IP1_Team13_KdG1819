@@ -1,21 +1,133 @@
-@model Domain.Users.Platform
+@using Domain.Identity
+@using Domain.Users
+@using UIMVC.Services
+@model AddPlatformModel
+@inject RoleService RoleService
 
-@{
-    ViewBag.Title = "Edit: "+Model.Name;
-    Layout = "_Layout";
+@section Scripts
+{
+    <script type="module" src="~/dist/changeplatform.entry.js" defer></script>
 }
 
-<h2>Aanpassen van @Model.Name</h2>
-<form asp-action="ChangePlatform" asp-controller="Platform" method="post">
-    <div class="form-group">
-        <label asp-for="Name">Naam van het platform</label>
-        <input asp-for="Name" class="form-control" value="@Model.Name"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Url">Een verkorte URL</label>
-        <input asp-for="Url" class="form-control" value="@Model.Url"/>
-    </div>
+@{
+    Platform platform = (Platform) ViewData["platform"];
+    ViewBag.Title = "Edit: " + platform.Name;
+    Layout = "_Layout";
+
+    IEnumerable<UimvcUser> admins = await RoleService.CollectAdmins(platform.Id);
+    IEnumerable<UimvcUser> mods = await RoleService.CollectModerators(platform.Id);
+}
+
+<h2>Aanpassen van @platform.Name</h2>
+<section class="container">
     <div class="row">
-        <input type="submit" class="btn btn-primary" value="Opslaan" />
+        <div class="col-md-8">
+            <form asp-action="ChangePlatform" asp-controller="Platform" asp-route-platformId="@platform.Id" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="Name">Naam van het platform</label>
+                    <input asp-for="Name" class="form-control" value="@platform.Name"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Url">Een verkorte URL</label>
+                    <input asp-for="Url" class="form-control" value="@platform.Url"/>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <p>Icoon</p>
+                        @Html.TextBoxFor(m => m.IconImage, new {type = "file", @class = "btn btn-primary"})
+                        @Html.ValidationMessageFor(m => m.IconImage)
+                    </div>
+                    <div class="col-md-10">
+                        <p>Voorpagina platform</p>
+                        @Html.TextBoxFor(m => m.FrontPageImage, new {type = "file", @class = "btn btn-primary"})
+                        @Html.ValidationMessageFor(m => m.FrontPageImage)
+                    </div>
+                    <div class="col-md-10">
+                        <p>Startpagina</p>
+                        @Html.TextBoxFor(m => m.CarouselImage, new {type = "file", @class = "btn btn-primary"})
+                        @Html.ValidationMessageFor(m => m.CarouselImage)
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <input type="submit" class="btn btn-primary" value="Opslaan"/>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <h4>Icoon</h4>
+            <img alt="Icon" class="img-fluid" src="data:image/png;base64, @System.Convert.ToBase64String(platform.IconImage)"/>
+            <h4>Foto voor voorpagina</h4>
+            <img alt="FrontPageImage" class="img-fluid" src="data:image/png;base64, @System.Convert.ToBase64String(platform.FrontPageImage)"/>
+            <h4>Carouselfoto</h4>
+            <img alt="CarouselImage" class="img-fluid" src="data:image/png;base64, @System.Convert.ToBase64String(platform.CarouselImage)"/>
+        </div>
     </div>
-</form>
+</section>
+
+<br/>
+<section class="container">
+    <div class="row">
+        <div class="col-md-8">
+            @if (User.IsInRole(Role.SuperAdmin.ToString("G")))
+            {
+                <h2>Wijs een admin of moderator toe aan het project</h2>
+                @Html.Partial("Partials/_AssignUserPartial", new AssignUserModel() {PlatformId = platform.Id})
+            }
+            else
+            {
+                <h2>Wijs een moderator toe aan het project</h2>
+                @Html.Partial("Partials/_AssignModPartial", new AssignUserModel() {PlatformId = platform.Id})
+            }
+
+        </div>
+        <div class="col-sm-4">
+            <h4>Admins van dit platform</h4>
+            @if (admins.Any())
+            {
+                foreach (UimvcUser admin in admins)
+                {
+                    <div class="row">
+                        <div class="col-2">
+                            @if (User.IsInRole(Role.SuperAdmin.ToString("G")))
+                            {
+                                @Html.Partial("Partials/_RemoveUserPartial", new AssignUserModel() {PlatformId = platform.Id, UserMail = admin.Email})
+                            }
+                            
+                        </div>
+                        <div class="col-10">
+                            <p class="mb-0">@admin.Name</p>
+                            <p>@admin.Email</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Geen admins gevonden.</p>
+            }
+
+            <h4>Moderators van dit platform</h4>
+            @if (mods.Any())
+            {
+                foreach (UimvcUser mod in mods)
+                {
+                    <div class="row">
+                        <div class="col-2">
+                            @Html.Partial("Partials/_RemoveUserPartial", new AssignUserModel() {PlatformId = platform.Id, UserMail = mod.Email})
+                        </div>
+                        <div class="col-10">
+                            <p class="mb-0">@mod.Name</p>
+                            <p>@mod.Email</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Geen moderators gevonden.</p>
+            }
+
+        </div>
+
+    </div>
+</section>

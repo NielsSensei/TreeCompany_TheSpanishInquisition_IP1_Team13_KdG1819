@@ -1,0 +1,72 @@
+@using Domain.Projects
+@model UIMVC.Models.ChangeIdeationModel
+
+@{
+    Phase parent = (Phase) @ViewData["Parent"];
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Een Ideation Aanpassen.</h1>
+            <form asp-controller="Ideation" asp-action="ConfirmChangeIdeation" method="post" 
+                  asp-route-ideation="@ViewData["Ideation"]" asp-route-aim="@Model">
+                <div class="form-group">
+                    <label>ProjectID</label>
+                    <input disabled value="@ViewData["Project"]" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <input disabled class="form-control" value="Ideation"/>
+                </div>
+                <fieldset disabled>
+                    <div class="form-group row">  
+                        <label class="col-sm-2 col-form-label">Huidige fase</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="Text" value="@parent.Description" />
+                        </div>
+                    </div>
+                </fieldset>
+                @if ((int)ViewData["PhaseCount"] > 0)
+                {
+                    <div class="form-group row">
+                        <label for="ParentPhase" class="col-sm-2 col-form-label">Selecteer een andere fase:</label>
+                        @Html.DropDownList("ParentPhase", new SelectList((System.Collections.IEnumerable) ViewData["Phases"], "Id", "Description"), "Kies een fase", new { @class = "form-control" })
+                    </div>
+                }
+                
+                @if ((int)ViewData["PhaseCount"] == 0)
+                {
+                    <p>Geen andere vrije fases, wat jammer.</p>
+                }
+                                
+                <div class="form-group">
+                    <label label-for="Title">Titel van de module</label>
+                    <input asp-for="Title" class="form-control" value="@ViewData["Title"]"/>
+                </div>
+                <div class="form-group">
+                    <label label-for="ExtraInfo">Geef hier extra informatie</label>
+                    <input asp-for="ExtraInfo" class="form-control" value="@ViewData["ExtraInfo"]"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MediaFile">Geef hier een nieuw filmpje eventueel: </label>
+                    <input asp-for="MediaFile" class="form-control" value="@ViewData["Video"]"/>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-10">
+                            <label asp-for="UserVote">Mogen gebruikers stemmen op de ideeën? </label> 
+                        </div>
+                        <div class="col-2">
+                            <input asp-for="UserVote" class="form-check-input" checked="@((bool) ViewData["UserVote"])"/>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <button class="btn btn-primary" type="submit">Bevestig</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

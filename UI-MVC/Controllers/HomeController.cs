@@ -12,6 +12,9 @@ namespace UIMVC.Controllers
             _platformMgr = new PlatformManager();
         }
 
+        /**
+         * @author Xander Veldeman
+         */
         public IActionResult Index()
         {
             var platforms = _platformMgr.ReadAllPlatforms();
@@ -19,12 +22,26 @@ namespace UIMVC.Controllers
             return View(platforms);
         }
 
+        /**
+         * @author Xander Veldeman
+         */
         public IActionResult About()
         {
             return View();
         }
 
+        /**
+         * @author Xander Veldeman
+         */
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        /**
+         * @author Niels Van Zandbergen
+         */
+        public IActionResult FAQ()
         {
             return View();
         }

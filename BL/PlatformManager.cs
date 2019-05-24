@@ -5,19 +5,25 @@ using Domain.Users;
 
 namespace BL
 {
+    /*
+     * @authors Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class PlatformManager
     {
         private PlatformRepository PlatformRepo { get; }
-        
+
         public PlatformManager()
         {
             PlatformRepo = new PlatformRepository();
         }
-        
+
+        /*
+         * @authors Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
         #region Platform
-        public Platform GetPlatform(int platformId)
+        public Platform GetPlatform(int platformId, bool details)
         {
-            return PlatformRepo.Read(platformId, true);
+            return PlatformRepo.Read(platformId, details);
         }
 
         public Platform MakePlatform(Platform platform)
@@ -34,12 +40,12 @@ namespace BL
         {
             PlatformRepo.Delete(platformId);
         }
-        
+
         public IEnumerable<Platform> ReadAllPlatforms()
         {
             return PlatformRepo.ReadAll();
         }
-        
+
         public IEnumerable<Platform> SearchPlatforms(string search)
         {
             return PlatformRepo.ReadAll()

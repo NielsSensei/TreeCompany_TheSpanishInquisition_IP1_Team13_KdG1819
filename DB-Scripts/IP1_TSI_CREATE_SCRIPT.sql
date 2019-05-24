@@ -67,6 +67,7 @@ CREATE TABLE Projects(
 	/*Constraints*/
 	CONSTRAINT pk_Projects PRIMARY KEY(ProjectID),
 	CONSTRAINT ck_Projects_Status CHECK (Status = UPPER(Status))
+
 )
 
 CREATE TABLE Phases(
@@ -94,7 +95,7 @@ CREATE TABLE Modules(
 	ShareCount INT,
 	RetweetCount INT,
 	Tags VARCHAR(255),
-	IsQuestionnaire BIT NOT NULL,
+	ModuleType TINYINT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Modules PRIMARY KEY(ModuleID)
@@ -111,8 +112,8 @@ CREATE TABLE Projectimages(
 
 CREATE TABLE Devices(
 	DeviceID INT IDENTITY,
-	LocationX FLOAT,
-	LocationY FLOAT,
+	LocationX REAL,
+	LocationY REAL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Devices PRIMARY KEY(DeviceID)
@@ -156,7 +157,7 @@ CREATE TABLE Ideations (
 	UserID NVARCHAR(255) NOT NULL,
 	Organisation BIT NOT NULL,
 	EventID INT,
-	UserIdea BIT NOT NULL,
+	UserVote BIT NOT NULL,
 	MediaFile VARCHAR(255),
 	RequiredFields tinyint NOT NULL,
 	ExtraInfo NVARCHAR(100),
@@ -190,6 +191,7 @@ CREATE TABLE Options(
 	OptionID INT IDENTITY,
 	OptionText NVARCHAR(150) NOT NULL,
 	QQuestionID INT NOT NULL,
+	IsCustom BIT NOT NULL,
 
 	/*Constraints*/
 	CONSTRAINT pk_Options PRIMARY KEY(OptionID)
@@ -204,22 +206,19 @@ CREATE TABLE Choices(
 	CONSTRAINT pk_Choices PRIMARY KEY(ChoiceID, AnswerID, OptionID)
 )
 
-
 CREATE TABLE IdeaFields(
 	FieldID INT IDENTITY,
 	IdeaID INT NOT NULL,
 	FieldText NVARCHAR(255),
 	FieldStrings NVARCHAR(800),
-	LocationX FLOAT,
-	LocationY FLOAT,
-	Url VARCHAR(50),
+	LocationX REAL,
+	LocationY REAL,
 	UploadedImage VARBINARY(255),
-	UploadedMedia VARBINARY(255),
+	MediaLink VARCHAR(255),
 
 	/*Constraints*/
 	CONSTRAINT pk_IdeaFields PRIMARY KEY(FieldID,IdeaID)
 )
-
 
 CREATE TABLE Votes(
 	VoteID INT IDENTITY,
@@ -371,7 +370,7 @@ create table AspNetRoles
 	UserId TEXT not null
 		constraint FK_AspNetUserRoles_AspNetUsers_UserId
 			references AspNetUsers
-				on delete cascade,	
+				on delete cascade,
 	RoleId TEXT not null
 		constraint FK_AspNetUserRoles_AspNetRoles_RoleId
 			references AspNetRoles

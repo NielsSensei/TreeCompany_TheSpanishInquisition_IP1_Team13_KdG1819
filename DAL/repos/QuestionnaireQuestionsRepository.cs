@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using DAL.Contexts;
 using DAL.Data_Access_Objects;
@@ -11,6 +10,9 @@ using Domain.Projects;
 
 namespace DAL.repos
 {
+    /*
+     * @authors Sacha Buelens, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class QuestionnaireQuestionsRepository : IRepository<QuestionnaireQuestion>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -20,7 +22,12 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @authors Sacha Buelens, Niels Van Zandbergen & Xander Veldeman
+         */
+
         #region Conversion Methods
+
         private QuestionnaireQuestionsDao ConvertToDao(QuestionnaireQuestion obj)
         {
             return new QuestionnaireQuestionsDao
@@ -38,20 +45,21 @@ namespace DAL.repos
             return new QuestionnaireQuestion
             {
                 Id = dao.QquestionId,
-                Module = new Questionnaire { Id = dao.ModuleId },
+                Module = new Questionnaire {Id = dao.ModuleId},
                 QuestionText = dao.QuestionText,
                 QuestionType = (QuestionType) dao.QType,
                 Optional = dao.Required
             };
         }
 
-        private OptionsDao ConvertToDao(int id, string obj, int qid)
+        private OptionsDao ConvertToDao(int id, string obj, int qid, bool isCustom = false)
         {
             return new OptionsDao
             {
                 OptionId = id,
                 OptionText = obj,
-                QquestionId = qid
+                QquestionId = qid,
+                IsCustom = isCustom
             };
         }
 
@@ -96,8 +104,8 @@ namespace DAL.repos
             return new OpenAnswer
             {
                 Id = dao.AnswerId,
-                User = new UimvcUser { Id = dao.UserId },
-                Question = new QuestionnaireQuestion { Id = dao.QQuestionId },
+                User = new UimvcUser {Id = dao.UserId},
+                Question = new QuestionnaireQuestion {Id = dao.QQuestionId},
                 IsUserEmail = dao.AnswerText.Contains("@"),
                 AnswerText = dao.AnswerText
             };
@@ -105,61 +113,95 @@ namespace DAL.repos
 
         private MultipleAnswer ConvertToDomain(AnswersDao answersDao, List<OptionsDao> chosenOptionsDao)
         {
-            MultipleAnswer ma = null;
+            MultipleAnswer ma = new MultipleAnswer();
             ma.Id = answersDao.AnswerId;
-            ma.User = new UimvcUser { Id = answersDao.UserId };
-            ma.Question = new QuestionnaireQuestion { Id = answersDao.QQuestionId };
+            ma.User = new UimvcUser {Id = answersDao.UserId};
+            ma.Question = new QuestionnaireQuestion {Id = answersDao.QQuestionId};
             ma.DropdownList = chosenOptionsDao.Count == 1;
+            ma.Choices = new List<string>();
 
-            foreach(OptionsDao dao in chosenOptionsDao)
+            foreach (OptionsDao dao in chosenOptionsDao)
             {
                 ma.Choices.Add(dao.OptionText);
             }
 
             return ma;
         }
+
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
+
         #region Id generation
+
         private int FindNextAvailableQQuestionId()
         {
             if (!_ctx.QuestionnaireQuestions.Any()) return 1;
-            int newId = ReadAll().Max(qq => qq.Id)+1;
+            int newId = ReadAll().Max(qq => qq.Id) + 1;
             return newId;
         }
 
         private int FindNextAvailableAnswerId()
-        {               
+        {
             if (!_ctx.Answers.Any()) return 1;
-            int newId = ReadAll().Max(answer => answer.Id)+1;
+            int newId = _ctx.Answers.ToList().Max(answer => answer.AnswerId) + 1;
             return newId;
         }
+
+        private int FindNextAvailableOptionId()
+        {
+            if (!_ctx.Options.Any()) return 1;
+            int newId = _ctx.Options.Max(option => option.OptionId) + 1;
+            return newId;
+        }
+
         #endregion
-        
+
+        /*
+         * @authors Sacha Buelens, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
+
         #region QuestionnaireQuestion CRUD
+
         public QuestionnaireQuestion Create(QuestionnaireQuestion obj)
         {
             IEnumerable<QuestionnaireQuestion> qqs = ReadAllByQuestionnaireId(obj.Questionnaire.Id);
 
-            foreach (QuestionnaireQuestion qq in qqs)
+            obj.Id = FindNextAvailableQQuestionId();
+
+            if (obj.QuestionType == QuestionType.Drop || obj.QuestionType == QuestionType.Multi ||
+                obj.QuestionType == QuestionType.Single)
             {
-                if (ExtensionMethods.HasMatchingWords(obj.QuestionText, qq.QuestionText) > 0)
+                foreach (string option in obj.Options)
                 {
-                    throw new DuplicateNameException("QuestionnaireQuestion(ID=" + obj.Id + ") is een gelijkaardige vraag aan QuestionnaireQuestion(ID=" +
-                        qq.Id + ") de vraag specifiek was: " + obj.QuestionText + ".");
+                    CreateOption(obj.Id, option);
                 }
             }
 
-            obj.Id = FindNextAvailableQQuestionId();
             _ctx.QuestionnaireQuestions.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
 
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public QuestionnaireQuestion Read(int id, bool details)
         {
-            QuestionnaireQuestionsDao questionnaireQuestionDao = details ? _ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QquestionId == id) : _ctx.QuestionnaireQuestions.First(q => q.QquestionId == id);
+            QuestionnaireQuestionsDao questionnaireQuestionDao = details
+                ? _ctx.QuestionnaireQuestions.AsNoTracking().First(q => q.QquestionId == id)
+                : _ctx.QuestionnaireQuestions.First(q => q.QquestionId == id);
             ExtensionMethods.CheckForNotFound(questionnaireQuestionDao, "QuestionnaireQuestion", id);
 
             return ConvertToDomain(questionnaireQuestionDao);
@@ -168,7 +210,8 @@ namespace DAL.repos
         public void Update(QuestionnaireQuestion obj)
         {
             QuestionnaireQuestionsDao newQuestionnaireQuestion = ConvertToDao(obj);
-            QuestionnaireQuestionsDao foundQuestionnaireQuestion = _ctx.QuestionnaireQuestions.First(qq => qq.QquestionId == obj.Id);
+            QuestionnaireQuestionsDao foundQuestionnaireQuestion =
+                _ctx.QuestionnaireQuestions.First(qq => qq.QquestionId == obj.Id);
             if (foundQuestionnaireQuestion != null)
             {
                 foundQuestionnaireQuestion.QuestionText = newQuestionnaireQuestion.QuestionText;
@@ -202,25 +245,45 @@ namespace DAL.repos
         {
             return ReadAll().Where(c => c.Module.Id == questionnaireId);
         }
-        #endregion       
-        
+
+        #endregion
+
+        /*
+         * @authors Sacha Buelens, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
+
         #region Answer CRUD
+
         public Answer Create(Answer obj)
         {
-            QuestionnaireQuestion qq = Read(obj.Question.Id, false);
+            QuestionnaireQuestion qq = Read(obj.Question.Id, true);
             obj.Id = FindNextAvailableAnswerId();
-            
-            if(qq.QuestionType == QuestionType.Open || qq.QuestionType == QuestionType.Mail)
+
+            if (qq.QuestionType == QuestionType.Open || qq.QuestionType == QuestionType.Mail)
             {
                 _ctx.Answers.Add(OpenConvertToDao((OpenAnswer) obj));
-            }else
+            }
+            else
             {
-                MultipleAnswer ma = (MultipleAnswer)obj;
+                MultipleAnswer ma = (MultipleAnswer) obj;
+
+                if (ma.CustomOption != null && !_ctx.Options.Any(dao => dao.OptionText == ma.CustomOption))
+                {
+                    CreateOption(ma.Question.Id, ma.CustomOption, true);
+                }
+
+                if (ma.CustomOption != null)
+                {
+                    ma.Choices.Add(ma.CustomOption);
+                }
+
+                
                 _ctx.Answers.Add(MultipleConvertToDao(ma));
-                foreach(String s in ma.Choices)
+                foreach (String s in ma.Choices)
                 {
                     int id = ReadOptionId(s, ma.Question.Id);
-                    _ctx.Choices.Add(ConvertToDao(id,ma.Id,_ctx.Choices.Count()+1));
+                    _ctx.Choices.Add(ConvertToDao(id, ma.Id, _ctx.Choices.AsNoTracking().Count() + 1));
+                    _ctx.SaveChanges();
                 }
             }
 
@@ -229,30 +292,53 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params answerId: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public OpenAnswer ReadOpenAnswer(int answerId, bool details)
         {
-            AnswersDao answersDao = details ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId) : _ctx.Answers.First(i => i.AnswerId == answerId);
+            AnswersDao answersDao = details
+                ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId)
+                : _ctx.Answers.First(i => i.AnswerId == answerId);
             ExtensionMethods.CheckForNotFound(answersDao, "Answer", answerId);
 
             return ConvertToDomain(answersDao);
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params answerId: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public MultipleAnswer ReadMultipleAnswer(int answerId, bool details)
         {
-            AnswersDao answersDao = details ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId) : _ctx.Answers.First(i => i.AnswerId == answerId);
+            AnswersDao answersDao = details
+                ? _ctx.Answers.AsNoTracking().First(i => i.AnswerId == answerId)
+                : _ctx.Answers.First(i => i.AnswerId == answerId);
             ExtensionMethods.CheckForNotFound(answersDao, "Answer", answerId);
 
             List<OptionsDao> optionsDaos = _ctx.Options.ToList().FindAll(o => o.QquestionId == answersDao.QQuestionId);
             List<OptionsDao> chosenOptionsDao = new List<OptionsDao>();
 
-            foreach(OptionsDao dao in optionsDaos)
-            {
-                ChoicesDao choice = _ctx.Choices.First(c => c.OptionId == dao.OptionId);
+            List<ChoicesDao> choices = _ctx.Choices.Where(dao => dao.AnswerId == answersDao.AnswerId).ToList();
 
-                if(choice.ChoiceId != null)
-                {
-                    chosenOptionsDao.Add(dao);
-                }
+            foreach (ChoicesDao choicesDao in choices)
+            {
+                chosenOptionsDao.AddRange(optionsDaos.Where(dao => dao.OptionId == choicesDao.OptionId).ToList());
             }
 
             return ConvertToDomain(answersDao, chosenOptionsDao);
@@ -264,58 +350,49 @@ namespace DAL.repos
 
             foreach (AnswersDao dao in _ctx.Answers.ToList().FindAll(a => a.QQuestionId == questionId))
             {
-                if (!_ctx.Choices.Where(c => c.AnswerId == dao.AnswerId).Any())
+                if (!_ctx.Choices.Any(c => c.AnswerId == dao.AnswerId) && dao.AnswerText != null)
                 {
                     myQuery.Add(ConvertToDomain(dao));
                 }
                 else
                 {
-                    MultipleAnswer toAdd = ReadMultipleAnswer(dao.AnswerId, false);
+                    MultipleAnswer toAdd = ReadMultipleAnswer(dao.AnswerId, true);
                     myQuery.Add(toAdd);
                 }
             }
 
             return myQuery;
         }
+
         #endregion
-        
+
+        /*
+         * @authors Sacha Buelens, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+         */
+
         #region Options CRUD
-        public string Create(int questionId, string obj)
+
+        public string CreateOption(int questionId, string obj, bool isCustom = false)
         {
-            IEnumerable<string> options = ReadAllOptions(questionId);
-            int newId = options.Count() + 1;
+            IEnumerable<string> options = ReadAllOptionsForQuestion(questionId);
+            int newId = FindNextAvailableOptionId();
 
-            for (int i = 0; i < options.Count(); i++)
-            {
-                if (ExtensionMethods.HasMatchingWords(obj, options.ElementAt(i)) > 0)
-                {
-                    throw new DuplicateNameException("Deze Option(ID=" + newId + ") met Optiontekst: " + obj + " is gelijkaardig aan de Option(ID=" + i + 
-                        "). De Optiontekst is: " + options.ElementAt(i) + ".");
-                }
-            }
-
-            _ctx.Options.Add(ConvertToDao(newId, obj, questionId));
+            _ctx.Options.Add(ConvertToDao(newId, obj, questionId, isCustom));
             _ctx.SaveChanges();
 
             return obj;
         }
 
-        public String ReadOption(int optionId, int questionID)
+        public String ReadOption(int optionId)
         {
             return ConvertToDomain(_ctx.Options.Find(optionId));
         }
 
         public int ReadOptionId(string optionText, int questionId)
         {
-            List<string> options = ReadAllOptions(questionId).ToList();
-            for(int i = 0; i < options.Count; i++)
-            {
-                if (options[i].Equals(optionText))
-                {
-                    return i + 1;
-                }
-            }
-            throw new DuplicateNameException("Option " + optionText + " niet gevonden voor de QuestionnaireQuestion(ID=" + questionId + ").");
+            OptionsDao option =
+                _ctx.Options.FirstOrDefault(o => o.QquestionId == questionId && o.OptionText == optionText);
+            return option.OptionId;
         }
 
         public void DeleteOption(int optionId)
@@ -325,20 +402,47 @@ namespace DAL.repos
             _ctx.SaveChanges();
         }
 
-        public IEnumerable<string> ReadAllOptions(int questionId)
+        public IEnumerable<string> ReadAllOptions()
         {
             List<string> myQuery = new List<string>();
 
-            foreach (OptionsDao dao in _ctx.Options)
+            foreach (OptionsDao dao in _ctx.Options.Where(dao => !dao.IsCustom))
             {
-                if (dao.QquestionId == questionId)
-                {
-                    myQuery.Append(ConvertToDomain(dao));
-                }
+                myQuery.Add(ConvertToDomain(dao));
             }
 
             return myQuery;
         }
+
+        public IEnumerable<string> ReadAllOptionsForQuestion(int questionId, bool customOptions = false)
+        {
+            List<string> myQuery = new List<string>();
+
+            if (customOptions)
+            {
+                foreach (OptionsDao dao in _ctx.Options.Where(dao => dao.IsCustom))
+                {
+                    if (dao.QquestionId == questionId)
+                    {
+                        myQuery.Add(ConvertToDomain(dao));
+                    }
+                }
+            }
+            else
+            {
+                foreach (OptionsDao dao in _ctx.Options.Where(dao => !dao.IsCustom))
+                {
+                    if (dao.QquestionId == questionId)
+                    {
+                        myQuery.Add(ConvertToDomain(dao));
+                    }
+                }
+            }
+
+
+            return myQuery;
+        }
+
         #endregion
     }
 }

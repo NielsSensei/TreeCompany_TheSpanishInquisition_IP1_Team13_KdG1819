@@ -1,8 +1,10 @@
 namespace Domain.UserInput
 {
+    /*
+     * @authors Nathan Gijselings, David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class VideoField : Field
     {
-        public string Url { get; set; }
-        //public Video UploadedVideo { get; set; }
+        public string VideoLink { get; set; }
     }
 }

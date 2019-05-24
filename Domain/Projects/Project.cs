@@ -4,6 +4,9 @@ using Domain.Users;
 
 namespace Domain.Projects
 {
+    /*
+     * @authors Nathan Gijselings, David Matei, Edwin Kai Yin Tam, Niels Van Zandbergen & Xander Veldeman
+     */
     public class Project
     {
         public int Id { get; set; }
@@ -17,7 +20,7 @@ namespace Domain.Projects
         public int LikeCount { get; set; }
         public int FbLikeCount { get; set; }
         public int TwitterLikeCount { get; set; }
-        public int LikeVisibility { get; set; }
+        public LikeVisibility LikeVisibility { get; set; }
         public Phase CurrentPhase { get; set; }
         public List<Phase> Phases { get; set; }
         public List<byte[]> PreviewImages { get; set; }

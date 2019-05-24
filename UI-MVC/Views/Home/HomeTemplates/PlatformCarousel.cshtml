@@ -14,21 +14,22 @@
             </ol>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="imageCarousel d-block w-100" src="images/ErrorImage.jpg" alt="First slide">
-                    <div class="carousel-caption d-none d-md-block">
+                    <img class="imageCarousel d-block w-100 img-fluid rounded" src="images/ErrorImage.jpg" alt="First slide">
+                    <div class="carousel-caption ">
                         <h3>Welcome to City of Ideas</h3>
-                        <p></p>
+                        <p class="d-none d-md-block"></p>
                     </div>
                 </div>
                 @foreach (Platform platform in Model)
                 {
                     <div class="carousel-item">
                         <a asp-controller="Platform" asp-action="Index" asp-route-id="@platform.Id">
-                            <img class="imageCarousel d-block w-100" alt="Slide"
+                            <img class="imageCarousel d-block w-100 img-fluid rounded" alt="Slide"
                                 src="data:image/png;base64, @System.Convert.ToBase64String(platform.CarouselImage)"/>
-                            <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-caption">
                                 <h3>@platform.Name</h3>
-                                <p>@platform.Url</p>
+                                <p class="d-none d-md-block">@platform.Url</p>
+                                <p class="d-none d-md-block">klik hier om naar het platform te gaan</p>
                             </div>
                         </a>
                     </div>

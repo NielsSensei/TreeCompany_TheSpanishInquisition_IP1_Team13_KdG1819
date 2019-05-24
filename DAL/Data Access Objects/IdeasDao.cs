@@ -1,5 +1,8 @@
 ﻿namespace DAL.Data_Access_Objects
 {
+    /*
+     * @authors Sacha Buelens, Niels Van Zandbergen & Xander Veldeman
+     */
     public class IdeasDao
     {
         public int IdeaId { get; set; }

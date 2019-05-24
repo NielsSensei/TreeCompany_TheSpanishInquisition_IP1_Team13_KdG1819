@@ -1,0 +1,37 @@
+@using Domain.Projects
+@using UIMVC.Services
+@inject UserService UserService
+@inject RoleService RoleService
+@model Domain.Projects.Ideation
+
+<h2>@Model.Title</h2>
+<p>door @UserService.CollectUserName(Model.User.Id)</p>
+@Html.Partial("_ReactionNumbersPartial", new LikeViewModel()
+{
+    LikeCount = Model.LikeCount, FbLikeCount = Model.FbLikeCount, TwitterLikeCount = Model.TwitterLikeCount,
+    ShareCount = Model.ShareCount, RetweetCount = Model.RetweetCount, IconStyle = LikeVisibility.IdeationLikes
+})
+<br/>
+<p>@Model.ExtraInfo</p>
+@if (Model.Event.Id != 0)
+{
+    <p>Deze ideation is georganiseerd dankzij dit evenement</p>
+}
+<section>
+    <h6 class="font-weight-bold">Tags:</h6>
+    <div class="row justify-content-start">
+        @if (Model.Tags.Any())
+        {
+            @Html.Partial("_TagsPartial", Model.Tags)
+        }
+        else
+        {
+            <p>Geen tags gevonden</p>
+        }
+        @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+        {
+            <a class="btn btn-primary mx-1 m-0" data-toggle="modal" data-target="#addTagModal">
+                Nieuwe Tag</a>
+        }
+    </div>
+</section>

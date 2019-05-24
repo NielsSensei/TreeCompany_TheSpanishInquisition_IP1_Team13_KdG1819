@@ -5,15 +5,21 @@ using Domain.UserInput;
 
 namespace BL
 {
+    /*
+     * @authors Nathan Gijselings & Niels Van Zandbergen
+     */
     public class VoteManager
     {
         private IdeationVoteRepository VoteRepo { get; }
-        
+
         public VoteManager()
         {
             VoteRepo = new IdeationVoteRepository();
         }
-        
+
+        /*
+         * @authors Nathan Gijselings & Niels Van Zandbergen
+         */
         #region Voting
         public bool VerifyVotingOnFeedback(int feedbackId, string userId, int? deviceId, double? x, double? y)
         {

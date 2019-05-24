@@ -10,6 +10,9 @@ using Domain.Users;
 
 namespace DAL.repos
 {
+    /*
+     * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+     */
     public class ProjectRepository : IRepository<Project>
     {
         private readonly CityOfIdeasDbContext _ctx;
@@ -19,8 +22,10 @@ namespace DAL.repos
             _ctx = new CityOfIdeasDbContext();
         }
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Conversion Methods
-
         private Project ConvertToDomain(ProjectsDao dao)
         {
             return new Project()
@@ -33,7 +38,7 @@ namespace DAL.repos
                 Goal = dao.Goal,
                 Status = dao.Status,
                 Visible = dao.Visible,
-                LikeVisibility = dao.LikeVisibility,
+                LikeVisibility = (LikeVisibility) dao.LikeVisibility,
                 ReactionCount = dao.ReactionCount,
                 LikeCount = dao.LikeCount,
                 FbLikeCount = dao.FbLikeCount,
@@ -53,7 +58,7 @@ namespace DAL.repos
                 Goal = project.Goal,
                 Status = project.Status,
                 Visible = project.Visible,
-                LikeVisibility = project.LikeVisibility,
+                LikeVisibility = (byte) project.LikeVisibility,
                 ReactionCount = project.ReactionCount,
                 LikeCount = project.LikeCount,
                 FbLikeCount = project.FbLikeCount,
@@ -102,12 +107,15 @@ namespace DAL.repos
 
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Id generation
 
         private int FindNextAvailableProjectId()
         {
             if (!_ctx.Projects.Any()) return 1;
-            int newId = ReadAll().Max(platform => platform.Id)+1;
+            int newId = ReadAll().Max(platform => platform.Id) + 1;
             return newId;
         }
 
@@ -126,6 +134,9 @@ namespace DAL.repos
         }
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Project CRUD
 
         public Project Create(Project obj)
@@ -139,7 +150,7 @@ namespace DAL.repos
                     throw new DuplicateNameException(
                         "Dit project bestaat al of is misschien gelijkaardig. Project(ID=" + obj.Id +
                         ") dat je wil aanmaken: " +
-                        obj.Title + ". Project(ID=" + p.Title + ") dat al bestaat: " + p.Title + ".");
+                        obj.Title + ". Project(ID=" + p.Id + ") dat al bestaat: " + p.Title + ".");
                 }
             }
 
@@ -150,13 +161,24 @@ namespace DAL.repos
             return obj;
         }
 
+        /*
+         * @documentation Niels Van Zandbergen
+         *
+         * @params id: Integer value die de identity van het object representeert.
+         * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+         * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+         * aangepast mogen worden.
+         *
+         * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+         * 
+         */
         public Project Read(int id, bool details)
         {
             ProjectsDao projectsDao = details
                 ? _ctx.Projects.AsNoTracking().FirstOrDefault(p => p.ProjectId == id)
                 : _ctx.Projects.FirstOrDefault(p => p.ProjectId == id);
             ExtensionMethods.CheckForNotFound(projectsDao, "Project", id);
-            
+
             return ConvertToDomain(projectsDao);
         }
 
@@ -192,7 +214,7 @@ namespace DAL.repos
         {
             List<Project> myQuery = new List<Project>();
 
-            foreach(ProjectsDao dao in _ctx.Projects)
+            foreach (ProjectsDao dao in _ctx.Projects)
             {
                 myQuery.Add(ConvertToDomain(dao));
             }
@@ -207,7 +229,11 @@ namespace DAL.repos
 
         #endregion
 
+        /*
+         * @authors David Matei, Edwin Kai Yin Tam & Niels Van Zandbergen
+         */
         #region Phase CRUD
+
         public Phase Create(Phase obj)
         {
             IEnumerable<Phase> phases = ReadAllPhases(obj.Project.Id);
@@ -226,10 +252,21 @@ namespace DAL.repos
             obj.Id = FindNextAvailablePhaseId();
             _ctx.Phases.Add(ConvertToDao(obj));
             _ctx.SaveChanges();
-            
+
             return obj;
         }
 
+        /*
+        * @documentation Niels Van Zandbergen
+        *
+        * @params id: Integer value die de identity van het object representeert.
+        * @params details: Indien we enkel een readonly kopij nodig hebben van ons object maken we gebruik
+        * van AsNoTracking. Dit verhoogt performantie en verhindert ook dat er dingen worden aangepast die niet
+        * aangepast mogen worden.
+        *
+        * @see https://docs.microsoft.com/en-us/ef/core/querying/tracking#no-tracking-queries
+        * 
+        */
         public Phase ReadPhase(int phaseId, bool details)
         {
             PhasesDao phasesDao = details
@@ -272,7 +309,7 @@ namespace DAL.repos
 
             return myQuery;
         }
-        
+
         public IEnumerable<Phase> ReadAllPhases(int projectId)
         {
             return ReadAllPhases().ToList().FindAll(p => p.Project.Id == projectId);
@@ -280,6 +317,9 @@ namespace DAL.repos
 
         #endregion
 
+        /*
+         * @author Niels Van Zandbergen
+         */
         #region Images CRUD
         public void Create(byte[] obj, int projectId)
         {
@@ -297,7 +337,7 @@ namespace DAL.repos
 
             _ctx.SaveChanges();
         }
-        
+
         public List<byte[]> ReadAllImages(int projectId)
         {
             List<byte[]> myQuery = new List<byte[]>();

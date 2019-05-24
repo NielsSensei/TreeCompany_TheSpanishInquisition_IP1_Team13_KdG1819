@@ -11,6 +11,9 @@ using UimvcUser = Domain.Identity.UimvcUser;
 
 namespace UIMVC.Areas.Identity.Pages.Account.Manage
 {
+    /*
+     * @author Xander Veldeman
+     */
     public class ExternalLoginsModel : PageModel
     {
         private readonly UserManager<UimvcUser> _userManager;
@@ -45,7 +48,6 @@ namespace UIMVC.Areas.Identity.Pages.Account.Manage
             OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
                 .Where(auth => CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
                 .ToList();
-            // TODO: XANDER DO ME
             //ShowRemoveButton = user.PasswordHash != null || CurrentLogins.Count > 1;
             return Page();
         }

@@ -1,0 +1,147 @@
+@using Domain.Projects
+@using Domain.UserInput
+@using UIMVC.Services
+@model Domain.Projects.Ideation
+@inject UserService Userservice
+@inject QuestionService Questionservice
+@inject RoleService RoleService
+@inject ProjectService ProjectService
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.Title;
+    ViewData["Platform"] = ProjectService.GetPlatform(Model);
+    ViewData["Project"] = ProjectService.GetProject(Model);
+    ViewData["Module"] = Model;
+}
+
+@section Scripts
+{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer></script>
+}
+
+<section class="container">
+    <section class="row">
+        @if (@Model.MediaLink == null)
+        {
+            <div class="col-12">
+                @Html.Partial("Partials/_IdeationHeaderPartial", Model)
+            </div>
+        }
+        else
+        {
+            <div class="col-12 col-md-5">
+                @Html.Partial("Partials/_IdeationHeaderPartial", Model)
+            </div>
+            <div class="col-12 col-md-7 embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="@Model.MediaLink"> </iframe>
+            </div>
+        }
+
+    </section>
+    <hr>
+    <section class="container">
+        <div class="row justify-content-between align-items-center">
+            <div>
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 0)
+                {
+                    <h1>Geen centrale vragen gesteld, wat jammer.</h1>
+                }
+
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count == 1)
+                {
+                    <h1>1 centrale vraag</h1>
+                }
+
+                @if (Questionservice.CollectIdeationQuestions(Model.Id).Count > 1)
+                {
+                    <h1>@Questionservice.CollectIdeationQuestions(Model.Id).Count centrale vragen</h1>
+                }
+            </div>
+            @if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+            {
+                <a class="btn btn-primary text-center" method="get" asp-controller="Ideation" asp-action="AddCentralQuestion"
+                   asp-route-ideation="@Model.Id">
+                    Stel een nieuwe centrale vraag
+                </a>
+            }
+        </div>
+        <section class="card-columns">
+            @foreach (IdeationQuestion iq in Questionservice.CollectIdeationQuestions(Model.Id))
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@iq.QuestionTitle</h5>
+                        <p class="card-text">@iq.Description</p>
+                        @if (iq.SiteUrl != null)
+                        {
+                            <p>Meer info: <a href="">@iq.SiteUrl</a></p>
+                        }
+                    </div>
+                    <div class="card-footer text-center">
+                        <a class="btn btn-primary" asp-controller="Ideation" asp-action="CollectIdeationThread" asp-route-id="@iq.Id">Ga naar Thread</a>
+                    </div>
+                </div>
+            }
+        </section>
+    </section>
+</section>
+<hr/>
+@if (User.Identity.IsAuthenticated && RoleService.IsAdmin(User).Result)
+{
+    <div class="row justify-content-around">
+        <a class="btn btn-primary m-2" formmethod="get" asp-controller="Ideation" asp-action="ChangeIdeation"
+           asp-route-id="@Model.Id">
+            Pas deze ideation aan
+        </a>
+
+        <button type="button" class="btn btn-primary m-2" data-toggle="modal"
+                data-target="#deleteIdeationModal">
+            Verwijder deze ideation.
+        </button>
+    </div>
+}
+
+<div class="modal fade" id="deleteIdeationModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteIdeationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Ben je zeker dat je deze ideation wil verwijderen?</h5>
+            </div>
+            <div class=modal-body>
+                <a type="button" class="btn btn-primary" asp-controller="Ideation"
+                   asp-action="DestroyIdeation" asp-route-id="@Model.Id">
+                    Bevestig
+                </a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog"
+     aria-labelledby="addTagModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class=modal-body>
+                <form asp-controller="Project" asp-action="AddTag" asp-route-module="@Model.Id" 
+                      asp-route-moduleType="@ModuleType.Ideation">
+                    <div class="form-group">
+                        <label>IdeationID</label>
+                        <input disabled value="@Model.Id" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Vul hier de tag in:</label>
+                        @Html.TextBox("GetMeATag", "",
+                            new {@class = "form-control"})
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Bevestig</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,185 @@
+﻿@using Domain.Projects
+@using Domain.Users
+@using Domain.UserInput
+
+@model ChangeQuestionnaireModel
+
+@{
+    ViewData["Title"] = "Aanpassen van Questionnaire";
+    Project project = (Project) ViewData["Project"];
+    Questionnaire questionnaire = (Questionnaire) ViewData["Questionnaire"];
+    AddQuestionnaireQuestionModel cqqm = (AddQuestionnaireQuestionModel) ViewData["Cqqm"];
+}
+
+@section Scripts{
+    <script type="module" src="~/dist/bootstrap_js.entry.js" defer>
+    </script>
+
+    <script type="module" src="~/dist/addQuestionnaireQuestion.entry.js" defer>
+    </script>
+}
+
+<h1>Vragenlijst beheren</h1>
+<form asp-controller="Questionnaire" asp-action="ChangeQuestionnaire" method="post" asp-route-eqm="@Model" asp-route-questionnaireid="@questionnaire.Id">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" label-for="Title">Titel</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="text" asp-for="Title" value="@questionnaire.Title"/>
+        </div>
+    </div>
+    <fieldset disabled>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Huidige fase</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="Text" value="@questionnaire.ParentPhase.Description"/>
+            </div>
+        </div>
+    </fieldset>
+    <div class="form-group row">
+        <label for="ParentPhase" class="col-sm-2 col-form-label">Selecteer een andere fase:</label>
+        @Html.DropDownList("ParentPhase", new SelectList(project.Phases, "Id", "Description"), "Kies een fase", new {@class = "form-control"})
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" label-for="OnGoing">Publiek</label>
+        @if (!questionnaire.Questions.Any())
+        {
+            <label class="form-check-label alert-danger">Het is aangeraden eerst enkele vragen toe te voegen voor je de vragenlijst publiek maakt</label>
+        }
+        else
+        {
+            <div class="col-sm-10">
+                <input class="form-check-input" type="checkbox" asp-for="OnGoing" checked="@questionnaire.OnGoing"/>
+            </div>
+        }
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" label-for="Title">Welk authorisatielevel moet je hebben om deze questionnaire in te vullen?</label>
+        <div class="col-sm-10">
+            @Html.DropDownListFor(m => m.VoteLevel, new SelectList(Enum.GetValues(typeof(Role))), "Huidige authorisatielevel: ", new {@class = "form-control"})
+        </div>
+    </div>
+    <input type="submit" value="Wijzigingen opslaan" class="btn btn-primary"/>
+</form>
+
+<h3>Vragen voor deze vragenlijst</h3>
+
+@if (!questionnaire.Questions.Any())
+{
+    <h4>Nog geen vragen aanwezig.</h4>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addQuestion">
+        Vraag toevoegen
+    </button>
+}
+else
+{
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">QuestionId</th>
+            <th scope="col">Type</th>
+            <th scope="col">Vraag</th>
+            <th scope="col">Verplicht?</th>
+            <th scope="col"># Antwoorden</th>
+            <th scope="col"></th>
+
+        </tr>
+        </thead>
+        @foreach (QuestionnaireQuestion qQ in questionnaire.Questions)
+        {
+            <tr>
+                <th scope="row">@qQ.Id</th>
+                <td>@qQ.QuestionType.ToString()</td>
+                <td>@qQ.QuestionText</td>
+
+                @if (qQ.Optional)
+                {
+                    <td>Nee</td>
+                }
+                else
+                {
+                    <td>Ja</td>
+                }
+
+                <td>@qQ.Answers.Count() Antwoorden</td>
+                <td>
+                    <a class="btn btn-danger" asp-action="DeleteQuestionnaireQuestion" asp-controller="Questionnaire" asp-route-questionid="@qQ.Id" method="post">Verwijderen</a>
+                    @Html.Partial("Partials/_QuestionResultPartial", qQ)
+                </td>
+            </tr>
+        }
+    </table>
+    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addQuestion">
+        + Vraag
+    </button>
+}
+
+@Html.Partial("Partials/_AddQuestionnaireQuestionPartial")
+
+<h3>Tags</h3>
+
+@if (!questionnaire.Tags.Any())
+{
+    <p>Geen tags beschikbaar</p>
+    <a class="btn btn-primary mx-1 m-0" data-toggle="modal" data-target="#addTagModal">
+        Nieuwe Tag
+    </a>
+}
+else
+{
+    <p>Tags: @Html.Partial("_TagsPartial", questionnaire.Tags)</p>
+    <a class="btn btn-primary mx-1 m-0" data-toggle="modal" data-target="#addTagModal">
+        Nieuwe Tag
+    </a>
+}
+
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteQuestionnaire">
+    Vragenlijst verwijderen
+</button>
+<div class="modal fade modal-lg" id="deleteQuestionnaire" tabindex="-1" role="dialog" aria-labelledby="deleteQuestionnaire" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Verwijder vragenlijst: @questionnaire.Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bent u zeker dat u deze vragenlijst wilt verwijderen?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ik ben niet zeker</button>
+                <form asp-controller="Questionnaire" asp-action="DeleteQuestionnaire" asp-route-questionnaireid="@questionnaire.Id" method="post">
+                    <input type="submit" value="Ik ben zeker" class="btn btn-danger"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog"
+     aria-labelledby="addTagModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class=modal-body>
+                <form asp-controller="Project" asp-action="AddTag" asp-route-module="@questionnaire.Id" 
+                      asp-route-moduletype="@ModuleType.Questionnaire">
+                    <div class="form-group">
+                        <label>QuestionnaireID</label>
+                        <input disabled value="@questionnaire.Id" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Vul hier de tag in:</label>
+                        @Html.TextBox("GetMeATag","",
+                            new { @class="form-control"})
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Bevestig</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

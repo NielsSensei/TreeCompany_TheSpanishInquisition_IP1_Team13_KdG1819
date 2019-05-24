@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BL;
 using Domain.Projects;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace UIMVC.Controllers.API
 {
@@ -23,28 +19,6 @@ namespace UIMVC.Controllers.API
             platMgr = new PlatformManager();
         }
 
-
-
-        // GET: api/<controller>/GetAllByPlatform?platformId=1
-        [HttpGet]
-        [Route("GetAllByPlatform")]
-        public IActionResult GetAllByPlatform(int platformId)
-        {
-            var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId));
-
-            foreach (Project project in projects)
-            {
-                project.Phases = projMgr.GetAllPhases(project.Id).ToList();
-                Phase curPhase = projMgr.GetPhase(project.CurrentPhase.Id);
-                project.CurrentPhase = curPhase;
-            }
-
-            if (projects == null)
-                return NotFound();
-
-            return Ok(projects);
-        }
-
         // GET api/<controller>/GetById?projectId=1
         [HttpGet]
         [Route("GetById")]
@@ -57,22 +31,34 @@ namespace UIMVC.Controllers.API
 
             return Ok(project);
         }
-
-        public IActionResult SortedBy(string quota, int platformId)
+        
+        [HttpGet]
+        [Route("SortedBy")]
+        public IActionResult SortedBy(int quota, int platformId)
         {
-            List<Project> projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId)).ToList();
+            var projects = projMgr.GetPlatformProjects(platMgr.GetPlatform(platformId, true));
+            var visibleProjects = new List<Project>();
+            
+            foreach (Project project in projects)
+            {
+                if (!project.Visible) continue;
+                project.Phases = projMgr.GetAllPhases(project.Id).ToList();
+                var curPhase = projMgr.GetPhase(project.CurrentPhase.Id, true);
+                project.CurrentPhase = curPhase;
+                visibleProjects.Add(project);
+            }
 
             switch (quota)
             {
-                case "Naam": return Ok(projects.OrderBy(m => m.Title));
+                case 1: return Ok(visibleProjects.OrderBy(m => m.Title));
                     break;
-                case "Status": return Ok(projects.OrderBy(m => m.Status));
+                case 2: return Ok(visibleProjects.OrderBy(m => m.Status));
                     break;
-                case "Likes": return Ok(projects.OrderBy(m => m.LikeCount));
+                case 3: return Ok(visibleProjects.OrderBy(m => m.LikeCount));
                     break;
-                case "Reacties": return Ok(projects.OrderBy(m => m.ReactionCount));
+                case 4: return Ok(visibleProjects.OrderBy(m => m.ReactionCount));
                     break;
-                default: return Ok(projects);
+                default: return Ok(visibleProjects);
             }
                 
         }
