@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Domain.UserInput;
 using System.Data;
@@ -170,9 +171,9 @@ namespace DAL.repos
             VotesDao foundVote = _ctx.Votes.First(vote => vote.VoteId == obj.Id);
             if (foundVote != null)
             {
-                foundVote.UserMail = newVote.UserMail;
-                foundVote.LocationX = newVote.LocationX;
-                foundVote.LocationY = newVote.LocationY;
+                if(!String.IsNullOrEmpty(newVote.UserMail)) foundVote.UserMail = newVote.UserMail;
+                if(newVote.LocationX != 0) foundVote.LocationX = newVote.LocationX;
+                if(newVote.LocationY != 0) foundVote.LocationY = newVote.LocationY;
             }
 
             _ctx.SaveChanges();
@@ -267,8 +268,8 @@ namespace DAL.repos
             DevicesDao foundDevice = _ctx.Devices.First(d => d.DeviceId == obj.Id);
             if(foundDevice != null)
             {
-                foundDevice.LocationX = newDevice.LocationX;
-                foundDevice.LocationY = newDevice.LocationY;
+                if(newDevice.LocationX != 0) foundDevice.LocationX = newDevice.LocationX;
+                if(newDevice.LocationY != 0) foundDevice.LocationY = newDevice.LocationY;
             }
 
             _ctx.SaveChanges();

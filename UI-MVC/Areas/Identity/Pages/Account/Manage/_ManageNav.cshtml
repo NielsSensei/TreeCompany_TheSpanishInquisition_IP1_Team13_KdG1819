@@ -29,11 +29,22 @@
     <li class="nav-item">
         <a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Persoonlijke Data</a>
     </li>
+    @if (RoleService.IsOrganisation(User).Result)
+    {
+        <li class="nav-item">
+            <p class="font-weight-bold">Organisatie Paneel</p>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Platform" asp-action="AddEvent">Organiseer een evenement</a>
+        </li>
+        
+    }
 
     @if (RoleService.IsModerator(User).Result)
     {
         <li class="nav-item">
-            <bold>Moderation Panel</bold>
+            <p class="font-weight-bold">Moderatie Paneel</p>
         </li>
 
         <li class="nav-item">

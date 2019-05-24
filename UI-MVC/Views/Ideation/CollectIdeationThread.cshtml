@@ -4,10 +4,10 @@
 @inject UIMVC.Services.ProjectService ProjectService
 
 @{
-    Ideation ideation = ProjectService.GetIdeation(Model);
+    Ideation ideation = ProjectService.CollectIdeationForQuestion(Model);
     ViewData["Title"] = Model.QuestionTitle;
-    ViewData["Platform"] = ProjectService.GetPlatform(Model.Ideation);
-    ViewData["Project"] = ProjectService.GetProject(Model.Ideation);
+    ViewData["Platform"] = ProjectService.CollectPlatformForModule(Model.Ideation);
+    ViewData["Project"] = ProjectService.CollectProjectForModule(Model.Ideation);
     ViewData["Module"] = ideation;
 }
 

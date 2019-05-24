@@ -10,8 +10,8 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = Model.Title;
-    ViewData["Platform"] = ProjectService.GetPlatform(Model);
-    ViewData["Project"] = ProjectService.GetProject(Model);
+    ViewData["Platform"] = ProjectService.CollectPlatformForModule(Model);
+    ViewData["Project"] = ProjectService.CollectProjectForModule(Model);
     ViewData["Module"] = Model;
 }
 

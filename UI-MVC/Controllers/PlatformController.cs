@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,7 +71,7 @@ namespace UIMVC.Controllers
         {
             if (search == null)
             {
-                return View(_platformMgr.ReadAllPlatforms());
+                return View(_platformMgr.GetAllPlatforms());
             }
             ViewData["search"] = search;
             var platforms = _platformMgr.SearchPlatforms(search);
@@ -186,7 +187,7 @@ namespace UIMVC.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult AddPlatform()
         {
-            ViewData["platforms"] = _platformMgr.ReadAllPlatforms();
+            ViewData["platforms"] = _platformMgr.GetAllPlatforms();
             return View();
         }
 
@@ -388,6 +389,93 @@ namespace UIMVC.Controllers
                 }
             }
             return RedirectToAction("CollectAllUsers", "Platform");
+        }
+        #endregion
+
+        #region Event
+        [HttpGet]
+        [Authorize(Roles = "LoggedInOrg, Moderator, Admin, SuperAdmin")]
+        public IActionResult AddEvent(string message = "")
+        {
+            ViewData["Platforms"] = _platformMgr.GetAllPlatforms();
+            
+            if (!message.Equals(""))
+            {
+                ViewData["FailMessage"] = message;
+            }
+            
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "LoggedInOrg, Moderator, Admin, SuperAdmin")]
+        public IActionResult AddEvent(AddEventModel aem, string org)
+        {
+            try
+            {
+                int platformId = Int32.Parse(Request.Form["Platform"].ToString());
+
+
+                if (aem.Name == null)
+                {
+                    return RedirectToAction("AddEvent", "Platform",
+                        new {message = "Dit evenement heeft geen naam!"});
+                }
+
+                if (aem.Description == null)
+                {
+                    return RedirectToAction("AddEvent", "Platform",
+                        new {message = "Dit evenement heeft geen beschrijving!"});
+                }
+
+                if (aem.StartDate == DateTime.MinValue)
+                {
+                    return RedirectToAction("AddEvent", "Platform",
+                        new {message = "Geen startdatum meegegeven!"});
+                }
+
+                if (aem.EndDate == DateTime.MinValue)
+                {
+                    return RedirectToAction("AddEvent", "Platform",
+                        new {message = "Geen einddatum meegegeven!"});
+                }
+
+                if (aem.EndDate < aem.StartDate)
+                {
+                    return RedirectToAction("AddEvent", "Platform",
+                        new {message = "Einddatum mag niet voor de startdatum komen!"});
+                }
+
+                if (aem.StartDate < DateTime.Today)
+                {
+                    return RedirectToAction("AddEvent", "Platform",
+                        new {message = "Startdatum mag niet in het verleden zijn!"});
+                }
+
+                Event e = new Event()
+                {
+                    Organisation = new Organisation() {Id = org},
+                    Platform = new Platform() {Id = platformId},
+                    Name = aem.Name,
+                    Description = aem.Description,
+                    StartDate = aem.StartDate,
+                    EndDate = aem.EndDate
+                };
+
+                _platformMgr.MakeEvent(e);
+                
+                return RedirectToAction("Index", "Platform", new{ id = platformId });
+            }
+            catch (FormatException)
+            {
+                return RedirectToAction("AddEvent", "Platform",
+                    new {message = "Er is geen platform gekozen!"});
+            }
+            catch (DuplicateNameException)
+            {
+                return RedirectToAction("AddEvent", "Platform",
+                    new {message = "U heeft al een event gepland in de gekozen periode!"});
+            }
         }
         #endregion
     }

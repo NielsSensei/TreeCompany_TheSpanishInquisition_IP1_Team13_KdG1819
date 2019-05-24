@@ -1,6 +1,6 @@
 ﻿/* Organisationevents */
-INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate)
-VALUES(1,5,'The Inquisition','Een conferentie over hoe we Antwerpen kunnen introduceren tot de Spaanse cultuur','2019-03-31','2019-04-1')
+INSERT INTO OrganisationEvents(EventID,UserID,Name,Description,StartDate,EndDate, PlatformID)
+VALUES(1,5,'The Inquisition','Een conferentie over hoe we Antwerpen kunnen introduceren tot de Spaanse cultuur','2019-03-31','2019-04-1',1)
 
 /* Projects
 Status: Niet gestart/Phase naam/Afgesloten
@@ -33,11 +33,11 @@ INSERT INTO Phases(PhaseID,ProjectID,Description,StartDate,EndDate)
 VALUES(5,1,'Begin van de vergroening van district Deurne','2019-07-01','2019-07-31')
 
 /* Modules */
-INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,ModuleType,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
-VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',0,0,0,0,0,0,'Hoe pakken we de Groenplaats aan, onze gedachten')
+INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,ModuleType,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title, ModuleType)
+VALUES(1,1,1,1,'#Questionnaire,#ForTheClimate,#OpinionsAreImportant',0,0,0,0,0,0,'Hoe pakken we de Groenplaats aan, onze gedachten',0)
 
-INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,ModuleType,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title)
-VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',1,0,0,0,0,0,'Geef uw alternatief!')
+INSERT INTO Modules(ModuleID,ProjectID,PhaseID,OnGoing,Tags,ModuleType,LikeCount,FbLikeCount,TwitterLikeCount,ShareCount,RetweetCount,Title, ModuleType)
+VALUES(2,1,2,1,'#CreateIdeas,#ForTheClimate,#NoIdeaIsStupid',1,0,0,0,0,0,'Geef uw alternatief!',1)
 
 /* QuestionnaireQuestions
 0 = open
@@ -53,10 +53,10 @@ INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Requi
 VALUES(2,1,'Welke aanpassing wil je het liefst?',1,1)
 
 INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Required)
-VALUES(3,1,'Vind je dat er ook een bloementuin op de Groenplaats past?',2,1)
+VALUES(3,1,'Hoeveel m2 aan gras moet er aangelegd worden?',2,1)
 
 INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Required)
-VALUES(4,1,'Hoeveel m2 aan gras moet er aangelegd worden?',3,1)
+VALUES(4,1,'Vind je dat er ook een bloementuin op de Groenplaats past?',3,1)
 
 INSERT INTO QuestionnaireQuestions(QQuestionID,ModuleID,QuestionTEXT,QType,Required)
 VALUES(5,1,'Gelieve u email adres achter te halen als u updates wilt over het project',4,0)
@@ -78,32 +78,32 @@ INSERT INTO Answers(AnswerID,QQuestionID,UserID,AnswerText)
 VALUES(5,5,1,'voorbeeldigeantwerpenaar@nva.be')
 
 /* Options */
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(1,'Geen tram 4 meer op de groenplaats.',2,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(2,'Verkeer afsluiten op de groenplaats.',2,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
 VALUES(3,'De groenplaats vervangen door klein bos.',2,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(4,'Ja',3,0)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
+VALUES(4,'10 vierkante meter',3,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(5,'Nee',3,0)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
+VALUES(5,'20 vierkante meter',3,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(6,'10m�',4,0)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
+VALUES(6,'30 vierkante meter',3,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(7,'20m�',4,0)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
+VALUES(7,'40 vierkante meter',3,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(8,'30m�',4,0)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
+VALUES(8,'Ja',4,0)
 
-INSERT INTO Options(OptionID,OptionText,QQuestionID)
-VALUES(9,'40m�',4,0)
+INSERT INTO Options(OptionID,OptionText,QQuestionID, IsCustom)
+VALUES(9,'Nee',4,0)
 
 /* Choices */
 INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
@@ -119,8 +119,12 @@ INSERT INTO Choices(ChoiceID,AnswerID,OptionID)
 VALUES(4,4,9)
 
 /* Ideations */
-INSERT INTO Ideations(ModuleID,UserID,Organisation,UserVote,RequiredFields,EventID,extraInfo)
-VALUES(2,7,0,1,41,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
+INSERT INTO Ideations(ModuleID,UserID,Organisation,UserVote,EventID,extraInfo)
+VALUES(2,7,0,1,0,'We hebben input nodig van de lokale Antwerpenaars over de Groenplaats. We gaan ook verschillende insteken proberen te geven zodat elke user wel iets te zeggen heeft.')
+
+/* IdeationSettings */
+INSERT INTO IdeationSettings(ModuleID, Field, ClosedField, MapField, VideoField, ImageField)
+VALUES(2,1,1,1,1,1)
 
 /* Ideationquestions */
 INSERT INTO IdeationQuestions(IQuestionID,ModuleID,QuestionTitle,Description,WebsiteLink)
