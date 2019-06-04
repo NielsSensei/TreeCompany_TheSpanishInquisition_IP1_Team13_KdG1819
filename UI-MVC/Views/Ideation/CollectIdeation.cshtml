@@ -73,7 +73,7 @@
                     <div class="card-body">
                         <h5 class="card-title">@iq.QuestionTitle</h5>
                         <p class="card-text">@iq.Description</p>
-                        @if (iq.SiteUrl != null)
+                        @if (iq.SiteUrl.Any())
                         {
                             <p>Meer info: <a href="">@iq.SiteUrl</a></p>
                         }
