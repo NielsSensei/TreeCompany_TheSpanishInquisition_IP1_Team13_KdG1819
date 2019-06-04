@@ -262,6 +262,11 @@ namespace UIMVC.Controllers
                 Ideation = new Ideation(){ Id = ideation }
             };
 
+            if (ciqm.SiteUrl == null)
+            {
+                iq.SiteUrl = "";
+            }
+
             _ideaMgr.MakeQuestion(iq, ideation);
 
             return RedirectToAction("CollectIdeation", "Ideation", new {Id = ideation});

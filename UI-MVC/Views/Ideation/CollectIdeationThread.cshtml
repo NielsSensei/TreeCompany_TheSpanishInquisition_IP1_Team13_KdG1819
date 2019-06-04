@@ -32,7 +32,7 @@
     <hr/>
     <section>
         <p>@Model.Description</p>
-        @if (Model.SiteUrl != null)
+        @if (Model.SiteUrl.Any())
         {
             <p>Lees meer: <a href="">@Model.SiteUrl</a></p>
         }
