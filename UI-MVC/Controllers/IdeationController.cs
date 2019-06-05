@@ -8,6 +8,7 @@ using BL;
 using Domain.Identity;
 using Domain.Projects;
 using Domain.UserInput;
+using Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -192,6 +193,7 @@ namespace UIMVC.Controllers
             if(cim.MediaFile != null && cim.MediaFile.Contains("youtu"))
             {
                 if (cim.MediaFile.Contains("="))
+                if (cim.MediaFile.Contains("="))
                 {
                     i.MediaLink = "https://youtube.com/embed/" + cim.MediaFile.Split("=")[1].Split("&")[0];   
                 }
@@ -306,15 +308,42 @@ namespace UIMVC.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
-        public IActionResult CollectAllIdeas(string filter = "all")
+        public async Task<IActionResult> CollectAllIdeas(string filter = "all")
         {
             List<Idea> ideas = new List<Idea>();
+            
+            if (!User.IsInRole("SuperAdmin"))
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                List<Project> projects = _projMgr.GetPlatformProjects(user.PlatformDetails).ToList();
+                List<Ideation> ideations = new List<Ideation>();
+                List<IdeationQuestion> ideationQuestions = new List<IdeationQuestion>();
+                
+                foreach (Project project in projects)
+                {
+                    ideations.AddRange(_moduleMgr.GetIdeations(project.Id));
+                }
+
+                foreach (Ideation ideation in ideations)
+                {
+                    ideationQuestions.AddRange(_ideaMgr.GetAllByModuleId(ideation.Id));
+                }
+
+                foreach (IdeationQuestion ideationQuestion in ideationQuestions)
+                {
+                    ideas.AddRange(_ideaMgr.GetIdeas(ideationQuestion.Id));
+                }
+            }
+            else
+            {
+                ideas = _ideaMgr.GetIdeas();
+            }
 
             switch (filter)
             {
-                case "all": ideas = _ideaMgr.GetIdeas(); break;
-                case "admin": ideas = _ideaMgr.GetIdeas().FindAll(i => i.ReviewByAdmin); break;
-                case "report": ideas = _ideaMgr.GetIdeas().FindAll(i => !i.ReviewByAdmin && i.Reported); break;
+                case "admin": ideas = ideas.FindAll(i => i.ReviewByAdmin); break;
+                case "report": ideas = ideas.FindAll(i => !i.ReviewByAdmin && i.Reported); break;
             }
 
             return View(ideas);
