@@ -109,9 +109,16 @@ namespace UIMVC.Controllers
                 i.ExtraInfo = aim.ExtraInfo;
             }
 
-            if (aim.MediaLink != null && aim.MediaLink.Contains("youtube.com/watch?v="))
+            if (aim.MediaLink != null && aim.MediaLink.Contains("youtu"))
             {
-                i.MediaLink = "https://youtube.com/embed/" + aim.MediaLink.Split("=")[1].Split("&")[0];
+                if (aim.MediaLink.Contains("="))
+                {
+                    i.MediaLink = "https://youtube.com/embed/" + aim.MediaLink.Split("=")[1].Split("&")[0];   
+                }
+                else
+                {
+                    i.MediaLink = "https://youtube.com/embed/" + aim.MediaLink.Split("/")[3];
+                }
             }
 
             _moduleMgr.MakeIdeation(i);
@@ -182,9 +189,16 @@ namespace UIMVC.Controllers
             i.Settings = settings;
             i.Settings.Ideation = i;
             
-            if(cim.MediaFile != null && cim.MediaFile.Contains("youtube.com/watch?v="))
+            if(cim.MediaFile != null && cim.MediaFile.Contains("youtu"))
             {
-                i.MediaLink = "https://youtube.com/embed/" + cim.MediaFile.Split("=")[1].Split("&")[0];
+                if (cim.MediaFile.Contains("="))
+                {
+                    i.MediaLink = "https://youtube.com/embed/" + cim.MediaFile.Split("=")[1].Split("&")[0];   
+                }
+                else
+                {
+                    i.MediaLink = "https://youtube.com/embed/" + cim.MediaFile.Split("/")[3];
+                }
             }
 
             try
@@ -329,7 +343,7 @@ namespace UIMVC.Controllers
         /*
          * @author Niels Van Zandbergen
          */
-        [Authorize(Roles = "Moderator, Admin, SuperAdmin")]
+        [Authorize]
         public IActionResult DestroyIdea(int idea, string from, int thread)
         {
             Idea toDelete = _ideaMgr.GetIdea(idea, false);
@@ -428,8 +442,8 @@ namespace UIMVC.Controllers
                     Idea = idea
                 };
                 
-                field.LocationX = Double.Parse(Request.Form["newIdeaMapX"].ToString().Replace(".", ","));
-                field.LocationY = Double.Parse(Request.Form["newIdeaMapY"].ToString().Replace(".", ","));
+                field.LocationX = Double.Parse(Request.Form["newIdeaMapX"].ToString().Replace(".",","));
+                field.LocationY = Double.Parse(Request.Form["newIdeaMapY"].ToString().Replace(".",","));
 
                 idea.Mfield = field;
             }
@@ -447,9 +461,21 @@ namespace UIMVC.Controllers
                 {
                     Idea = idea
                 };
-
-                field.VideoLink = "https://www.youtube.com/embed/" +
-                                  Request.Form["FieldVideo"].ToString().Split("=")[1].Split("&")[0];
+                
+                if(Request.Form["FieldVideo"].ToString().Contains("youtu"))
+                {
+                    if (Request.Form["FieldVideo"].ToString().Contains("="))
+                    {
+                        field.VideoLink = "https://www.youtube.com/embed/" +
+                            Request.Form["FieldVideo"].ToString().Split("=")[1].Split("&")[0];  
+                    }
+                    else
+                    {
+                        field.VideoLink = "https://www.youtube.com/embed/" +
+                            Request.Form["FieldVideo"].ToString().Split("/")[3];
+                    }
+                }
+                
                 idea.Vfield = field;
             }
             else
@@ -584,15 +610,24 @@ namespace UIMVC.Controllers
             }
 
             if (!Request.Form["FieldVideo"].ToString().Equals("") && 
-                Request.Form["FieldVideo"].ToString().Contains("youtube.com/watch?v="))
+                Request.Form["FieldVideo"].ToString().Contains("youtu"))
             {
                 if (toEdit.Vfield != null && !toEdit.Vfield.VideoLink.Equals(Request.Form["FieldVideo"].ToString()) ||
                     toEdit.Vfield == null)
                 {
                     VideoField field = new VideoField() { Idea = toEdit };
 
-                    field.VideoLink = "https://www.youtube.com/embed/" + 
-                                      Request.Form["FieldVideo"].ToString().Split("=")[1].Split("&")[0];
+                    if (Request.Form["FieldVideo"].ToString().Contains("="))
+                    {
+                        field.VideoLink = "https://www.youtube.com/embed/" + 
+                            Request.Form["FieldVideo"].ToString().Split("=")[1].Split("&")[0];  
+                    }
+                    else
+                    {
+                        field.VideoLink = "https://www.youtube.com/embed/" +
+                            Request.Form["FieldVideo"].ToString().Split("/")[3];
+                    }
+                    
                     toEdit.Vfield = field;
                 }
             }
