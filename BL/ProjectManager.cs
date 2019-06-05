@@ -116,6 +116,11 @@ namespace BL
         {
             return ProjectRepo.ReadAllForPlatform(platform.Id);
         }
+        
+        public IEnumerable<Project> GetPlatformProjects(int platformId)
+        {
+            return ProjectRepo.ReadAllForPlatform(platformId);
+        }
         #endregion
     }
 }
